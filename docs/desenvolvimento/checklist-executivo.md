@@ -58,16 +58,16 @@ Critério de aceite:
 
 ## Fase 4 — Leitura agregada
 
-- [ ] Ler e validar as seis abas.
-- [ ] Reconstruir ata completa por `ata_id`.
-- [ ] Validar todas as referências entre abas.
-- [ ] Separar registros válidos e inválidos.
-- [ ] Calcular indicadores somente com registros válidos.
-- [ ] Exibir detalhe de ata em modo somente leitura.
+- [x] Ler e validar as seis abas.
+- [x] Reconstruir ata completa por `ata_id`.
+- [x] Validar todas as referências entre abas.
+- [x] Separar registros válidos e inválidos.
+- [x] Calcular indicadores somente com registros válidos.
+- [x] Exibir detalhe de ata em modo somente leitura.
 
 Critério de aceite:
 
-- [ ] Edição manual inválida não entra em indicadores e produz diagnóstico
+- [x] Edição manual inválida não entra em indicadores e produz diagnóstico
   localizado.
 
 ## Fase 5 — Criação imutável

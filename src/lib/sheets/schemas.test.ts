@@ -83,6 +83,18 @@ describe("schemas das linhas do Sheets", () => {
     expect(domainAtaToSheet(sheetAtaToDomain(sheet))).toEqual(sheet);
   });
 
+  it("converte data e horário serializados pelo Sheets", () => {
+    const parsed = sheetAtaSchema.parse({
+      ...valid.ata,
+      data_reuniao: 46194,
+      hora_inicio: 0.4375,
+    });
+    expect(parsed).toMatchObject({
+      data_reuniao: "2026-06-21",
+      hora_inicio: "10:30",
+    });
+  });
+
   it("converte todos os códigos e rótulos bidirecionalmente", () => {
     for (const code of plataformaMapping.codes) {
       expect(plataformaMapping.fromSheet(plataformaMapping.toSheet(code))).toBe(code);

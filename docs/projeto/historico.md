@@ -72,3 +72,19 @@ canônico.
   `Aberta`/`Fechada`.
 - A suíte alcançou 46 testes aprovados; lint, TypeScript e build de produção
   também foram aprovados.
+
+## 21 de junho de 2026 — Leitura agregada
+
+- As seis abas passaram a ser lidas em um único `batchGet`, com validação de
+  cabeçalhos e conversão explícita de datas e horários do Sheets.
+- Atas completas passaram a ser reconstruídas por `ata_id`, com validação das
+  referências de grupo e dependentes.
+- Linhas inválidas, duplicadas, órfãs ou inconsistentes passaram a ser isoladas
+  com diagnóstico de aba, linha, campo e mensagem.
+- Indicadores passaram a considerar somente registros válidos.
+- A listagem e o detalhe de atas foram implementados em modo somente leitura,
+  preservando a identificação histórica de grupos inativos.
+- A leitura real confirmou 17 grupos e as demais cinco abas vazias, com todos
+  os cabeçalhos válidos e tipos compatíveis.
+- A suíte alcançou 53 testes aprovados; lint e TypeScript também foram
+  aprovados antes do fechamento da fase.

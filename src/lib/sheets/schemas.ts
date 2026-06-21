@@ -36,6 +36,27 @@ const sheetInteger = (minimum: number) =>
     return value;
   }, z.number().int().min(minimum));
 
+const sheetDate = z.preprocess((value) => {
+  if (typeof value === "number") {
+    const milliseconds = Math.round((value - 25569) * 86_400_000);
+    return new Date(milliseconds).toISOString().slice(0, 10);
+  }
+  if (typeof value === "string") {
+    const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value);
+    if (match) return `${match[3]}-${match[2]}-${match[1]}`;
+  }
+  return value;
+}, z.string().date());
+
+const sheetTime = z.preprocess((value) => {
+  if (typeof value === "number" && value >= 0 && value < 1) {
+    const minutes = Math.round(value * 24 * 60);
+    const hours = Math.floor(minutes / 60) % 24;
+    return `${String(hours).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+  }
+  return value;
+}, z.string().regex(/^(?:[01]\d|2[0-3]):(?:00|30)$/, "Horário inválido."));
+
 export const sheetGrupoSchema = z.object({
   grupo_id: uuid,
   zoom_id: requiredText,
@@ -49,10 +70,8 @@ export const sheetAtaSchema = z
   .object({
     ata_id: uuid,
     grupo_id: uuid,
-    data_reuniao: z.string().date(),
-    hora_inicio: z
-      .string()
-      .regex(/^(?:[01]\d|2[0-3]):(?:00|30)$/, "Horário inválido."),
+    data_reuniao: sheetDate,
+    hora_inicio: sheetTime,
     plataforma: z.literal("Zoom"),
     tipo_reuniao: z.enum(["Aberta", "Fechada"]),
     formato_partilha: sheetBoolean,

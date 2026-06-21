@@ -1,26 +1,16 @@
+import Link from "next/link";
 import { signOut } from "@/auth";
 import { requireAuthorizedSession } from "@/lib/auth/require-session";
-import { listAtas, listGroups } from "@/lib/sheets/repository";
+import { readAggregatedAtas } from "@/lib/sheets/repository";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const session = await requireAuthorizedSession();
-  const [groupRows, ataRows] = await Promise.all([listGroups(), listAtas()]);
-  const allGroups = groupRows
-    .filter((row) => row.valid)
-    .map((row) => row.data);
-  const groups = allGroups
+  const result = await readAggregatedAtas();
+  const activeGroups = result.grupos
     .filter((group) => group.ativo)
     .sort((first, second) => first.ordem - second.ordem);
-  const groupNames = new Map(
-    allGroups.map((group) => [group.grupo_id, group.grupo_nome]),
-  );
-  const validAtas = ataRows
-    .filter((row) => row.valid)
-    .map((row) => row.data)
-    .sort((first, second) => second.data_reuniao.localeCompare(first.data_reuniao));
-  const invalidAtas = ataRows.filter((row) => !row.valid);
 
   return (
     <main className="shell">
@@ -29,34 +19,83 @@ export default async function HomePage() {
           <h1>GS Mapeamento</h1>
           <span className="muted">{session.user?.email}</span>
         </div>
-        <form action={async () => { "use server"; await signOut({ redirectTo: "/login" }); }}>
+        <form
+          action={async () => {
+            "use server";
+            await signOut({ redirectTo: "/login" });
+          }}
+        >
           <button type="submit">Sair</button>
         </form>
       </header>
+
       <div className="grid">
         <section className="card">
           <h2>Grupos ativos</h2>
           <ol className="list">
-            {groups.map((group) => <li key={group.grupo_id}>{group.grupo_nome}</li>)}
+            {activeGroups.map((group) => (
+              <li key={group.grupo_id}>{group.grupo_nome}</li>
+            ))}
           </ol>
         </section>
+
         <section className="card">
-          <h2>Atas</h2>
-          {validAtas.length === 0 ? <p className="muted">Nenhuma ata cadastrada.</p> : (
+          <h2>Atas válidas</h2>
+          {result.atas.length === 0 ? (
+            <p className="muted">Nenhuma ata válida cadastrada.</p>
+          ) : (
             <ul className="list">
-              {validAtas.map((ata) => (
-                <li key={ata.ata_id}>
-                  <strong>{groupNames.get(ata.grupo_id) ?? "Grupo inativo ou inválido"}</strong><br />
-                  <span className="muted">{ata.data_reuniao} às {ata.hora_inicio}</span>
+              {result.atas.map(({ grupo, registro, indicadores }) => (
+                <li key={registro.ata.ata_id}>
+                  <Link className="record-link" href={`/atas/${registro.ata.ata_id}`}>
+                    <strong>{grupo.grupo_nome}</strong>
+                    <span className="muted">
+                      {registro.ata.data_reuniao} às {registro.ata.hora_inicio}
+                    </span>
+                    <span className="summary">
+                      {registro.ata.total_membros_presentes} membros ·{" "}
+                      {indicadores.total_visitantes} visitantes
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>
           )}
-          {invalidAtas.length > 0 && (
-            <p className="error">{invalidAtas.length} linha(s) inválida(s) no Sheets precisam de correção.</p>
-          )}
         </section>
       </div>
+
+      {result.diagnostics.length > 0 && (
+        <section className="card diagnostics">
+          <h2>Correções necessárias no Sheets</h2>
+          <p className="muted">
+            Estas linhas foram isoladas e não participam dos indicadores.
+          </p>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aba</th>
+                  <th>Linha</th>
+                  <th>Campo</th>
+                  <th>Problema</th>
+                </tr>
+              </thead>
+              <tbody>
+                {result.diagnostics.map((diagnostic, index) => (
+                  <tr
+                    key={`${diagnostic.sheet}:${diagnostic.rowNumber}:${diagnostic.field}:${index}`}
+                  >
+                    <td>{diagnostic.sheet}</td>
+                    <td>{diagnostic.rowNumber}</td>
+                    <td>{diagnostic.field}</td>
+                    <td>{diagnostic.message}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
     </main>
   );
 }
