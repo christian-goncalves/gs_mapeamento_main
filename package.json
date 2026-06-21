@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "municipios:update": "node scripts/update-municipios.mjs",
+    "sheets:reconcile-contract": "node --env-file=.env.local scripts/reconcile-sheet-validations.mjs"
   },
   "dependencies": {
     "googleapis": "^173.0.0",

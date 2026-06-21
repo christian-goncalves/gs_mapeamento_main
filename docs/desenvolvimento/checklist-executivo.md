@@ -25,36 +25,36 @@ Legenda: `[x]` concluído, `[ ]` pendente, `[!]` bloqueado.
 
 ## Fase 3 — Contratos executáveis
 
-- [ ] Separar schemas de formulário, domínio e linhas persistidas.
-- [ ] Criar schemas positivos e negativos para as seis entidades.
-- [ ] Implementar mapa entre códigos internos e rótulos portugueses do Sheets.
-- [ ] Aplicar `Zoom` como validação controlada de `atas.plataforma` no Sheets.
-- [ ] Exigir estado para Brasil e estado vazio para outros países.
-- [ ] Validar IDs únicos e ordens únicas por contexto.
-- [ ] Validar grupo existente e ativo durante a criação.
-- [ ] Permitir leitura histórica de atas vinculadas a grupos inativos.
-- [ ] Corrigir preservação do número real da linha quando houver linhas vazias.
+- [x] Separar schemas de formulário, domínio e linhas persistidas.
+- [x] Criar schemas positivos e negativos para as seis entidades.
+- [x] Implementar mapa entre códigos internos e rótulos portugueses do Sheets.
+- [x] Aplicar `Zoom` como validação controlada de `atas.plataforma` no Sheets.
+- [x] Exigir estado para Brasil e estado vazio para outros países.
+- [x] Validar IDs únicos e ordens únicas por contexto.
+- [x] Validar grupo existente e ativo durante a criação.
+- [x] Permitir leitura histórica de atas vinculadas a grupos inativos.
+- [x] Corrigir preservação do número real da linha quando houver linhas vazias.
 
 Critério de aceite:
 
-- [ ] Cada regra documental possui teste isolado.
-- [ ] Uma linha válida do Sheets é aceita e uma inválida informa aba, linha e
+- [x] Cada regra documental possui teste isolado.
+- [x] Uma linha válida do Sheets é aceita e uma inválida informa aba, linha e
   campo.
 
 ### Municípios brasileiros
 
-- [ ] Criar script que consulte a API de Localidades do IBGE.
-- [ ] Gerar JSON mínimo com `id`, `nome` e `uf`.
-- [ ] Validar IDs únicos, 27 UFs e campos obrigatórios.
-- [ ] Ordenar deterministicamente e registrar fonte/data da atualização.
-- [ ] Implementar busca normalizada por nome e UF.
-- [ ] Exibir opções no formato `Nome - UF`.
-- [ ] Validar no backend usando o mesmo JSON.
+- [x] Criar script que consulte a API de Localidades do IBGE.
+- [x] Gerar JSON mínimo com `id`, `nome` e `uf`.
+- [x] Validar IDs únicos, 27 UFs e campos obrigatórios.
+- [x] Ordenar deterministicamente e registrar fonte/data da atualização.
+- [x] Implementar busca normalizada por nome e UF.
+- [x] Exibir opções no formato `Nome - UF`.
+- [x] Validar no backend usando o mesmo JSON.
 
 Critério de aceite:
 
-- [ ] Município ausente da base é rejeitado.
-- [ ] O autocomplete funciona sem chamada externa em tempo de execução.
+- [x] Município ausente da base é rejeitado.
+- [x] O autocomplete funciona sem chamada externa em tempo de execução.
 
 ## Fase 4 — Leitura agregada
 

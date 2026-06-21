@@ -1,8 +1,14 @@
 import "server-only";
 
-import { ataSchema, grupoSchema, type Ata, type Grupo } from "@/domain/entities";
+import type { Ata, Grupo } from "@/domain/entities";
 import { getSheetsClient, getSpreadsheetId } from "./client";
 import { parseRows, rowsToObjects, type ParsedRow } from "./rows";
+import {
+  sheetAtaSchema,
+  sheetAtaToDomain,
+  sheetGrupoSchema,
+  sheetGrupoToDomain,
+} from "./schemas";
 
 export const SHEET_HEADERS = {
   grupos: [
@@ -29,12 +35,17 @@ async function readSheet(name: SheetName) {
   });
   return rowsToObjects(
     SHEET_HEADERS[name],
-    (response.data.values as string[][] | undefined) ?? [],
+    (response.data.values as (string | number | boolean)[][] | undefined) ?? [],
   );
 }
 
 export async function listGroups(): Promise<ParsedRow<Grupo>[]> {
-  return parseRows(grupoSchema, await readSheet("grupos"));
+  return parseRows(
+    "grupos",
+    sheetGrupoSchema,
+    await readSheet("grupos"),
+    sheetGrupoToDomain,
+  );
 }
 
 export async function listActiveGroups() {
@@ -47,5 +58,10 @@ export async function listActiveGroups() {
 }
 
 export async function listAtas(): Promise<ParsedRow<Ata>[]> {
-  return parseRows(ataSchema, await readSheet("atas"));
+  return parseRows(
+    "atas",
+    sheetAtaSchema,
+    await readSheet("atas"),
+    sheetAtaToDomain,
+  );
 }

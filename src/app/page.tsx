@@ -1,13 +1,21 @@
 import { signOut } from "@/auth";
 import { requireAuthorizedSession } from "@/lib/auth/require-session";
-import { listActiveGroups, listAtas } from "@/lib/sheets/repository";
+import { listAtas, listGroups } from "@/lib/sheets/repository";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const session = await requireAuthorizedSession();
-  const [groups, ataRows] = await Promise.all([listActiveGroups(), listAtas()]);
-  const groupNames = new Map(groups.map((group) => [group.grupo_id, group.grupo_nome]));
+  const [groupRows, ataRows] = await Promise.all([listGroups(), listAtas()]);
+  const allGroups = groupRows
+    .filter((row) => row.valid)
+    .map((row) => row.data);
+  const groups = allGroups
+    .filter((group) => group.ativo)
+    .sort((first, second) => first.ordem - second.ordem);
+  const groupNames = new Map(
+    allGroups.map((group) => [group.grupo_id, group.grupo_nome]),
+  );
   const validAtas = ataRows
     .filter((row) => row.valid)
     .map((row) => row.data)

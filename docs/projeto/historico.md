@@ -55,3 +55,20 @@ A documentação passou a ser organizada por responsabilidade: produto,
 arquitetura, desenvolvimento, projeto e referências. Nomes de arquivos foram
 padronizados em ASCII `kebab-case` e `docs/README.md` tornou-se o índice
 canônico.
+
+## 21 de junho de 2026 — Contratos executáveis
+
+- Schemas de formulário, domínio e linhas do Sheets foram separados.
+- Conversões bidirecionais passaram a preservar códigos internos e rótulos em
+  português.
+- Diagnósticos de leitura passaram a informar aba, número real da linha e
+  campo, inclusive após linhas vazias.
+- Regras de unicidade, participação, criação com grupo ativo e histórico com
+  grupo inativo receberam validações executáveis.
+- A base local foi gerada pela API oficial do IBGE com 5.571 municípios, 27
+  UFs, fonte e data de atualização.
+- Os seis cabeçalhos foram confirmados na planilha oficial e as validações de
+  `atas.plataforma` e `atas.tipo_reuniao` foram reconciliadas para `Zoom` e
+  `Aberta`/`Fechada`.
+- A suíte alcançou 46 testes aprovados; lint, TypeScript e build de produção
+  também foram aprovados.
