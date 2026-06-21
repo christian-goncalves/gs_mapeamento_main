@@ -109,11 +109,11 @@ convenção, mantendo a mesma separação entre configuração pública e segred
 
 ## Segurança antes do desenvolvimento
 
-Os JSONs de credenciais atualmente presentes no diretório não devem ser usados
-como artefatos versionáveis. Antes de iniciar a aplicação:
+Os JSONs de credenciais foram removidos após a migração dos valores mínimos para
+`.env.local`. Antes de implantar a aplicação:
 
-1. Rotacionar ou revogar as chaves atuais no Google Cloud.
-2. Remover os JSONs do diretório do projeto.
-3. Criar `.gitignore` para `.env*` e arquivos de credenciais.
-4. Configurar novos segredos localmente e na Vercel.
-5. Compartilhar apenas a planilha do MVP com a nova conta de serviço.
+1. Rotacionar ou revogar a chave atual no Google Cloud.
+2. Atualizar `GOOGLE_PRIVATE_KEY` localmente e na Vercel.
+3. Criar um cliente OAuth próprio para Auth.js, com callbacks da aplicação.
+4. Configurar os segredos de autenticação localmente e na Vercel.
+5. Manter apenas a planilha do MVP compartilhada com a conta de serviço.

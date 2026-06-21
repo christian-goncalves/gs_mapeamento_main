@@ -81,7 +81,8 @@ Próxima etapa planejada:
 
 ## Segurança
 
-Os JSONs de credenciais Google permanecem somente no ambiente local e são
-ignorados pelo Git. Antes da implantação, as chaves devem ser rotacionadas e os
-segredos devem ser configurados no ambiente local e na Vercel, nunca no
-repositório.
+As credenciais necessárias foram migradas dos JSONs de origem para
+`.env.local`, ignorado pelo Git, e os JSONs foram removidos do projeto. O cliente
+OAuth encontrado era específico do callback do n8n e não foi reaproveitado para
+Auth.js. Antes da implantação, a chave da conta de serviço deve ser rotacionada
+e os novos segredos devem ser configurados na Vercel, nunca no repositório.

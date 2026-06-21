@@ -58,8 +58,9 @@ dependência operacional do Jotform.
 
 ## Segurança
 
-Credenciais Google não devem permanecer no diretório do projeto nem ser
-versionadas. Antes da implementação, as chaves atuais devem ser removidas do
-projeto e rotacionadas. Na Vercel, os segredos serão configurados como variáveis
-de ambiente e a planilha será compartilhada somente com a conta de serviço
-utilizada pelo backend.
+Os valores locais ficam somente em `.env.local`, ignorado pelo Git. Os JSONs de
+origem não fazem parte do projeto e `.env.example` contém apenas o contrato das
+variáveis, sem valores. Antes da implantação, a chave da conta de serviço deve
+ser rotacionada e os novos segredos devem ser configurados nas variáveis de
+ambiente da Vercel. A planilha deve permanecer compartilhada somente com a conta
+de serviço utilizada pelo backend.
