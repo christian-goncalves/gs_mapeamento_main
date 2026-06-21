@@ -1,0 +1,25 @@
+# Segredos e configuracao local
+.env
+.env.*
+!.env.example
+google-api_drive-sheets-gmail-docs/
+*.key
+*.pem
+
+# Dependencias e artefatos da futura aplicacao
+node_modules/
+.next/
+.vercel/
+coverage/
+dist/
+*.log
+
+# Configuracao local de agentes e sistema
+.agents/
+.codex/
+.git-store/
+.git.empty-backup-*/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db

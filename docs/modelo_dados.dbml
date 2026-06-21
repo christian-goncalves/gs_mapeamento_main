@@ -1,0 +1,113 @@
+// Modelo conceitual do Google Sheets usado pelo MVP GS Mapeamento.
+// Cada tabela representa uma aba. DBML e usado apenas para visualizacao.
+
+Enum tipo_reuniao {
+  aberta
+  fechada
+}
+
+Enum categoria_visitante {
+  provavel_adicto
+  familiar
+  profissional
+  estudante
+  outro
+}
+
+Enum origem_contato {
+  indicacao_pessoal
+  familiar
+  profissional
+  grupo_na
+  internet
+  redes_sociais
+  radio
+  tv
+  material_impresso
+  evento_palestra
+  encaminhamento
+  outro
+}
+
+Table grupos {
+  grupo_id uuid [pk]
+  zoom_id varchar [not null, note: 'ID externo do Zoom; pode se repetir']
+  grupo_nome varchar [not null, unique]
+  ordem integer [not null, unique, note: 'Ordem de exibicao a partir de 1']
+  ativo boolean [not null, default: true]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  indexes {
+    zoom_id
+  }
+}
+
+Table atas {
+  ata_id uuid [pk]
+  grupo_id uuid [not null]
+  data_reuniao date [not null]
+  hora_inicio time [not null]
+  plataforma varchar [not null]
+  tipo_reuniao tipo_reuniao [not null]
+  formato_partilha boolean [not null, default: false]
+  formato_estudo boolean [not null, default: false]
+  formato_tematico boolean [not null, default: false]
+  formato_literatura boolean [not null, default: false]
+  formato_passos boolean [not null, default: false]
+  formato_tradicoes boolean [not null, default: false]
+  total_membros_presentes integer [not null, note: 'Maior ou igual a zero']
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  Note: 'Pelo menos um formato de reuniao deve ser verdadeiro.'
+}
+
+Table servidores {
+  servidor_id uuid [pk]
+  ata_id uuid [not null]
+  nome varchar [not null]
+  ordem integer [not null, note: 'Inteiro a partir de 1']
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  indexes {
+    (ata_id, ordem) [unique]
+  }
+}
+
+Table participacao {
+  participacao_id uuid [pk]
+  ata_id uuid [not null]
+  localidade varchar [not null]
+  estado varchar [note: 'Obrigatorio quando pais for Brasil']
+  pais varchar [not null]
+  presencas integer [not null, note: 'Inteiro maior que zero']
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Table visitantes {
+  visitante_id uuid [pk]
+  ata_id uuid [not null]
+  nome varchar [not null]
+  cidade varchar [not null]
+  categoria categoria_visitante [not null]
+  origem_contato origem_contato [not null]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Table trocas_chaveiro {
+  troca_chaveiro_id uuid [pk]
+  ata_id uuid [not null]
+  tempo_limpo varchar [not null, note: '30 dias, 60 dias, 90 dias, 6 meses, 9 meses, 1 ano, 18 meses ou Multiplos anos']
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Ref: atas.grupo_id > grupos.grupo_id
+Ref: servidores.ata_id > atas.ata_id
+Ref: participacao.ata_id > atas.ata_id
+Ref: visitantes.ata_id > atas.ata_id
+Ref: trocas_chaveiro.ata_id > atas.ata_id
