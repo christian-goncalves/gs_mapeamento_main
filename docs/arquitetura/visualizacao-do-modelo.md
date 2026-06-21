@@ -1,6 +1,6 @@
 # Visualização do modelo de dados
 
-O arquivo `modelo_dados.dbml` representa as seis abas do Google Sheets como um
+O arquivo [`modelo-de-dados.dbml`](modelo-de-dados.dbml) representa as seis abas do Google Sheets como um
 modelo relacional. Ele serve para visualizar e exportar o desenho; não significa
 que o MVP utilizará um banco de dados relacional.
 
@@ -9,7 +9,7 @@ que o MVP utilizará um banco de dados relacional.
 1. Acesse https://dbdiagram.io/.
 2. Entre em sua conta e selecione **New Diagram**.
 3. Escolha o formato **DBML**.
-4. Abra `docs/modelo_dados.dbml` neste projeto.
+4. Abra `docs/arquitetura/modelo-de-dados.dbml` neste projeto.
 5. Copie todo o conteúdo para o editor do dbdiagram.io.
 6. Confirme que as seis tabelas e os cinco relacionamentos foram renderizados.
 
@@ -37,7 +37,7 @@ todo o modelo e faça uma captura de tela.
 
 Nome sugerido para salvar no projeto:
 
-`docs/modelo_dados.png`
+`docs/arquitetura/modelo-de-dados.png`
 
 Antes de salvar, confirme que nomes de campos e relacionamentos estão legíveis e
 que nenhuma credencial ou identificador real de planilha aparece na imagem.

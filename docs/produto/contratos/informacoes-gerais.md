@@ -63,3 +63,6 @@ servidores.
 - Localidades, visitantes e trocas de chaveiro ficam em suas próprias abas.
 - Tema, hora de encerramento, ID manual e número da reunião não fazem parte do
   MVP.
+
+O fluxo de confirmação, imutabilidade e deduplicação está definido no
+[Escopo do MVP](../escopo-mvp.md).

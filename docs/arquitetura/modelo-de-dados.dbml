@@ -61,6 +61,10 @@ Table atas {
   updated_at timestamp [not null]
 
   Note: 'Pelo menos um formato de reuniao deve ser verdadeiro.'
+
+  indexes {
+    (grupo_id, data_reuniao, hora_inicio) [unique, note: 'Chave de negocio validada pela aplicacao para prevenir duplicidade']
+  }
 }
 
 Table servidores {
@@ -91,7 +95,7 @@ Table visitantes {
   visitante_id uuid [pk]
   ata_id uuid [not null]
   nome varchar [not null]
-  cidade varchar [not null]
+  cidade varchar [not null, note: 'Municipio brasileiro controlado no formato Nome - UF']
   categoria categoria_visitante [not null]
   origem_contato origem_contato [not null]
   created_at timestamp [not null]

@@ -33,7 +33,7 @@ Cada visitante gera uma linha na aba `visitantes`.
 | Campo | Controle | Regra |
 | --- | --- | --- |
 | nome | texto | Obrigatório |
-| cidade | seleção | Obrigatória |
+| cidade | autocomplete | Município brasileiro obrigatório, no formato `Nome - UF` |
 | categoria | seleção | Obrigatória |
 | origem_contato | seleção | Obrigatória |
 
@@ -90,3 +90,6 @@ O backend calcula e não persiste:
 - quantidade de membros sem localidade informada
 
 Total de ingressos e total de partilhas estão fora do escopo do MVP.
+
+A origem e atualização da lista de municípios estão definidas na
+[Arquitetura de dados](../../arquitetura/arquitetura-de-dados.md).
