@@ -107,6 +107,10 @@ autorizados, sem dependência de arquivos locais de credenciais.
 Os nomes podem ser ajustados apenas se a versão adotada do Auth.js exigir outra
 convenção, mantendo a mesma separação entre configuração pública e segredos.
 
+O cliente OAuth deve ser do tipo Aplicativo da Web e exclusivo desta aplicação.
+O callback local é `http://localhost:3000/api/auth/callback/google`; em produção,
+deve ser cadastrada a mesma rota no domínio HTTPS definitivo.
+
 ## Segurança antes do desenvolvimento
 
 Os JSONs de credenciais foram removidos após a migração dos valores mínimos para

@@ -7,6 +7,12 @@ secrets/
 *.key
 *.pem
 
+# Next.js e dependencias
+.next/
+node_modules/
+coverage/
+*.tsbuildinfo
+
 # Dependencias e artefatos da futura aplicacao
 node_modules/
 .next/

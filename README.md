@@ -64,3 +64,39 @@ variáveis, sem valores. Antes da implantação, a chave da conta de serviço de
 ser rotacionada e os novos segredos devem ser configurados nas variáveis de
 ambiente da Vercel. A planilha deve permanecer compartilhada somente com a conta
 de serviço utilizada pelo backend.
+
+## Desenvolvimento local
+
+Requisitos: Node.js 24 ou versão LTS compatível com Next.js 16 e acesso à
+planilha pela conta de serviço.
+
+```bash
+npm install
+npm test
+npm run dev
+```
+
+O valor controlado inicial de `plataforma` é `Zoom`. Novas plataformas exigem
+alteração coordenada no schema da aplicação e na validação da aba `atas`.
+
+### OAuth do Auth.js ainda necessário
+
+Crie no Google Cloud um cliente OAuth 2.0 do tipo **Aplicativo da Web**, próprio
+para esta aplicação. O cliente antigo do n8n não é compatível e não deve ser
+reutilizado.
+
+Origem JavaScript local: `http://localhost:3000`.
+
+URI de redirecionamento local:
+`http://localhost:3000/api/auth/callback/google`.
+
+Na produção, cadastre a origem HTTPS da aplicação e a mesma rota
+`/api/auth/callback/google`. Preencha em `.env.local`:
+
+- `AUTH_SECRET`: segredo aleatório forte da aplicação;
+- `AUTH_GOOGLE_ID`: ID do novo cliente OAuth;
+- `AUTH_GOOGLE_SECRET`: segredo do novo cliente OAuth;
+- `AUTH_ALLOWED_EMAILS`: e-mails permitidos, separados por vírgula.
+
+As quatro variáveis também devem ser configuradas na Vercel. Nenhuma delas pode
+usar prefixo `NEXT_PUBLIC_`.

@@ -86,3 +86,34 @@ As credenciais necessárias foram migradas dos JSONs de origem para
 OAuth encontrado era específico do callback do n8n e não foi reaproveitado para
 Auth.js. Antes da implantação, a chave da conta de serviço deve ser rotacionada
 e os novos segredos devem ser configurados na Vercel, nunca no repositório.
+
+## Fundação da aplicação - 21 de junho de 2026
+
+Implementado:
+
+- Next.js 16 com App Router, React 19 e TypeScript;
+- schemas Zod e regras agregadas das seis entidades;
+- indicadores derivados sem persistência;
+- adaptador Google Sheets restrito ao servidor, com conferência estrita dos
+  cabeçalhos;
+- Auth.js com Google e autorização por `AUTH_ALLOWED_EMAILS` em cada leitura;
+- página de login, grupos ativos ordenados e listagem de atas;
+- testes unitários de domínio e conversão das linhas do Sheets.
+
+Validação real da planilha:
+
+- as seis abas possuem os cabeçalhos esperados;
+- `grupos` contém 17 registros e foi lida com sucesso pela conta de serviço;
+- as outras cinco abas ainda não possuem registros;
+- grupos ativos são filtrados e ordenados pelo campo `ordem` no backend.
+
+Bloqueio externo restante para testar o login Google de ponta a ponta:
+
+- criar um cliente OAuth 2.0 do tipo Aplicativo da Web exclusivo da aplicação;
+- cadastrar `http://localhost:3000/api/auth/callback/google` e o callback do
+  domínio de produção;
+- preencher `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` e
+  `AUTH_ALLOWED_EMAILS` no ambiente local e na Vercel.
+
+O OAuth antigo do n8n permanece explicitamente descartado. A rotação da chave
+da conta de serviço continua obrigatória antes da implantação.
