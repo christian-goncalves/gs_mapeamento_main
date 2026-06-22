@@ -95,16 +95,16 @@ Critério de aceite:
 ## Fase 6 — Política de edição manual
 
 - [x] Adicionar `MANUAL_SHEETS_EDIT_ENABLED=true` ao contrato de ambiente.
-- [ ] Ler proteções e IDs das seis abas.
-- [ ] Criar reconciliação administrativa idempotente.
-- [ ] Com `true`, manter edição manual.
-- [ ] Com `false`, aplicar proteção permitindo escrita da conta de serviço.
-- [ ] Documentar que o proprietário administra e pode remover proteções.
+- [x] Ler proteções e IDs das seis abas.
+- [x] Criar reconciliação administrativa idempotente.
+- [x] Com `true`, manter edição manual.
+- [x] Com `false`, aplicar proteção permitindo escrita da conta de serviço.
+- [x] Documentar que o proprietário administra e pode remover proteções.
 
 Critério de aceite:
 
-- [ ] Executar a reconciliação repetidamente não duplica proteções.
-- [ ] A configuração declarada corresponde ao estado real das abas.
+- [x] Executar a reconciliação repetidamente não duplica proteções.
+- [x] A configuração declarada corresponde ao estado real das abas.
 
 ## Fase 7 — Validação e implantação
 

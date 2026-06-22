@@ -35,6 +35,18 @@ locais ficam em `.env.local`, ignorado pelo Git.
 
 Nenhuma variável de segredo pode usar o prefixo `NEXT_PUBLIC_`.
 
+`MANUAL_SHEETS_EDIT_ENABLED` aceita estritamente `true` ou `false`. Depois de
+configurá-la, a política pode ser reconciliada por uma rotina administrativa:
+
+```bash
+npm run sheets:reconcile-protections
+```
+
+Com `true`, a rotina remove somente as proteções gerenciadas pela aplicação.
+Com `false`, mantém uma proteção gerenciada em cada uma das seis abas, com a
+conta de serviço autorizada a escrever. Proteções manuais são preservadas e o
+proprietário da planilha continua capaz de administrar ou remover proteções.
+
 ## OAuth Google
 
 Origem JavaScript local:

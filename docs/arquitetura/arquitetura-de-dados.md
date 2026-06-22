@@ -112,7 +112,9 @@ Fonte: https://servicodados.ibge.gov.br/api/docs/localidades
 
 A flag não bloqueia células sozinha. A rotina deve reconciliar idempotentemente
 a configuração com os intervalos protegidos. O proprietário continua capaz de
-administrar as proteções.
+administrar e remover as proteções. A rotina identifica somente as proteções
+gerenciadas pela aplicação por uma descrição estável e nunca altera proteções
+criadas manualmente.
 
 ## Indicadores derivados
 

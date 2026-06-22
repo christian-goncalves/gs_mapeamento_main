@@ -106,3 +106,22 @@ canônico.
   produção foram aprovados.
 - A escrita real não foi executada porque `GOOGLE_SHEETS_TEST_ID` não está
   configurado; a planilha oficial permaneceu inalterada.
+
+## 22 de junho de 2026 — Política de edição manual
+
+- Uma rotina administrativa server-only passou a validar estritamente a
+  política, os IDs e os cabeçalhos das seis abas antes de qualquer mutação.
+- Proteções gerenciadas passaram a usar descrição estável, sem remover ou
+  modificar proteções manuais, e todas as mudanças necessárias são enviadas em
+  um único `spreadsheets.batchUpdate`.
+- A política `false` passou a manter uma proteção por aba com escrita permitida
+  para a conta de serviço; o proprietário continua capaz de administrar as
+  proteções conforme as garantias do Sheets.
+- Testes cobriram remoção seletiva, criação das seis proteções, idempotência,
+  correção de divergência, preservação manual, falha do lote, configuração
+  inválida e permissão da conta de serviço.
+- A reconciliação real com `true` aplicou zero mutações. Uma leitura independente
+  confirmou os IDs e zero proteções nas seis abas; a planilha oficial permaneceu
+  inalterada.
+- A suíte alcançou 74 testes aprovados; lint, TypeScript e build Webpack de
+  produção com limite de memória também foram aprovados.
