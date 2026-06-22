@@ -57,6 +57,12 @@ const sheetTime = z.preprocess((value) => {
   return value;
 }, z.string().regex(/^(?:[01]\d|2[0-3]):(?:00|30)$/, "Horário inválido."));
 
+export const sheetAtaBusinessKeySchema = z.object({
+  grupo_id: uuid,
+  data_reuniao: sheetDate,
+  hora_inicio: sheetTime,
+});
+
 export const sheetGrupoSchema = z.object({
   grupo_id: uuid,
   zoom_id: requiredText,

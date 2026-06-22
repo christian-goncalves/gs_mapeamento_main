@@ -11,6 +11,7 @@ import {
   domainTrocaChaveiroToSheet,
   domainVisitanteToSheet,
   sheetAtaSchema,
+  sheetAtaBusinessKeySchema,
   sheetAtaToDomain,
   sheetGrupoSchema,
   sheetParticipacaoSchema,
@@ -90,6 +91,19 @@ describe("schemas das linhas do Sheets", () => {
       hora_inicio: 0.4375,
     });
     expect(parsed).toMatchObject({
+      data_reuniao: "2026-06-21",
+      hora_inicio: "10:30",
+    });
+  });
+
+  it("extrai chave de duplicidade mesmo com outra coluna inválida", () => {
+    expect(
+      sheetAtaBusinessKeySchema.parse({
+        ...valid.ata,
+        plataforma: "valor manual inválido",
+      }),
+    ).toEqual({
+      grupo_id: groupId,
       data_reuniao: "2026-06-21",
       hora_inicio: "10:30",
     });

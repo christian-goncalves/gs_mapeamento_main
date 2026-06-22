@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   ataFormSchema,
+  ataSubmissionSchema,
   participacaoFormSchema,
   visitanteFormSchema,
 } from "./form-schemas";
@@ -40,5 +41,25 @@ describe("schemas de formulário", () => {
         origem_contato: "outro",
       }).success,
     ).toBe(false);
+  });
+
+  it("aceita envio completo com listas vazias", () => {
+    expect(
+      ataSubmissionSchema.safeParse({
+        ata: {
+          grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
+          data_reuniao: "2026-06-22",
+          hora_inicio: "20:30",
+          plataforma: "zoom",
+          tipo_reuniao: "aberta",
+          formatos: ["partilha"],
+          total_membros_presentes: 0,
+        },
+        servidores: [],
+        participacao: [],
+        visitantes: [],
+        trocas_chaveiro: [],
+      }).success,
+    ).toBe(true);
   });
 });

@@ -72,24 +72,25 @@ Critério de aceite:
 
 ## Fase 5 — Criação imutável
 
-- [ ] Construir formulário com Informações Gerais e Participação.
-- [ ] Manter o rascunho somente no navegador.
-- [ ] Permitir adicionar, reordenar e remover dependentes antes do envio.
-- [ ] Exibir resumo completo em diálogo de confirmação.
-- [ ] Revalidar autorização e domínio na Server Action.
-- [ ] Gerar UUIDs e timestamps no backend.
-- [ ] Consultar duplicidade por `grupo_id + data_reuniao + hora_inicio`.
-- [ ] Desabilitar confirmação durante a requisição.
-- [ ] Gravar ata e dependentes em um único `spreadsheets.batchUpdate`.
-- [ ] Retornar sucesso somente após confirmação da API.
-- [ ] Não disponibilizar edição ou exclusão após o envio.
+- [x] Construir formulário com Informações Gerais e Participação.
+- [x] Manter o rascunho somente no navegador.
+- [x] Permitir adicionar, reordenar e remover dependentes antes do envio.
+- [x] Exibir resumo completo em diálogo de confirmação.
+- [x] Revalidar autorização e domínio na Server Action.
+- [x] Gerar UUIDs e timestamps no backend.
+- [x] Consultar duplicidade por `grupo_id + data_reuniao + hora_inicio`.
+- [x] Desabilitar confirmação durante a requisição.
+- [x] Gravar ata e dependentes em um único `spreadsheets.batchUpdate`.
+- [x] Retornar sucesso somente após confirmação da API.
+- [x] Não disponibilizar edição ou exclusão após o envio.
 
 Critério de aceite:
 
-- [ ] Cancelar o resumo não grava dados.
-- [ ] Falha em qualquer suboperação não grava nenhuma linha.
-- [ ] Reenvio da mesma chave é rejeitado.
-- [ ] Ata enviada aparece na listagem e no detalhe somente leitura.
+- [x] Cancelar o resumo não grava dados.
+- [x] Falha em qualquer suboperação não grava nenhuma linha.
+- [x] Reenvio da mesma chave é rejeitado.
+- [!] Ata enviada aparece na listagem e no detalhe somente leitura — validação
+  externa bloqueada até a configuração de `GOOGLE_SHEETS_TEST_ID`.
 
 ## Fase 6 — Política de edição manual
 

@@ -63,3 +63,27 @@ export const visitanteFormSchema = z.object({
 export const trocaChaveiroFormSchema = z.object({
   tempo_limpo: z.enum(tempoLimpoMapping.codes),
 });
+
+export const ataSubmissionSchema = z
+  .object({
+    ata: ataFormSchema,
+    servidores: z.array(servidorFormSchema.omit({ ordem: true })),
+    participacao: z.array(participacaoFormSchema),
+    visitantes: z.array(visitanteFormSchema),
+    trocas_chaveiro: z.array(trocaChaveiroFormSchema),
+  })
+  .superRefine((submission, context) => {
+    const total = submission.participacao.reduce(
+      (sum, item) => sum + item.presencas,
+      0,
+    );
+    if (total > submission.ata.total_membros_presentes) {
+      context.addIssue({
+        code: "custom",
+        path: ["participacao"],
+        message: "A soma das presenças supera o total de membros presentes.",
+      });
+    }
+  });
+
+export type AtaSubmission = z.infer<typeof ataSubmissionSchema>;

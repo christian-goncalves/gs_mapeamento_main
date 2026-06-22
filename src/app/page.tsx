@@ -40,7 +40,10 @@ export default async function HomePage() {
         </section>
 
         <section className="card">
-          <h2>Atas válidas</h2>
+          <div className="section-heading">
+            <h2>Atas válidas</h2>
+            <Link className="button-link" href="/atas/nova">Nova ata</Link>
+          </div>
           {result.atas.length === 0 ? (
             <p className="muted">Nenhuma ata válida cadastrada.</p>
           ) : (

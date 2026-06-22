@@ -88,3 +88,21 @@ canônico.
   os cabeçalhos válidos e tipos compatíveis.
 - A suíte alcançou 53 testes aprovados; lint e TypeScript também foram
   aprovados antes do fechamento da fase.
+
+## 22 de junho de 2026 — Criação imutável
+
+- O formulário autenticado passou a manter o rascunho somente no navegador e
+  permite adicionar, reordenar e remover dependentes antes do envio.
+- Um resumo modal completo passou a exigir confirmação explícita e bloquear
+  reenvios enquanto a requisição está ativa.
+- A Server Action passou a revalidar autorização, payload, grupo ativo e chave
+  de duplicidade antes da persistência.
+- UUIDs, timestamps e ordens de servidores passaram a ser gerados no backend.
+- Ata e dependentes passaram a compor um único `spreadsheets.batchUpdate` com
+  `appendCells`, sem chamadas de escrita parciais.
+- A busca de municípios passou a usar uma rota autenticada alimentada apenas
+  pelo JSON local do IBGE.
+- A suíte alcançou 66 testes aprovados; lint, TypeScript e build Webpack de
+  produção foram aprovados.
+- A escrita real não foi executada porque `GOOGLE_SHEETS_TEST_ID` não está
+  configurado; a planilha oficial permaneceu inalterada.
