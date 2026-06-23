@@ -12,8 +12,7 @@ fonte oficial dos dados.
 - Seleção de grupos ativos.
 - Criação, listagem e visualização de atas.
 - Informações Gerais e Participação.
-- Servidores, localidades, visitantes, ingressos, partilhas e trocas de
-  chaveiro.
+- Servidores, localidades, visitantes, ingressos, partilhas e trocas de ficha.
 - Indicadores calculados sem persistência de totais derivados.
 - Validação dos dados lidos e escritos no Sheets.
 - Manutenção manual controlada na planilha.
@@ -49,9 +48,11 @@ interface bloqueia confirmações repetidas enquanto a requisição estiver ativ
 
 ## Municípios brasileiros
 
-Visitantes selecionam a cidade por autocomplete em uma lista controlada. O IBGE
-é a fonte oficial; a aplicação usa um JSON mínimo local com `id`, `nome` e `uf`,
-sem chamada externa durante o preenchimento. O Sheets persiste `Nome - UF`.
+Localidades da reunião, visitantes e ingressos selecionam cidades por
+autocomplete em uma lista controlada. O IBGE é a fonte oficial; a aplicação usa
+um JSON mínimo local com `id`, `nome` e `uf`, sem chamada externa durante o
+preenchimento. O Sheets persiste `Nome - UF` onde a cidade é um atributo da
+pessoa e persiste cidade, UF e país separados na aba de participação.
 
 ## Edição manual e testes
 

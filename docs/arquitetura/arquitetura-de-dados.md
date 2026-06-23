@@ -31,7 +31,7 @@ Uma pasta de trabalho contém sete abas:
 | `participacao` | Presenças por localidade vinculadas por `ata_id` |
 | `visitantes` | Visitantes vinculados por `ata_id` |
 | `ingressos` | Ingressos vinculados por `ata_id` |
-| `trocas_chaveiro` | Trocas vinculadas por `ata_id` |
+| `trocas_chaveiro` | Trocas de ficha vinculadas por `ata_id` |
 
 `grupo_id` é o identificador interno dos grupos. `zoom_id` é um atributo externo
 repetível e nunca é usado como chave de relacionamento.
@@ -103,7 +103,7 @@ externo não faz parte do MVP.
   `12M`, `18M` e `MULTIPLOS_ANOS`.
 - O adaptador converte nos dois sentidos e rejeita valores desconhecidos.
 - `plataforma` aceita inicialmente somente `Zoom`.
-- `visitantes.cidade` persiste `Nome - UF`.
+- `visitantes.cidade` e `ingressos.cidade` persistem `Nome - UF`.
 
 ## Base de municípios
 
@@ -140,5 +140,5 @@ O backend calcula, sem persistir:
 - total de países;
 - total de visitantes;
 - total de ingressos;
-- total de trocas de chaveiro pela soma de `quantidade`;
+- total de trocas de ficha pela soma de `quantidade`;
 - membros sem localidade informada.

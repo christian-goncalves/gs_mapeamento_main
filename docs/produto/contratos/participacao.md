@@ -2,30 +2,33 @@
 
 ## Objetivo
 
-Coletar fatos sobre presença, partilhas, visitantes, ingressos e trocas de
-chaveiro. Totais derivados por contagem não são campos persistidos.
+Coletar fatos sobre presença, partilhas, localidades, visitantes, ingressos e
+trocas de ficha. Totais derivados por contagem não são campos persistidos.
 
 ## Total de membros presentes
 
-`total_membros_presentes` é obrigatório, inteiro e maior ou igual a zero. Ele é
-informado uma vez na seção Participação e persistido na aba `atas`.
+`total_membros_presentes` é obrigatório e selecionado uma vez na seção
+Participação. A interface oferece lista suspensa de 1 a 100 e inicia em 10. O
+valor é persistido na aba `atas`.
 
 ## Total de partilhas
 
-`total_partilhas` é obrigatório, inteiro e maior ou igual a zero. Ele é
-informado uma vez e persistido na aba `atas`.
+`total_partilhas` é obrigatório e selecionado uma vez na seção Participação. A
+interface oferece lista suspensa de 1 a 30 e inicia em 5. O valor é persistido
+na aba `atas`.
 
-## Participação por localidade
+## Localidade - Cidades (UF)
 
-Não há separação entre participação nacional e internacional. Cada item gera
-uma linha na aba `participacao`.
+A seção Participação contém somente os totais. As cidades e quantidades da
+reunião ficam em uma seção própria chamada `Localidade - Cidades (UF)`. Cada
+cidade adicionada gera uma linha na aba `participacao`.
 
 | Campo | Controle | Regra |
 | --- | --- | --- |
-| localidade | seleção ou texto | Cidade ou localidade obrigatória |
-| estado | seleção | Obrigatório quando `pais` for Brasil |
-| pais | seleção | Obrigatório |
-| presencas | número inteiro | Obrigatório e maior que zero |
+| localidade | autocomplete | Município brasileiro obrigatório |
+| estado | derivado | UF derivada do município escolhido |
+| pais | derivado | Sempre `Brasil` no MVP |
+| presencas | quantidade | Obrigatória e maior que zero |
 
 A soma das presenças registradas para uma ata não pode superar
 `total_membros_presentes`. A quantidade de membros sem localidade informada é a
@@ -37,12 +40,13 @@ Cada visitante gera uma linha na aba `visitantes`.
 
 | Campo | Controle | Regra |
 | --- | --- | --- |
-| nome | texto | Obrigatório |
+| nome | texto | Se vazio, persistir `Anonimo` |
 | cidade | autocomplete | Município brasileiro obrigatório, no formato `Nome - UF` |
 | categoria | seleção | Obrigatória |
 | origem_contato | seleção | Obrigatória |
 
-Visitantes anônimos persistem `Anonimo` no campo `nome`.
+Na interface, o campo de nome usa `Anonimo` como placeholder. O usuário pode
+clicar e escrever um nome; se deixar vazio, o backend persiste `Anonimo`.
 
 ### Categorias
 
@@ -67,10 +71,11 @@ Visitantes anônimos persistem `Anonimo` no campo `nome`.
 - Encaminhamento
 - Outro
 
-## Trocas de chaveiro
+## Troca de ficha
 
-Cada troca gera uma linha na aba `trocas_chaveiro` e contém `tempo_limpo` e
-`quantidade`.
+Cada troca de ficha gera uma linha na aba `trocas_chaveiro` e contém
+`tempo_limpo` e `quantidade`. O nome da aba permanece técnico para preservar o
+contrato existente; a interface usa `Troca de ficha`.
 
 | Campo | Controle | Regra |
 | --- | --- | --- |
@@ -96,10 +101,13 @@ Cada ingresso gera uma linha na aba `ingressos`.
 
 | Campo | Controle | Regra |
 | --- | --- | --- |
-| nome | texto | Obrigatório |
+| nome | texto | Se vazio, persistir `Anonimo` |
+| cidade | autocomplete | Município brasileiro obrigatório, no formato `Nome - UF` |
 
-Ingressos anônimos persistem `Anonimo`. `total_ingressos` é derivado pela
-contagem de linhas válidas na aba `ingressos`.
+Ingressos seguem a mesma lógica visual de visitantes: o campo de nome usa
+`Anonimo` como placeholder, o usuário pode escrever um nome e, se deixar vazio,
+o backend persiste `Anonimo`. `total_ingressos` é derivado pela contagem de
+linhas válidas na aba `ingressos`.
 
 ## Valores derivados
 
@@ -110,7 +118,7 @@ O backend calcula e não persiste:
 - total de países
 - total de visitantes
 - total de ingressos
-- total de trocas de chaveiro
+- total de trocas de ficha
 - quantidade de membros sem localidade informada
 
 `total_trocas_chaveiro` é a soma de `trocas_chaveiro.quantidade`.

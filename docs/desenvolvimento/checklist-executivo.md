@@ -147,3 +147,13 @@ Critério de aceite:
 - [x] TIRO 3: `npm test`, `npm run lint` e `npm run build` aprovados.
 - [x] Reconciliação Sheets: DEV e PROD atualizadas para o contrato ATA Full com
   sete abas.
+
+## Refatoração UX — contrato operacional da ata
+
+- [x] Etapa 1: documentar regras de Participação, Localidade, Visitantes,
+  Ingressos e Troca de ficha.
+- [ ] Etapa 2: ajustar contrato de dados e reconciliação Sheets para
+  `ingressos.cidade`.
+- [ ] Etapa 3: reorganizar a tela de criação conforme as novas seções e regras.
+- [ ] Etapa 4: ajustar revisão final e detalhe somente leitura.
+- [ ] Etapa 5: validar em DEV com ata real e registrar evidência.

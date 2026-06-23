@@ -116,6 +116,7 @@ Table ingressos {
   ingresso_id uuid [pk]
   ata_id uuid [not null]
   nome varchar [not null, note: 'Usar Anonimo quando nao informado']
+  cidade varchar [not null, note: 'Municipio brasileiro controlado no formato Nome - UF']
   created_at timestamp [not null]
   updated_at timestamp [not null]
 }

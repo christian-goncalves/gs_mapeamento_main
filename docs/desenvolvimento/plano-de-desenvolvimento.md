@@ -64,3 +64,14 @@ da Vercel e fluxo completo em produção.
 
 Critério de aceite: o MVP opera somente para usuários autorizados, sem banco
 local, sem dependência do Jotform e sem sucesso falso.
+
+## Refatoração UX — contrato operacional da ata
+
+Reorganizar a tela de criação sem alterar a imutabilidade: Participação passa a
+conter somente totais, `Localidade - Cidades (UF)` concentra cidades e
+quantidades, visitantes e ingressos usam `Anonimo` por padrão com cidade
+obrigatória, ingressos persistem cidade e a interface passa a usar `Troca de
+ficha`.
+
+Critério de aceite: documentação, contrato Sheets, criação, leitura, detalhe,
+resumo de confirmação e validação DEV representam o mesmo contrato.
