@@ -33,7 +33,7 @@ const submission = {
       origem_contato: "internet",
     },
   ],
-  ingressos: [{ nome: "Anonimo" }],
+  ingressos: [{ nome: "Anonimo", cidade: "Itajaí - SC" }],
   trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 2 }],
 } satisfies AtaSubmission;
 const group = {
@@ -86,6 +86,7 @@ describe("envio imutável", () => {
     expect(registro.ingressos[0]).toMatchObject({
       ata_id: registro.ata.ata_id,
       nome: "Anonimo",
+      cidade: "Itajaí - SC",
     });
     expect(registro.trocas_chaveiro[0]).toMatchObject({
       tempo_limpo: "1M",

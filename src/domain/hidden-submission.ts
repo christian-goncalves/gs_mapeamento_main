@@ -5,31 +5,22 @@ import { isMunicipioOption } from "./municipios";
 
 const requiredText = z.string().trim().min(1, "Campo obrigatório.");
 
-const namedPersonSchema = z
-  .object({
-    anonimo: z.boolean(),
-    nome: z.string().trim().optional(),
-  })
-  .superRefine((item, context) => {
-    if (!item.anonimo && !item.nome) {
-      context.addIssue({
-        code: "custom",
-        path: ["nome"],
-        message: "Nome é obrigatório.",
-      });
-    }
-  });
+const optionalPersonNameSchema = z.object({
+  nome: z.string().trim().optional(),
+});
 
 export const hiddenParticipacaoSchema = z.object({
   localidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
   presencas: z.number().int().min(1),
 });
 
-export const hiddenVisitanteSchema = namedPersonSchema.extend({
+export const hiddenVisitanteSchema = optionalPersonNameSchema.extend({
   cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
 });
 
-export const hiddenIngressoSchema = namedPersonSchema;
+export const hiddenIngressoSchema = optionalPersonNameSchema.extend({
+  cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
+});
 
 export const hiddenTrocaChaveiroSchema = z.object({
   tempo_limpo: z.enum(tempoLimpoMapping.codes),
@@ -67,8 +58,8 @@ function municipioParts(value: string) {
   return { localidade: match[1], estado: match[2], pais: "Brasil" };
 }
 
-function personName(item: { anonimo: boolean; nome?: string }) {
-  return item.anonimo ? "Anonimo" : item.nome?.trim() ?? "";
+function personName(item: { nome?: string }) {
+  return item.nome?.trim() || "Anonimo";
 }
 
 export function normalizeHiddenAtaSubmission(
@@ -89,6 +80,7 @@ export function normalizeHiddenAtaSubmission(
     })),
     ingressos: submission.ingressos.map((item) => ({
       nome: personName(item),
+      cidade: item.cidade,
     })),
     trocas_chaveiro: submission.trocas_chaveiro,
   };

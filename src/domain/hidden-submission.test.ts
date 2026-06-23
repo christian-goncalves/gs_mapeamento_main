@@ -26,12 +26,12 @@ function hiddenPayload() {
       { localidade: "Joinville - SC", presencas: 3 },
     ],
     visitantes: [
-      { anonimo: true, nome: "", cidade: "Itajaí - SC" },
-      { anonimo: false, nome: "Visitante", cidade: "Brusque - SC" },
+      { nome: "", cidade: "Itajaí - SC" },
+      { nome: "Visitante", cidade: "Brusque - SC" },
     ],
     ingressos: [
-      { anonimo: true, nome: "" },
-      { anonimo: false, nome: "Ingressante" },
+      { nome: "", cidade: "Itajaí - SC" },
+      { nome: "Ingressante", cidade: "Joinville - SC" },
     ],
     trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 2 }],
   } as const;
@@ -52,7 +52,10 @@ describe("normalização do formulário hidden", () => {
         { nome: "Anonimo", categoria: "outro", origem_contato: "outro" },
         { nome: "Visitante", categoria: "outro", origem_contato: "outro" },
       ],
-      ingressos: [{ nome: "Anonimo" }, { nome: "Ingressante" }],
+      ingressos: [
+        { nome: "Anonimo", cidade: "Itajaí - SC" },
+        { nome: "Ingressante", cidade: "Joinville - SC" },
+      ],
       trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 2 }],
     });
   });
@@ -87,11 +90,11 @@ describe("normalização do formulário hidden", () => {
     expect(calcularIndicadores(registro).membros_sem_localidade).toBe(5);
   });
 
-  it("rejeita nome ausente quando anonimato está desligado", () => {
+  it("exige cidade dos ingressos", () => {
     const payload = hiddenPayload();
     const result = hiddenAtaSubmissionSchema.safeParse({
       ...payload,
-      ingressos: [{ anonimo: false, nome: "" }],
+      ingressos: [{ nome: "", cidade: "" }],
     });
     expect(result.success).toBe(false);
   });

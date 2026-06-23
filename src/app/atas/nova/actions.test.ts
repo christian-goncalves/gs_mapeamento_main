@@ -27,8 +27,8 @@ const payload = JSON.stringify({
     plataforma: "zoom",
     tipo_reuniao: "aberta",
     formatos: ["partilha"],
-    total_membros_presentes: 0,
-    total_partilhas: 0,
+    total_membros_presentes: 1,
+    total_partilhas: 1,
   },
   servidores: [],
   participacao: [],
@@ -50,8 +50,8 @@ const hiddenPayload = JSON.stringify({
   },
   servidores: [],
   participacao: [{ localidade: "Itajaí - SC", presencas: 8 }],
-  visitantes: [{ anonimo: true, nome: "", cidade: "Itajaí - SC" }],
-  ingressos: [{ anonimo: true, nome: "" }],
+  visitantes: [{ nome: "", cidade: "Itajaí - SC" }],
+  ingressos: [{ nome: "", cidade: "Brusque - SC" }],
   trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 1 }],
 });
 
@@ -121,7 +121,7 @@ describe("Server Action de criação", () => {
             origem_contato: "outro",
           }),
         ],
-        ingressos: [expect.objectContaining({ nome: "Anonimo" })],
+        ingressos: [expect.objectContaining({ nome: "Anonimo", cidade: "Brusque - SC" })],
       }),
     );
   });

@@ -66,6 +66,7 @@ const valid = {
     ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d",
     ata_id: ataId,
     nome: "Ingressante",
+    cidade: "São Paulo - SP",
     ...audit,
   },
   troca: {
@@ -105,6 +106,7 @@ describe("schemas de domínio", () => {
       { ...valid.visitante, cidade: "Inexistente - SP" },
     ],
     ["ingressos", ingressoSchema, { ...valid.ingresso, nome: "" }],
+    ["ingressos", ingressoSchema, { ...valid.ingresso, cidade: "" }],
     [
       "trocas_chaveiro",
       trocaChaveiroSchema,

@@ -26,6 +26,7 @@ const base = {
       ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d",
       ata_id: ataId,
       nome: "Anonimo",
+      cidade: "São Paulo - SP",
       ...audit,
     },
   ],

@@ -87,6 +87,7 @@ function baseRows(): ParsedContractRows {
         ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d",
         ata_id: ataId,
         nome: "Anonimo",
+        cidade: "São Paulo - SP",
         ...audit,
       }),
     ],
@@ -113,7 +114,7 @@ describe("leitura agregada", () => {
         servidores: [{ nome: "Maria" }],
         participacao: [{ presencas: 2 }],
         visitantes: [{ nome: "João" }],
-        ingressos: [{ nome: "Anonimo" }],
+        ingressos: [{ nome: "Anonimo", cidade: "São Paulo - SP" }],
         trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 2 }],
       },
       indicadores: {

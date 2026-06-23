@@ -38,8 +38,8 @@ export const ataSchema = z.object({
   plataforma: z.enum(plataformaMapping.codes),
   tipo_reuniao: z.enum(tipoReuniaoMapping.codes),
   formatos: z.array(z.enum(formatoMapping.codes)).min(1),
-  total_membros_presentes: z.number().int().min(0),
-  total_partilhas: z.number().int().min(0),
+  total_membros_presentes: z.number().int().min(1),
+  total_partilhas: z.number().int().min(1),
   ...auditFields,
 });
 
@@ -95,6 +95,7 @@ export const ingressoSchema = z.object({
   ingresso_id: uuid,
   ata_id: uuid,
   nome: requiredText,
+  cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
   ...auditFields,
 });
 

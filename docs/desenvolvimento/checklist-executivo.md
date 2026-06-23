@@ -152,7 +152,7 @@ Critério de aceite:
 
 - [x] Etapa 1: documentar regras de Participação, Localidade, Visitantes,
   Ingressos e Troca de ficha.
-- [ ] Etapa 2: ajustar contrato de dados e reconciliação Sheets para
+- [x] Etapa 2: ajustar contrato de dados e reconciliação Sheets para
   `ingressos.cidade`.
 - [ ] Etapa 3: reorganizar a tela de criação conforme as novas seções e regras.
 - [ ] Etapa 4: ajustar revisão final e detalhe somente leitura.

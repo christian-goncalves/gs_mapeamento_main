@@ -56,6 +56,7 @@ const registro: AtaCompleta = {
       ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d",
       ata_id: ataId,
       nome: "Anonimo",
+      cidade: "São Paulo - SP",
       ...audit,
     },
   ],
@@ -98,6 +99,9 @@ describe("lote atômico do Sheets", () => {
     expect(
       requests[4].appendCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
     ).toEqual({ stringValue: "Anonimo" });
+    expect(
+      requests[4].appendCells?.rows?.[0]?.values?.[3]?.userEnteredValue,
+    ).toEqual({ stringValue: "São Paulo - SP" });
     expect(
       requests[5].appendCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
     ).toEqual({ stringValue: "1M" });

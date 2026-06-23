@@ -60,7 +60,7 @@ const valid = {
   },
   ingresso: {
     ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d", ata_id: ataId,
-    nome: "Anonimo", ...audit,
+    nome: "Anonimo", cidade: "São Paulo - SP", ...audit,
   },
 };
 
@@ -84,6 +84,7 @@ describe("schemas das linhas do Sheets", () => {
     ["participacao", sheetParticipacaoSchema, { ...valid.participacao, estado: "" }],
     ["visitantes", sheetVisitanteSchema, { ...valid.visitante, categoria: "Desconhecida" }],
     ["ingressos", sheetIngressoSchema, { ...valid.ingresso, nome: "" }],
+    ["ingressos", sheetIngressoSchema, { ...valid.ingresso, cidade: "" }],
     ["trocas_chaveiro", sheetTrocaChaveiroSchema, { ...valid.troca, tempo_limpo: "10 dias" }],
     ["trocas_chaveiro", sheetTrocaChaveiroSchema, { ...valid.troca, quantidade: "0" }],
   ])("rejeita linha inválida de %s", (_name, schema, value) => {

@@ -18,8 +18,8 @@ describe("schemas de formulário", () => {
         plataforma: "zoom",
         tipo_reuniao: "fechada",
         formatos: ["estudo"],
-        total_membros_presentes: 0,
-        total_partilhas: 0,
+        total_membros_presentes: 1,
+        total_partilhas: 1,
       }).success,
     ).toBe(true);
   });
@@ -47,7 +47,8 @@ describe("schemas de formulário", () => {
   });
 
   it("valida ingresso e troca de chaveiro full", () => {
-    expect(ingressoFormSchema.safeParse({ nome: "Anonimo" }).success).toBe(true);
+    expect(ingressoFormSchema.safeParse({ nome: "Anonimo", cidade: "Itajaí - SC" }).success).toBe(true);
+    expect(ingressoFormSchema.safeParse({ nome: "Anonimo", cidade: "" }).success).toBe(false);
     expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "1M", quantidade: 1 }).success).toBe(true);
     expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "dias_30", quantidade: 1 }).success).toBe(false);
     expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "1M", quantidade: 0 }).success).toBe(false);
@@ -63,8 +64,8 @@ describe("schemas de formulário", () => {
           plataforma: "zoom",
           tipo_reuniao: "aberta",
           formatos: ["partilha"],
-          total_membros_presentes: 0,
-          total_partilhas: 0,
+          total_membros_presentes: 1,
+          total_partilhas: 1,
         },
         servidores: [],
         participacao: [],

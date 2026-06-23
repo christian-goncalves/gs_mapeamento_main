@@ -165,6 +165,24 @@ describe("reconciliação do contrato Sheets", () => {
     });
   });
 
+  it("adiciona cidade em ingressos quando a coluna está ausente", async () => {
+    const { client } = clientWith({
+      afterMigration: true,
+      invalidHeader: {
+        ingressos: SHEET_HEADERS.ingressos.filter(
+          (header) => header !== "cidade",
+        ),
+      },
+    });
+
+    const result = await reconcileSheetContract(client, "spreadsheet-test");
+
+    expect(result.addedColumns).toContainEqual({
+      sheet: "ingressos",
+      column: "cidade",
+    });
+  });
+
   it("falha sem mutar quando cabeçalho existente tem divergência inesperada", async () => {
     const { client, batchUpdate } = clientWith({
       invalidHeader: { atas: ["ata_id", "campo_inesperado"] },

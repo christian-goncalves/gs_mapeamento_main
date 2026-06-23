@@ -97,6 +97,18 @@ function migratableMissingColumn(
     }
   }
 
+  if (sheet === "ingressos") {
+    const expectedWithoutCidade = SHEET_HEADERS.ingressos.filter(
+      (header) => header !== "cidade",
+    );
+    if (isHeaderPrefix(actual, expectedWithoutCidade)) {
+      return {
+        column: "cidade",
+        insertIndex: SHEET_HEADERS.ingressos.indexOf("cidade"),
+      };
+    }
+  }
+
   return null;
 }
 

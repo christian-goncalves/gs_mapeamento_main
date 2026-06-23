@@ -87,8 +87,8 @@ export const sheetAtaSchema = z
     formato_literatura: sheetBoolean,
     formato_passos: sheetBoolean,
     formato_tradicoes: sheetBoolean,
-    total_membros_presentes: sheetInteger(0),
-    total_partilhas: sheetInteger(0),
+    total_membros_presentes: sheetInteger(1),
+    total_partilhas: sheetInteger(1),
     ...auditFields,
   })
   .refine(
@@ -182,6 +182,7 @@ export const sheetIngressoSchema = z.object({
   ingresso_id: uuid,
   ata_id: uuid,
   nome: requiredText,
+  cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
   ...auditFields,
 });
 
