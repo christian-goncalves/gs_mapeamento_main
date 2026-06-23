@@ -113,9 +113,9 @@ Critério de aceite:
 - [x] Confirmar `ingressos`, `atas.total_partilhas` e
   `trocas_chaveiro.quantidade` em DEV e PROD.
 - [x] Executar lint, testes e build após a refatoração ATA Full.
-- [ ] Validar criação real de ata em DEV, com participação, visitante,
+- [x] Validar criação real de ata em DEV, com participação, visitante,
   ingresso e troca com quantidade.
-- [ ] Confirmar listagem e detalhe da ata criada em modo somente leitura.
+- [x] Confirmar listagem e detalhe da ata criada em modo somente leitura.
 - [ ] Testar duplicidade e duplo clique em DEV.
 - [ ] Testar usuário permitido e usuário bloqueado.
 - [ ] Testar autorização em cada leitura e Server Action.
