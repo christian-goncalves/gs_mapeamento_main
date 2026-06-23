@@ -156,4 +156,4 @@ Critério de aceite:
   `ingressos.cidade`.
 - [x] Etapa 3: reorganizar a tela de criação conforme as novas seções e regras.
 - [x] Etapa 4: ajustar revisão final e detalhe somente leitura.
-- [ ] Etapa 5: validar em DEV com ata real e registrar evidência.
+- [x] Etapa 5: validar em DEV com ata real e registrar evidência.

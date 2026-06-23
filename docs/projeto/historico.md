@@ -173,3 +173,24 @@ canônico.
   `addedColumns=[atas.total_partilhas, trocas_chaveiro.quantidade]`.
 - A verificação read-only confirmou as abas `grupos`, `atas`, `servidores`,
   `participacao`, `visitantes`, `trocas_chaveiro` e `ingressos` em DEV e PROD.
+
+## 23 de junho de 2026 — Refatoração UX da ata
+
+- O contrato de produto passou a separar Participação dos registros de
+  localidade: Participação contém os totais, enquanto `Localidade - Cidades
+  (UF)` registra cidade e quantidade.
+- Visitantes e ingressos passaram a usar `Anonimo` como valor persistido quando
+  o nome não é informado.
+- Ingressos passaram a exigir e persistir `cidade`.
+- A interface passou a usar a nomenclatura `Troca de ficha`, mantendo a aba
+  técnica `trocas_chaveiro`.
+- A reconciliação DEV adicionou a coluna `ingressos.cidade` sem criar novas
+  abas.
+- A validação DEV criou a ata `24a7ca23-62ed-4357-a7dd-108e6a0a7766` com
+  `10` membros presentes, `5` partilhas, duas cidades, dois visitantes, dois
+  ingressos com cidade e uma troca de ficha com quantidade `2`.
+- A leitura agregada confirmou `membros_sem_localidade=3`,
+  `total_ingressos=2`, `total_visitantes=2` e `total_trocas_chaveiro=2`.
+- A duplicidade da mesma chave foi rejeitada sem alterar as contagens das abas.
+- Após a migração, a DEV manteve diagnósticos em linhas antigas de `ingressos`
+  sem cidade; esses registros históricos não participam dos indicadores.
