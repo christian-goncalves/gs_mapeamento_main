@@ -6,10 +6,12 @@ type Suggestion = { id: number; nome: string; uf: string; label: string };
 
 export function MunicipioAutocomplete({
   id,
+  placeholder = "Digite nome ou UF",
   value,
   onChange,
 }: {
   id: string;
+  placeholder?: string;
   value: string;
   onChange: (value: string) => void;
 }) {
@@ -59,7 +61,7 @@ export function MunicipioAutocomplete({
         aria-autocomplete="list"
         aria-expanded={visibleSuggestions.length > 0}
         aria-controls={`${id}-options`}
-        placeholder="Digite nome ou UF"
+        placeholder={placeholder}
       />
       {value.trim().length >= 2 && loading && (
         <span className="field-hint">Buscando...</span>

@@ -28,6 +28,9 @@ const horarios = Array.from({ length: 48 }, (_, index) => {
   const hours = Math.floor(index / 2);
   return `${String(hours).padStart(2, "0")}:${index % 2 === 0 ? "00" : "30"}`;
 });
+const membrosPresentesOptions = Array.from({ length: 100 }, (_, index) => index + 1);
+const totalPartilhasOptions = Array.from({ length: 30 }, (_, index) => index + 1);
+
 function clientId() {
   return globalThis.crypto.randomUUID();
 }
@@ -51,13 +54,12 @@ function submissionFromDraft(draft: Draft): HiddenAtaSubmission {
       }),
     ),
     visitantes: draft.visitantes.map(
-      ({ anonimo, nome, cidade }) => ({
-        anonimo,
+      ({ nome, cidade }) => ({
         nome,
         cidade,
       }),
     ),
-    ingressos: draft.ingressos.map(({ anonimo, nome }) => ({ anonimo, nome })),
+    ingressos: draft.ingressos.map(({ nome, cidade }) => ({ nome, cidade })),
     trocas_chaveiro: draft.trocas_chaveiro.map(({ tempo_limpo, quantidade }) => ({
       tempo_limpo,
       quantidade,
@@ -87,8 +89,8 @@ export function AtaForm({
       plataforma: "zoom",
       tipo_reuniao: "aberta",
       formatos: [],
-      total_membros_presentes: 0,
-      total_partilhas: 0,
+      total_membros_presentes: 10,
+      total_partilhas: 5,
     },
     servidores: [],
     participacao: [],
@@ -254,34 +256,46 @@ export function AtaForm({
       <section className="card form-section">
         <div className="section-heading">
           <h2>Participação</h2>
+        </div>
+        <div className="form-grid">
+          <label>
+            Membros presentes
+            <select required value={draft.ata.total_membros_presentes} onChange={(event) => setDraft((current) => ({
+              ...current,
+              ata: { ...current.ata, total_membros_presentes: Number(event.target.value) },
+            }))}>
+              {membrosPresentesOptions.map((value) => <option key={value} value={value}>{value}</option>)}
+            </select>
+          </label>
+          <label>
+            Total de partilhas
+            <select required value={draft.ata.total_partilhas} onChange={(event) => setDraft((current) => ({
+              ...current,
+              ata: { ...current.ata, total_partilhas: Number(event.target.value) },
+            }))}>
+              {totalPartilhasOptions.map((value) => <option key={value} value={value}>{value}</option>)}
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section className="card form-section">
+        <div className="section-heading">
+          <h2>Localidade - Cidades (UF)</h2>
           <button type="button" className="secondary" onClick={() => setDraft((current) => ({
             ...current,
             participacao: [...current.participacao, { clientId: clientId(), localidade: "", presencas: 1 }],
-          }))}>Adicionar localidade</button>
+          }))}>Adicionar cidade</button>
         </div>
-        <label className="narrow-field">
-          Total de membros presentes
-          <input type="number" required min={0} step={1} value={draft.ata.total_membros_presentes} onChange={(event) => setDraft((current) => ({
-            ...current,
-            ata: { ...current.ata, total_membros_presentes: Number(event.target.value) },
-          }))} />
-        </label>
-        <label className="narrow-field">
-          Total de partilhas
-          <input type="number" required min={0} step={1} value={draft.ata.total_partilhas} onChange={(event) => setDraft((current) => ({
-            ...current,
-            ata: { ...current.ata, total_partilhas: Number(event.target.value) },
-          }))} />
-        </label>
         {draft.participacao.map((item, index) => (
           <div className="repeat-block" key={item.clientId}>
             <div className="form-grid">
-              <label htmlFor={`participation-city-${item.clientId}`}>Localidade<MunicipioAutocomplete id={`participation-city-${item.clientId}`} value={item.localidade} onChange={(value) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, localidade: value } : entry) }))} /></label>
-              <label>Presenças<input type="number" required min={1} step={1} value={item.presencas} onChange={(event) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, presencas: Number(event.target.value) } : entry) }))} /></label>
+              <label htmlFor={`participation-city-${item.clientId}`}>Cidade<MunicipioAutocomplete id={`participation-city-${item.clientId}`} placeholder="digite a cidade aqui" value={item.localidade} onChange={(value) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, localidade: value } : entry) }))} /></label>
+              <label>Quantidade<input type="number" required min={1} step={1} value={item.presencas} onChange={(event) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, presencas: Number(event.target.value) } : entry) }))} /></label>
             </div>
             <div className="row-actions">
-              <button type="button" className="icon-button" disabled={index === 0} onClick={() => setDraft((current) => ({ ...current, participacao: move(current.participacao, index, -1) }))} aria-label="Mover localidade para cima">↑</button>
-              <button type="button" className="icon-button" disabled={index === draft.participacao.length - 1} onClick={() => setDraft((current) => ({ ...current, participacao: move(current.participacao, index, 1) }))} aria-label="Mover localidade para baixo">↓</button>
+              <button type="button" className="icon-button" disabled={index === 0} onClick={() => setDraft((current) => ({ ...current, participacao: move(current.participacao, index, -1) }))} aria-label="Mover cidade para cima">↑</button>
+              <button type="button" className="icon-button" disabled={index === draft.participacao.length - 1} onClick={() => setDraft((current) => ({ ...current, participacao: move(current.participacao, index, 1) }))} aria-label="Mover cidade para baixo">↓</button>
               <button type="button" className="danger-button" onClick={() => setDraft((current) => ({ ...current, participacao: current.participacao.filter((entry) => entry.clientId !== item.clientId) }))}>Remover</button>
             </div>
           </div>
@@ -293,26 +307,14 @@ export function AtaForm({
           <h2>Visitantes</h2>
           <button type="button" className="secondary" onClick={() => setDraft((current) => ({
             ...current,
-            visitantes: [...current.visitantes, { clientId: clientId(), anonimo: true, nome: "", cidade: "" }],
+            visitantes: [...current.visitantes, { clientId: clientId(), nome: "", cidade: "" }],
           }))}>Adicionar visitante</button>
         </div>
         {draft.visitantes.map((item, index) => (
           <div className="repeat-block" key={item.clientId}>
             <div className="form-grid">
-              <label className="choice">
-                <input
-                  type="checkbox"
-                  checked={!item.anonimo}
-                  onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, anonimo: !event.target.checked, nome: event.target.checked ? entry.nome : "" } : entry) }))}
-                />
-                Informar nome
-              </label>
-              {item.anonimo ? (
-                <div><span className="muted">Anônimo</span></div>
-              ) : (
-                <label>Nome<input required value={item.nome ?? ""} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, nome: event.target.value } : entry) }))} /></label>
-              )}
-              <label htmlFor={`city-${item.clientId}`}>Cidade<MunicipioAutocomplete id={`city-${item.clientId}`} value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
+              <label>Nome<input value={item.nome ?? ""} placeholder="Anonimo" onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, nome: event.target.value } : entry) }))} /></label>
+              <label htmlFor={`city-${item.clientId}`}>Cidade<MunicipioAutocomplete id={`city-${item.clientId}`} placeholder="digite a cidade aqui" value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
             </div>
             <div className="row-actions">
               <button type="button" className="icon-button" disabled={index === 0} onClick={() => setDraft((current) => ({ ...current, visitantes: move(current.visitantes, index, -1) }))} aria-label="Mover visitante para cima">↑</button>
@@ -328,24 +330,15 @@ export function AtaForm({
           <h2>Ingressos</h2>
           <button type="button" className="secondary" onClick={() => setDraft((current) => ({
             ...current,
-            ingressos: [...current.ingressos, { clientId: clientId(), anonimo: true, nome: "" }],
+            ingressos: [...current.ingressos, { clientId: clientId(), nome: "", cidade: "" }],
           }))}>Adicionar ingresso</button>
         </div>
         {draft.ingressos.map((item, index) => (
-          <div className="repeat-row" key={item.clientId}>
-            <label className="choice">
-              <input
-                type="checkbox"
-                checked={!item.anonimo}
-                onChange={(event) => setDraft((current) => ({ ...current, ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId ? { ...entry, anonimo: !event.target.checked, nome: event.target.checked ? entry.nome : "" } : entry) }))}
-              />
-              Informar nome
-            </label>
-            {item.anonimo ? (
-              <div><span className="muted">Anônimo</span></div>
-            ) : (
-              <label>Nome<input required value={item.nome ?? ""} onChange={(event) => setDraft((current) => ({ ...current, ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId ? { ...entry, nome: event.target.value } : entry) }))} /></label>
-            )}
+          <div className="repeat-block" key={item.clientId}>
+            <div className="form-grid">
+              <label>Nome<input value={item.nome ?? ""} placeholder="Anonimo" onChange={(event) => setDraft((current) => ({ ...current, ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId ? { ...entry, nome: event.target.value } : entry) }))} /></label>
+              <label htmlFor={`ingresso-city-${item.clientId}`}>Cidade<MunicipioAutocomplete id={`ingresso-city-${item.clientId}`} placeholder="digite a cidade aqui" value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
+            </div>
             <div className="row-actions">
               <button type="button" className="icon-button" disabled={index === 0} onClick={() => setDraft((current) => ({ ...current, ingressos: move(current.ingressos, index, -1) }))} aria-label="Mover ingresso para cima">↑</button>
               <button type="button" className="icon-button" disabled={index === draft.ingressos.length - 1} onClick={() => setDraft((current) => ({ ...current, ingressos: move(current.ingressos, index, 1) }))} aria-label="Mover ingresso para baixo">↓</button>
@@ -357,7 +350,7 @@ export function AtaForm({
 
       <section className="card form-section">
         <div className="section-heading">
-          <h2>Trocas de chaveiro</h2>
+          <h2>Troca de ficha</h2>
           <button type="button" className="secondary" onClick={() => setDraft((current) => ({
             ...current,
             trocas_chaveiro: [...current.trocas_chaveiro, { clientId: clientId(), tempo_limpo: "1M", quantidade: 1 }],
@@ -400,13 +393,13 @@ export function AtaForm({
             <div className="review-lists">
               <h3>Servidores ({draft.servidores.length})</h3>
               <ol>{draft.servidores.map((item) => <li key={item.clientId}>{item.nome}</li>)}</ol>
-              <h3>Participação ({draft.participacao.length})</h3>
-              <ul>{draft.participacao.map((item) => <li key={item.clientId}>{item.localidade} · {item.presencas} presenças</li>)}</ul>
+              <h3>Localidade - Cidades (UF) ({draft.participacao.length})</h3>
+              <ul>{draft.participacao.map((item) => <li key={item.clientId}>{item.localidade} · {item.presencas}</li>)}</ul>
               <h3>Visitantes ({draft.visitantes.length})</h3>
-              <ul>{draft.visitantes.map((item) => <li key={item.clientId}>{item.anonimo ? "Anônimo" : item.nome} · {item.cidade}</li>)}</ul>
+              <ul>{draft.visitantes.map((item) => <li key={item.clientId}>{item.nome?.trim() || "Anonimo"} · {item.cidade}</li>)}</ul>
               <h3>Ingressos ({draft.ingressos.length})</h3>
-              <ul>{draft.ingressos.map((item) => <li key={item.clientId}>{item.anonimo ? "Anônimo" : item.nome}</li>)}</ul>
-              <h3>Trocas de chaveiro ({draft.trocas_chaveiro.reduce((total, item) => total + item.quantidade, 0)})</h3>
+              <ul>{draft.ingressos.map((item) => <li key={item.clientId}>{item.nome?.trim() || "Anonimo"} · {item.cidade}</li>)}</ul>
+              <h3>Troca de ficha ({draft.trocas_chaveiro.reduce((total, item) => total + item.quantidade, 0)})</h3>
               <ul>{draft.trocas_chaveiro.map((item) => <li key={item.clientId}>{tempoLimpoMapping.toSheet(item.tempo_limpo)} · {item.quantidade}</li>)}</ul>
             </div>
             {actionState.error && <p className="form-error" role="alert">{actionState.error}</p>}

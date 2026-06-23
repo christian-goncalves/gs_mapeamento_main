@@ -154,6 +154,6 @@ Critério de aceite:
   Ingressos e Troca de ficha.
 - [x] Etapa 2: ajustar contrato de dados e reconciliação Sheets para
   `ingressos.cidade`.
-- [ ] Etapa 3: reorganizar a tela de criação conforme as novas seções e regras.
-- [ ] Etapa 4: ajustar revisão final e detalhe somente leitura.
+- [x] Etapa 3: reorganizar a tela de criação conforme as novas seções e regras.
+- [x] Etapa 4: ajustar revisão final e detalhe somente leitura.
 - [ ] Etapa 5: validar em DEV com ata real e registrar evidência.

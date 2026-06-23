@@ -62,7 +62,7 @@ export default async function AtaDetailPage({
           <div><dt>Países</dt><dd>{indicadores.total_paises}</dd></div>
           <div><dt>Visitantes</dt><dd>{indicadores.total_visitantes}</dd></div>
           <div><dt>Ingressos</dt><dd>{indicadores.total_ingressos}</dd></div>
-          <div><dt>Trocas</dt><dd>{indicadores.total_trocas_chaveiro}</dd></div>
+          <div><dt>Fichas</dt><dd>{indicadores.total_trocas_chaveiro}</dd></div>
           <div><dt>Sem localidade</dt><dd>{indicadores.membros_sem_localidade}</dd></div>
         </dl>
       </section>
@@ -106,14 +106,14 @@ export default async function AtaDetailPage({
         <h2>Ingressos</h2>
         {registro.ingressos.length === 0 ? <p className="muted">Nenhum ingresso informado.</p> : (
           <ul className="list">
-            {registro.ingressos.map((entry) => <li key={entry.ingresso_id}>{entry.nome}</li>)}
+            {registro.ingressos.map((entry) => <li key={entry.ingresso_id}>{entry.nome} · {entry.cidade}</li>)}
           </ul>
         )}
       </section>
 
       <section className="card">
-        <h2>Trocas de chaveiro</h2>
-        {registro.trocas_chaveiro.length === 0 ? <p className="muted">Nenhuma troca informada.</p> : (
+        <h2>Troca de ficha</h2>
+        {registro.trocas_chaveiro.length === 0 ? <p className="muted">Nenhuma troca de ficha informada.</p> : (
           <ul className="list">
             {registro.trocas_chaveiro.map((entry) => <li key={entry.troca_chaveiro_id}>{tempoLimpoMapping.toSheet(entry.tempo_limpo)} · {entry.quantidade}</li>)}
           </ul>
