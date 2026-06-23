@@ -1,6 +1,6 @@
 # Visualização do modelo de dados
 
-O arquivo [`modelo-de-dados.dbml`](modelo-de-dados.dbml) representa as seis abas do Google Sheets como um
+O arquivo [`modelo-de-dados.dbml`](modelo-de-dados.dbml) representa as sete abas do Google Sheets como um
 modelo relacional. Ele serve para visualizar e exportar o desenho; não significa
 que o MVP utilizará um banco de dados relacional.
 
@@ -11,7 +11,7 @@ que o MVP utilizará um banco de dados relacional.
 3. Escolha o formato **DBML**.
 4. Abra `docs/arquitetura/modelo-de-dados.dbml` neste projeto.
 5. Copie todo o conteúdo para o editor do dbdiagram.io.
-6. Confirme que as seis tabelas e os cinco relacionamentos foram renderizados.
+6. Confirme que as sete tabelas e os seis relacionamentos foram renderizados.
 
 ## Organização sugerida
 
@@ -19,7 +19,7 @@ Posicione `atas` no centro e distribua:
 
 - `grupos` à esquerda de `atas`;
 - `servidores` e `participacao` acima e abaixo de `atas`;
-- `visitantes` e `trocas_chaveiro` à direita de `atas`.
+- `visitantes`, `ingressos` e `trocas_chaveiro` à direita de `atas`.
 
 O resultado deve mostrar:
 
@@ -27,6 +27,7 @@ O resultado deve mostrar:
 - `atas` 1:N `servidores`;
 - `atas` 1:N `participacao`;
 - `atas` 1:N `visitantes`;
+- `atas` 1:N `ingressos`;
 - `atas` 1:N `trocas_chaveiro`.
 
 ## Exportar ou capturar

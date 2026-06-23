@@ -14,6 +14,7 @@ const submission = {
     tipo_reuniao: "aberta",
     formatos: ["partilha"],
     total_membros_presentes: 3,
+    total_partilhas: 1,
   },
   servidores: [{ nome: "Primeiro" }, { nome: "Segundo" }],
   participacao: [
@@ -32,7 +33,8 @@ const submission = {
       origem_contato: "internet",
     },
   ],
-  trocas_chaveiro: [{ tempo_limpo: "dias_30" }],
+  ingressos: [{ nome: "Anonimo" }],
+  trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 2 }],
 } satisfies AtaSubmission;
 const group = {
   grupo_id: grupoId,
@@ -80,6 +82,14 @@ describe("envio imutável", () => {
       ata_id: registro.ata.ata_id,
       created_at: "2026-06-22T12:00:00.000Z",
       updated_at: "2026-06-22T12:00:00.000Z",
+    });
+    expect(registro.ingressos[0]).toMatchObject({
+      ata_id: registro.ata.ata_id,
+      nome: "Anonimo",
+    });
+    expect(registro.trocas_chaveiro[0]).toMatchObject({
+      tempo_limpo: "1M",
+      quantidade: 2,
     });
   });
 });

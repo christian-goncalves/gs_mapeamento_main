@@ -25,6 +25,7 @@ const ata = {
   tipo_reuniao: "aberta" as const,
   formatos: ["partilha" as const],
   total_membros_presentes: 3,
+  total_partilhas: 1,
   ...audit,
 };
 
@@ -81,11 +82,20 @@ function baseRows(): ParsedContractRows {
         ...audit,
       }),
     ],
+    ingressos: [
+      valid("ingressos", 2, {
+        ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d",
+        ata_id: ataId,
+        nome: "Anonimo",
+        ...audit,
+      }),
+    ],
     trocas_chaveiro: [
       valid("trocas_chaveiro", 2, {
         troca_chaveiro_id: "e13f1e7e-e67e-4482-a5e0-897bb52a50d5",
         ata_id: ataId,
-        tempo_limpo: "dias_30" as const,
+        tempo_limpo: "1M" as const,
+        quantidade: 2,
         ...audit,
       }),
     ],
@@ -103,14 +113,17 @@ describe("leitura agregada", () => {
         servidores: [{ nome: "Maria" }],
         participacao: [{ presencas: 2 }],
         visitantes: [{ nome: "João" }],
-        trocas_chaveiro: [{ tempo_limpo: "dias_30" }],
+        ingressos: [{ nome: "Anonimo" }],
+        trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 2 }],
       },
       indicadores: {
         total_localidades: 1,
         total_estados: 1,
         total_paises: 1,
         total_visitantes: 1,
-        total_trocas_chaveiro: 1,
+        total_ingressos: 1,
+        total_partilhas: 1,
+        total_trocas_chaveiro: 2,
         membros_sem_localidade: 1,
       },
     });
@@ -123,6 +136,23 @@ describe("leitura agregada", () => {
     expect(result.atas[0].indicadores.total_visitantes).toBe(1);
     expect(result.diagnostics).toContainEqual(
       expect.objectContaining({ sheet: "visitantes", rowNumber: 9, field: "cidade" }),
+    );
+  });
+
+  it("rejeita ingresso órfão sem afetar membros sem localidade", () => {
+    const rows = baseRows();
+    if (!rows.ingressos[0].valid) throw new Error("Fixture inválido.");
+    rows.ingressos[0] = valid("ingressos", 10, {
+      ...rows.ingressos[0].data,
+      ata_id: "2bed9d1b-7fea-4cf4-9497-f0ccbcead41c",
+    });
+    const result = aggregateContractRows(rows);
+    expect(result.atas[0].indicadores).toMatchObject({
+      total_ingressos: 0,
+      membros_sem_localidade: 1,
+    });
+    expect(result.diagnostics).toContainEqual(
+      expect.objectContaining({ sheet: "ingressos", rowNumber: 10, field: "ata_id" }),
     );
   });
 

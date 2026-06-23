@@ -5,6 +5,7 @@ google-api_drive-sheets-gmail-docs/
 credentials/
 secrets/
 docs/GS_Mapeamento.json
+gs_mapeamento_vercel.json
 *.key
 *.pem
 

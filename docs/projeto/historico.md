@@ -125,3 +125,51 @@ canônico.
   inalterada.
 - A suíte alcançou 74 testes aprovados; lint, TypeScript e build Webpack de
   produção com limite de memória também foram aprovados.
+
+## 23 de junho de 2026 — Refatoracao ATA Full backend
+
+- Diagnostico do modelo de ATA registrado em
+  `docs/projeto/diagnostico-modelo-ata.md`.
+- O backend passou a aceitar `total_partilhas` na aba `atas`.
+- A entidade `ingressos` foi adicionada como aba propria, com uma linha por
+  pessoa e `total_ingressos` derivado por contagem de linhas validas.
+- Trocas de chaveiro passaram a persistir `tempo_limpo` e `quantidade`.
+- Os codigos internos/persistidos de `tempo_limpo` passaram para `1M`, `2M`,
+  `3M`, `6M`, `9M`, `12M`, `18M` e `MULTIPLOS_ANOS`.
+- Leitura agregada, detalhe, listagem, escrita atomica, contrato Sheets,
+  scripts de reconciliacao e DBML foram atualizados para o modelo full.
+- Atas continuam imutaveis; nenhuma rota ou Server Action de edicao foi criada.
+- A suite alcancou 83 testes aprovados; lint e build de producao foram
+  aprovados antes do proximo tiro.
+
+## 23 de junho de 2026 — Frontend hidden do modelo ATA Full
+
+- O formulario de criacao passou a enviar payload hidden aceito pela Server
+  Action e normalizado no backend para o contrato full.
+- Participacao passou a exibir somente localidade controlada e presencas; o
+  backend deriva `estado=UF` e `pais=Brasil`.
+- Visitantes passaram a exibir somente nome anonimo/opcional e cidade; o
+  backend persiste `categoria=outro` e `origem_contato=outro`.
+- Ingressos foram adicionados entre Visitantes e Trocas de chaveiro, com uma
+  linha por pessoa e suporte a anonimato.
+- A UI mostra `Anônimo` e o backend persiste exatamente `Anonimo`
+  sem acento.
+- Trocas de chaveiro passaram a exibir `tempo_limpo` e `quantidade`.
+- O resumo de confirmacao exibe membros, partilhas, participacao, visitantes,
+  ingressos e trocas com quantidade.
+- O caso real `20 presentes; Itajai=8, Brusque=4, Joinville=3` foi coberto em
+  teste e calcula `membros_sem_localidade=5`.
+- A suite alcancou 87 testes aprovados; lint e build de producao foram
+  aprovados no encerramento da fase.
+
+## 23 de junho de 2026 — Reconciliação Sheets ATA Full
+
+- DEV e PROD foram reconciliadas para o contrato ATA Full com sete abas.
+- As duas planilhas receberam a aba `ingressos`.
+- As duas planilhas receberam a coluna `atas.total_partilhas`.
+- As duas planilhas receberam a coluna `trocas_chaveiro.quantidade`.
+- O resultado resumido da reconciliação foi
+  `createdSheets=["ingressos"]` e
+  `addedColumns=[atas.total_partilhas, trocas_chaveiro.quantidade]`.
+- A verificação read-only confirmou as abas `grupos`, `atas`, `servidores`,
+  `participacao`, `visitantes`, `trocas_chaveiro` e `ingressos` em DEV e PROD.

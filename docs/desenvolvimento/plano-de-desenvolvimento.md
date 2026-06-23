@@ -11,7 +11,7 @@ O estado das tarefas pertence exclusivamente ao
 
 ## Fase 1 — Contrato e modelo
 
-Harmonizar contratos, DBML, cabeçalhos e validações das seis abas.
+Harmonizar contratos, DBML, cabeçalhos e validações das abas do contrato.
 
 Critério de aceite: documentos e Sheets descrevem as mesmas entidades, campos,
 valores e relações.
@@ -34,7 +34,7 @@ inválidos informam aba, linha e campo.
 
 ## Fase 4 — Leitura agregada
 
-Reconstruir atas completas pelas seis abas e calcular indicadores somente com
+Reconstruir atas completas pelas abas do contrato e calcular indicadores somente com
 registros válidos.
 
 Critério de aceite: listagem e detalhe somente leitura representam a planilha e
@@ -51,7 +51,7 @@ aplicação.
 
 ## Fase 6 — Política de edição manual
 
-Implementar reconciliação idempotente das proteções das seis abas conforme a
+Implementar reconciliação idempotente das proteções das abas do contrato conforme a
 configuração server-only.
 
 Critério de aceite: estado real das proteções corresponde à configuração e o

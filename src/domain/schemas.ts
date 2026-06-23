@@ -39,6 +39,7 @@ export const ataSchema = z.object({
   tipo_reuniao: z.enum(tipoReuniaoMapping.codes),
   formatos: z.array(z.enum(formatoMapping.codes)).min(1),
   total_membros_presentes: z.number().int().min(0),
+  total_partilhas: z.number().int().min(0),
   ...auditFields,
 });
 
@@ -90,10 +91,18 @@ export const visitanteSchema = z.object({
   ...auditFields,
 });
 
+export const ingressoSchema = z.object({
+  ingresso_id: uuid,
+  ata_id: uuid,
+  nome: requiredText,
+  ...auditFields,
+});
+
 export const trocaChaveiroSchema = z.object({
   troca_chaveiro_id: uuid,
   ata_id: uuid,
   tempo_limpo: z.enum(tempoLimpoMapping.codes),
+  quantidade: z.number().int().min(1),
   ...auditFields,
 });
 
@@ -102,4 +111,5 @@ export type Ata = z.infer<typeof ataSchema>;
 export type Servidor = z.infer<typeof servidorSchema>;
 export type Participacao = z.infer<typeof participacaoSchema>;
 export type Visitante = z.infer<typeof visitanteSchema>;
+export type Ingresso = z.infer<typeof ingressoSchema>;
 export type TrocaChaveiro = z.infer<typeof trocaChaveiroSchema>;

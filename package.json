@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "municipios:update": "node scripts/update-municipios.mjs",
-    "sheets:reconcile-contract": "node --env-file=.env.local scripts/reconcile-sheet-validations.mjs",
+    "sheets:reconcile-contract": "tsx --env-file=.env.local scripts/reconcile-sheet-contract.ts",
     "sheets:reconcile-protections": "tsx --env-file=.env.local scripts/reconcile-sheet-protections.ts"
   },
   "dependencies": {

@@ -1,11 +1,9 @@
 "use client";
 
 import { useActionState, useRef, useState } from "react";
-import type { AtaSubmission } from "@/domain/form-schemas";
+import type { HiddenAtaSubmission } from "@/domain/hidden-submission";
 import {
-  categoriaVisitanteMapping,
   formatoMapping,
-  origemContatoMapping,
   plataformaMapping,
   tempoLimpoMapping,
   tipoReuniaoMapping,
@@ -15,13 +13,14 @@ import { MunicipioAutocomplete } from "./municipio-autocomplete";
 
 type ClientRow = { clientId: string };
 type Draft = Omit<
-  AtaSubmission,
-  "servidores" | "participacao" | "visitantes" | "trocas_chaveiro"
+  HiddenAtaSubmission,
+  "servidores" | "participacao" | "visitantes" | "ingressos" | "trocas_chaveiro"
 > & {
-  servidores: (AtaSubmission["servidores"][number] & ClientRow)[];
-  participacao: (AtaSubmission["participacao"][number] & ClientRow)[];
-  visitantes: (AtaSubmission["visitantes"][number] & ClientRow)[];
-  trocas_chaveiro: (AtaSubmission["trocas_chaveiro"][number] & ClientRow)[];
+  servidores: (HiddenAtaSubmission["servidores"][number] & ClientRow)[];
+  participacao: (HiddenAtaSubmission["participacao"][number] & ClientRow)[];
+  visitantes: (HiddenAtaSubmission["visitantes"][number] & ClientRow)[];
+  ingressos: (HiddenAtaSubmission["ingressos"][number] & ClientRow)[];
+  trocas_chaveiro: (HiddenAtaSubmission["trocas_chaveiro"][number] & ClientRow)[];
 };
 
 const initialActionState: CreateAtaState = {};
@@ -29,12 +28,6 @@ const horarios = Array.from({ length: 48 }, (_, index) => {
   const hours = Math.floor(index / 2);
   return `${String(hours).padStart(2, "0")}:${index % 2 === 0 ? "00" : "30"}`;
 });
-const ufs = [
-  "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS",
-  "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC",
-  "SP", "SE", "TO",
-];
-
 function clientId() {
   return globalThis.crypto.randomUUID();
 }
@@ -47,28 +40,27 @@ function move<T>(items: T[], index: number, direction: -1 | 1) {
   return next;
 }
 
-function submissionFromDraft(draft: Draft): AtaSubmission {
+function submissionFromDraft(draft: Draft): HiddenAtaSubmission {
   return {
     ata: draft.ata,
     servidores: draft.servidores.map(({ nome }) => ({ nome })),
     participacao: draft.participacao.map(
-      ({ localidade, estado, pais, presencas }) => ({
+      ({ localidade, presencas }) => ({
         localidade,
-        estado,
-        pais,
         presencas,
       }),
     ),
     visitantes: draft.visitantes.map(
-      ({ nome, cidade, categoria, origem_contato }) => ({
+      ({ anonimo, nome, cidade }) => ({
+        anonimo,
         nome,
         cidade,
-        categoria,
-        origem_contato,
       }),
     ),
-    trocas_chaveiro: draft.trocas_chaveiro.map(({ tempo_limpo }) => ({
+    ingressos: draft.ingressos.map(({ anonimo, nome }) => ({ anonimo, nome })),
+    trocas_chaveiro: draft.trocas_chaveiro.map(({ tempo_limpo, quantidade }) => ({
       tempo_limpo,
+      quantidade,
     })),
   };
 }
@@ -96,10 +88,12 @@ export function AtaForm({
       tipo_reuniao: "aberta",
       formatos: [],
       total_membros_presentes: 0,
+      total_partilhas: 0,
     },
     servidores: [],
     participacao: [],
     visitantes: [],
+    ingressos: [],
     trocas_chaveiro: [],
   });
   const submission = submissionFromDraft(draft);
@@ -262,7 +256,7 @@ export function AtaForm({
           <h2>Participação</h2>
           <button type="button" className="secondary" onClick={() => setDraft((current) => ({
             ...current,
-            participacao: [...current.participacao, { clientId: clientId(), localidade: "", estado: "", pais: "Brasil", presencas: 1 }],
+            participacao: [...current.participacao, { clientId: clientId(), localidade: "", presencas: 1 }],
           }))}>Adicionar localidade</button>
         </div>
         <label className="narrow-field">
@@ -272,16 +266,17 @@ export function AtaForm({
             ata: { ...current.ata, total_membros_presentes: Number(event.target.value) },
           }))} />
         </label>
-        <datalist id="country-suggestions">
-          <option value="Brasil" /><option value="Argentina" /><option value="Chile" />
-          <option value="Estados Unidos" /><option value="Portugal" /><option value="Uruguai" />
-        </datalist>
+        <label className="narrow-field">
+          Total de partilhas
+          <input type="number" required min={0} step={1} value={draft.ata.total_partilhas} onChange={(event) => setDraft((current) => ({
+            ...current,
+            ata: { ...current.ata, total_partilhas: Number(event.target.value) },
+          }))} />
+        </label>
         {draft.participacao.map((item, index) => (
           <div className="repeat-block" key={item.clientId}>
-            <div className="form-grid four-columns">
-              <label>Localidade<input required value={item.localidade} onChange={(event) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, localidade: event.target.value } : entry) }))} /></label>
-              <label>País<input required list="country-suggestions" value={item.pais} onChange={(event) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, pais: event.target.value, estado: event.target.value === "Brasil" ? entry.estado : "" } : entry) }))} /></label>
-              <label>Estado<select required={item.pais === "Brasil"} disabled={item.pais !== "Brasil"} value={item.estado} onChange={(event) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, estado: event.target.value } : entry) }))}><option value="">Selecione</option>{ufs.map((uf) => <option key={uf}>{uf}</option>)}</select></label>
+            <div className="form-grid">
+              <label htmlFor={`participation-city-${item.clientId}`}>Localidade<MunicipioAutocomplete id={`participation-city-${item.clientId}`} value={item.localidade} onChange={(value) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, localidade: value } : entry) }))} /></label>
               <label>Presenças<input type="number" required min={1} step={1} value={item.presencas} onChange={(event) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, presencas: Number(event.target.value) } : entry) }))} /></label>
             </div>
             <div className="row-actions">
@@ -298,16 +293,26 @@ export function AtaForm({
           <h2>Visitantes</h2>
           <button type="button" className="secondary" onClick={() => setDraft((current) => ({
             ...current,
-            visitantes: [...current.visitantes, { clientId: clientId(), nome: "", cidade: "", categoria: "outro", origem_contato: "outro" }],
+            visitantes: [...current.visitantes, { clientId: clientId(), anonimo: true, nome: "", cidade: "" }],
           }))}>Adicionar visitante</button>
         </div>
         {draft.visitantes.map((item, index) => (
           <div className="repeat-block" key={item.clientId}>
-            <div className="form-grid four-columns">
-              <label>Nome<input required value={item.nome} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, nome: event.target.value } : entry) }))} /></label>
+            <div className="form-grid">
+              <label className="choice">
+                <input
+                  type="checkbox"
+                  checked={!item.anonimo}
+                  onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, anonimo: !event.target.checked, nome: event.target.checked ? entry.nome : "" } : entry) }))}
+                />
+                Informar nome
+              </label>
+              {item.anonimo ? (
+                <div><span className="muted">Anônimo</span></div>
+              ) : (
+                <label>Nome<input required value={item.nome ?? ""} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, nome: event.target.value } : entry) }))} /></label>
+              )}
               <label htmlFor={`city-${item.clientId}`}>Cidade<MunicipioAutocomplete id={`city-${item.clientId}`} value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
-              <label>Categoria<select value={item.categoria} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, categoria: event.target.value as typeof entry.categoria } : entry) }))}>{categoriaVisitanteMapping.codes.map((code) => <option key={code} value={code}>{categoriaVisitanteMapping.toSheet(code)}</option>)}</select></label>
-              <label>Origem<select value={item.origem_contato} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, origem_contato: event.target.value as typeof entry.origem_contato } : entry) }))}>{origemContatoMapping.codes.map((code) => <option key={code} value={code}>{origemContatoMapping.toSheet(code)}</option>)}</select></label>
             </div>
             <div className="row-actions">
               <button type="button" className="icon-button" disabled={index === 0} onClick={() => setDraft((current) => ({ ...current, visitantes: move(current.visitantes, index, -1) }))} aria-label="Mover visitante para cima">↑</button>
@@ -320,15 +325,48 @@ export function AtaForm({
 
       <section className="card form-section">
         <div className="section-heading">
+          <h2>Ingressos</h2>
+          <button type="button" className="secondary" onClick={() => setDraft((current) => ({
+            ...current,
+            ingressos: [...current.ingressos, { clientId: clientId(), anonimo: true, nome: "" }],
+          }))}>Adicionar ingresso</button>
+        </div>
+        {draft.ingressos.map((item, index) => (
+          <div className="repeat-row" key={item.clientId}>
+            <label className="choice">
+              <input
+                type="checkbox"
+                checked={!item.anonimo}
+                onChange={(event) => setDraft((current) => ({ ...current, ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId ? { ...entry, anonimo: !event.target.checked, nome: event.target.checked ? entry.nome : "" } : entry) }))}
+              />
+              Informar nome
+            </label>
+            {item.anonimo ? (
+              <div><span className="muted">Anônimo</span></div>
+            ) : (
+              <label>Nome<input required value={item.nome ?? ""} onChange={(event) => setDraft((current) => ({ ...current, ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId ? { ...entry, nome: event.target.value } : entry) }))} /></label>
+            )}
+            <div className="row-actions">
+              <button type="button" className="icon-button" disabled={index === 0} onClick={() => setDraft((current) => ({ ...current, ingressos: move(current.ingressos, index, -1) }))} aria-label="Mover ingresso para cima">↑</button>
+              <button type="button" className="icon-button" disabled={index === draft.ingressos.length - 1} onClick={() => setDraft((current) => ({ ...current, ingressos: move(current.ingressos, index, 1) }))} aria-label="Mover ingresso para baixo">↓</button>
+              <button type="button" className="danger-button" onClick={() => setDraft((current) => ({ ...current, ingressos: current.ingressos.filter((entry) => entry.clientId !== item.clientId) }))}>Remover</button>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <section className="card form-section">
+        <div className="section-heading">
           <h2>Trocas de chaveiro</h2>
           <button type="button" className="secondary" onClick={() => setDraft((current) => ({
             ...current,
-            trocas_chaveiro: [...current.trocas_chaveiro, { clientId: clientId(), tempo_limpo: "dias_30" }],
+            trocas_chaveiro: [...current.trocas_chaveiro, { clientId: clientId(), tempo_limpo: "1M", quantidade: 1 }],
           }))}>Adicionar troca</button>
         </div>
         {draft.trocas_chaveiro.map((item, index) => (
           <div className="repeat-row" key={item.clientId}>
             <label>Tempo limpo<select value={item.tempo_limpo} onChange={(event) => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.map((entry) => entry.clientId === item.clientId ? { ...entry, tempo_limpo: event.target.value as typeof entry.tempo_limpo } : entry) }))}>{tempoLimpoMapping.codes.map((code) => <option key={code} value={code}>{tempoLimpoMapping.toSheet(code)}</option>)}</select></label>
+            <label>Quantidade<input type="number" required min={1} step={1} value={item.quantidade} onChange={(event) => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.map((entry) => entry.clientId === item.clientId ? { ...entry, quantidade: Number(event.target.value) } : entry) }))} /></label>
             <div className="row-actions">
               <button type="button" className="icon-button" disabled={index === 0} onClick={() => setDraft((current) => ({ ...current, trocas_chaveiro: move(current.trocas_chaveiro, index, -1) }))} aria-label="Mover troca para cima">↑</button>
               <button type="button" className="icon-button" disabled={index === draft.trocas_chaveiro.length - 1} onClick={() => setDraft((current) => ({ ...current, trocas_chaveiro: move(current.trocas_chaveiro, index, 1) }))} aria-label="Mover troca para baixo">↓</button>
@@ -357,16 +395,19 @@ export function AtaForm({
               <div><dt>Tipo</dt><dd>{tipoReuniaoMapping.toSheet(draft.ata.tipo_reuniao)}</dd></div>
               <div><dt>Formatos</dt><dd>{draft.ata.formatos.map((code) => formatoMapping.toSheet(code)).join(", ")}</dd></div>
               <div><dt>Membros presentes</dt><dd>{draft.ata.total_membros_presentes}</dd></div>
+              <div><dt>Partilhas</dt><dd>{draft.ata.total_partilhas}</dd></div>
             </dl>
             <div className="review-lists">
               <h3>Servidores ({draft.servidores.length})</h3>
               <ol>{draft.servidores.map((item) => <li key={item.clientId}>{item.nome}</li>)}</ol>
               <h3>Participação ({draft.participacao.length})</h3>
-              <ul>{draft.participacao.map((item) => <li key={item.clientId}>{item.localidade} · {item.estado ? `${item.estado} · ` : ""}{item.pais} · {item.presencas} presenças</li>)}</ul>
+              <ul>{draft.participacao.map((item) => <li key={item.clientId}>{item.localidade} · {item.presencas} presenças</li>)}</ul>
               <h3>Visitantes ({draft.visitantes.length})</h3>
-              <ul>{draft.visitantes.map((item) => <li key={item.clientId}>{item.nome} · {item.cidade} · {categoriaVisitanteMapping.toSheet(item.categoria)} · {origemContatoMapping.toSheet(item.origem_contato)}</li>)}</ul>
-              <h3>Trocas de chaveiro ({draft.trocas_chaveiro.length})</h3>
-              <ul>{draft.trocas_chaveiro.map((item) => <li key={item.clientId}>{tempoLimpoMapping.toSheet(item.tempo_limpo)}</li>)}</ul>
+              <ul>{draft.visitantes.map((item) => <li key={item.clientId}>{item.anonimo ? "Anônimo" : item.nome} · {item.cidade}</li>)}</ul>
+              <h3>Ingressos ({draft.ingressos.length})</h3>
+              <ul>{draft.ingressos.map((item) => <li key={item.clientId}>{item.anonimo ? "Anônimo" : item.nome}</li>)}</ul>
+              <h3>Trocas de chaveiro ({draft.trocas_chaveiro.reduce((total, item) => total + item.quantidade, 0)})</h3>
+              <ul>{draft.trocas_chaveiro.map((item) => <li key={item.clientId}>{tempoLimpoMapping.toSheet(item.tempo_limpo)} · {item.quantidade}</li>)}</ul>
             </div>
             {actionState.error && <p className="form-error" role="alert">{actionState.error}</p>}
             <div className="modal-actions">

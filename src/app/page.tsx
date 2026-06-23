@@ -57,7 +57,8 @@ export default async function HomePage() {
                     </span>
                     <span className="summary">
                       {registro.ata.total_membros_presentes} membros ·{" "}
-                      {indicadores.total_visitantes} visitantes
+                      {indicadores.total_visitantes} visitantes ·{" "}
+                      {indicadores.total_ingressos} ingressos
                     </span>
                   </Link>
                 </li>

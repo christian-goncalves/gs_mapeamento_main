@@ -32,6 +32,7 @@ describe("integridade entre linhas", () => {
       servidores: [],
       participacao: [],
       visitantes: [],
+      ingressos: [],
       trocas_chaveiro: [],
     } satisfies ContractRows;
     expect(validateContractIntegrity(rows)).toContainEqual({
@@ -51,7 +52,7 @@ describe("integridade entre linhas", () => {
           grupo_id: "2bed9d1b-7fea-4cf4-9497-f0ccbcead41c",
         }),
       ],
-      atas: [], servidores: [], participacao: [], visitantes: [], trocas_chaveiro: [],
+      atas: [], servidores: [], participacao: [], visitantes: [], ingressos: [], trocas_chaveiro: [],
     } satisfies ContractRows;
     expect(validateContractIntegrity(rows)).toEqual([
       expect.objectContaining({ sheet: "grupos", rowNumber: 3, field: "ordem" }),
@@ -75,7 +76,7 @@ describe("integridade entre linhas", () => {
           servidor_id: "dbca5f07-744f-4e9f-9169-f7f66d4cbbcc",
         }),
       ],
-      participacao: [], visitantes: [], trocas_chaveiro: [],
+      participacao: [], visitantes: [], ingressos: [], trocas_chaveiro: [],
     } satisfies ContractRows;
     expect(validateContractIntegrity(rows)).toEqual([
       expect.objectContaining({ sheet: "servidores", rowNumber: 3, field: "ordem" }),

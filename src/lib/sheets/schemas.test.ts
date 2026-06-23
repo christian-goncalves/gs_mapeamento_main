@@ -8,12 +8,15 @@ import {
 } from "@/domain/enums";
 import {
   domainAtaToSheet,
+  domainIngressoToSheet,
   domainTrocaChaveiroToSheet,
   domainVisitanteToSheet,
   sheetAtaSchema,
   sheetAtaBusinessKeySchema,
   sheetAtaToDomain,
   sheetGrupoSchema,
+  sheetIngressoSchema,
+  sheetIngressoToDomain,
   sheetParticipacaoSchema,
   sheetServidorSchema,
   sheetTrocaChaveiroSchema,
@@ -36,7 +39,8 @@ const valid = {
     ata_id: ataId, grupo_id: groupId, data_reuniao: "2026-06-21", hora_inicio: "10:30",
     plataforma: "Zoom", tipo_reuniao: "Aberta", formato_partilha: "TRUE",
     formato_estudo: "FALSE", formato_tematico: "FALSE", formato_literatura: "FALSE",
-    formato_passos: "FALSE", formato_tradicoes: "FALSE", total_membros_presentes: "3", ...audit,
+    formato_passos: "FALSE", formato_tradicoes: "FALSE", total_membros_presentes: "3",
+    total_partilhas: "2", ...audit,
   },
   servidor: {
     servidor_id: "a4e54dd9-8e3f-4d56-a932-00ea5c13fc88", ata_id: ataId,
@@ -52,7 +56,11 @@ const valid = {
   },
   troca: {
     troca_chaveiro_id: "e13f1e7e-e67e-4482-a5e0-897bb52a50d5", ata_id: ataId,
-    tempo_limpo: "30 dias", ...audit,
+    tempo_limpo: "1M", quantidade: "2", ...audit,
+  },
+  ingresso: {
+    ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d", ata_id: ataId,
+    nome: "Anonimo", ...audit,
   },
 };
 
@@ -63,6 +71,7 @@ describe("schemas das linhas do Sheets", () => {
     ["servidores", sheetServidorSchema, valid.servidor],
     ["participacao", sheetParticipacaoSchema, valid.participacao],
     ["visitantes", sheetVisitanteSchema, valid.visitante],
+    ["ingressos", sheetIngressoSchema, valid.ingresso],
     ["trocas_chaveiro", sheetTrocaChaveiroSchema, valid.troca],
   ])("aceita linha válida de %s", (_name, schema, value) => {
     expect(schema.safeParse(value).success).toBe(true);
@@ -74,7 +83,9 @@ describe("schemas das linhas do Sheets", () => {
     ["servidores", sheetServidorSchema, { ...valid.servidor, nome: "" }],
     ["participacao", sheetParticipacaoSchema, { ...valid.participacao, estado: "" }],
     ["visitantes", sheetVisitanteSchema, { ...valid.visitante, categoria: "Desconhecida" }],
+    ["ingressos", sheetIngressoSchema, { ...valid.ingresso, nome: "" }],
     ["trocas_chaveiro", sheetTrocaChaveiroSchema, { ...valid.troca, tempo_limpo: "10 dias" }],
+    ["trocas_chaveiro", sheetTrocaChaveiroSchema, { ...valid.troca, quantidade: "0" }],
   ])("rejeita linha inválida de %s", (_name, schema, value) => {
     expect(schema.safeParse(value).success).toBe(false);
   });
@@ -127,9 +138,11 @@ describe("schemas das linhas do Sheets", () => {
     }
   });
 
-  it("converte visitante e troca sem perda", () => {
+  it("converte visitante, ingresso e troca sem perda", () => {
     const visitor = sheetVisitanteSchema.parse(valid.visitante);
     expect(domainVisitanteToSheet(sheetVisitanteToDomain(visitor))).toEqual(visitor);
+    const ingresso = sheetIngressoSchema.parse(valid.ingresso);
+    expect(domainIngressoToSheet(sheetIngressoToDomain(ingresso))).toEqual(ingresso);
     const keytag = sheetTrocaChaveiroSchema.parse(valid.troca);
     expect(domainTrocaChaveiroToSheet(sheetTrocaChaveiroToDomain(keytag))).toEqual(keytag);
   });

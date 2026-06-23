@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   ataSchema,
+  ingressoSchema,
   participacaoSchema,
   servidorSchema,
   trocaChaveiroSchema,
@@ -13,6 +14,7 @@ export const ataCompletaSchema = z
     servidores: z.array(servidorSchema),
     participacao: z.array(participacaoSchema),
     visitantes: z.array(visitanteSchema),
+    ingressos: z.array(ingressoSchema),
     trocas_chaveiro: z.array(trocaChaveiroSchema),
   })
   .superRefine((registro, context) => {
@@ -21,6 +23,7 @@ export const ataCompletaSchema = z
       ...registro.servidores,
       ...registro.participacao,
       ...registro.visitantes,
+      ...registro.ingressos,
       ...registro.trocas_chaveiro,
     ];
 
@@ -81,7 +84,12 @@ export function calcularIndicadores(registro: AtaCompleta) {
     total_estados: estados.size,
     total_paises: paises.size,
     total_visitantes: registro.visitantes.length,
-    total_trocas_chaveiro: registro.trocas_chaveiro.length,
+    total_ingressos: registro.ingressos.length,
+    total_partilhas: registro.ata.total_partilhas,
+    total_trocas_chaveiro: registro.trocas_chaveiro.reduce(
+      (total, item) => total + item.quantidade,
+      0,
+    ),
     membros_sem_localidade:
       registro.ata.total_membros_presentes - presencasInformadas,
   };

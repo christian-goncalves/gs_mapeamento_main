@@ -3,6 +3,7 @@ import type { AtaCompleta } from "@/domain/rules";
 import { SHEET_HEADERS, type SheetName } from "./contract";
 import {
   domainAtaToSheet,
+  domainIngressoToSheet,
   domainParticipacaoToSheet,
   domainServidorToSheet,
   domainTrocaChaveiroToSheet,
@@ -46,6 +47,7 @@ export function buildAtomicAppendRequests(
     servidores: registro.servidores.map(domainServidorToSheet),
     participacao: registro.participacao.map(domainParticipacaoToSheet),
     visitantes: registro.visitantes.map(domainVisitanteToSheet),
+    ingressos: registro.ingressos.map(domainIngressoToSheet),
     trocas_chaveiro: registro.trocas_chaveiro.map(
       domainTrocaChaveiroToSheet,
     ),

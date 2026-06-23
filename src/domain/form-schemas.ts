@@ -27,6 +27,7 @@ export const ataFormSchema = z.object({
   tipo_reuniao: z.enum(tipoReuniaoMapping.codes),
   formatos: z.array(z.enum(formatoMapping.codes)).min(1),
   total_membros_presentes: z.number().int().min(0),
+  total_partilhas: z.number().int().min(0),
 });
 
 export const servidorFormSchema = z.object({
@@ -60,8 +61,13 @@ export const visitanteFormSchema = z.object({
   origem_contato: z.enum(origemContatoMapping.codes),
 });
 
+export const ingressoFormSchema = z.object({
+  nome: requiredText,
+});
+
 export const trocaChaveiroFormSchema = z.object({
   tempo_limpo: z.enum(tempoLimpoMapping.codes),
+  quantidade: z.number().int().min(1),
 });
 
 export const ataSubmissionSchema = z
@@ -70,6 +76,7 @@ export const ataSubmissionSchema = z
     servidores: z.array(servidorFormSchema.omit({ ordem: true })),
     participacao: z.array(participacaoFormSchema),
     visitantes: z.array(visitanteFormSchema),
+    ingressos: z.array(ingressoFormSchema),
     trocas_chaveiro: z.array(trocaChaveiroFormSchema),
   })
   .superRefine((submission, context) => {

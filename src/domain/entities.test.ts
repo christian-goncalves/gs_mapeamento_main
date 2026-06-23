@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   ataSchema,
   grupoSchema,
+  ingressoSchema,
   participacaoSchema,
   servidorSchema,
   trocaChaveiroSchema,
@@ -33,6 +34,7 @@ const valid = {
     tipo_reuniao: "aberta",
     formatos: ["partilha"],
     total_membros_presentes: 3,
+    total_partilhas: 2,
     ...audit,
   },
   servidor: {
@@ -60,10 +62,17 @@ const valid = {
     origem_contato: "internet",
     ...audit,
   },
+  ingresso: {
+    ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d",
+    ata_id: ataId,
+    nome: "Ingressante",
+    ...audit,
+  },
   troca: {
     troca_chaveiro_id: "e13f1e7e-e67e-4482-a5e0-897bb52a50d5",
     ata_id: ataId,
-    tempo_limpo: "dias_30",
+    tempo_limpo: "1M",
+    quantidade: 2,
     ...audit,
   },
 } as const;
@@ -75,6 +84,7 @@ describe("schemas de domínio", () => {
     ["servidores", servidorSchema, valid.servidor],
     ["participacao", participacaoSchema, valid.participacao],
     ["visitantes", visitanteSchema, valid.visitante],
+    ["ingressos", ingressoSchema, valid.ingresso],
     ["trocas_chaveiro", trocaChaveiroSchema, valid.troca],
   ])("aceita caso válido de %s", (_name, schema, value) => {
     expect(schema.safeParse(value).success).toBe(true);
@@ -94,10 +104,16 @@ describe("schemas de domínio", () => {
       visitanteSchema,
       { ...valid.visitante, cidade: "Inexistente - SP" },
     ],
+    ["ingressos", ingressoSchema, { ...valid.ingresso, nome: "" }],
     [
       "trocas_chaveiro",
       trocaChaveiroSchema,
       { ...valid.troca, tempo_limpo: "10 dias" },
+    ],
+    [
+      "trocas_chaveiro",
+      trocaChaveiroSchema,
+      { ...valid.troca, quantidade: 0 },
     ],
   ])("rejeita caso inválido de %s", (_name, schema, value) => {
     expect(schema.safeParse(value).success).toBe(false);
@@ -105,6 +121,10 @@ describe("schemas de domínio", () => {
 
   it("exige intervalo de meia hora", () => {
     expect(ataSchema.safeParse({ ...valid.ata, hora_inicio: "10:15" }).success).toBe(false);
+  });
+
+  it("rejeita total de partilhas negativo", () => {
+    expect(ataSchema.safeParse({ ...valid.ata, total_partilhas: -1 }).success).toBe(false);
   });
 
   it("exige estado para Brasil", () => {

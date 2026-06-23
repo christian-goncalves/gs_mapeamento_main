@@ -17,6 +17,7 @@ const registro: AtaCompleta = {
     tipo_reuniao: "aberta",
     formatos: ["partilha"],
     total_membros_presentes: 1,
+    total_partilhas: 1,
     ...audit,
   },
   servidores: [
@@ -50,11 +51,20 @@ const registro: AtaCompleta = {
       ...audit,
     },
   ],
+  ingressos: [
+    {
+      ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d",
+      ata_id: ataId,
+      nome: "Anonimo",
+      ...audit,
+    },
+  ],
   trocas_chaveiro: [
     {
       troca_chaveiro_id: "e13f1e7e-e67e-4482-a5e0-897bb52a50d5",
       ata_id: ataId,
-      tempo_limpo: "dias_30",
+      tempo_limpo: "1M",
+      quantidade: 2,
       ...audit,
     },
   ],
@@ -65,15 +75,16 @@ const sheetIds = {
   servidores: 2,
   participacao: 3,
   visitantes: 4,
-  trocas_chaveiro: 5,
+  ingressos: 5,
+  trocas_chaveiro: 6,
 };
 
 describe("lote atômico do Sheets", () => {
   it("gera um append por aba não vazia no mesmo lote", () => {
     const requests = buildAtomicAppendRequests(registro, sheetIds);
-    expect(requests).toHaveLength(5);
+    expect(requests).toHaveLength(6);
     expect(requests.map((request) => request.appendCells?.sheetId)).toEqual([
-      1, 2, 3, 4, 5,
+      1, 2, 3, 4, 5, 6,
     ]);
     expect(
       requests[0].appendCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
@@ -86,7 +97,13 @@ describe("lote atômico do Sheets", () => {
     ).toEqual({ stringValue: "Outro" });
     expect(
       requests[4].appendCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
-    ).toEqual({ stringValue: "30 dias" });
+    ).toEqual({ stringValue: "Anonimo" });
+    expect(
+      requests[5].appendCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
+    ).toEqual({ stringValue: "1M" });
+    expect(
+      requests[5].appendCells?.rows?.[0]?.values?.[3]?.userEnteredValue,
+    ).toEqual({ numberValue: 2 });
   });
 
   it("faz uma única chamada e só resolve após confirmação da API", async () => {

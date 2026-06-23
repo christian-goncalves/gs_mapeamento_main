@@ -257,6 +257,6 @@ export async function reconcileSheetProtections(
   return {
     manualEditEnabled: configuration.manualEditEnabled,
     requestCount: requests.length,
-    managedProtectionCount: configuration.manualEditEnabled ? 0 : 6,
+    managedProtectionCount: configuration.manualEditEnabled ? 0 : sheetNames.length,
   };
 }

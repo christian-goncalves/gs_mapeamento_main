@@ -100,12 +100,12 @@ describe("política de proteções do Sheets", () => {
     ]);
   });
 
-  it("com false cria uma proteção para cada uma das seis abas", async () => {
+  it("com false cria uma proteção para cada aba do contrato", async () => {
     const { client, batchUpdate } = clientWith();
     await reconcile(client, false);
 
     const requests = batchUpdate.mock.calls[0][0].requestBody.requests;
-    expect(requests).toHaveLength(6);
+    expect(requests).toHaveLength(names.length);
     expect(requests.every((request: object) => "addProtectedRange" in request))
       .toBe(true);
   });
@@ -169,7 +169,7 @@ describe("política de proteções do Sheets", () => {
     await reconcile(client, false);
 
     const requests = batchUpdate.mock.calls[0][0].requestBody.requests;
-    expect(requests).toHaveLength(6);
+    expect(requests).toHaveLength(names.length);
     expect(JSON.stringify(requests)).not.toContain("91");
   });
 

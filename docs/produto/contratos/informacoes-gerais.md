@@ -60,7 +60,9 @@ servidores.
 - `ata_id`, `created_at` e `updated_at` são gerados pelo backend.
 - `total_membros_presentes` pertence à seção Participação, embora seja
   persistido na linha principal da aba `atas`.
-- Localidades, visitantes e trocas de chaveiro ficam em suas próprias abas.
+- `total_partilhas` também é persistido na linha principal da aba `atas`.
+- Localidades, visitantes, ingressos e trocas de chaveiro ficam em suas
+  próprias abas.
 - Tema, hora de encerramento, ID manual e número da reunião não fazem parte do
   MVP.
 

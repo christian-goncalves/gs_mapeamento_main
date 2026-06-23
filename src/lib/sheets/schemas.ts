@@ -9,6 +9,7 @@ import {
 import type {
   Ata,
   Grupo,
+  Ingresso,
   Participacao,
   Servidor,
   TrocaChaveiro,
@@ -87,6 +88,7 @@ export const sheetAtaSchema = z
     formato_passos: sheetBoolean,
     formato_tradicoes: sheetBoolean,
     total_membros_presentes: sheetInteger(0),
+    total_partilhas: sheetInteger(0),
     ...auditFields,
   })
   .refine(
@@ -163,15 +165,23 @@ export const sheetTrocaChaveiroSchema = z.object({
   troca_chaveiro_id: uuid,
   ata_id: uuid,
   tempo_limpo: z.enum([
-    "30 dias",
-    "60 dias",
-    "90 dias",
-    "6 meses",
-    "9 meses",
-    "1 ano",
-    "18 meses",
-    "Múltiplos anos",
+    "1M",
+    "2M",
+    "3M",
+    "6M",
+    "9M",
+    "12M",
+    "18M",
+    "MULTIPLOS_ANOS",
   ]),
+  quantidade: sheetInteger(1),
+  ...auditFields,
+});
+
+export const sheetIngressoSchema = z.object({
+  ingresso_id: uuid,
+  ata_id: uuid,
+  nome: requiredText,
   ...auditFields,
 });
 
@@ -180,6 +190,7 @@ export type SheetAta = z.infer<typeof sheetAtaSchema>;
 export type SheetServidor = z.infer<typeof sheetServidorSchema>;
 export type SheetParticipacao = z.infer<typeof sheetParticipacaoSchema>;
 export type SheetVisitante = z.infer<typeof sheetVisitanteSchema>;
+export type SheetIngresso = z.infer<typeof sheetIngressoSchema>;
 export type SheetTrocaChaveiro = z.infer<typeof sheetTrocaChaveiroSchema>;
 
 export const sheetGrupoToDomain = (row: SheetGrupo): Grupo => row;
@@ -202,6 +213,7 @@ export function sheetAtaToDomain(row: SheetAta): Ata {
     tipo_reuniao: tipoReuniaoMapping.fromSheet(row.tipo_reuniao),
     formatos,
     total_membros_presentes: row.total_membros_presentes,
+    total_partilhas: row.total_partilhas,
     created_at: row.created_at,
     updated_at: row.updated_at,
   };
@@ -223,6 +235,7 @@ export function domainAtaToSheet(item: Ata): SheetAta {
     formato_passos: formatos.has("passos"),
     formato_tradicoes: formatos.has("tradicoes"),
     total_membros_presentes: item.total_membros_presentes,
+    total_partilhas: item.total_partilhas,
     created_at: item.created_at,
     updated_at: item.updated_at,
   };
@@ -252,6 +265,9 @@ export function domainVisitanteToSheet(item: Visitante): SheetVisitante {
     origem_contato: origemContatoMapping.toSheet(item.origem_contato),
   };
 }
+
+export const sheetIngressoToDomain = (row: SheetIngresso): Ingresso => row;
+export const domainIngressoToSheet = (item: Ingresso): SheetIngresso => item;
 
 export function sheetTrocaChaveiroToDomain(
   row: SheetTrocaChaveiro,

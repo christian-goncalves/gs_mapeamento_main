@@ -2,13 +2,18 @@
 
 ## Objetivo
 
-Coletar somente fatos sobre presença, visitantes e trocas de chaveiro. Totais
-que podem ser calculados não são campos de preenchimento.
+Coletar fatos sobre presença, partilhas, visitantes, ingressos e trocas de
+chaveiro. Totais derivados por contagem não são campos persistidos.
 
 ## Total de membros presentes
 
 `total_membros_presentes` é obrigatório, inteiro e maior ou igual a zero. Ele é
 informado uma vez na seção Participação e persistido na aba `atas`.
+
+## Total de partilhas
+
+`total_partilhas` é obrigatório, inteiro e maior ou igual a zero. Ele é
+informado uma vez e persistido na aba `atas`.
 
 ## Participação por localidade
 
@@ -37,6 +42,8 @@ Cada visitante gera uma linha na aba `visitantes`.
 | categoria | seleção | Obrigatória |
 | origem_contato | seleção | Obrigatória |
 
+Visitantes anônimos persistem `Anonimo` no campo `nome`.
+
 ### Categorias
 
 - Provável adicto
@@ -62,21 +69,37 @@ Cada visitante gera uma linha na aba `visitantes`.
 
 ## Trocas de chaveiro
 
-Cada troca gera uma linha na aba `trocas_chaveiro` e contém somente
-`tempo_limpo`.
+Cada troca gera uma linha na aba `trocas_chaveiro` e contém `tempo_limpo` e
+`quantidade`.
+
+| Campo | Controle | Regra |
+| --- | --- | --- |
+| tempo_limpo | seleção | Obrigatório |
+| quantidade | número inteiro | Obrigatória e maior que zero |
 
 Valores aceitos:
 
-- 30 dias
-- 60 dias
-- 90 dias
-- 6 meses
-- 9 meses
-- 1 ano
-- 18 meses
-- Múltiplos anos
+- `1M`
+- `2M`
+- `3M`
+- `6M`
+- `9M`
+- `12M`
+- `18M`
+- `MULTIPLOS_ANOS`
 
 Nome e padrinho ou madrinha não são coletados no MVP.
+
+## Ingressos
+
+Cada ingresso gera uma linha na aba `ingressos`.
+
+| Campo | Controle | Regra |
+| --- | --- | --- |
+| nome | texto | Obrigatório |
+
+Ingressos anônimos persistem `Anonimo`. `total_ingressos` é derivado pela
+contagem de linhas válidas na aba `ingressos`.
 
 ## Valores derivados
 
@@ -86,10 +109,11 @@ O backend calcula e não persiste:
 - total de estados
 - total de países
 - total de visitantes
+- total de ingressos
 - total de trocas de chaveiro
 - quantidade de membros sem localidade informada
 
-Total de ingressos e total de partilhas estão fora do escopo do MVP.
+`total_trocas_chaveiro` é a soma de `trocas_chaveiro.quantidade`.
 
 A origem e atualização da lista de municípios estão definidas na
 [Arquitetura de dados](../../arquitetura/arquitetura-de-dados.md).

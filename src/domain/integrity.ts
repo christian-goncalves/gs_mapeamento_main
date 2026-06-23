@@ -1,6 +1,7 @@
 import type {
   Ata,
   Grupo,
+  Ingresso,
   Participacao,
   Servidor,
   TrocaChaveiro,
@@ -16,6 +17,7 @@ export type ContractRows = {
   servidores: ValidRow<Servidor>[];
   participacao: ValidRow<Participacao>[];
   visitantes: ValidRow<Visitante>[];
+  ingressos: ValidRow<Ingresso>[];
   trocas_chaveiro: ValidRow<TrocaChaveiro>[];
 };
 
@@ -73,6 +75,12 @@ export function validateContractIntegrity(rows: ContractRows) {
       "visitante_id",
       (item) => item.visitante_id,
       "visitante_id duplicado.",
+    ),
+    ...duplicateDiagnostics(
+      rows.ingressos,
+      "ingresso_id",
+      (item) => item.ingresso_id,
+      "ingresso_id duplicado.",
     ),
     ...duplicateDiagnostics(
       rows.trocas_chaveiro,

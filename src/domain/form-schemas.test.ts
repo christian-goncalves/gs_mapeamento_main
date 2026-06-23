@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   ataFormSchema,
   ataSubmissionSchema,
+  ingressoFormSchema,
   participacaoFormSchema,
+  trocaChaveiroFormSchema,
   visitanteFormSchema,
 } from "./form-schemas";
 
@@ -17,6 +19,7 @@ describe("schemas de formulário", () => {
         tipo_reuniao: "fechada",
         formatos: ["estudo"],
         total_membros_presentes: 0,
+        total_partilhas: 0,
       }).success,
     ).toBe(true);
   });
@@ -43,6 +46,13 @@ describe("schemas de formulário", () => {
     ).toBe(false);
   });
 
+  it("valida ingresso e troca de chaveiro full", () => {
+    expect(ingressoFormSchema.safeParse({ nome: "Anonimo" }).success).toBe(true);
+    expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "1M", quantidade: 1 }).success).toBe(true);
+    expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "dias_30", quantidade: 1 }).success).toBe(false);
+    expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "1M", quantidade: 0 }).success).toBe(false);
+  });
+
   it("aceita envio completo com listas vazias", () => {
     expect(
       ataSubmissionSchema.safeParse({
@@ -54,10 +64,12 @@ describe("schemas de formulário", () => {
           tipo_reuniao: "aberta",
           formatos: ["partilha"],
           total_membros_presentes: 0,
+          total_partilhas: 0,
         },
         servidores: [],
         participacao: [],
         visitantes: [],
+        ingressos: [],
         trocas_chaveiro: [],
       }).success,
     ).toBe(true);

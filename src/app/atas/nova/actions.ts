@@ -3,7 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { DuplicateAtaError } from "@/domain/creation";
-import { ataSubmissionSchema } from "@/domain/form-schemas";
+import { ataSubmissionSchema, type AtaSubmission } from "@/domain/form-schemas";
+import {
+  hiddenAtaSubmissionSchema,
+  normalizeHiddenAtaSubmission,
+} from "@/domain/hidden-submission";
 import { requireAuthorizedSession } from "@/lib/auth/require-session";
 import { createAtaInSheets } from "@/lib/sheets/create-ata";
 
@@ -26,16 +30,23 @@ export async function createAtaAction(
   } catch {
     return { error: "O resumo enviado não contém JSON válido." };
   }
-  const result = ataSubmissionSchema.safeParse(raw);
-  if (!result.success) {
-    const issue = result.error.issues[0];
-    const field = issue.path.join(".");
-    return { error: `${field ? `${field}: ` : ""}${issue.message}` };
+  const fullResult = ataSubmissionSchema.safeParse(raw);
+  let submission: AtaSubmission;
+  if (fullResult.success) {
+    submission = fullResult.data;
+  } else {
+    const hiddenResult = hiddenAtaSubmissionSchema.safeParse(raw);
+    if (!hiddenResult.success) {
+      const issue = hiddenResult.error.issues[0] ?? fullResult.error.issues[0];
+      const field = issue.path.join(".");
+      return { error: `${field ? `${field}: ` : ""}${issue.message}` };
+    }
+    submission = normalizeHiddenAtaSubmission(hiddenResult.data);
   }
 
   let ataId: string;
   try {
-    ataId = await createAtaInSheets(result.data);
+    ataId = await createAtaInSheets(submission);
   } catch (error) {
     if (error instanceof DuplicateAtaError) return { error: error.message };
     if (error instanceof Error && /Grupo (inexistente|inativo)/.test(error.message)) {

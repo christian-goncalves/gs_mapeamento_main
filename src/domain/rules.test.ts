@@ -16,10 +16,19 @@ const base = {
     tipo_reuniao: "aberta",
     formatos: ["partilha"],
     total_membros_presentes: 3,
+    total_partilhas: 4,
     ...audit,
   },
   servidores: [],
   visitantes: [],
+  ingressos: [
+    {
+      ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d",
+      ata_id: ataId,
+      nome: "Anonimo",
+      ...audit,
+    },
+  ],
   trocas_chaveiro: [],
   participacao: [
     {
@@ -48,6 +57,9 @@ describe("regras agregadas", () => {
     expect(calcularIndicadores(parsed)).toMatchObject({
       total_localidades: 1,
       total_paises: 1,
+      total_ingressos: 1,
+      total_partilhas: 4,
+      total_trocas_chaveiro: 0,
       membros_sem_localidade: 1,
     });
   });

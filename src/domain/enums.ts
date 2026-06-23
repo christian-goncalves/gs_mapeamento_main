@@ -51,14 +51,14 @@ export const origemContatoMapping = createEnumMapping({
 } as const);
 
 export const tempoLimpoMapping = createEnumMapping({
-  dias_30: "30 dias",
-  dias_60: "60 dias",
-  dias_90: "90 dias",
-  meses_6: "6 meses",
-  meses_9: "9 meses",
-  ano_1: "1 ano",
-  meses_18: "18 meses",
-  multiplos_anos: "Múltiplos anos",
+  "1M": "1M",
+  "2M": "2M",
+  "3M": "3M",
+  "6M": "6M",
+  "9M": "9M",
+  "12M": "12M",
+  "18M": "18M",
+  MULTIPLOS_ANOS: "MULTIPLOS_ANOS",
 } as const);
 
 export const formatoMapping = createEnumMapping({

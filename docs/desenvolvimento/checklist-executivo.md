@@ -10,8 +10,8 @@ Legenda: `[x]` concluído, `[ ]` pendente, `[!]` bloqueado.
 
 ## Fase 1 — Contrato e modelo
 
-- [x] Harmonizar contratos das seis entidades.
-- [x] Criar DBML e estruturar as seis abas do Google Sheets.
+- [x] Harmonizar contratos das entidades iniciais.
+- [x] Criar DBML e estruturar as abas iniciais do Google Sheets.
 - [x] Migrar grupos para UUID e preservar `zoom_id`.
 
 ## Fase 2 — Fundação
@@ -58,7 +58,7 @@ Critério de aceite:
 
 ## Fase 4 — Leitura agregada
 
-- [x] Ler e validar as seis abas.
+- [x] Ler e validar as abas vigentes na fase.
 - [x] Reconstruir ata completa por `ata_id`.
 - [x] Validar todas as referências entre abas.
 - [x] Separar registros válidos e inválidos.
@@ -89,13 +89,13 @@ Critério de aceite:
 - [x] Cancelar o resumo não grava dados.
 - [x] Falha em qualquer suboperação não grava nenhuma linha.
 - [x] Reenvio da mesma chave é rejeitado.
-- [!] Ata enviada aparece na listagem e no detalhe somente leitura — validação
-  externa bloqueada até a configuração de `GOOGLE_SHEETS_TEST_ID`.
+- [ ] Ata enviada aparece na listagem e no detalhe somente leitura em validação
+  funcional com Google Sheets.
 
 ## Fase 6 — Política de edição manual
 
 - [x] Adicionar `MANUAL_SHEETS_EDIT_ENABLED=true` ao contrato de ambiente.
-- [x] Ler proteções e IDs das seis abas.
+- [x] Ler proteções e IDs das abas vigentes na fase.
 - [x] Criar reconciliação administrativa idempotente.
 - [x] Com `true`, manter edição manual.
 - [x] Com `false`, aplicar proteção permitindo escrita da conta de serviço.
@@ -108,19 +108,42 @@ Critério de aceite:
 
 ## Fase 7 — Validação e implantação
 
-- [ ] Criar planilha exclusiva de testes com as seis abas.
-- [ ] Configurar `GOOGLE_SHEETS_TEST_ID` fora do repositório.
-- [ ] Testar schemas, mapeamentos, referências e indicadores.
+- [x] Reconciliar contrato estrutural de DEV com sete abas.
+- [x] Reconciliar contrato estrutural de PROD com sete abas.
+- [x] Confirmar `ingressos`, `atas.total_partilhas` e
+  `trocas_chaveiro.quantidade` em DEV e PROD.
+- [x] Executar lint, testes e build após a refatoração ATA Full.
+- [ ] Validar criação real de ata em DEV, com participação, visitante,
+  ingresso e troca com quantidade.
+- [ ] Confirmar listagem e detalhe da ata criada em modo somente leitura.
+- [ ] Testar duplicidade e duplo clique em DEV.
 - [ ] Testar usuário permitido e usuário bloqueado.
 - [ ] Testar autorização em cada leitura e Server Action.
-- [ ] Testar gravação atômica e falhas da API.
-- [ ] Testar duplicidade e duplo clique.
-- [ ] Executar lint, TypeScript, testes e build.
+- [ ] Testar falha atômica sem escrita parcial.
 - [ ] Rotacionar a chave da conta de serviço antes da implantação.
 - [ ] Configurar segredos e callback OAuth na Vercel.
-- [ ] Executar o fluxo completo em produção.
+- [ ] Repetir fluxo mínimo validado em produção.
 
 Critério de aceite:
 
 - [ ] MVP opera somente para usuários autorizados, sem banco local, sem Jotform,
   sem segredo no navegador e sem sucesso falso.
+
+## Refatoracao ATA Full — 23 de junho de 2026
+
+- [x] TIRO 1: diagnostico documentado sem alterar `src/`.
+- [x] TIRO 1: `npm test`, `npm run lint` e `npm run build` aprovados.
+- [x] TIRO 2: backend full com `total_partilhas`, `ingressos`,
+  `trocas_chaveiro.quantidade` e novos codigos de `tempo_limpo`.
+- [x] TIRO 2: contrato Sheets, DBML, docs, scripts, leitura agregada, escrita
+  atomica, listagem e detalhe atualizados.
+- [x] TIRO 2: `npm test`, `npm run lint` e `npm run build` aprovados.
+- [x] TIRO 3: frontend hidden conectado ao backend full.
+- [x] TIRO 3: Server Action aceita payload hidden e normaliza para o contrato
+  full.
+- [x] TIRO 3: anonimato persiste `Anonimo`, visitantes recebem defaults
+  ocultos e participacao deriva UF/pais da localidade controlada.
+- [x] TIRO 3: caso real com 20 presentes calcula `membros_sem_localidade=5`.
+- [x] TIRO 3: `npm test`, `npm run lint` e `npm run build` aprovados.
+- [x] Reconciliação Sheets: DEV e PROD atualizadas para o contrato ATA Full com
+  sete abas.

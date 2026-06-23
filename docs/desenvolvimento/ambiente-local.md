@@ -28,12 +28,29 @@ locais ficam em `.env.local`, ignorado pelo Git.
 | `AUTH_GOOGLE_SECRET` | Segredo do cliente OAuth |
 | `AUTH_ALLOWED_EMAILS` | E-mails autorizados separados por vírgula |
 | `GOOGLE_SHEETS_ID` | Planilha oficial |
-| `GOOGLE_SHEETS_TEST_ID` | Planilha exclusiva de testes |
 | `GOOGLE_SERVICE_ACCOUNT_EMAIL` | Conta de serviço do backend |
 | `GOOGLE_PRIVATE_KEY` | Chave privada da conta de serviço |
 | `MANUAL_SHEETS_EDIT_ENABLED` | Política declarada de edição manual |
 
 Nenhuma variável de segredo pode usar o prefixo `NEXT_PUBLIC_`.
+
+## Reconciliação estrutural do contrato
+
+`GOOGLE_SHEETS_ID` pode continuar apontando para a planilha oficial em
+`.env.local`. Para validar ou aplicar mudanças estruturais do contrato, use
+sobrescrita segura no comando e execute primeiro em DEV:
+
+```bash
+GOOGLE_SHEETS_ID=1oHQ_VgwlRHEEUZP5gXyUX8RiGz0hEEZebHUhXiy1imU npm run sheets:reconcile-contract
+GOOGLE_SHEETS_ID=1itgYTa7CCWgjdux_Pt1ffNAxoNA8zTn9GTzsShH_1Yw npm run sheets:reconcile-contract
+```
+
+A rotina `sheets:reconcile-contract` cria abas ausentes e adiciona colunas
+faltantes do contrato estrutural. IDs de planilhas e segredos continuam fora do
+repositório; valores sensíveis devem ficar somente no ambiente local ou no
+provedor de execução.
+
+## Proteções do Sheets
 
 `MANUAL_SHEETS_EDIT_ENABLED` aceita estritamente `true` ou `false`. Depois de
 configurá-la, a política pode ser reconciliada por uma rotina administrativa:
@@ -43,7 +60,7 @@ npm run sheets:reconcile-protections
 ```
 
 Com `true`, a rotina remove somente as proteções gerenciadas pela aplicação.
-Com `false`, mantém uma proteção gerenciada em cada uma das seis abas, com a
+Com `false`, mantém uma proteção gerenciada em cada uma das sete abas, com a
 conta de serviço autorizada a escrever. Proteções manuais são preservadas e o
 proprietário da planilha continua capaz de administrar ou remover proteções.
 

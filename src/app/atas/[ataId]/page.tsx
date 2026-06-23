@@ -49,6 +49,7 @@ export default async function AtaDetailPage({
           <div><dt>Plataforma</dt><dd>{plataformaMapping.toSheet(ata.plataforma)}</dd></div>
           <div><dt>Tipo</dt><dd>{tipoReuniaoMapping.toSheet(ata.tipo_reuniao)}</dd></div>
           <div><dt>Membros presentes</dt><dd>{ata.total_membros_presentes}</dd></div>
+          <div><dt>Partilhas</dt><dd>{ata.total_partilhas}</dd></div>
           <div><dt>Formatos</dt><dd>{ata.formatos.map((code) => formatoMapping.toSheet(code)).join(", ")}</dd></div>
         </dl>
       </section>
@@ -60,6 +61,7 @@ export default async function AtaDetailPage({
           <div><dt>Estados</dt><dd>{indicadores.total_estados}</dd></div>
           <div><dt>Países</dt><dd>{indicadores.total_paises}</dd></div>
           <div><dt>Visitantes</dt><dd>{indicadores.total_visitantes}</dd></div>
+          <div><dt>Ingressos</dt><dd>{indicadores.total_ingressos}</dd></div>
           <div><dt>Trocas</dt><dd>{indicadores.total_trocas_chaveiro}</dd></div>
           <div><dt>Sem localidade</dt><dd>{indicadores.membros_sem_localidade}</dd></div>
         </dl>
@@ -101,10 +103,19 @@ export default async function AtaDetailPage({
       </section>
 
       <section className="card">
+        <h2>Ingressos</h2>
+        {registro.ingressos.length === 0 ? <p className="muted">Nenhum ingresso informado.</p> : (
+          <ul className="list">
+            {registro.ingressos.map((entry) => <li key={entry.ingresso_id}>{entry.nome}</li>)}
+          </ul>
+        )}
+      </section>
+
+      <section className="card">
         <h2>Trocas de chaveiro</h2>
         {registro.trocas_chaveiro.length === 0 ? <p className="muted">Nenhuma troca informada.</p> : (
           <ul className="list">
-            {registro.trocas_chaveiro.map((entry) => <li key={entry.troca_chaveiro_id}>{tempoLimpoMapping.toSheet(entry.tempo_limpo)}</li>)}
+            {registro.trocas_chaveiro.map((entry) => <li key={entry.troca_chaveiro_id}>{tempoLimpoMapping.toSheet(entry.tempo_limpo)} · {entry.quantidade}</li>)}
           </ul>
         )}
       </section>

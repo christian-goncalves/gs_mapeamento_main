@@ -28,17 +28,44 @@ const payload = JSON.stringify({
     tipo_reuniao: "aberta",
     formatos: ["partilha"],
     total_membros_presentes: 0,
+    total_partilhas: 0,
   },
   servidores: [],
   participacao: [],
   visitantes: [],
+  ingressos: [],
   trocas_chaveiro: [],
+});
+
+const hiddenPayload = JSON.stringify({
+  ata: {
+    grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
+    data_reuniao: "2026-06-22",
+    hora_inicio: "20:30",
+    plataforma: "zoom",
+    tipo_reuniao: "aberta",
+    formatos: ["partilha"],
+    total_membros_presentes: 20,
+    total_partilhas: 3,
+  },
+  servidores: [],
+  participacao: [{ localidade: "Itajaí - SC", presencas: 8 }],
+  visitantes: [{ anonimo: true, nome: "", cidade: "Itajaí - SC" }],
+  ingressos: [{ anonimo: true, nome: "" }],
+  trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 1 }],
 });
 
 function formData(confirmed: boolean) {
   const data = new FormData();
   data.set("confirmed", String(confirmed));
   data.set("payload", payload);
+  return data;
+}
+
+function hiddenFormData() {
+  const data = new FormData();
+  data.set("confirmed", "true");
+  data.set("payload", hiddenPayload);
   return data;
 }
 
@@ -70,6 +97,32 @@ describe("Server Action de criação", () => {
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/");
     expect(mocks.redirect).toHaveBeenCalledWith(
       "/atas/93ef9660-8c64-4b51-9bc5-09069ce629c1",
+    );
+  });
+
+  it("normaliza payload hidden antes de chamar o adaptador", async () => {
+    mocks.createAtaInSheets.mockResolvedValue(
+      "93ef9660-8c64-4b51-9bc5-09069ce629c1",
+    );
+    await createAtaAction({}, hiddenFormData());
+    expect(mocks.createAtaInSheets).toHaveBeenCalledWith(
+      expect.objectContaining({
+        participacao: [
+          expect.objectContaining({
+            localidade: "Itajaí",
+            estado: "SC",
+            pais: "Brasil",
+          }),
+        ],
+        visitantes: [
+          expect.objectContaining({
+            nome: "Anonimo",
+            categoria: "outro",
+            origem_contato: "outro",
+          }),
+        ],
+        ingressos: [expect.objectContaining({ nome: "Anonimo" })],
+      }),
     );
   });
 

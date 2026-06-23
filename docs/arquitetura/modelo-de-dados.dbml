@@ -57,6 +57,7 @@ Table atas {
   formato_passos boolean [not null, default: false]
   formato_tradicoes boolean [not null, default: false]
   total_membros_presentes integer [not null, note: 'Maior ou igual a zero']
+  total_partilhas integer [not null, note: 'Maior ou igual a zero']
   created_at timestamp [not null]
   updated_at timestamp [not null]
 
@@ -105,7 +106,16 @@ Table visitantes {
 Table trocas_chaveiro {
   troca_chaveiro_id uuid [pk]
   ata_id uuid [not null]
-  tempo_limpo varchar [not null, note: '30 dias, 60 dias, 90 dias, 6 meses, 9 meses, 1 ano, 18 meses ou Multiplos anos']
+  tempo_limpo varchar [not null, note: '1M, 2M, 3M, 6M, 9M, 12M, 18M ou MULTIPLOS_ANOS']
+  quantidade integer [not null, note: 'Inteiro maior que zero']
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Table ingressos {
+  ingresso_id uuid [pk]
+  ata_id uuid [not null]
+  nome varchar [not null, note: 'Usar Anonimo quando nao informado']
   created_at timestamp [not null]
   updated_at timestamp [not null]
 }
@@ -114,4 +124,5 @@ Ref: atas.grupo_id > grupos.grupo_id
 Ref: servidores.ata_id > atas.ata_id
 Ref: participacao.ata_id > atas.ata_id
 Ref: visitantes.ata_id > atas.ata_id
+Ref: ingressos.ata_id > atas.ata_id
 Ref: trocas_chaveiro.ata_id > atas.ata_id

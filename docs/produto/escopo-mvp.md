@@ -12,7 +12,8 @@ fonte oficial dos dados.
 - Seleção de grupos ativos.
 - Criação, listagem e visualização de atas.
 - Informações Gerais e Participação.
-- Servidores, localidades, visitantes e trocas de chaveiro.
+- Servidores, localidades, visitantes, ingressos, partilhas e trocas de
+  chaveiro.
 - Indicadores calculados sem persistência de totais derivados.
 - Validação dos dados lidos e escritos no Sheets.
 - Manutenção manual controlada na planilha.
@@ -23,7 +24,7 @@ fonte oficial dos dados.
 - Formulário público.
 - Banco de dados local ou relacional.
 - Integração operacional com Jotform ou automações de terceiros.
-- Finanças, ingressos, partilhas, anexos e informações extras.
+- Finanças, anexos e informações extras.
 - Visitantes internacionais.
 
 ## Envio imutável
@@ -55,7 +56,7 @@ sem chamada externa durante o preenchimento. O Sheets persiste `Nome - UF`.
 ## Edição manual e testes
 
 - A edição manual no Sheets começa habilitada.
-- Uma configuração server-only permitirá reconciliar proteções das seis abas.
+- Uma configuração server-only permitirá reconciliar proteções das sete abas.
 - Testes de escrita usam uma planilha exclusiva, nunca a planilha oficial.
 
 Os detalhes técnicos estão em

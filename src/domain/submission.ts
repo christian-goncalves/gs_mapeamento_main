@@ -44,6 +44,12 @@ export function materializeAtaSubmission(
       ...item,
       ...audit,
     })),
+    ingressos: submission.ingressos.map((item) => ({
+      ingresso_id: identity.uuid(),
+      ata_id: ataId,
+      ...item,
+      ...audit,
+    })),
     trocas_chaveiro: submission.trocas_chaveiro.map((item) => ({
       troca_chaveiro_id: identity.uuid(),
       ata_id: ataId,

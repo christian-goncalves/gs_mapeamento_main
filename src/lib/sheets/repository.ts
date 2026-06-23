@@ -4,6 +4,7 @@ import { aggregateContractRows } from "@/domain/aggregate";
 import type {
   Ata,
   Grupo,
+  Ingresso,
   Participacao,
   Servidor,
   TrocaChaveiro,
@@ -11,12 +12,20 @@ import type {
 } from "@/domain/entities";
 import { getSheetsClient, getSpreadsheetId } from "./client";
 import { SHEET_HEADERS, type SheetName } from "./contract";
-import { parseRows, rowsToObjects, type ParsedRow } from "./rows";
+import {
+  parseRows,
+  rowsToObjects,
+  type LocatedObject,
+  type ParsedRow,
+  type RowDiagnostic,
+} from "./rows";
 import {
   sheetAtaSchema,
   sheetAtaToDomain,
   sheetGrupoSchema,
   sheetGrupoToDomain,
+  sheetIngressoSchema,
+  sheetIngressoToDomain,
   sheetParticipacaoSchema,
   sheetParticipacaoToDomain,
   sheetServidorSchema,
@@ -39,6 +48,73 @@ async function readSheet(name: SheetName) {
     SHEET_HEADERS[name],
     (response.data.values as (string | number | boolean)[][] | undefined) ?? [],
   );
+}
+
+function missingSheetDiagnostic(name: SheetName): RowDiagnostic {
+  return {
+    sheet: name,
+    rowNumber: 1,
+    field: "aba",
+    message: "Aba ausente no Sheets. Reconciliar o contrato antes de usar este dado.",
+  };
+}
+
+function isMissingSheetRangeError(error: unknown, name: SheetName) {
+  return (
+    error instanceof Error &&
+    error.message.includes(`Unable to parse range: ${name}!`)
+  );
+}
+
+async function readContractSheets() {
+  const names = Object.keys(SHEET_HEADERS) as SheetName[];
+  const sheets = getSheetsClient();
+
+  try {
+    const response = await sheets.spreadsheets.values.batchGet({
+      spreadsheetId: getSpreadsheetId(),
+      ranges: names.map((name) => `${name}!A:Z`),
+      valueRenderOption: "UNFORMATTED_VALUE",
+      dateTimeRenderOption: "SERIAL_NUMBER",
+    });
+    return {
+      diagnostics: [],
+      values: Object.fromEntries(
+        names.map((name, index) => [
+          name,
+          rowsToObjects(
+            SHEET_HEADERS[name],
+            (response.data.valueRanges?.[index]?.values as
+              | (string | number | boolean)[][]
+              | undefined) ?? [],
+          ),
+        ]),
+      ) as Record<SheetName, LocatedObject[]>,
+    };
+  } catch (error) {
+    if (
+      !names.some((name) => isMissingSheetRangeError(error, name))
+    ) {
+      throw error;
+    }
+  }
+
+  const diagnostics: RowDiagnostic[] = [];
+  const entries = await Promise.all(
+    names.map(async (name) => {
+      try {
+        return [name, await readSheet(name)] as const;
+      } catch (error) {
+        if (!isMissingSheetRangeError(error, name)) throw error;
+        diagnostics.push(missingSheetDiagnostic(name));
+        return [name, []] as const;
+      }
+    }),
+  );
+  return {
+    diagnostics,
+    values: Object.fromEntries(entries) as Record<SheetName, LocatedObject[]>,
+  };
 }
 
 export async function listGroups(): Promise<ParsedRow<Grupo>[]> {
@@ -95,6 +171,15 @@ export async function listVisitantes(): Promise<ParsedRow<Visitante>[]> {
   );
 }
 
+export async function listIngressos(): Promise<ParsedRow<Ingresso>[]> {
+  return parseRows(
+    "ingressos",
+    sheetIngressoSchema,
+    await readSheet("ingressos"),
+    sheetIngressoToDomain,
+  );
+}
+
 export async function listTrocasChaveiro(): Promise<
   ParsedRow<TrocaChaveiro>[]
 > {
@@ -107,25 +192,7 @@ export async function listTrocasChaveiro(): Promise<
 }
 
 export async function readAggregatedAtas() {
-  const names = Object.keys(SHEET_HEADERS) as SheetName[];
-  const sheets = getSheetsClient();
-  const response = await sheets.spreadsheets.values.batchGet({
-    spreadsheetId: getSpreadsheetId(),
-    ranges: names.map((name) => `${name}!A:Z`),
-    valueRenderOption: "UNFORMATTED_VALUE",
-    dateTimeRenderOption: "SERIAL_NUMBER",
-  });
-  const values = Object.fromEntries(
-    names.map((name, index) => [
-      name,
-      rowsToObjects(
-        SHEET_HEADERS[name],
-        (response.data.valueRanges?.[index]?.values as
-          | (string | number | boolean)[][]
-          | undefined) ?? [],
-      ),
-    ]),
-  ) as Record<SheetName, ReturnType<typeof rowsToObjects>>;
+  const { diagnostics, values } = await readContractSheets();
 
   const grupos = parseRows(
     "grupos",
@@ -157,18 +224,34 @@ export async function readAggregatedAtas() {
     values.visitantes,
     sheetVisitanteToDomain,
   );
+  const ingressos = parseRows(
+    "ingressos",
+    sheetIngressoSchema,
+    values.ingressos,
+    sheetIngressoToDomain,
+  );
   const trocas_chaveiro = parseRows(
     "trocas_chaveiro",
     sheetTrocaChaveiroSchema,
     values.trocas_chaveiro,
     sheetTrocaChaveiroToDomain,
   );
-  return aggregateContractRows({
+  const aggregated = aggregateContractRows({
     grupos,
     atas,
     servidores,
     participacao,
     visitantes,
+    ingressos,
     trocas_chaveiro,
   });
+  return {
+    ...aggregated,
+    diagnostics: [...diagnostics, ...aggregated.diagnostics].sort(
+      (first, second) =>
+        first.sheet.localeCompare(second.sheet) ||
+        first.rowNumber - second.rowNumber ||
+        first.field.localeCompare(second.field),
+    ),
+  };
 }

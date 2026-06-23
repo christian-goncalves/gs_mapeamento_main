@@ -5,7 +5,7 @@
 Definir como o domínio do MVP é validado, persistido e reconstruído. O Google
 Sheets é a fonte oficial e não existe banco de dados local.
 
-O [modelo DBML](modelo-de-dados.dbml) representa visualmente as seis abas, sem
+O [modelo DBML](modelo-de-dados.dbml) representa visualmente as sete abas, sem
 indicar adoção de banco relacional.
 
 ## Componentes
@@ -21,7 +21,7 @@ Cada leitura e mutação valida novamente a sessão e o e-mail permitido.
 
 ## Persistência
 
-Uma pasta de trabalho contém seis abas:
+Uma pasta de trabalho contém sete abas:
 
 | Aba | Responsabilidade |
 | --- | --- |
@@ -30,6 +30,7 @@ Uma pasta de trabalho contém seis abas:
 | `servidores` | Servidores vinculados por `ata_id` |
 | `participacao` | Presenças por localidade vinculadas por `ata_id` |
 | `visitantes` | Visitantes vinculados por `ata_id` |
+| `ingressos` | Ingressos vinculados por `ata_id` |
 | `trocas_chaveiro` | Trocas vinculadas por `ata_id` |
 
 `grupo_id` é o identificador interno dos grupos. `zoom_id` é um atributo externo
@@ -39,6 +40,17 @@ Os campos e valores aceitos estão nos contratos de
 [Informações Gerais](../produto/contratos/informacoes-gerais.md) e
 [Participação](../produto/contratos/participacao.md).
 
+## Reconciliação estrutural
+
+A rotina `npm run sheets:reconcile-contract` reconcilia a estrutura declarada do
+contrato com a planilha alvo: valida abas existentes, cria abas ausentes e
+adiciona colunas faltantes sem gravar registros de negócio.
+
+Essa rotina é diferente de `npm run sheets:reconcile-protections`, que atua
+somente sobre intervalos protegidos e política de edição manual. Mudanças de
+contrato devem passar pela reconciliação estrutural antes de validações
+funcionais em DEV e, depois, em PROD.
+
 ## Normalização e auditoria
 
 - Uma célula contém um único valor.
@@ -47,14 +59,15 @@ Os campos e valores aceitos estão nos contratos de
 - Entidades dependentes usam `ata_id`.
 - IDs são UUIDs gerados pelo backend.
 - `created_at` e `updated_at` usam ISO 8601.
-- Totais derivados nunca são persistidos.
+- Totais derivados nunca são persistidos; `total_partilhas` é fato informado e
+  fica na aba `atas`.
 
 ## Leitura
 
 O adaptador confere os cabeçalhos, converte as linhas e preserva a localização
 original de cada registro. A leitura agregada:
 
-1. valida individualmente as seis abas;
+1. valida individualmente as sete abas;
 2. resolve referências por `grupo_id` e `ata_id`;
 3. separa registros válidos e inválidos;
 4. calcula indicadores apenas com dados válidos;
@@ -85,7 +98,9 @@ externo não faz parte do MVP.
 ## Valores controlados
 
 - O domínio usa códigos internos para enums.
-- O Sheets mantém rótulos em português.
+- O Sheets mantém rótulos em português quando o enum possui rótulo externo; os
+  códigos de `tempo_limpo` são persistidos como `1M`, `2M`, `3M`, `6M`, `9M`,
+  `12M`, `18M` e `MULTIPLOS_ANOS`.
 - O adaptador converte nos dois sentidos e rejeita valores desconhecidos.
 - `plataforma` aceita inicialmente somente `Zoom`.
 - `visitantes.cidade` persiste `Nome - UF`.
@@ -107,7 +122,7 @@ Fonte: https://servicodados.ibge.gov.br/api/docs/localidades
 `MANUAL_SHEETS_EDIT_ENABLED` declara a política:
 
 - `true`: mantém a edição manual;
-- `false`: uma rotina administrativa aplica proteções às seis abas e permite a
+- `false`: uma rotina administrativa aplica proteções às sete abas e permite a
   escrita da conta de serviço conforme as garantias do Sheets.
 
 A flag não bloqueia células sozinha. A rotina deve reconciliar idempotentemente
@@ -124,5 +139,6 @@ O backend calcula, sem persistir:
 - total de estados;
 - total de países;
 - total de visitantes;
-- total de trocas de chaveiro;
+- total de ingressos;
+- total de trocas de chaveiro pela soma de `quantidade`;
 - membros sem localidade informada.

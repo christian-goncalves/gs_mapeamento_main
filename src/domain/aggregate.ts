@@ -3,6 +3,7 @@ import { validateContractIntegrity, type ContractRows } from "./integrity";
 import type {
   Ata,
   Grupo,
+  Ingresso,
   Participacao,
   Servidor,
   TrocaChaveiro,
@@ -18,6 +19,7 @@ export type ParsedContractRows = {
   servidores: ParsedRow<Servidor>[];
   participacao: ParsedRow<Participacao>[];
   visitantes: ParsedRow<Visitante>[];
+  ingressos: ParsedRow<Ingresso>[];
   trocas_chaveiro: ParsedRow<TrocaChaveiro>[];
 };
 
@@ -101,6 +103,7 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
     ...rowDiagnostics(rows.servidores),
     ...rowDiagnostics(rows.participacao),
     ...rowDiagnostics(rows.visitantes),
+    ...rowDiagnostics(rows.ingressos),
     ...rowDiagnostics(rows.trocas_chaveiro),
   ];
   const initiallyValid: ContractRows = {
@@ -109,6 +112,7 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
     servidores: validRows(rows.servidores),
     participacao: validRows(rows.participacao),
     visitantes: validRows(rows.visitantes),
+    ingressos: validRows(rows.ingressos),
     trocas_chaveiro: validRows(rows.trocas_chaveiro),
   };
 
@@ -150,6 +154,11 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
     ataIds,
     diagnostics,
   );
+  const ingressos = filterAtaReferences(
+    withoutDiagnosed(initiallyValid.ingressos, integrityDiagnostics),
+    ataIds,
+    diagnostics,
+  );
   const trocas = filterAtaReferences(
     withoutDiagnosed(initiallyValid.trocas_chaveiro, integrityDiagnostics),
     ataIds,
@@ -184,6 +193,7 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
   const servidoresByAta = byAta(servidores);
   const participacaoByAta = byAta(participacao);
   const visitantesByAta = byAta(visitantes);
+  const ingressosByAta = byAta(ingressos);
   const trocasByAta = byAta(trocas);
   const aggregatedAtas = atas.map((ataRow) => {
     const ata = ataRow.data;
@@ -196,6 +206,9 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
         (row) => row.data,
       ),
       visitantes: (visitantesByAta.get(ata.ata_id) ?? []).map(
+        (row) => row.data,
+      ),
+      ingressos: (ingressosByAta.get(ata.ata_id) ?? []).map(
         (row) => row.data,
       ),
       trocas_chaveiro: (trocasByAta.get(ata.ata_id) ?? []).map(
