@@ -22,7 +22,15 @@ export function rowsToObjects(
 
   return rows
     .map((row, index) => ({ row, rowNumber: index + 2 }))
-    .filter(({ row }) => row.some((cell) => cell !== ""))
+    .filter(({ row }) =>
+      row.some(
+        (cell) =>
+          cell !== "" &&
+          cell !== false &&
+          cell !== null &&
+          typeof cell !== "undefined",
+      ),
+    )
     .map(({ row, rowNumber }) => ({
       rowNumber,
       value: Object.fromEntries(

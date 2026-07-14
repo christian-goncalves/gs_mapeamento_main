@@ -6,17 +6,19 @@ execução do MVP.
 ## Ordem de leitura
 
 1. [Escopo do MVP](produto/escopo-mvp.md)
-2. [Contrato de Informações Gerais](produto/contratos/informacoes-gerais.md)
-3. [Contrato de Participação](produto/contratos/participacao.md)
-4. [Arquitetura de dados](arquitetura/arquitetura-de-dados.md)
-5. [Plano de desenvolvimento](desenvolvimento/plano-de-desenvolvimento.md)
-6. [Checklist executivo](desenvolvimento/checklist-executivo.md)
+2. [Backlog de produto](produto/backlog.md)
+3. [Contrato de Informações Gerais](produto/contratos/informacoes-gerais.md)
+4. [Contrato de Participação](produto/contratos/participacao.md)
+5. [Arquitetura de dados](arquitetura/arquitetura-de-dados.md)
+6. [Plano de desenvolvimento](desenvolvimento/plano-de-desenvolvimento.md)
+7. [Checklist executivo](desenvolvimento/checklist-executivo.md)
 
 ## Mapa das fontes canônicas
 
 | Assunto | Documento |
 | --- | --- |
 | Escopo, decisões e exclusões | [Escopo do MVP](produto/escopo-mvp.md) |
+| Ideias futuras e pendências de produto | [Backlog de produto](produto/backlog.md) |
 | Campos e regras de Informações Gerais | [Contrato de Informações Gerais](produto/contratos/informacoes-gerais.md) |
 | Campos e regras de Participação | [Contrato de Participação](produto/contratos/participacao.md) |
 | Persistência, integridade e Sheets | [Arquitetura de dados](arquitetura/arquitetura-de-dados.md) |
@@ -42,6 +44,7 @@ valores ou regras de negócio.
 - Cada Markdown possui um único título `# H1`.
 - Links internos são relativos ao documento de origem.
 - Decisões de negócio pertencem a `produto/`.
+- Ideias futuras ficam em `produto/backlog.md` ate virarem plano aprovado.
 - Regras técnicas e de persistência pertencem a `arquitetura/`.
 - Fases e tarefas pertencem a `desenvolvimento/`.
 - Fatos passados pertencem a `projeto/historico.md`.

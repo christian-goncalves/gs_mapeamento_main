@@ -15,6 +15,7 @@ import {
   sheetAtaBusinessKeySchema,
   sheetAtaToDomain,
   sheetGrupoSchema,
+  sheetGrupoHorarioSchema,
   sheetIngressoSchema,
   sheetIngressoToDomain,
   sheetParticipacaoSchema,
@@ -33,11 +34,19 @@ const audit = {
 };
 const valid = {
   grupo: {
-    grupo_id: groupId, zoom_id: "001", grupo_nome: "Grupo", ordem: "1", ativo: "TRUE", ...audit,
+    grupo_id: groupId, zoom_id: "001", grupo_nome: "Grupo", ordem: "1", ativo: "TRUE",
+    responsavel_grupo_nome: "Responsável", responsavel_grupo_email: "responsavel@example.com",
+    email_acesso_grupo: "grupo@example.com", responsaveis_ata: "Equipe de ata",
+    link_formulario_ata: "grupo", ...audit,
+  },
+  grupoHorario: {
+    horario_id: "a0b4f0fa-37f4-4a69-8ebb-a1b40e538c2d", grupo_id: groupId,
+    dia_semana: "segunda", hora_inicio: "20:30", link_reuniao: "https://example.com/reuniao",
+    ativo: "TRUE", ...audit,
   },
   ata: {
     ata_id: ataId, grupo_id: groupId, data_reuniao: "2026-06-21", hora_inicio: "10:30",
-    plataforma: "Zoom", tipo_reuniao: "Aberta", formato_partilha: "TRUE",
+    preenchido_por: "Patricia", plataforma: "Zoom", tipo_reuniao: "Aberta", formato_partilha: "TRUE",
     formato_estudo: "FALSE", formato_tematico: "FALSE", formato_literatura: "FALSE",
     formato_passos: "FALSE", formato_tradicoes: "FALSE", total_membros_presentes: "3",
     total_partilhas: "2", ...audit,
@@ -67,6 +76,7 @@ const valid = {
 describe("schemas das linhas do Sheets", () => {
   it.each([
     ["grupos", sheetGrupoSchema, valid.grupo],
+    ["grupo_horarios", sheetGrupoHorarioSchema, valid.grupoHorario],
     ["atas", sheetAtaSchema, valid.ata],
     ["servidores", sheetServidorSchema, valid.servidor],
     ["participacao", sheetParticipacaoSchema, valid.participacao],
@@ -79,6 +89,7 @@ describe("schemas das linhas do Sheets", () => {
 
   it.each([
     ["grupos", sheetGrupoSchema, { ...valid.grupo, ativo: "sim" }],
+    ["grupo_horarios", sheetGrupoHorarioSchema, { ...valid.grupoHorario, dia_semana: "feriado" }],
     ["atas", sheetAtaSchema, { ...valid.ata, plataforma: "Meet" }],
     ["servidores", sheetServidorSchema, { ...valid.servidor, nome: "" }],
     ["participacao", sheetParticipacaoSchema, { ...valid.participacao, estado: "" }],
@@ -94,6 +105,32 @@ describe("schemas das linhas do Sheets", () => {
   it("converte ata do Sheets e volta sem perda", () => {
     const sheet = sheetAtaSchema.parse(valid.ata);
     expect(domainAtaToSheet(sheetAtaToDomain(sheet))).toEqual(sheet);
+  });
+
+  it("trata colunas textuais opcionais de grupos com FALSE herdado como texto vazio", () => {
+    const parsed = sheetGrupoSchema.parse({
+      ...valid.grupo,
+      responsavel_grupo_nome: false,
+      responsavel_grupo_email: false,
+      email_acesso_grupo: false,
+      responsaveis_ata: false,
+      link_formulario_ata: false,
+    });
+    expect(parsed).toMatchObject({
+      responsavel_grupo_nome: "",
+      responsavel_grupo_email: "",
+      email_acesso_grupo: "",
+      responsaveis_ata: "",
+      link_formulario_ata: "",
+    });
+  });
+
+  it("aceita Zoom ID numérico retornado pelo Sheets", () => {
+    const parsed = sheetGrupoSchema.parse({
+      ...valid.grupo,
+      zoom_id: 4430251323,
+    });
+    expect(parsed.zoom_id).toBe("4430251323");
   });
 
   it("converte data e horário serializados pelo Sheets", () => {

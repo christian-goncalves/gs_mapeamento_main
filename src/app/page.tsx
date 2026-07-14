@@ -1,4 +1,10 @@
 import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFileCirclePlus,
+  faLayerGroup,
+  faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
 import { signOut } from "@/auth";
 import { requireAuthorizedSession } from "@/lib/auth/require-session";
 import { readAggregatedAtas } from "@/lib/sheets/repository";
@@ -6,11 +12,13 @@ import { readAggregatedAtas } from "@/lib/sheets/repository";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const session = await requireAuthorizedSession();
+  const { session, access } = await requireAuthorizedSession();
   const result = await readAggregatedAtas();
+  const allowedGroupIds = new Set(access.groups.map((group) => group.grupo_id));
   const activeGroups = result.grupos
-    .filter((group) => group.ativo)
-    .sort((first, second) => first.ordem - second.ordem);
+    .filter((group) => group.ativo && allowedGroupIds.has(group.grupo_id))
+    .sort((first, second) => first.grupo_nome.localeCompare(second.grupo_nome, "pt-BR"));
+  const atas = result.atas.filter(({ grupo }) => allowedGroupIds.has(grupo.grupo_id));
 
   return (
     <main className="shell">
@@ -25,13 +33,29 @@ export default async function HomePage() {
             await signOut({ redirectTo: "/login" });
           }}
         >
-          <button type="submit">Sair</button>
+          <button type="submit">
+            <span className="button-content">
+              <FontAwesomeIcon icon={faRightFromBracket} />
+              Sair
+            </span>
+          </button>
         </form>
       </header>
 
       <div className="grid">
         <section className="card">
-          <h2>Grupos ativos</h2>
+          <div className="section-heading">
+            <h2>Grupos ativos</h2>
+            <Link
+              className="button-link"
+              href={access.role === "administrador" ? "/grupos" : "/meu-grupo"}
+            >
+              <span className="button-content">
+                <FontAwesomeIcon icon={faLayerGroup} />
+                Gerenciar
+              </span>
+            </Link>
+          </div>
           <ol className="list">
             {activeGroups.map((group) => (
               <li key={group.grupo_id}>{group.grupo_nome}</li>
@@ -42,13 +66,18 @@ export default async function HomePage() {
         <section className="card">
           <div className="section-heading">
             <h2>Atas válidas</h2>
-            <Link className="button-link" href="/atas/nova">Nova ata</Link>
+            <Link className="button-link" href="/atas/nova">
+              <span className="button-content">
+                <FontAwesomeIcon icon={faFileCirclePlus} />
+                Nova ata
+              </span>
+            </Link>
           </div>
-          {result.atas.length === 0 ? (
+          {atas.length === 0 ? (
             <p className="muted">Nenhuma ata válida cadastrada.</p>
           ) : (
             <ul className="list">
-              {result.atas.map(({ grupo, registro, indicadores }) => (
+              {atas.map(({ grupo, registro, indicadores }) => (
                 <li key={registro.ata.ata_id}>
                   <Link className="record-link" href={`/atas/${registro.ata.ata_id}`}>
                     <strong>{grupo.grupo_nome}</strong>

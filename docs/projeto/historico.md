@@ -194,3 +194,26 @@ canônico.
 - A duplicidade da mesma chave foi rejeitada sem alterar as contagens das abas.
 - Após a migração, a DEV manteve diagnósticos em linhas antigas de `ingressos`
   sem cidade; esses registros históricos não participam dos indicadores.
+
+## 14 de julho de 2026 — Validacao de autenticacao por email
+
+- As rodadas de testes manuais do fluxo de autenticacao por email foram
+  consolidadas em
+  [validacao-autenticacao-email-2026-07-14.md](historico/validacao-autenticacao-email-2026-07-14.md).
+- A primeira rodada confirmou que a redefinicao gravava a nova senha, mas o
+  login era negado porque o responsavel estava vinculado a grupo removido, nao
+  por falha de hash.
+- A segunda rodada isolou o 404 da ativacao: o Sheets retornava `zoom_id`
+  numerico e o schema antigo descartava o grupo durante a leitura agregada.
+- A politica forte de senha passou a ser compartilhada entre ativacao e
+  redefinicao, exigindo minimo de 8 caracteres, uma maiuscula, uma minuscula e
+  um numero.
+- O reuso de link de ativacao deixou de cair em 404 seco e passou a mostrar
+  mensagem amigavel para convite invalido, expirado ou ja utilizado.
+- A sequencia definida foi executada integralmente ate o Teste 14; nao ha
+  pendencias abertas da rodada anterior.
+- A proxima atividade registrada e uma nova execucao completa dos Testes 1 a
+  14, apos excluir `Grupo Teste A` e `Grupo Teste B`.
+- A nova execucao completa tambem passou ate o Teste 14. O unico ajuste final
+  foi impedir reenvio de convite quando o responsavel continua pendente com o
+  mesmo e-mail.

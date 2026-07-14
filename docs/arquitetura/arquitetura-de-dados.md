@@ -5,7 +5,7 @@
 Definir como o domínio do MVP é validado, persistido e reconstruído. O Google
 Sheets é a fonte oficial e não existe banco de dados local.
 
-O [modelo DBML](modelo-de-dados.dbml) representa visualmente as sete abas, sem
+O [modelo DBML](modelo-de-dados.dbml) representa visualmente as oito abas, sem
 indicar adoção de banco relacional.
 
 ## Componentes
@@ -21,11 +21,12 @@ Cada leitura e mutação valida novamente a sessão e o e-mail permitido.
 
 ## Persistência
 
-Uma pasta de trabalho contém sete abas:
+Uma pasta de trabalho contém oito abas:
 
 | Aba | Responsabilidade |
 | --- | --- |
 | `grupos` | Cadastro controlado dos grupos |
+| `grupo_horarios` | Horários recorrentes vinculados por `grupo_id` |
 | `atas` | Dados escalares de cada reunião |
 | `servidores` | Servidores vinculados por `ata_id` |
 | `participacao` | Presenças por localidade vinculadas por `ata_id` |
@@ -35,6 +36,15 @@ Uma pasta de trabalho contém sete abas:
 
 `grupo_id` é o identificador interno dos grupos. `zoom_id` é um atributo externo
 repetível e nunca é usado como chave de relacionamento.
+
+`grupos.link_formulario_ata` é o identificador do link simplificado de
+preenchimento da ata. Esse link é gerado pela aplicação a partir do nome do
+grupo, é único entre grupos e não cria uma estrutura paralela de convites,
+tokens, expiração ou auditoria de acesso.
+
+`atas.preenchido_por` registra o nome informado pela pessoa que preencheu a ata.
+Esse campo substitui a necessidade de cadastro separado de responsáveis pela
+ata.
 
 Os campos e valores aceitos estão nos contratos de
 [Informações Gerais](../produto/contratos/informacoes-gerais.md) e
@@ -56,9 +66,11 @@ funcionais em DEV e, depois, em PROD.
 - Uma célula contém um único valor.
 - Uma linha representa um único registro.
 - Dados repetíveis ocupam linhas próprias.
-- Entidades dependentes usam `ata_id`.
+- Entidades de reunião usam `ata_id`; horários usam `grupo_id`.
 - IDs são UUIDs gerados pelo backend.
 - `created_at` e `updated_at` usam ISO 8601.
+- A coluna `grupos.ordem` é mantida por compatibilidade visual na planilha; a
+  aplicação ordena grupos alfabeticamente por `grupo_nome`.
 - Totais derivados nunca são persistidos; `total_partilhas` é fato informado e
   fica na aba `atas`.
 
@@ -67,7 +79,7 @@ funcionais em DEV e, depois, em PROD.
 O adaptador confere os cabeçalhos, converte as linhas e preserva a localização
 original de cada registro. A leitura agregada:
 
-1. valida individualmente as sete abas;
+1. valida individualmente as oito abas;
 2. resolve referências por `grupo_id` e `ata_id`;
 3. separa registros válidos e inválidos;
 4. calcula indicadores apenas com dados válidos;
@@ -76,11 +88,18 @@ original de cada registro. A leitura agregada:
 Grupos inativos não aparecem em novos formulários, mas continuam identificáveis
 em atas históricas.
 
+## Acesso
+
+Administradores são os e-mails em `AUTH_ALLOWED_EMAILS`. Responsáveis de grupo
+são reconhecidos pelo campo `email_acesso_grupo` da aba `grupos`. O link
+`/preencher/{link_formulario_ata}` permite abrir somente o formulário do grupo
+correspondente, sem login Google e sem acesso a painel administrativo.
+
 ## Criação atômica
 
 O rascunho não é persistido. Após a confirmação do resumo, o backend:
 
-1. revalida autorização e dados;
+1. revalida autorização, link público ou dados;
 2. confirma que o grupo existe e está ativo;
 3. consulta a chave `grupo_id + data_reuniao + hora_inicio`;
 4. gera UUIDs e timestamps;
@@ -122,7 +141,7 @@ Fonte: https://servicodados.ibge.gov.br/api/docs/localidades
 `MANUAL_SHEETS_EDIT_ENABLED` declara a política:
 
 - `true`: mantém a edição manual;
-- `false`: uma rotina administrativa aplica proteções às sete abas e permite a
+- `false`: uma rotina administrativa aplica proteções às abas e permite a
   escrita da conta de serviço conforme as garantias do Sheets.
 
 A flag não bloqueia células sozinha. A rotina deve reconciliar idempotentemente

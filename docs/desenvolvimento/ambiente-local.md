@@ -60,7 +60,7 @@ npm run sheets:reconcile-protections
 ```
 
 Com `true`, a rotina remove somente as proteções gerenciadas pela aplicação.
-Com `false`, mantém uma proteção gerenciada em cada uma das sete abas, com a
+Com `false`, mantém uma proteção gerenciada em cada aba do contrato, com a
 conta de serviço autorizada a escrever. Proteções manuais são preservadas e o
 proprietário da planilha continua capaz de administrar ou remover proteções.
 

@@ -9,15 +9,41 @@ import {
 import type {
   Ata,
   Grupo,
+  GrupoHorario,
   Ingresso,
   Participacao,
   Servidor,
   TrocaChaveiro,
+  UsuarioGrupo,
   Visitante,
 } from "@/domain/schemas";
 import { isMunicipioOption } from "@/domain/municipios";
 
 const requiredText = z.string().trim().min(1, "Campo obrigatório.");
+const requiredSheetText = z.preprocess(
+  (value) => (typeof value === "number" ? String(value) : value),
+  requiredText,
+);
+const optionalText = z.preprocess(
+  (value) => (value === false || value == null ? "" : value),
+  z.string().trim().default(""),
+);
+const historicalRequiredText = z.preprocess(
+  (value) => (value === "" || value === false || value == null ? "Não informado" : value),
+  requiredText,
+);
+const optionalEmail = optionalText.refine(
+  (value) => !value || z.email().safeParse(value).success,
+  "E-mail inválido.",
+);
+const optionalSlug = optionalText.refine(
+  (value) => /^[a-z0-9-]*$/.test(value),
+  "O link deve usar apenas letras minúsculas, números e hífen.",
+);
+const optionalTimestamp = optionalText.refine(
+  (value) => !value || z.string().datetime({ offset: true }).safeParse(value).success,
+  "Data/hora inválida.",
+);
 const uuid = z.string().uuid("UUID inválido.");
 const timestamp = z.string().datetime({ offset: true });
 const auditFields = { created_at: timestamp, updated_at: timestamp };
@@ -58,6 +84,16 @@ const sheetTime = z.preprocess((value) => {
   return value;
 }, z.string().regex(/^(?:[01]\d|2[0-3]):(?:00|30)$/, "Horário inválido."));
 
+export const sheetDiaSemanaSchema = z.enum([
+  "domingo",
+  "segunda",
+  "terca",
+  "quarta",
+  "quinta",
+  "sexta",
+  "sabado",
+]);
+
 export const sheetAtaBusinessKeySchema = z.object({
   grupo_id: uuid,
   data_reuniao: sheetDate,
@@ -66,10 +102,41 @@ export const sheetAtaBusinessKeySchema = z.object({
 
 export const sheetGrupoSchema = z.object({
   grupo_id: uuid,
-  zoom_id: requiredText,
+  zoom_id: requiredSheetText,
   grupo_nome: requiredText,
   ordem: sheetInteger(1),
   ativo: sheetBoolean,
+  responsavel_grupo_nome: optionalText,
+  responsavel_grupo_email: optionalEmail,
+  email_acesso_grupo: optionalEmail,
+  responsaveis_ata: optionalText,
+  link_formulario_ata: optionalSlug,
+  ...auditFields,
+});
+
+export const sheetGrupoHorarioSchema = z.object({
+  horario_id: uuid,
+  grupo_id: uuid,
+  dia_semana: sheetDiaSemanaSchema,
+  hora_inicio: sheetTime,
+  link_reuniao: optionalText,
+  ativo: sheetBoolean,
+  ...auditFields,
+});
+
+export const sheetUsuarioGrupoSchema = z.object({
+  usuario_id: uuid,
+  grupo_id: uuid,
+  email: requiredText.refine(
+    (value) => z.email().safeParse(value).success,
+    "E-mail inválido.",
+  ),
+  nome: optionalText,
+  senha_hash: optionalText,
+  status: z.enum(["pendente", "ativo", "inativo"]),
+  convite_token: optionalText,
+  convite_expira_em: optionalTimestamp,
+  ultimo_login: optionalTimestamp,
   ...auditFields,
 });
 
@@ -79,6 +146,7 @@ export const sheetAtaSchema = z
     grupo_id: uuid,
     data_reuniao: sheetDate,
     hora_inicio: sheetTime,
+    preenchido_por: historicalRequiredText,
     plataforma: z.literal("Zoom"),
     tipo_reuniao: z.enum(["Aberta", "Fechada"]),
     formato_partilha: sheetBoolean,
@@ -187,6 +255,8 @@ export const sheetIngressoSchema = z.object({
 });
 
 export type SheetGrupo = z.infer<typeof sheetGrupoSchema>;
+export type SheetGrupoHorario = z.infer<typeof sheetGrupoHorarioSchema>;
+export type SheetUsuarioGrupo = z.infer<typeof sheetUsuarioGrupoSchema>;
 export type SheetAta = z.infer<typeof sheetAtaSchema>;
 export type SheetServidor = z.infer<typeof sheetServidorSchema>;
 export type SheetParticipacao = z.infer<typeof sheetParticipacaoSchema>;
@@ -196,6 +266,18 @@ export type SheetTrocaChaveiro = z.infer<typeof sheetTrocaChaveiroSchema>;
 
 export const sheetGrupoToDomain = (row: SheetGrupo): Grupo => row;
 export const domainGrupoToSheet = (item: Grupo): SheetGrupo => item;
+export const sheetGrupoHorarioToDomain = (
+  row: SheetGrupoHorario,
+): GrupoHorario => row;
+export const domainGrupoHorarioToSheet = (
+  item: GrupoHorario,
+): SheetGrupoHorario => item;
+export const sheetUsuarioGrupoToDomain = (
+  row: SheetUsuarioGrupo,
+): UsuarioGrupo => row;
+export const domainUsuarioGrupoToSheet = (
+  item: UsuarioGrupo,
+): SheetUsuarioGrupo => item;
 
 export function sheetAtaToDomain(row: SheetAta): Ata {
   const formatos: Ata["formatos"] = [];
@@ -210,6 +292,7 @@ export function sheetAtaToDomain(row: SheetAta): Ata {
     grupo_id: row.grupo_id,
     data_reuniao: row.data_reuniao,
     hora_inicio: row.hora_inicio,
+    preenchido_por: row.preenchido_por,
     plataforma: plataformaMapping.fromSheet(row.plataforma),
     tipo_reuniao: tipoReuniaoMapping.fromSheet(row.tipo_reuniao),
     formatos,
@@ -227,6 +310,7 @@ export function domainAtaToSheet(item: Ata): SheetAta {
     grupo_id: item.grupo_id,
     data_reuniao: item.data_reuniao,
     hora_inicio: item.hora_inicio,
+    preenchido_por: item.preenchido_por,
     plataforma: plataformaMapping.toSheet(item.plataforma),
     tipo_reuniao: tipoReuniaoMapping.toSheet(item.tipo_reuniao),
     formato_partilha: formatos.has("partilha"),

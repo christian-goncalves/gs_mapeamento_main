@@ -53,7 +53,10 @@ export function buildAtomicAppendRequests(
     ),
   };
 
-  return (Object.entries(rows) as [Exclude<SheetName, "grupos">, object[]][])
+  return (Object.entries(rows) as [
+    Exclude<SheetName, "grupos" | "grupo_horarios">,
+    object[],
+  ][])
     .filter(([, items]) => items.length > 0)
     .map(([sheet, items]) => ({
       appendCells: {

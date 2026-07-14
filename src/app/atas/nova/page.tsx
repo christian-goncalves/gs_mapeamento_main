@@ -1,13 +1,18 @@
 import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { requireAuthorizedSession } from "@/lib/auth/require-session";
-import { listActiveGroups } from "@/lib/sheets/repository";
+import { listActiveGroupOptions } from "@/lib/sheets/repository";
 import { AtaForm } from "./ata-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function NewAtaPage() {
-  await requireAuthorizedSession();
-  const groups = await listActiveGroups();
+  const { access } = await requireAuthorizedSession();
+  const allowedGroupIds = new Set(access.groups.map((group) => group.grupo_id));
+  const groups = (await listActiveGroupOptions()).filter((group) =>
+    allowedGroupIds.has(group.grupo_id),
+  );
   const now = new Date();
   const today = new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Sao_Paulo",
@@ -18,7 +23,12 @@ export default async function NewAtaPage() {
 
   return (
     <main className="shell form-shell">
-      <Link className="back-link" href="/">Voltar para atas</Link>
+      <Link className="back-link" href="/">
+        <span className="button-content">
+          <FontAwesomeIcon icon={faArrowLeft} />
+          Voltar para atas
+        </span>
+      </Link>
       <header>
         <p className="eyebrow">Nova ata</p>
         <h1>Registrar reunião</h1>
@@ -31,6 +41,11 @@ export default async function NewAtaPage() {
           groups={groups.map((group) => ({
             id: group.grupo_id,
             name: group.grupo_nome,
+            horarios: group.horarios.map((horario) => ({
+              dia_semana: horario.dia_semana,
+              hora_inicio: horario.hora_inicio,
+              link_reuniao: horario.link_reuniao,
+            })),
           }))}
           today={today}
         />

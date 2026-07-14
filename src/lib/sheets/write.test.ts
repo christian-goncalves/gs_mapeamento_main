@@ -13,6 +13,7 @@ const registro: AtaCompleta = {
     grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
     data_reuniao: "2026-06-22",
     hora_inicio: "20:30",
+    preenchido_por: "Patricia",
     plataforma: "zoom",
     tipo_reuniao: "aberta",
     formatos: ["partilha"],
@@ -73,6 +74,7 @@ const registro: AtaCompleta = {
 const sheetIds = {
   grupos: 0,
   atas: 1,
+  grupo_horarios: 7,
   servidores: 2,
   participacao: 3,
   visitantes: 4,
@@ -92,6 +94,9 @@ describe("lote atômico do Sheets", () => {
     ).toEqual({ numberValue: 46195 });
     expect(
       requests[0].appendCells?.rows?.[0]?.values?.[4]?.userEnteredValue,
+    ).toEqual({ stringValue: "Patricia" });
+    expect(
+      requests[0].appendCells?.rows?.[0]?.values?.[5]?.userEnteredValue,
     ).toEqual({ stringValue: "Zoom" });
     expect(
       requests[3].appendCells?.rows?.[0]?.values?.[4]?.userEnteredValue,

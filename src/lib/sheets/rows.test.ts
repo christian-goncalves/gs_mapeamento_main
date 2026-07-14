@@ -13,6 +13,17 @@ describe("linhas do Sheets", () => {
     ]);
   });
 
+  it("ignora linhas vazias com FALSE herdado de checkbox", () => {
+    expect(
+      rowsToObjects(
+        ["id", "nome", "texto"],
+        [["id", "nome", "texto"], ["", "", false], ["1", "Grupo", false]],
+      ),
+    ).toEqual([
+      { rowNumber: 3, value: { id: "1", nome: "Grupo", texto: false } },
+    ]);
+  });
+
   it("preserva o número real depois de linhas vazias", () => {
     const rows = rowsToObjects(
       ["id"],

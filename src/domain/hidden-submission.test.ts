@@ -13,6 +13,7 @@ function hiddenPayload() {
       grupo_id: grupoId,
       data_reuniao: "2026-06-23",
       hora_inicio: "20:30",
+      preenchido_por: "Patricia",
       plataforma: "zoom",
       tipo_reuniao: "aberta",
       formatos: ["partilha"],

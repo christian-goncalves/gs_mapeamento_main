@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   ataFormSchema,
   ataSubmissionSchema,
+  grupoFormSchema,
   ingressoFormSchema,
   participacaoFormSchema,
   trocaChaveiroFormSchema,
@@ -9,12 +10,36 @@ import {
 } from "./form-schemas";
 
 describe("schemas de formulário", () => {
+  it("valida todos os campos obrigatórios do grupo", () => {
+    expect(
+      grupoFormSchema.safeParse({
+        zoom_id: "123456789",
+        grupo_nome: "Grupo",
+        ativo: true,
+        responsavel_grupo_nome: "Patricia",
+        responsavel_grupo_email: "patricia@example.com",
+        email_acesso_grupo: "grupo@example.com",
+      }).success,
+    ).toBe(true);
+    expect(
+      grupoFormSchema.safeParse({
+        zoom_id: "TESTE ID",
+        grupo_nome: "Grupo",
+        ativo: true,
+        responsavel_grupo_nome: "",
+        responsavel_grupo_email: "email-invalido",
+        email_acesso_grupo: "",
+      }).success,
+    ).toBe(false);
+  });
+
   it("aceita códigos internos sem campos de persistência", () => {
     expect(
       ataFormSchema.safeParse({
         grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
         data_reuniao: "2026-06-21",
         hora_inicio: "20:30",
+        preenchido_por: "Patricia",
         plataforma: "zoom",
         tipo_reuniao: "fechada",
         formatos: ["estudo"],
@@ -61,6 +86,7 @@ describe("schemas de formulário", () => {
           grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
           data_reuniao: "2026-06-22",
           hora_inicio: "20:30",
+          preenchido_por: "Patricia",
           plataforma: "zoom",
           tipo_reuniao: "aberta",
           formatos: ["partilha"],

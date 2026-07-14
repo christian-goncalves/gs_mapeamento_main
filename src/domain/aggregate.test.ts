@@ -14,6 +14,11 @@ const group = {
   grupo_nome: "Grupo Histórico",
   ordem: 1,
   ativo: false,
+  responsavel_grupo_nome: "",
+  responsavel_grupo_email: "",
+  email_acesso_grupo: "",
+  responsaveis_ata: "",
+  link_formulario_ata: "grupo-historico",
   ...audit,
 };
 const ata = {
@@ -21,6 +26,7 @@ const ata = {
   grupo_id: grupoId,
   data_reuniao: "2026-06-21",
   hora_inicio: "10:30",
+  preenchido_por: "Patricia",
   plataforma: "zoom" as const,
   tipo_reuniao: "aberta" as const,
   formatos: ["partilha" as const],
@@ -50,6 +56,7 @@ function invalid(
 function baseRows(): ParsedContractRows {
   return {
     grupos: [valid("grupos", 2, group)],
+    grupo_horarios: [],
     atas: [valid("atas", 2, ata)],
     servidores: [
       valid("servidores", 2, {

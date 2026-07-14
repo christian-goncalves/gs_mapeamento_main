@@ -15,14 +15,16 @@ por isso, ficam na aba `servidores`.
 | grupo_id | seleção | Grupo ativo cadastrado na aba `grupos` |
 | data_reuniao | data | Obrigatória |
 | hora_inicio | seleção de hora | Obrigatória, em intervalos de 30 minutos |
+| preenchido_por | texto | Nome da pessoa que preencheu a ata |
 | plataforma | seleção | Obrigatória e com valores controlados |
 | tipo_reuniao | seleção única | `aberta` ou `fechada` |
 | formatos | seleção múltipla | Pelo menos um formato obrigatório |
 | servidores | lista repetível | Um nome por item |
 
 O usuário seleciona o grupo pelo nome. A aplicação persiste o `grupo_id` UUID;
-`zoom_id` e `ordem` pertencem ao cadastro do grupo e não são identificadores da
-ata.
+`zoom_id` pertence ao cadastro do grupo e não é identificador da ata. A coluna
+`ordem`, quando existir na planilha, é compatibilidade visual e não define a
+ordenação da aplicação.
 
 ## Formatos de reunião
 

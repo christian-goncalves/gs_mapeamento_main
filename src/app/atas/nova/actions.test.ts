@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
   redirect: vi.fn(),
   revalidatePath: vi.fn(),
   requireAuthorizedSession: vi.fn(),
+  getActiveGroupByAtaLink: vi.fn(),
 }));
 
 vi.mock("@/lib/sheets/create-ata", () => ({
@@ -14,6 +15,10 @@ vi.mock("@/lib/sheets/create-ata", () => ({
 vi.mock("@/lib/auth/require-session", () => ({
   requireAuthorizedSession: mocks.requireAuthorizedSession,
 }));
+vi.mock("@/lib/sheets/repository", () => ({
+  getActiveGroupByAtaLink: mocks.getActiveGroupByAtaLink,
+}));
+vi.mock("server-only", () => ({}));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
 
@@ -24,6 +29,7 @@ const payload = JSON.stringify({
     grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
     data_reuniao: "2026-06-22",
     hora_inicio: "20:30",
+    preenchido_por: "Patricia",
     plataforma: "zoom",
     tipo_reuniao: "aberta",
     formatos: ["partilha"],
@@ -42,6 +48,7 @@ const hiddenPayload = JSON.stringify({
     grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
     data_reuniao: "2026-06-22",
     hora_inicio: "20:30",
+    preenchido_por: "Patricia",
     plataforma: "zoom",
     tipo_reuniao: "aberta",
     formatos: ["partilha"],

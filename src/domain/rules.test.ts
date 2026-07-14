@@ -12,6 +12,7 @@ const base = {
     grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
     data_reuniao: "2026-06-21",
     hora_inicio: "10:30",
+    preenchido_por: "Patricia",
     plataforma: "zoom",
     tipo_reuniao: "aberta",
     formatos: ["partilha"],

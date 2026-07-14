@@ -1,5 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  canAccessGroup,
+} from "@/lib/auth/access";
 import {
   categoriaVisitanteMapping,
   formatoMapping,
@@ -18,11 +23,12 @@ export default async function AtaDetailPage({
 }: {
   params: Promise<{ ataId: string }>;
 }) {
-  await requireAuthorizedSession();
+  const { access } = await requireAuthorizedSession();
   const { ataId } = await params;
   const result = await readAggregatedAtas();
   const item = result.atas.find((candidate) => candidate.registro.ata.ata_id === ataId);
   if (!item) notFound();
+  if (!canAccessGroup(access, item.grupo.grupo_id)) notFound();
 
   const { grupo, registro, indicadores } = item;
   const { ata } = registro;
@@ -30,7 +36,10 @@ export default async function AtaDetailPage({
   return (
     <main className="shell detail-shell">
       <Link className="back-link" href="/">
-        Voltar para atas
+        <span className="button-content">
+          <FontAwesomeIcon icon={faArrowLeft} />
+          Voltar para atas
+        </span>
       </Link>
       <header className="detail-header">
         <div>
@@ -46,6 +55,7 @@ export default async function AtaDetailPage({
       <section className="card">
         <h2>Informações gerais</h2>
         <dl className="definition-grid">
+          <div><dt>Preenchido por</dt><dd>{ata.preenchido_por}</dd></div>
           <div><dt>Plataforma</dt><dd>{plataformaMapping.toSheet(ata.plataforma)}</dd></div>
           <div><dt>Tipo</dt><dd>{tipoReuniaoMapping.toSheet(ata.tipo_reuniao)}</dd></div>
           <div><dt>Membros presentes</dt><dd>{ata.total_membros_presentes}</dd></div>

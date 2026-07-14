@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --hostname 127.0.0.1 --port 3000",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -13,11 +13,15 @@
     "sheets:reconcile-protections": "tsx --env-file=.env.local scripts/reconcile-sheet-protections.ts"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.3.0",
+    "@fortawesome/free-solid-svg-icons": "^7.3.0",
+    "@fortawesome/react-fontawesome": "^3.3.1",
     "googleapis": "^173.0.0",
     "next": "^16.2.9",
     "next-auth": "beta",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "resend": "^6.17.2",
     "server-only": "^0.0.1",
     "zod": "^4.4.3"
   },

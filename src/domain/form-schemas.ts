@@ -11,11 +11,40 @@ import { horaInicioSchema } from "./schemas";
 import { isMunicipioOption } from "./municipios";
 
 const requiredText = z.string().trim().min(1, "Campo obrigatório.");
+const optionalText = z.string().trim();
+const requiredEmail = requiredText.refine(
+  (value) => z.email().safeParse(value).success,
+  "E-mail inválido.",
+);
+const zoomId = requiredText.refine((value) => {
+  if (/^\d{8,12}$/.test(value)) return true;
+  const parsed = z.url().safeParse(value);
+  if (!parsed.success) return false;
+  return /(^|\.)zoom\.us$/i.test(new URL(value).hostname);
+}, "Informe um ID numérico do Zoom ou uma URL válida do Zoom.");
 
 export const grupoFormSchema = z.object({
-  zoom_id: requiredText,
+  zoom_id: zoomId,
   grupo_nome: requiredText,
-  ordem: z.number().int().min(1),
+  ativo: z.boolean(),
+  responsavel_grupo_nome: requiredText,
+  responsavel_grupo_email: requiredEmail,
+  email_acesso_grupo: requiredEmail,
+});
+
+export const grupoHorarioFormSchema = z.object({
+  grupo_id: z.string().uuid(),
+  dia_semana: z.enum([
+    "domingo",
+    "segunda",
+    "terca",
+    "quarta",
+    "quinta",
+    "sexta",
+    "sabado",
+  ]),
+  hora_inicio: horaInicioSchema,
+  link_reuniao: optionalText,
   ativo: z.boolean(),
 });
 
@@ -23,6 +52,7 @@ export const ataFormSchema = z.object({
   grupo_id: z.string().uuid(),
   data_reuniao: z.string().date(),
   hora_inicio: horaInicioSchema,
+  preenchido_por: requiredText,
   plataforma: z.enum(plataformaMapping.codes),
   tipo_reuniao: z.enum(tipoReuniaoMapping.codes),
   formatos: z.array(z.enum(formatoMapping.codes)).min(1),

@@ -4,6 +4,7 @@ import { aggregateContractRows } from "@/domain/aggregate";
 import type {
   Ata,
   Grupo,
+  GrupoHorario,
   Ingresso,
   Participacao,
   Servidor,
@@ -23,6 +24,8 @@ import {
   sheetAtaSchema,
   sheetAtaToDomain,
   sheetGrupoSchema,
+  sheetGrupoHorarioSchema,
+  sheetGrupoHorarioToDomain,
   sheetGrupoToDomain,
   sheetIngressoSchema,
   sheetIngressoToDomain,
@@ -126,13 +129,49 @@ export async function listGroups(): Promise<ParsedRow<Grupo>[]> {
   );
 }
 
+export async function listGrupoHorarios(): Promise<ParsedRow<GrupoHorario>[]> {
+  return parseRows(
+    "grupo_horarios",
+    sheetGrupoHorarioSchema,
+    await readSheet("grupo_horarios"),
+    sheetGrupoHorarioToDomain,
+  );
+}
+
 export async function listActiveGroups() {
   const rows = await listGroups();
   return rows
     .filter((row): row is Extract<typeof row, { valid: true }> => row.valid)
     .map((row) => row.data)
     .filter((group) => group.ativo)
-    .sort((first, second) => first.ordem - second.ordem);
+    .sort((first, second) => first.grupo_nome.localeCompare(second.grupo_nome, "pt-BR"));
+}
+
+export async function listActiveGroupOptions() {
+  const result = await readAggregatedAtas();
+  return result.grupos
+    .filter((group) => group.ativo)
+    .sort((first, second) => first.grupo_nome.localeCompare(second.grupo_nome, "pt-BR"))
+    .map((group) => ({
+      ...group,
+      horarios: result.grupo_horarios.filter(
+        (horario) => horario.grupo_id === group.grupo_id && horario.ativo,
+      ),
+    }));
+}
+
+export async function getActiveGroupByAtaLink(link: string) {
+  const result = await readAggregatedAtas();
+  const group = result.grupos.find(
+    (item) => item.link_formulario_ata === link,
+  );
+  if (!group || !group.ativo) return null;
+  return {
+    group,
+    horarios: result.grupo_horarios.filter(
+      (horario) => horario.grupo_id === group.grupo_id && horario.ativo,
+    ),
+  };
 }
 
 export async function listAtas(): Promise<ParsedRow<Ata>[]> {
@@ -200,6 +239,12 @@ export async function readAggregatedAtas() {
     values.grupos,
     sheetGrupoToDomain,
   );
+  const grupo_horarios = parseRows(
+    "grupo_horarios",
+    sheetGrupoHorarioSchema,
+    values.grupo_horarios,
+    sheetGrupoHorarioToDomain,
+  );
   const atas = parseRows(
     "atas",
     sheetAtaSchema,
@@ -238,6 +283,7 @@ export async function readAggregatedAtas() {
   );
   const aggregated = aggregateContractRows({
     grupos,
+    grupo_horarios,
     atas,
     servidores,
     participacao,

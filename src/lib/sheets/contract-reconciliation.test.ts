@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { tempoLimpoMapping } from "@/domain/enums";
 import { SHEET_HEADERS, type SheetName } from "./contract";
 import {
   reconcileSheetContract,
@@ -62,6 +63,9 @@ function clientWith(options: {
 }
 
 describe("reconciliação do contrato Sheets", () => {
+  const trocasChaveiroSheetId =
+    (Object.keys(SHEET_HEADERS) as SheetName[]).indexOf("trocas_chaveiro") + 1;
+
   it("cria ingressos quando a aba está ausente", async () => {
     const { client, batchUpdate } = clientWith({
       names: existingNames,
@@ -147,6 +151,33 @@ describe("reconciliação do contrato Sheets", () => {
     );
   });
 
+  it("adiciona preenchido_por em atas quando a coluna está ausente", async () => {
+    const { client, batchUpdate } = clientWith({
+      afterMigration: true,
+      invalidHeader: {
+        atas: SHEET_HEADERS.atas.filter((header) => header !== "preenchido_por"),
+      },
+    });
+
+    const result = await reconcileSheetContract(client, "spreadsheet-test");
+
+    expect(result.addedColumns).toContainEqual({
+      sheet: "atas",
+      column: "preenchido_por",
+    });
+    const requests = batchUpdate.mock.calls[0][0].requestBody.requests;
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        insertDimension: expect.objectContaining({
+          range: expect.objectContaining({
+            dimension: "COLUMNS",
+            startIndex: SHEET_HEADERS.atas.indexOf("preenchido_por"),
+          }),
+        }),
+      }),
+    );
+  });
+
   it("adiciona quantidade em trocas_chaveiro quando a coluna está ausente", async () => {
     const { client } = clientWith({
       afterMigration: true,
@@ -181,6 +212,147 @@ describe("reconciliação do contrato Sheets", () => {
       sheet: "ingressos",
       column: "cidade",
     });
+  });
+
+  it("adiciona os campos de acesso em grupos quando a planilha está no contrato antigo", async () => {
+    const newGroupColumns = [
+      "responsavel_grupo_nome",
+      "responsavel_grupo_email",
+      "email_acesso_grupo",
+      "responsaveis_ata",
+      "link_formulario_ata",
+    ];
+    const { client, batchUpdate } = clientWith({
+      afterMigration: true,
+      invalidHeader: {
+        grupos: SHEET_HEADERS.grupos.filter(
+          (header) => !newGroupColumns.includes(header),
+        ),
+      },
+    });
+
+    const result = await reconcileSheetContract(client, "spreadsheet-test");
+
+    for (const column of newGroupColumns) {
+      expect(result.addedColumns).toContainEqual({ sheet: "grupos", column });
+    }
+    const requests = batchUpdate.mock.calls[0][0].requestBody.requests;
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        insertDimension: expect.objectContaining({
+          range: expect.objectContaining({
+            dimension: "COLUMNS",
+            startIndex: SHEET_HEADERS.grupos.indexOf(newGroupColumns[0]),
+            endIndex:
+              SHEET_HEADERS.grupos.indexOf(newGroupColumns[0]) +
+              newGroupColumns.length,
+          }),
+        }),
+      }),
+    );
+  });
+
+  it("reconcilia validações de trocas_chaveiro com o contrato atual", async () => {
+    const { client, batchUpdate } = clientWith();
+
+    await reconcileSheetContract(client, "spreadsheet-test");
+
+    const requests = batchUpdate.mock.calls[0][0].requestBody.requests;
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        repeatCell: expect.objectContaining({
+          range: expect.objectContaining({
+            sheetId: trocasChaveiroSheetId,
+            startColumnIndex: 2,
+            endColumnIndex: 3,
+          }),
+          cell: expect.objectContaining({
+            dataValidation: expect.objectContaining({
+              condition: {
+                type: "ONE_OF_LIST",
+                values: tempoLimpoMapping.codes.map((userEnteredValue) => ({
+                  userEnteredValue,
+                })),
+              },
+              strict: true,
+              showCustomUi: true,
+            }),
+          }),
+          fields: "dataValidation",
+        }),
+      }),
+    );
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        repeatCell: expect.objectContaining({
+          range: expect.objectContaining({
+            sheetId: trocasChaveiroSheetId,
+            startColumnIndex: 3,
+            endColumnIndex: 4,
+          }),
+          cell: expect.objectContaining({
+            dataValidation: expect.objectContaining({
+              condition: {
+                type: "NUMBER_GREATER_THAN_EQ",
+                values: [
+                  {
+                    userEnteredValue: "1",
+                  },
+                ],
+              },
+              strict: true,
+            }),
+          }),
+          fields: "dataValidation",
+        }),
+      }),
+    );
+  });
+
+  it("remove validação herdada de checkbox das colunas textuais de acesso em grupos", async () => {
+    const { client, batchUpdate } = clientWith();
+
+    await reconcileSheetContract(client, "spreadsheet-test");
+
+    const requests = batchUpdate.mock.calls[0][0].requestBody.requests;
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        repeatCell: expect.objectContaining({
+          range: expect.objectContaining({
+            sheetId: 1,
+            startColumnIndex: SHEET_HEADERS.grupos.indexOf(
+              "responsavel_grupo_nome",
+            ),
+            endColumnIndex:
+              SHEET_HEADERS.grupos.indexOf("link_formulario_ata") + 1,
+          }),
+          cell: {},
+          fields: "dataValidation",
+        }),
+      }),
+    );
+  });
+
+  it("não aplica dropdown de tempo limpo na coluna quantidade", async () => {
+    const { client, batchUpdate } = clientWith();
+
+    await reconcileSheetContract(client, "spreadsheet-test");
+
+    const requests = batchUpdate.mock.calls[0][0].requestBody.requests;
+    const quantidadeValidation = requests.find(
+      (request: { repeatCell?: { range?: { startColumnIndex?: number } } }) =>
+        request.repeatCell?.range?.startColumnIndex === 3,
+    );
+    expect(
+      quantidadeValidation?.repeatCell?.cell?.dataValidation?.condition?.type,
+    ).toBe("NUMBER_GREATER_THAN_EQ");
+    expect(
+      quantidadeValidation?.repeatCell?.cell?.dataValidation?.condition?.values,
+    ).not.toEqual(
+      tempoLimpoMapping.codes.map((userEnteredValue) => ({
+        userEnteredValue,
+      })),
+    );
   });
 
   it("falha sem mutar quando cabeçalho existente tem divergência inesperada", async () => {

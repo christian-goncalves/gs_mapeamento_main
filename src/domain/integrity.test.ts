@@ -17,6 +17,11 @@ const group = {
   grupo_nome: "Grupo",
   ordem: 1,
   ativo: true,
+  responsavel_grupo_nome: "",
+  responsavel_grupo_email: "",
+  email_acesso_grupo: "",
+  responsaveis_ata: "",
+  link_formulario_ata: "grupo",
   ...audit,
 } satisfies Grupo;
 
@@ -28,6 +33,7 @@ describe("integridade entre linhas", () => {
   it("rejeita IDs duplicados com aba, linha e campo", () => {
     const rows = {
       grupos: [row("grupos", 2, group), row("grupos", 8, { ...group, ordem: 2 })],
+      grupo_horarios: [],
       atas: [],
       servidores: [],
       participacao: [],
@@ -43,20 +49,20 @@ describe("integridade entre linhas", () => {
     });
   });
 
-  it("rejeita ordem de grupo duplicada", () => {
+  it("permite ordem de grupo duplicada porque a ordenação é alfabética", () => {
     const rows = {
       grupos: [
         row("grupos", 2, group),
         row("grupos", 3, {
           ...group,
           grupo_id: "2bed9d1b-7fea-4cf4-9497-f0ccbcead41c",
+          link_formulario_ata: "outro-grupo",
         }),
       ],
+      grupo_horarios: [],
       atas: [], servidores: [], participacao: [], visitantes: [], ingressos: [], trocas_chaveiro: [],
     } satisfies ContractRows;
-    expect(validateContractIntegrity(rows)).toEqual([
-      expect.objectContaining({ sheet: "grupos", rowNumber: 3, field: "ordem" }),
-    ]);
+    expect(validateContractIntegrity(rows)).toEqual([]);
   });
 
   it("rejeita ordem de servidor repetida apenas na mesma ata", () => {
@@ -69,6 +75,7 @@ describe("integridade entre linhas", () => {
     } satisfies Servidor;
     const rows = {
       grupos: [], atas: [],
+      grupo_horarios: [],
       servidores: [
         row("servidores", 2, server),
         row("servidores", 3, {

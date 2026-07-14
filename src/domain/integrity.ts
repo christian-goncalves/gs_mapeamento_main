@@ -1,6 +1,7 @@
 import type {
   Ata,
   Grupo,
+  GrupoHorario,
   Ingresso,
   Participacao,
   Servidor,
@@ -13,6 +14,7 @@ type ValidRow<T> = Extract<ParsedRow<T>, { valid: true }>;
 
 export type ContractRows = {
   grupos: ValidRow<Grupo>[];
+  grupo_horarios: ValidRow<GrupoHorario>[];
   atas: ValidRow<Ata>[];
   servidores: ValidRow<Servidor>[];
   participacao: ValidRow<Participacao>[];
@@ -89,10 +91,28 @@ export function validateContractIntegrity(rows: ContractRows) {
       "troca_chaveiro_id duplicado.",
     ),
     ...duplicateDiagnostics(
-      rows.grupos,
-      "ordem",
-      (item) => String(item.ordem),
-      "A ordem deve ser única entre grupos.",
+      rows.grupos.filter((row) => row.data.link_formulario_ata),
+      "link_formulario_ata",
+      (item) => item.link_formulario_ata,
+      "O link do formulário deve ser único entre grupos.",
+    ),
+    ...duplicateDiagnostics(
+      rows.grupos.filter((row) => row.data.email_acesso_grupo),
+      "email_acesso_grupo",
+      (item) => item.email_acesso_grupo.toLocaleLowerCase("en-US"),
+      "O e-mail de acesso deve ser único entre grupos.",
+    ),
+    ...duplicateDiagnostics(
+      rows.grupo_horarios ?? [],
+      "horario_id",
+      (item) => item.horario_id,
+      "horario_id duplicado.",
+    ),
+    ...duplicateDiagnostics(
+      (rows.grupo_horarios ?? []).filter((row) => row.data.ativo),
+      "hora_inicio",
+      (item) => `${item.grupo_id}|${item.dia_semana}|${item.hora_inicio}`,
+      "Horário ativo duplicado para o mesmo grupo, dia e hora.",
     ),
     ...duplicateDiagnostics(
       rows.servidores,

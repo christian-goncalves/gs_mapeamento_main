@@ -29,17 +29,48 @@ Enum origem_contato {
   outro
 }
 
+Enum dia_semana {
+  domingo
+  segunda
+  terca
+  quarta
+  quinta
+  sexta
+  sabado
+}
+
 Table grupos {
   grupo_id uuid [pk]
   zoom_id varchar [not null, note: 'ID externo do Zoom; pode se repetir']
   grupo_nome varchar [not null, unique]
-  ordem integer [not null, unique, note: 'Ordem de exibicao a partir de 1']
+  ordem integer [not null, note: 'Compatibilidade visual na planilha; aplicacao ordena por nome']
   ativo boolean [not null, default: true]
+  responsavel_grupo_nome varchar
+  responsavel_grupo_email varchar
+  email_acesso_grupo varchar [note: 'Login Google do responsavel do grupo']
+  responsaveis_ata text [note: 'Compatibilidade; responsavel por ata e registrado em atas.preenchido_por']
+  link_formulario_ata varchar [unique, note: 'Identificador gerado para /preencher/{link}']
   created_at timestamp [not null]
   updated_at timestamp [not null]
 
   indexes {
     zoom_id
+    email_acesso_grupo
+  }
+}
+
+Table grupo_horarios {
+  horario_id uuid [pk]
+  grupo_id uuid [not null]
+  dia_semana dia_semana [not null]
+  hora_inicio time [not null]
+  link_reuniao varchar
+  ativo boolean [not null, default: true]
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+
+  indexes {
+    (grupo_id, dia_semana, hora_inicio) [note: 'Horarios ativos nao devem duplicar esta combinacao']
   }
 }
 
@@ -48,6 +79,7 @@ Table atas {
   grupo_id uuid [not null]
   data_reuniao date [not null]
   hora_inicio time [not null]
+  preenchido_por varchar [not null]
   plataforma varchar [not null]
   tipo_reuniao tipo_reuniao [not null]
   formato_partilha boolean [not null, default: false]
@@ -122,6 +154,7 @@ Table ingressos {
 }
 
 Ref: atas.grupo_id > grupos.grupo_id
+Ref: grupo_horarios.grupo_id > grupos.grupo_id
 Ref: servidores.ata_id > atas.ata_id
 Ref: participacao.ata_id > atas.ata_id
 Ref: visitantes.ata_id > atas.ata_id

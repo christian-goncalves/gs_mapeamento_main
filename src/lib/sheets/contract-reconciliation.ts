@@ -1,5 +1,6 @@
 import type { sheets_v4 } from "googleapis";
 
+import { tempoLimpoMapping } from "@/domain/enums";
 import { SHEET_HEADERS, type SheetName } from "./contract";
 
 type SheetSnapshot = {
@@ -44,7 +45,11 @@ export type ContractReconciliationResult = {
   requestCount: number;
 };
 
-const autoCreatableSheets = new Set<SheetName>(["ingressos"]);
+const autoCreatableSheets = new Set<SheetName>([
+  "ingressos",
+  "grupo_horarios",
+  "usuarios_grupo",
+]);
 const sheetNames = Object.keys(SHEET_HEADERS) as SheetName[];
 
 function headerMismatchMessage(
@@ -69,17 +74,27 @@ function isHeaderPrefix(actual: unknown[], expectedPrefix: readonly string[]) {
   );
 }
 
-function migratableMissingColumn(
+function migratableMissingColumns(
   sheet: SheetName,
   actual: unknown[],
-): { column: string; insertIndex: number } | null {
+): { columns: string[]; insertIndex: number } | null {
   if (sheet === "atas") {
+    const expectedWithoutPreenchidoPor = SHEET_HEADERS.atas.filter(
+      (header) => header !== "preenchido_por",
+    );
+    if (isHeaderPrefix(actual, expectedWithoutPreenchidoPor)) {
+      return {
+        columns: ["preenchido_por"],
+        insertIndex: SHEET_HEADERS.atas.indexOf("preenchido_por"),
+      };
+    }
+
     const expectedWithoutTotalPartilhas = SHEET_HEADERS.atas.filter(
       (header) => header !== "total_partilhas",
     );
     if (isHeaderPrefix(actual, expectedWithoutTotalPartilhas)) {
       return {
-        column: "total_partilhas",
+        columns: ["total_partilhas"],
         insertIndex: SHEET_HEADERS.atas.indexOf("total_partilhas"),
       };
     }
@@ -91,7 +106,7 @@ function migratableMissingColumn(
     );
     if (isHeaderPrefix(actual, expectedWithoutQuantidade)) {
       return {
-        column: "quantidade",
+        columns: ["quantidade"],
         insertIndex: SHEET_HEADERS.trocas_chaveiro.indexOf("quantidade"),
       };
     }
@@ -103,10 +118,41 @@ function migratableMissingColumn(
     );
     if (isHeaderPrefix(actual, expectedWithoutCidade)) {
       return {
-        column: "cidade",
+        columns: ["cidade"],
         insertIndex: SHEET_HEADERS.ingressos.indexOf("cidade"),
       };
     }
+  }
+
+  if (sheet === "grupos") {
+    const firstGroupAccessColumn = "responsavel_grupo_nome";
+    const newGroupColumns = [
+      firstGroupAccessColumn,
+      "responsavel_grupo_email",
+      "email_acesso_grupo",
+      "responsaveis_ata",
+      "link_formulario_ata",
+    ];
+    const expectedWithoutNewGroupColumns = SHEET_HEADERS.grupos.filter(
+      (header) => !newGroupColumns.includes(header),
+    );
+    if (isHeaderPrefix(actual, expectedWithoutNewGroupColumns)) {
+      return {
+        columns: newGroupColumns,
+        insertIndex: SHEET_HEADERS.grupos.indexOf(firstGroupAccessColumn),
+      };
+    }
+  }
+
+  const expected = SHEET_HEADERS[sheet];
+  if (
+    actual.length < expected.length &&
+    actual.every((header, index) => header === expected[index])
+  ) {
+    return {
+      columns: [...expected.slice(actual.length)],
+      insertIndex: actual.length,
+    };
   }
 
   return null;
@@ -163,8 +209,91 @@ function atasValidationRequests(
   });
 
   return [
-    listValidation(4, ["Zoom"]),
-    listValidation(5, ["Aberta", "Fechada"]),
+    listValidation(5, ["Zoom"]),
+    listValidation(6, ["Aberta", "Fechada"]),
+  ];
+}
+
+function gruposAccessColumnCleanupRequests(
+  sheetId: number,
+  rowCount: number,
+): sheets_v4.Schema$Request[] {
+  const startColumnIndex = SHEET_HEADERS.grupos.indexOf(
+    "responsavel_grupo_nome",
+  );
+  const endColumnIndex =
+    SHEET_HEADERS.grupos.indexOf("link_formulario_ata") + 1;
+  return [
+    {
+      repeatCell: {
+        range: {
+          sheetId,
+          startRowIndex: 1,
+          endRowIndex: rowCount,
+          startColumnIndex,
+          endColumnIndex,
+        },
+        cell: {},
+        fields: "dataValidation",
+      },
+    },
+  ];
+}
+
+function trocasChaveiroValidationRequests(
+  sheetId: number,
+  rowCount: number,
+): sheets_v4.Schema$Request[] {
+  return [
+    {
+      repeatCell: {
+        range: {
+          sheetId,
+          startRowIndex: 1,
+          endRowIndex: rowCount,
+          startColumnIndex: 2,
+          endColumnIndex: 3,
+        },
+        cell: {
+          dataValidation: {
+            condition: {
+              type: "ONE_OF_LIST",
+              values: tempoLimpoMapping.codes.map((userEnteredValue) => ({
+                userEnteredValue,
+              })),
+            },
+            strict: true,
+            showCustomUi: true,
+          },
+        },
+        fields: "dataValidation",
+      },
+    },
+    {
+      repeatCell: {
+        range: {
+          sheetId,
+          startRowIndex: 1,
+          endRowIndex: rowCount,
+          startColumnIndex: 3,
+          endColumnIndex: 4,
+        },
+        cell: {
+          dataValidation: {
+            condition: {
+              type: "NUMBER_GREATER_THAN_EQ",
+              values: [
+                {
+                  userEnteredValue: "1",
+                },
+              ],
+            },
+            strict: true,
+          },
+        },
+        fields: "dataValidation",
+      },
+    },
   ];
 }
 
@@ -220,7 +349,7 @@ export async function reconcileSheetContract(
       continue;
     }
 
-    const migration = migratableMissingColumn(name, actual);
+    const migration = migratableMissingColumns(name, actual);
     const sheetId = byName.get(name)?.properties?.sheetId;
     if (!migration || !Number.isInteger(sheetId) || sheetId == null) {
       assertHeader(name, actual);
@@ -233,7 +362,7 @@ export async function reconcileSheetContract(
           sheetId,
           dimension: "COLUMNS",
           startIndex: migration.insertIndex,
-          endIndex: migration.insertIndex + 1,
+          endIndex: migration.insertIndex + migration.columns.length,
         },
         inheritFromBefore: true,
       },
@@ -245,19 +374,21 @@ export async function reconcileSheetContract(
           startRowIndex: 0,
           endRowIndex: 1,
           startColumnIndex: migration.insertIndex,
-          endColumnIndex: migration.insertIndex + 1,
+          endColumnIndex: migration.insertIndex + migration.columns.length,
         },
         rows: [
           {
-            values: [
-              { userEnteredValue: { stringValue: migration.column } },
-            ],
+            values: migration.columns.map((column) => ({
+              userEnteredValue: { stringValue: column },
+            })),
           },
         ],
         fields: "userEnteredValue",
       },
     });
-    addedColumns.push({ sheet: name, column: migration.column });
+    addedColumns.push(
+      ...migration.columns.map((column) => ({ sheet: name, column })),
+    );
   }
 
   let nextId = nextSheetId(metadata);
@@ -293,6 +424,31 @@ export async function reconcileSheetContract(
     throw new Error("ID da aba atas não encontrado ou inválido.");
   }
   requests.push(...atasValidationRequests(atasSheetId, atasRowCount ?? 1000));
+
+  const gruposSheetId = byName.get("grupos")?.properties?.sheetId;
+  const gruposRowCount = byName.get("grupos")?.properties?.gridProperties?.rowCount;
+  if (!Number.isInteger(gruposSheetId) || gruposSheetId == null) {
+    throw new Error("ID da aba grupos não encontrado ou inválido.");
+  }
+  requests.push(
+    ...gruposAccessColumnCleanupRequests(gruposSheetId, gruposRowCount ?? 1000),
+  );
+
+  const trocasChaveiroSheetId = byName.get("trocas_chaveiro")?.properties?.sheetId;
+  const trocasChaveiroRowCount =
+    byName.get("trocas_chaveiro")?.properties?.gridProperties?.rowCount;
+  if (
+    !Number.isInteger(trocasChaveiroSheetId) ||
+    trocasChaveiroSheetId == null
+  ) {
+    throw new Error("ID da aba trocas_chaveiro não encontrado ou inválido.");
+  }
+  requests.push(
+    ...trocasChaveiroValidationRequests(
+      trocasChaveiroSheetId,
+      trocasChaveiroRowCount ?? 1000,
+    ),
+  );
 
   if (requests.length > 0) {
     await client.spreadsheets.batchUpdate({

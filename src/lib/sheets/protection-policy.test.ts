@@ -151,7 +151,7 @@ describe("política de proteções do Sheets", () => {
     expect(requests[0].updateProtectedRange.protectedRange).toMatchObject({
       protectedRangeId: 101,
       warningOnly: false,
-      range: { sheetId: 1 },
+      range: { sheetId: names.indexOf("atas") },
       editors: { users: [serviceAccountEmail] },
     });
   });
