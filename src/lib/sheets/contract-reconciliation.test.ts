@@ -178,6 +178,38 @@ describe("reconciliação do contrato Sheets", () => {
     );
   });
 
+  it("adiciona campos novos da Fase 3 em atas quando estão ausentes", async () => {
+    const newAtaColumns = ["duracao", "formato_outros"];
+    const { client, batchUpdate } = clientWith({
+      afterMigration: true,
+      invalidHeader: {
+        atas: SHEET_HEADERS.atas.filter(
+          (header) => !newAtaColumns.includes(header),
+        ),
+      },
+    });
+
+    const result = await reconcileSheetContract(client, "spreadsheet-test");
+
+    for (const column of newAtaColumns) {
+      expect(result.addedColumns).toContainEqual({ sheet: "atas", column });
+    }
+    const requests = batchUpdate.mock.calls[0][0].requestBody.requests;
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        insertDimension: expect.objectContaining({
+          range: expect.objectContaining({
+            dimension: "COLUMNS",
+            startIndex: SHEET_HEADERS.atas.indexOf(newAtaColumns[0]),
+            endIndex:
+              SHEET_HEADERS.atas.indexOf(newAtaColumns[0]) +
+              newAtaColumns.length,
+          }),
+        }),
+      }),
+    );
+  });
+
   it("adiciona quantidade em trocas_chaveiro quando a coluna está ausente", async () => {
     const { client } = clientWith({
       afterMigration: true,
@@ -221,6 +253,7 @@ describe("reconciliação do contrato Sheets", () => {
       "email_acesso_grupo",
       "responsaveis_ata",
       "link_formulario_ata",
+      "ultima_reuniao_anterior",
     ];
     const { client, batchUpdate } = clientWith({
       afterMigration: true,
@@ -250,6 +283,42 @@ describe("reconciliação do contrato Sheets", () => {
         }),
       }),
     );
+  });
+
+  it("adiciona ultima_reuniao_anterior em grupos quando só essa coluna está ausente", async () => {
+    const { client } = clientWith({
+      afterMigration: true,
+      invalidHeader: {
+        grupos: SHEET_HEADERS.grupos.filter(
+          (header) => header !== "ultima_reuniao_anterior",
+        ),
+      },
+    });
+
+    const result = await reconcileSheetContract(client, "spreadsheet-test");
+
+    expect(result.addedColumns).toContainEqual({
+      sheet: "grupos",
+      column: "ultima_reuniao_anterior",
+    });
+  });
+
+  it("adiciona funcao em servidores quando a coluna está ausente", async () => {
+    const { client } = clientWith({
+      afterMigration: true,
+      invalidHeader: {
+        servidores: SHEET_HEADERS.servidores.filter(
+          (header) => header !== "funcao",
+        ),
+      },
+    });
+
+    const result = await reconcileSheetContract(client, "spreadsheet-test");
+
+    expect(result.addedColumns).toContainEqual({
+      sheet: "servidores",
+      column: "funcao",
+    });
   });
 
   it("reconcilia validações de trocas_chaveiro com o contrato atual", async () => {

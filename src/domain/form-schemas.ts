@@ -12,6 +12,10 @@ import { isMunicipioOption } from "./municipios";
 
 const requiredText = z.string().trim().min(1, "Campo obrigatório.");
 const optionalText = z.string().trim();
+const optionalDuration = optionalText.refine(
+  (value) => !value || /^(?:[0-9]{1,2}):[0-5]\d$/.test(value),
+  "A duração deve usar o formato H:MM.",
+);
 const requiredEmail = requiredText.refine(
   (value) => z.email().safeParse(value).success,
   "E-mail inválido.",
@@ -30,6 +34,7 @@ export const grupoFormSchema = z.object({
   responsavel_grupo_nome: requiredText,
   responsavel_grupo_email: requiredEmail,
   email_acesso_grupo: requiredEmail,
+  ultima_reuniao_anterior: z.number().int().min(0),
 });
 
 export const grupoHorarioFormSchema = z.object({
@@ -52,16 +57,27 @@ export const ataFormSchema = z.object({
   grupo_id: z.string().uuid(),
   data_reuniao: z.string().date(),
   hora_inicio: horaInicioSchema,
+  duracao: optionalDuration,
+  formato_outros: optionalText,
   preenchido_por: requiredText,
   plataforma: z.enum(plataformaMapping.codes),
   tipo_reuniao: z.enum(tipoReuniaoMapping.codes),
   formatos: z.array(z.enum(formatoMapping.codes)).min(1),
   total_membros_presentes: z.number().int().min(1),
   total_partilhas: z.number().int().min(1),
+}).superRefine((ata, context) => {
+  if (ata.formatos.includes("outros") && !ata.formato_outros) {
+    context.addIssue({
+      code: "custom",
+      path: ["formato_outros"],
+      message: "Descreva o formato outros.",
+    });
+  }
 });
 
 export const servidorFormSchema = z.object({
   nome: requiredText,
+  funcao: optionalText,
   ordem: z.number().int().min(1),
 });
 

@@ -37,7 +37,7 @@ const valid = {
     grupo_id: groupId, zoom_id: "001", grupo_nome: "Grupo", ordem: "1", ativo: "TRUE",
     responsavel_grupo_nome: "Responsável", responsavel_grupo_email: "responsavel@example.com",
     email_acesso_grupo: "grupo@example.com", responsaveis_ata: "Equipe de ata",
-    link_formulario_ata: "grupo", ...audit,
+    link_formulario_ata: "grupo", ultima_reuniao_anterior: "12", ...audit,
   },
   grupoHorario: {
     horario_id: "a0b4f0fa-37f4-4a69-8ebb-a1b40e538c2d", grupo_id: groupId,
@@ -46,14 +46,14 @@ const valid = {
   },
   ata: {
     ata_id: ataId, grupo_id: groupId, data_reuniao: "2026-06-21", hora_inicio: "10:30",
-    preenchido_por: "Patricia", plataforma: "Zoom", tipo_reuniao: "Aberta", formato_partilha: "TRUE",
+    duracao: "1:30", formato_outros: "", preenchido_por: "Patricia", plataforma: "Zoom", tipo_reuniao: "Aberta", formato_partilha: "TRUE",
     formato_estudo: "FALSE", formato_tematico: "FALSE", formato_literatura: "FALSE",
     formato_passos: "FALSE", formato_tradicoes: "FALSE", total_membros_presentes: "3",
     total_partilhas: "2", ...audit,
   },
   servidor: {
     servidor_id: "a4e54dd9-8e3f-4d56-a932-00ea5c13fc88", ata_id: ataId,
-    nome: "Maria", ordem: "1", ...audit,
+    nome: "Maria", funcao: "Secretária", ordem: "1", ...audit,
   },
   participacao: {
     participacao_id: "e7918765-a98d-46bf-86f8-e6deef3190a2", ata_id: ataId,

@@ -10,6 +10,8 @@ const submission = {
     grupo_id: grupoId,
     data_reuniao: "2026-06-22",
     hora_inicio: "20:30",
+    duracao: "1:30",
+    formato_outros: "",
     preenchido_por: "Patricia",
     plataforma: "zoom",
     tipo_reuniao: "aberta",
@@ -17,7 +19,7 @@ const submission = {
     total_membros_presentes: 3,
     total_partilhas: 1,
   },
-  servidores: [{ nome: "Primeiro" }, { nome: "Segundo" }],
+  servidores: [{ nome: "Primeiro", funcao: "Coordenação" }, { nome: "Segundo" }],
   participacao: [
     {
       localidade: "Salvador",
@@ -48,6 +50,7 @@ const group = {
   email_acesso_grupo: "",
   responsaveis_ata: "",
   link_formulario_ata: "grupo",
+  ultima_reuniao_anterior: 0,
   created_at: "2026-06-21T12:00:00.000Z",
   updated_at: "2026-06-21T12:00:00.000Z",
 } satisfies Grupo;

@@ -29,6 +29,7 @@ export function materializeAtaSubmission(
       servidor_id: identity.uuid(),
       ata_id: ataId,
       nome: item.nome,
+      funcao: item.funcao ?? "",
       ordem: index + 1,
       ...audit,
     })),

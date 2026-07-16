@@ -36,8 +36,6 @@ const horarios = Array.from({ length: 48 }, (_, index) => {
   const hours = Math.floor(index / 2);
   return `${String(hours).padStart(2, "0")}:${index % 2 === 0 ? "00" : "30"}`;
 });
-const membrosPresentesOptions = Array.from({ length: 100 }, (_, index) => index + 1);
-const totalPartilhasOptions = Array.from({ length: 30 }, (_, index) => index + 1);
 const tipoReuniaoOptions: Draft["ata"]["tipo_reuniao"][] = [
   "fechada",
   "aberta",
@@ -47,10 +45,78 @@ function clientId() {
   return globalThis.crypto.randomUUID();
 }
 
+function NumberStepper({
+  id,
+  label,
+  value,
+  min = 1,
+  max,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  value: number;
+  min?: number;
+  max?: number;
+  onChange: (value: number) => void;
+}) {
+  const canDecrease = value > min;
+  const canIncrease = typeof max === "number" ? value < max : true;
+
+  function update(nextValue: number) {
+    if (Number.isNaN(nextValue)) {
+      onChange(0);
+      return;
+    }
+    if (typeof max === "number" && nextValue > max) {
+      onChange(max);
+      return;
+    }
+    onChange(nextValue);
+  }
+
+  return (
+    <label htmlFor={id}>
+      {label}
+      <span className="number-stepper">
+        <button
+          type="button"
+          className="icon-button"
+          aria-label={`Diminuir ${label.toLowerCase()}`}
+          disabled={!canDecrease}
+          onClick={() => update(value - 1)}
+        >
+          -
+        </button>
+        <input
+          id={id}
+          type="number"
+          required
+          min={min}
+          max={max}
+          step={1}
+          value={value || ""}
+          placeholder="0"
+          onChange={(event) => update(Number(event.target.value))}
+        />
+        <button
+          type="button"
+          className="icon-button"
+          aria-label={`Aumentar ${label.toLowerCase()}`}
+          disabled={!canIncrease}
+          onClick={() => update(value < min ? min : value + 1)}
+        >
+          +
+        </button>
+      </span>
+    </label>
+  );
+}
+
 function submissionFromDraft(draft: Draft): HiddenAtaSubmission {
   return {
     ata: draft.ata,
-    servidores: draft.servidores.map(({ nome }) => ({ nome })),
+    servidores: draft.servidores.map(({ nome, funcao }) => ({ nome, funcao })),
     participacao: draft.participacao.map(
       ({ localidade, presencas }) => ({
         localidade,
@@ -106,6 +172,8 @@ export function AtaForm({
       grupo_id: initialGroupId,
       data_reuniao: today,
       hora_inicio: initialTime,
+      duracao: "",
+      formato_outros: "",
       preenchido_por: "",
       plataforma: "zoom",
       tipo_reuniao: "fechada",
@@ -165,12 +233,7 @@ export function AtaForm({
       <section className="card form-section">
         <h2>Informações gerais</h2>
         <div className="form-grid">
-          {fixedGroupId ? (
-            <label>
-              Grupo
-              <input value={selectedGroup?.name ?? ""} readOnly />
-            </label>
-          ) : (
+          {!fixedGroupId && (
             <label>
               Grupo
               <select
@@ -217,6 +280,19 @@ export function AtaForm({
             >
               {horarioOptions.map((time) => <option key={time}>{time}</option>)}
             </select>
+          </label>
+          <label>
+            Duração
+            <input
+              pattern="(?:[0-9]{1,2}):[0-5][0-9]"
+              placeholder="Ex.: 1:30"
+              title="Use o formato H:MM, por exemplo 1:30."
+              value={draft.ata.duracao}
+              onChange={(event) => setDraft((current) => ({
+                ...current,
+                ata: { ...current.ata, duracao: event.target.value },
+              }))}
+            />
           </label>
           <label>
             Preenchido por
@@ -279,6 +355,20 @@ export function AtaForm({
               </label>
             ))}
           </div>
+          {draft.ata.formatos.includes("outros") && (
+            <label className="narrow-field">
+              Descreva o formato
+              <input
+                required
+                value={draft.ata.formato_outros}
+                placeholder="Formato da reunião..."
+                onChange={(event) => setDraft((current) => ({
+                  ...current,
+                  ata: { ...current.ata, formato_outros: event.target.value },
+                }))}
+              />
+            </label>
+          )}
         </fieldset>
       </section>
 
@@ -287,26 +377,28 @@ export function AtaForm({
           <h2>Participação</h2>
         </div>
         <div className="form-grid">
-          <label>
-            Membros presentes
-            <select required value={draft.ata.total_membros_presentes || ""} onChange={(event) => setDraft((current) => ({
+          <NumberStepper
+            id="total-membros-presentes"
+            label="Membros presentes"
+            value={draft.ata.total_membros_presentes}
+            min={1}
+            max={100}
+            onChange={(value) => setDraft((current) => ({
               ...current,
-              ata: { ...current.ata, total_membros_presentes: Number(event.target.value) },
-            }))}>
-              <option value="" disabled>Membros presentes...</option>
-              {membrosPresentesOptions.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
-          </label>
-          <label>
-            Total de partilhas
-            <select required value={draft.ata.total_partilhas || ""} onChange={(event) => setDraft((current) => ({
+              ata: { ...current.ata, total_membros_presentes: value },
+            }))}
+          />
+          <NumberStepper
+            id="total-partilhas"
+            label="Total de partilhas"
+            value={draft.ata.total_partilhas}
+            min={1}
+            max={30}
+            onChange={(value) => setDraft((current) => ({
               ...current,
-              ata: { ...current.ata, total_partilhas: Number(event.target.value) },
-            }))}>
-              <option value="" disabled>Total de partilhas...</option>
-              {totalPartilhasOptions.map((value) => <option key={value} value={value}>{value}</option>)}
-            </select>
-          </label>
+              ata: { ...current.ata, total_partilhas: value },
+            }))}
+          />
         </div>
       </section>
 
@@ -315,10 +407,14 @@ export function AtaForm({
           <h2>Servidores</h2>
         </div>
         {draft.servidores.map((item) => (
-          <div className="repeat-row repeat-row--single" key={item.clientId}>
+          <div className="repeat-row repeat-row--double" key={item.clientId}>
             <label>Nome<input required value={item.nome} placeholder="Nome..." onChange={(event) => setDraft((current) => ({
               ...current,
               servidores: current.servidores.map((server) => server.clientId === item.clientId ? { ...server, nome: event.target.value } : server),
+            }))} /></label>
+            <label>Função<input value={item.funcao ?? ""} placeholder="Função..." onChange={(event) => setDraft((current) => ({
+              ...current,
+              servidores: current.servidores.map((server) => server.clientId === item.clientId ? { ...server, funcao: event.target.value } : server),
             }))} /></label>
             <button type="button" className="danger-icon-button" aria-label="Remover servidor" title="Remover servidor" onClick={() => setDraft((current) => ({ ...current, servidores: current.servidores.filter((server) => server.clientId !== item.clientId) }))}><FontAwesomeIcon icon={faTrashCan} /></button>
           </div>
@@ -329,7 +425,7 @@ export function AtaForm({
             className="secondary"
             onClick={() => setDraft((current) => ({
               ...current,
-              servidores: [...current.servidores, { clientId: clientId(), nome: "" }],
+              servidores: [...current.servidores, { clientId: clientId(), nome: "", funcao: "" }],
             }))}
           ><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar servidor</span></button>
         </div>
@@ -342,7 +438,14 @@ export function AtaForm({
         {draft.participacao.map((item) => (
           <div className="repeat-row repeat-row--city" key={item.clientId}>
             <label htmlFor={`participation-city-${item.clientId}`}>Cidade<MunicipioAutocomplete id={`participation-city-${item.clientId}`} placeholder="Cidade..." value={item.localidade} onChange={(value) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, localidade: value } : entry) }))} /></label>
-            <label>Quantidade<input type="number" required min={1} max={10} step={1} value={item.presencas} placeholder="Quantidade..." onChange={(event) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, presencas: Number(event.target.value) } : entry) }))} /></label>
+            <NumberStepper
+              id={`participation-count-${item.clientId}`}
+              label="Quantidade"
+              value={item.presencas}
+              min={1}
+              max={10}
+              onChange={(value) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, presencas: value } : entry) }))}
+            />
             <button type="button" className="danger-icon-button" aria-label="Remover cidade" title="Remover cidade" onClick={() => setDraft((current) => ({ ...current, participacao: current.participacao.filter((entry) => entry.clientId !== item.clientId) }))}><FontAwesomeIcon icon={faTrashCan} /></button>
           </div>
         ))}
@@ -394,20 +497,26 @@ export function AtaForm({
 
       <section className="card form-section">
         <div className="section-heading">
-          <h2>Troca de ficha</h2>
+          <h2>Conquistas de tempo</h2>
         </div>
         {draft.trocas_chaveiro.map((item) => (
           <div className="repeat-row repeat-row--double" key={item.clientId}>
             <label>Tempo limpo<select value={item.tempo_limpo} onChange={(event) => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.map((entry) => entry.clientId === item.clientId ? { ...entry, tempo_limpo: event.target.value as typeof entry.tempo_limpo } : entry) }))}>{tempoLimpoMapping.codes.map((code) => <option key={code} value={code}>{tempoLimpoMapping.toSheet(code)}</option>)}</select></label>
-            <label>Quantidade<input type="number" required min={1} step={1} value={item.quantidade} placeholder="Quantidade..." onChange={(event) => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.map((entry) => entry.clientId === item.clientId ? { ...entry, quantidade: Number(event.target.value) } : entry) }))} /></label>
-            <button type="button" className="danger-icon-button" aria-label="Remover troca" title="Remover troca" onClick={() => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.filter((entry) => entry.clientId !== item.clientId) }))}><FontAwesomeIcon icon={faTrashCan} /></button>
+            <NumberStepper
+              id={`clean-time-count-${item.clientId}`}
+              label="Quantidade"
+              value={item.quantidade}
+              min={1}
+              onChange={(value) => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.map((entry) => entry.clientId === item.clientId ? { ...entry, quantidade: value } : entry) }))}
+            />
+            <button type="button" className="danger-icon-button" aria-label="Remover conquista de tempo" title="Remover conquista de tempo" onClick={() => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.filter((entry) => entry.clientId !== item.clientId) }))}><FontAwesomeIcon icon={faTrashCan} /></button>
           </div>
         ))}
         <div className="section-footer">
           <button type="button" className="secondary" onClick={() => setDraft((current) => ({
             ...current,
             trocas_chaveiro: [...current.trocas_chaveiro, { clientId: clientId(), tempo_limpo: "1M", quantidade: 1 }],
-          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar troca</span></button>
+          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar conquista</span></button>
         </div>
       </section>
 
@@ -421,11 +530,12 @@ export function AtaForm({
       {reviewing && (
         <div className="modal-backdrop">
           <section className="confirmation-modal" role="dialog" aria-modal="true" aria-labelledby="confirmation-title">
-            <h2 id="confirmation-title">Confirmar envio imutável</h2>
-            <p className="muted">Confira todos os dados. Após o envio, a ata não poderá ser editada ou excluída pela aplicação.</p>
+            <h2 id="confirmation-title">Resumo da ata</h2>
+            <p className="muted">Confira os dados antes de enviar. Após a confirmação, a ata ficará registrada como somente leitura.</p>
             <dl className="review-grid">
               <div><dt>Grupo</dt><dd>{selectedGroup?.name}</dd></div>
               <div><dt>Data e hora</dt><dd>{draft.ata.data_reuniao} às {draft.ata.hora_inicio}</dd></div>
+              {draft.ata.duracao && <div><dt>Duração</dt><dd>{draft.ata.duracao}</dd></div>}
               <div><dt>Preenchido por</dt><dd>{draft.ata.preenchido_por}</dd></div>
               <div><dt>Plataforma</dt><dd>{plataformaMapping.toSheet(draft.ata.plataforma)}</dd></div>
               <div><dt>Tipo</dt><dd>{tipoReuniaoMapping.toSheet(draft.ata.tipo_reuniao)}</dd></div>
@@ -435,14 +545,14 @@ export function AtaForm({
             </dl>
             <div className="review-lists">
               <h3>Servidores ({draft.servidores.length})</h3>
-              <ol>{draft.servidores.map((item) => <li key={item.clientId}>{item.nome}</li>)}</ol>
+              <ol>{draft.servidores.map((item) => <li key={item.clientId}>{item.nome}{item.funcao ? ` · ${item.funcao}` : ""}</li>)}</ol>
               <h3>Localidade - Cidades (UF) ({draft.participacao.length})</h3>
               <ul>{draft.participacao.map((item) => <li key={item.clientId}>{item.localidade} · {item.presencas}</li>)}</ul>
               <h3>Visitantes ({draft.visitantes.length})</h3>
               <ul>{draft.visitantes.map((item) => <li key={item.clientId}>{item.nome?.trim() || "Anonimo"} · {item.cidade}</li>)}</ul>
               <h3>Ingressos ({draft.ingressos.length})</h3>
               <ul>{draft.ingressos.map((item) => <li key={item.clientId}>{item.nome?.trim() || "Anonimo"} · {item.cidade}</li>)}</ul>
-              <h3>Troca de ficha ({draft.trocas_chaveiro.reduce((total, item) => total + item.quantidade, 0)})</h3>
+              <h3>Conquistas de tempo ({draft.trocas_chaveiro.reduce((total, item) => total + item.quantidade, 0)})</h3>
               <ul>{draft.trocas_chaveiro.map((item) => <li key={item.clientId}>{tempoLimpoMapping.toSheet(item.tempo_limpo)} · {item.quantidade}</li>)}</ul>
             </div>
             {actionState.error && <p className="form-error" role="alert">{actionState.error}</p>}

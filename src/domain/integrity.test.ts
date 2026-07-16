@@ -22,6 +22,7 @@ const group = {
   email_acesso_grupo: "",
   responsaveis_ata: "",
   link_formulario_ata: "grupo",
+  ultima_reuniao_anterior: 0,
   ...audit,
 } satisfies Grupo;
 
@@ -70,6 +71,7 @@ describe("integridade entre linhas", () => {
       servidor_id: "a4e54dd9-8e3f-4d56-a932-00ea5c13fc88",
       ata_id: "93ef9660-8c64-4b51-9bc5-09069ce629c1",
       nome: "Maria",
+      funcao: "",
       ordem: 1,
       ...audit,
     } satisfies Servidor;

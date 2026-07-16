@@ -22,6 +22,10 @@ const optionalSlug = optionalText.refine(
 const uuid = z.string().uuid("UUID inválido.");
 const timestamp = z.string().datetime({ offset: true });
 const auditFields = { created_at: timestamp, updated_at: timestamp };
+const optionalDuration = optionalText.refine(
+  (value) => !value || /^(?:[0-9]{1,2}):[0-5]\d$/.test(value),
+  "A duração deve usar o formato H:MM.",
+);
 
 export const horaInicioSchema = z
   .string()
@@ -55,6 +59,7 @@ export const grupoSchema = z.object({
   email_acesso_grupo: optionalEmail,
   responsaveis_ata: optionalText,
   link_formulario_ata: optionalSlug,
+  ultima_reuniao_anterior: z.number().int().min(0).default(0),
   ...auditFields,
 });
 
@@ -95,6 +100,8 @@ export const ataSchema = z.object({
   grupo_id: uuid,
   data_reuniao: z.string().date(),
   hora_inicio: horaInicioSchema,
+  duracao: optionalDuration,
+  formato_outros: optionalText,
   preenchido_por: requiredText,
   plataforma: z.enum(plataformaMapping.codes),
   tipo_reuniao: z.enum(tipoReuniaoMapping.codes),
@@ -108,6 +115,7 @@ export const servidorSchema = z.object({
   servidor_id: uuid,
   ata_id: uuid,
   nome: requiredText,
+  funcao: optionalText,
   ordem: z.number().int().min(1),
   ...auditFields,
 });

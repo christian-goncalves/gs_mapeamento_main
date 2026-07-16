@@ -21,6 +21,7 @@ const emptyGroup: Grupo = {
   email_acesso_grupo: "",
   responsaveis_ata: "",
   link_formulario_ata: "",
+  ultima_reuniao_anterior: 0,
   created_at: new Date(0).toISOString(),
   updated_at: new Date(0).toISOString(),
 };
@@ -163,6 +164,16 @@ export function GroupEditor({
                 Grupo ativo
               </label>
             )}
+            <label>
+              Última reunião antes do sistema
+              <input
+                name="ultima_reuniao_anterior"
+                type="number"
+                min={0}
+                step={1}
+                defaultValue={current.ultima_reuniao_anterior}
+              />
+            </label>
           </div>
         </section>
 

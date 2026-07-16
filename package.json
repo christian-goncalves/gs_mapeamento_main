@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --hostname 127.0.0.1 --port 3000",
+    "dev": "next dev --webpack --hostname 127.0.0.1 --port 3000",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run",
     "municipios:update": "node scripts/update-municipios.mjs",
     "sheets:reconcile-contract": "tsx --env-file=.env.local scripts/reconcile-sheet-contract.ts",
-    "sheets:reconcile-protections": "tsx --env-file=.env.local scripts/reconcile-sheet-protections.ts"
+    "sheets:reconcile-protections": "tsx --env-file=.env.local scripts/reconcile-sheet-protections.ts",
+    "sheets:reset-ata-records:dry-run": "tsx --env-file=.env.local scripts/reset-ata-record-sheets.ts",
+    "sheets:reset-ata-records": "tsx --env-file=.env.local scripts/reset-ata-record-sheets.ts --execute"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.3.0",

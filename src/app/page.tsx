@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faEye,
+  faFilePdf,
   faFileCirclePlus,
   faLayerGroup,
+  faPenToSquare,
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import { signOut } from "@/auth";
@@ -12,20 +15,29 @@ import { readAggregatedAtas } from "@/lib/sheets/repository";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const { session, access } = await requireAuthorizedSession();
+  const { access } = await requireAuthorizedSession();
   const result = await readAggregatedAtas();
   const allowedGroupIds = new Set(access.groups.map((group) => group.grupo_id));
   const activeGroups = result.grupos
     .filter((group) => group.ativo && allowedGroupIds.has(group.grupo_id))
     .sort((first, second) => first.grupo_nome.localeCompare(second.grupo_nome, "pt-BR"));
   const atas = result.atas.filter(({ grupo }) => allowedGroupIds.has(grupo.grupo_id));
+  const pageTitle = activeGroups.length === 1 ? activeGroups[0].grupo_nome : "Grupos ativos";
 
   return (
     <main className="shell">
       <header className="header">
-        <div>
-          <h1>GS Mapeamento</h1>
-          <span className="muted">{session.user?.email}</span>
+        <div className="header-title">
+          <h1>{pageTitle}</h1>
+          <Link
+            className="button-link"
+            href={access.role === "administrador" ? "/grupos" : "/meu-grupo"}
+          >
+            <span className="button-content">
+              <FontAwesomeIcon icon={faLayerGroup} />
+              Gerenciar
+            </span>
+          </Link>
         </div>
         <form
           action={async () => {
@@ -45,16 +57,7 @@ export default async function HomePage() {
       <div className="grid">
         <section className="card">
           <div className="section-heading">
-            <h2>Grupos ativos</h2>
-            <Link
-              className="button-link"
-              href={access.role === "administrador" ? "/grupos" : "/meu-grupo"}
-            >
-              <span className="button-content">
-                <FontAwesomeIcon icon={faLayerGroup} />
-                Gerenciar
-              </span>
-            </Link>
+            <h2>Grupos com acesso</h2>
           </div>
           <ol className="list">
             {activeGroups.map((group) => (
@@ -77,19 +80,44 @@ export default async function HomePage() {
             <p className="muted">Nenhuma ata válida cadastrada.</p>
           ) : (
             <ul className="list">
-              {atas.map(({ grupo, registro, indicadores }) => (
+              {atas.map(({ grupo, registro }) => (
                 <li key={registro.ata.ata_id}>
-                  <Link className="record-link" href={`/atas/${registro.ata.ata_id}`}>
-                    <strong>{grupo.grupo_nome}</strong>
-                    <span className="muted">
-                      {registro.ata.data_reuniao} às {registro.ata.hora_inicio}
-                    </span>
-                    <span className="summary">
-                      {registro.ata.total_membros_presentes} membros ·{" "}
-                      {indicadores.total_visitantes} visitantes ·{" "}
-                      {indicadores.total_ingressos} ingressos
-                    </span>
-                  </Link>
+                  <div className="ata-record">
+                    <div className="ata-record-main">
+                      {activeGroups.length > 1 && (
+                        <span className="muted">{grupo.grupo_nome}</span>
+                      )}
+                      <strong>{registro.ata.data_reuniao} às {registro.ata.hora_inicio}</strong>
+                    </div>
+                    <div className="row-actions ata-record-actions" aria-label="Ações da ata">
+                      <Link
+                        className="icon-button"
+                        href={`/atas/${registro.ata.ata_id}`}
+                        aria-label={`Visualizar ata de ${registro.ata.data_reuniao} às ${registro.ata.hora_inicio}`}
+                        title="Visualizar"
+                      >
+                        <FontAwesomeIcon icon={faEye} />
+                      </Link>
+                      <button
+                        type="button"
+                        className="icon-button"
+                        aria-label="Editar ata indisponível"
+                        title="Editar será implementado na fase de ciclo de vida da ata"
+                        disabled
+                      >
+                        <FontAwesomeIcon icon={faPenToSquare} />
+                      </button>
+                      <button
+                        type="button"
+                        className="icon-button"
+                        aria-label="PDF da ata indisponível"
+                        title="PDF será implementado na fase de relatórios"
+                        disabled
+                      >
+                        <FontAwesomeIcon icon={faFilePdf} />
+                      </button>
+                    </div>
+                  </div>
                 </li>
               ))}
             </ul>

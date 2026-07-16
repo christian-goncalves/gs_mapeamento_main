@@ -30,7 +30,7 @@ export const hiddenTrocaChaveiroSchema = z.object({
 export const hiddenAtaSubmissionSchema = z
   .object({
     ata: ataFormSchema,
-    servidores: z.array(z.object({ nome: requiredText })),
+    servidores: z.array(z.object({ nome: requiredText, funcao: z.string().trim().optional() })),
     participacao: z.array(hiddenParticipacaoSchema),
     visitantes: z.array(hiddenVisitanteSchema),
     ingressos: z.array(hiddenIngressoSchema),

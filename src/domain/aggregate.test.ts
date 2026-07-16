@@ -19,6 +19,7 @@ const group = {
   email_acesso_grupo: "",
   responsaveis_ata: "",
   link_formulario_ata: "grupo-historico",
+  ultima_reuniao_anterior: 0,
   ...audit,
 };
 const ata = {
@@ -26,6 +27,8 @@ const ata = {
   grupo_id: grupoId,
   data_reuniao: "2026-06-21",
   hora_inicio: "10:30",
+  duracao: "",
+  formato_outros: "",
   preenchido_por: "Patricia",
   plataforma: "zoom" as const,
   tipo_reuniao: "aberta" as const,
@@ -63,6 +66,7 @@ function baseRows(): ParsedContractRows {
         servidor_id: "a4e54dd9-8e3f-4d56-a932-00ea5c13fc88",
         ata_id: ataId,
         nome: "Maria",
+        funcao: "Secretária",
         ordem: 1,
         ...audit,
       }),

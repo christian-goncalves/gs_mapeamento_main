@@ -38,6 +38,7 @@ export default async function NewAtaPage() {
         <section className="card"><p>Nenhum grupo ativo disponível.</p></section>
       ) : (
         <AtaForm
+          fixedGroupId={groups.length === 1 ? groups[0].grupo_id : undefined}
           groups={groups.map((group) => ({
             id: group.grupo_id,
             name: group.grupo_nome,

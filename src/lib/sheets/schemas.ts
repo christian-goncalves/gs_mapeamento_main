@@ -62,6 +62,18 @@ const sheetInteger = (minimum: number) =>
     }
     return value;
   }, z.number().int().min(minimum));
+const sheetOptionalInteger = (minimum: number) =>
+  z.preprocess((value) => {
+    if (value === "" || value === false || value == null) return 0;
+    if (typeof value === "string" && /^-?\d+$/.test(value.trim())) {
+      return Number(value);
+    }
+    return value;
+  }, z.number().int().min(minimum));
+const sheetOptionalDuration = optionalText.refine(
+  (value) => !value || /^(?:[0-9]{1,2}):[0-5]\d$/.test(value),
+  "A duração deve usar o formato H:MM.",
+);
 
 const sheetDate = z.preprocess((value) => {
   if (typeof value === "number") {
@@ -111,6 +123,7 @@ export const sheetGrupoSchema = z.object({
   email_acesso_grupo: optionalEmail,
   responsaveis_ata: optionalText,
   link_formulario_ata: optionalSlug,
+  ultima_reuniao_anterior: sheetOptionalInteger(0),
   ...auditFields,
 });
 
@@ -146,6 +159,8 @@ export const sheetAtaSchema = z
     grupo_id: uuid,
     data_reuniao: sheetDate,
     hora_inicio: sheetTime,
+    duracao: sheetOptionalDuration,
+    formato_outros: optionalText,
     preenchido_por: historicalRequiredText,
     plataforma: z.literal("Zoom"),
     tipo_reuniao: z.enum(["Aberta", "Fechada"]),
@@ -166,7 +181,8 @@ export const sheetAtaSchema = z
       ata.formato_tematico ||
       ata.formato_literatura ||
       ata.formato_passos ||
-      ata.formato_tradicoes,
+      ata.formato_tradicoes ||
+      Boolean(ata.formato_outros),
     { path: ["formatos"], message: "Selecione pelo menos um formato." },
   );
 
@@ -174,6 +190,7 @@ export const sheetServidorSchema = z.object({
   servidor_id: uuid,
   ata_id: uuid,
   nome: requiredText,
+  funcao: optionalText,
   ordem: sheetInteger(1),
   ...auditFields,
 });
@@ -287,11 +304,14 @@ export function sheetAtaToDomain(row: SheetAta): Ata {
   if (row.formato_literatura) formatos.push("literatura");
   if (row.formato_passos) formatos.push("passos");
   if (row.formato_tradicoes) formatos.push("tradicoes");
+  if (row.formato_outros) formatos.push("outros");
   return {
     ata_id: row.ata_id,
     grupo_id: row.grupo_id,
     data_reuniao: row.data_reuniao,
     hora_inicio: row.hora_inicio,
+    duracao: row.duracao,
+    formato_outros: row.formato_outros,
     preenchido_por: row.preenchido_por,
     plataforma: plataformaMapping.fromSheet(row.plataforma),
     tipo_reuniao: tipoReuniaoMapping.fromSheet(row.tipo_reuniao),
@@ -310,6 +330,8 @@ export function domainAtaToSheet(item: Ata): SheetAta {
     grupo_id: item.grupo_id,
     data_reuniao: item.data_reuniao,
     hora_inicio: item.hora_inicio,
+    duracao: item.duracao,
+    formato_outros: formatos.has("outros") ? item.formato_outros : "",
     preenchido_por: item.preenchido_por,
     plataforma: plataformaMapping.toSheet(item.plataforma),
     tipo_reuniao: tipoReuniaoMapping.toSheet(item.tipo_reuniao),

@@ -79,6 +79,17 @@ function migratableMissingColumns(
   actual: unknown[],
 ): { columns: string[]; insertIndex: number } | null {
   if (sheet === "atas") {
+    const newAtaColumns = ["duracao", "formato_outros"];
+    const expectedWithoutNewAtaColumns = SHEET_HEADERS.atas.filter(
+      (header) => !newAtaColumns.includes(header),
+    );
+    if (isHeaderPrefix(actual, expectedWithoutNewAtaColumns)) {
+      return {
+        columns: newAtaColumns,
+        insertIndex: SHEET_HEADERS.atas.indexOf(newAtaColumns[0]),
+      };
+    }
+
     const expectedWithoutPreenchidoPor = SHEET_HEADERS.atas.filter(
       (header) => header !== "preenchido_por",
     );
@@ -132,6 +143,7 @@ function migratableMissingColumns(
       "email_acesso_grupo",
       "responsaveis_ata",
       "link_formulario_ata",
+      "ultima_reuniao_anterior",
     ];
     const expectedWithoutNewGroupColumns = SHEET_HEADERS.grupos.filter(
       (header) => !newGroupColumns.includes(header),
@@ -140,6 +152,28 @@ function migratableMissingColumns(
       return {
         columns: newGroupColumns,
         insertIndex: SHEET_HEADERS.grupos.indexOf(firstGroupAccessColumn),
+      };
+    }
+
+    const expectedWithoutUltimaReuniao = SHEET_HEADERS.grupos.filter(
+      (header) => header !== "ultima_reuniao_anterior",
+    );
+    if (isHeaderPrefix(actual, expectedWithoutUltimaReuniao)) {
+      return {
+        columns: ["ultima_reuniao_anterior"],
+        insertIndex: SHEET_HEADERS.grupos.indexOf("ultima_reuniao_anterior"),
+      };
+    }
+  }
+
+  if (sheet === "servidores") {
+    const expectedWithoutFuncao = SHEET_HEADERS.servidores.filter(
+      (header) => header !== "funcao",
+    );
+    if (isHeaderPrefix(actual, expectedWithoutFuncao)) {
+      return {
+        columns: ["funcao"],
+        insertIndex: SHEET_HEADERS.servidores.indexOf("funcao"),
       };
     }
   }
@@ -209,8 +243,8 @@ function atasValidationRequests(
   });
 
   return [
-    listValidation(5, ["Zoom"]),
-    listValidation(6, ["Aberta", "Fechada"]),
+    listValidation(SHEET_HEADERS.atas.indexOf("plataforma"), ["Zoom"]),
+    listValidation(SHEET_HEADERS.atas.indexOf("tipo_reuniao"), ["Aberta", "Fechada"]),
   ];
 }
 

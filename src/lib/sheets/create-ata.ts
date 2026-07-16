@@ -11,7 +11,11 @@ import {
   sheetGrupoSchema,
   sheetGrupoToDomain,
 } from "./schemas";
-import { buildAtomicAppendRequests, executeAtomicBatch } from "./write";
+import {
+  buildAtomicWriteRequests,
+  executeAtomicBatch,
+  firstEmptyDataRowNumber,
+} from "./write";
 
 export async function createAtaInSheets(submission: AtaSubmission) {
   const spreadsheetId = getSpreadsheetId();
@@ -30,14 +34,21 @@ export async function createAtaInSheets(submission: AtaSubmission) {
     }),
   ]);
 
-  const rows = Object.fromEntries(
+  const sheetValues = Object.fromEntries(
     names.map((name, index) => [
+      name,
+      (valuesResponse.data.valueRanges?.[index]?.values as
+        | SheetCell[][]
+        | undefined) ?? [],
+    ]),
+  ) as Record<SheetName, SheetCell[][]>;
+
+  const rows = Object.fromEntries(
+    names.map((name) => [
       name,
       rowsToObjects(
         SHEET_HEADERS[name],
-        (valuesResponse.data.valueRanges?.[index]?.values as
-          | SheetCell[][]
-          | undefined) ?? [],
+        sheetValues[name],
       ),
     ]),
   ) as Record<SheetName, ReturnType<typeof rowsToObjects>>;
@@ -69,9 +80,18 @@ export async function createAtaInSheets(submission: AtaSubmission) {
   }
 
   const registro = materializeAtaSubmission(submission);
-  const requests = buildAtomicAppendRequests(
+  const nextRows = {
+    atas: firstEmptyDataRowNumber(sheetValues.atas),
+    servidores: firstEmptyDataRowNumber(sheetValues.servidores),
+    participacao: firstEmptyDataRowNumber(sheetValues.participacao),
+    visitantes: firstEmptyDataRowNumber(sheetValues.visitantes),
+    ingressos: firstEmptyDataRowNumber(sheetValues.ingressos),
+    trocas_chaveiro: firstEmptyDataRowNumber(sheetValues.trocas_chaveiro),
+  };
+  const requests = buildAtomicWriteRequests(
     registro,
     sheetIds as Record<SheetName, number>,
+    nextRows,
   );
   await executeAtomicBatch(sheets, spreadsheetId, requests);
   return registro.ata.ata_id;

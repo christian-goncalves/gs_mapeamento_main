@@ -35,6 +35,11 @@ function bool(formData: FormData, name: string) {
   return formData.get(name) === "on";
 }
 
+function int(formData: FormData, name: string) {
+  const value = text(formData, name);
+  return value ? Number(value) : 0;
+}
+
 const horariosPayloadSchema = z
   .array(
     z.object({
@@ -122,6 +127,7 @@ export async function saveGrupoAction(
     responsavel_grupo_nome: text(formData, "responsavel_grupo_nome"),
     responsavel_grupo_email: text(formData, "responsavel_grupo_email"),
     email_acesso_grupo: text(formData, "email_acesso_grupo"),
+    ultima_reuniao_anterior: int(formData, "ultima_reuniao_anterior"),
   };
   const parsedResult = grupoFormSchema.safeParse(raw);
   if (!parsedResult.success) {
@@ -142,6 +148,7 @@ export async function saveGrupoAction(
         ordem,
         responsaveis_ata: existingGroup?.responsaveis_ata ?? "",
         link_formulario_ata: linkFormularioAta,
+        ultima_reuniao_anterior: parsed.ultima_reuniao_anterior,
       }
     : {
         zoom_id: parsed.zoom_id,
@@ -153,6 +160,7 @@ export async function saveGrupoAction(
         email_acesso_grupo: existingGroup?.email_acesso_grupo ?? "",
         responsaveis_ata: existingGroup?.responsaveis_ata ?? "",
         link_formulario_ata: linkFormularioAta,
+        ultima_reuniao_anterior: existingGroup?.ultima_reuniao_anterior ?? 0,
       };
   try {
     assertUniqueGroupFields(
@@ -235,6 +243,7 @@ export async function duplicateGrupoAction(formData: FormData) {
     email_acesso_grupo: "",
     responsaveis_ata: source.responsaveis_ata,
     link_formulario_ata: uniqueSlug(slug(groupName), result.grupos, newGroupId),
+    ultima_reuniao_anterior: source.ultima_reuniao_anterior,
   });
 
   for (const horario of result.grupo_horarios.filter(

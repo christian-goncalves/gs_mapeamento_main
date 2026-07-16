@@ -19,6 +19,7 @@ describe("schemas de formulário", () => {
         responsavel_grupo_nome: "Patricia",
         responsavel_grupo_email: "patricia@example.com",
         email_acesso_grupo: "grupo@example.com",
+        ultima_reuniao_anterior: 12,
       }).success,
     ).toBe(true);
     expect(
@@ -29,6 +30,7 @@ describe("schemas de formulário", () => {
         responsavel_grupo_nome: "",
         responsavel_grupo_email: "email-invalido",
         email_acesso_grupo: "",
+        ultima_reuniao_anterior: -1,
       }).success,
     ).toBe(false);
   });
@@ -39,6 +41,8 @@ describe("schemas de formulário", () => {
         grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
         data_reuniao: "2026-06-21",
         hora_inicio: "20:30",
+        duracao: "1:30",
+        formato_outros: "",
         preenchido_por: "Patricia",
         plataforma: "zoom",
         tipo_reuniao: "fechada",
@@ -56,6 +60,24 @@ describe("schemas de formulário", () => {
         estado: "LX",
         pais: "Portugal",
         presencas: 1,
+      }).success,
+    ).toBe(false);
+  });
+
+  it("exige descrição quando formato outros é selecionado", () => {
+    expect(
+      ataFormSchema.safeParse({
+        grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
+        data_reuniao: "2026-06-21",
+        hora_inicio: "20:30",
+        duracao: "",
+        formato_outros: "",
+        preenchido_por: "Patricia",
+        plataforma: "zoom",
+        tipo_reuniao: "fechada",
+        formatos: ["outros"],
+        total_membros_presentes: 1,
+        total_partilhas: 1,
       }).success,
     ).toBe(false);
   });
@@ -86,6 +108,8 @@ describe("schemas de formulário", () => {
           grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
           data_reuniao: "2026-06-22",
           hora_inicio: "20:30",
+          duracao: "",
+          formato_outros: "",
           preenchido_por: "Patricia",
           plataforma: "zoom",
           tipo_reuniao: "aberta",

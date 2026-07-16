@@ -12,6 +12,11 @@ import {
 
 type SheetIds = Record<SheetName, number>;
 type SheetValue = string | number | boolean;
+type RecordSheetName = Exclude<
+  SheetName,
+  "grupos" | "usuarios_grupo" | "grupo_horarios"
+>;
+type NextRows = Record<RecordSheetName, number>;
 
 function dateSerial(date: string) {
   return Date.parse(`${date}T00:00:00.000Z`) / 86_400_000 + 25569;
@@ -38,9 +43,20 @@ function rowData(
   };
 }
 
-export function buildAtomicAppendRequests(
+export function firstEmptyDataRowNumber(values: unknown[][]) {
+  const [, ...rows] = values;
+  const emptyIndex = rows.findIndex((row) => {
+    const id = row[0];
+    return id === "" || id === null || typeof id === "undefined";
+  });
+  if (emptyIndex >= 0) return emptyIndex + 2;
+  return values.length + 1;
+}
+
+export function buildAtomicWriteRequests(
   registro: AtaCompleta,
   sheetIds: SheetIds,
+  nextRows: NextRows,
 ): sheets_v4.Schema$Request[] {
   const rows = {
     atas: [domainAtaToSheet(registro.ata)],
@@ -54,13 +70,19 @@ export function buildAtomicAppendRequests(
   };
 
   return (Object.entries(rows) as [
-    Exclude<SheetName, "grupos" | "grupo_horarios">,
+    RecordSheetName,
     object[],
   ][])
     .filter(([, items]) => items.length > 0)
     .map(([sheet, items]) => ({
-      appendCells: {
-        sheetId: sheetIds[sheet],
+      updateCells: {
+        range: {
+          sheetId: sheetIds[sheet],
+          startRowIndex: nextRows[sheet] - 1,
+          endRowIndex: nextRows[sheet] - 1 + items.length,
+          startColumnIndex: 0,
+          endColumnIndex: SHEET_HEADERS[sheet].length,
+        },
         rows: items.map((item) =>
           rowData(sheet, item as Record<string, SheetValue>),
         ),

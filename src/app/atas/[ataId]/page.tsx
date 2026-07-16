@@ -56,11 +56,13 @@ export default async function AtaDetailPage({
         <h2>Informações gerais</h2>
         <dl className="definition-grid">
           <div><dt>Preenchido por</dt><dd>{ata.preenchido_por}</dd></div>
+          {ata.duracao && <div><dt>Duração</dt><dd>{ata.duracao}</dd></div>}
           <div><dt>Plataforma</dt><dd>{plataformaMapping.toSheet(ata.plataforma)}</dd></div>
           <div><dt>Tipo</dt><dd>{tipoReuniaoMapping.toSheet(ata.tipo_reuniao)}</dd></div>
           <div><dt>Membros presentes</dt><dd>{ata.total_membros_presentes}</dd></div>
           <div><dt>Partilhas</dt><dd>{ata.total_partilhas}</dd></div>
           <div><dt>Formatos</dt><dd>{ata.formatos.map((code) => formatoMapping.toSheet(code)).join(", ")}</dd></div>
+          {ata.formato_outros && <div><dt>Formato outros</dt><dd>{ata.formato_outros}</dd></div>}
         </dl>
       </section>
 
@@ -72,7 +74,7 @@ export default async function AtaDetailPage({
           <div><dt>Países</dt><dd>{indicadores.total_paises}</dd></div>
           <div><dt>Visitantes</dt><dd>{indicadores.total_visitantes}</dd></div>
           <div><dt>Ingressos</dt><dd>{indicadores.total_ingressos}</dd></div>
-          <div><dt>Fichas</dt><dd>{indicadores.total_trocas_chaveiro}</dd></div>
+          <div><dt>Conquistas de tempo</dt><dd>{indicadores.total_trocas_chaveiro}</dd></div>
           <div><dt>Sem localidade</dt><dd>{indicadores.membros_sem_localidade}</dd></div>
         </dl>
       </section>
@@ -81,7 +83,12 @@ export default async function AtaDetailPage({
         <h2>Servidores</h2>
         {registro.servidores.length === 0 ? <p className="muted">Nenhum servidor informado.</p> : (
           <ol className="list">
-            {registro.servidores.map((servidor) => <li key={servidor.servidor_id}>{servidor.nome}</li>)}
+            {registro.servidores.map((servidor) => (
+              <li key={servidor.servidor_id}>
+                {servidor.nome}
+                {servidor.funcao ? ` · ${servidor.funcao}` : ""}
+              </li>
+            ))}
           </ol>
         )}
       </section>
@@ -122,8 +129,8 @@ export default async function AtaDetailPage({
       </section>
 
       <section className="card">
-        <h2>Troca de ficha</h2>
-        {registro.trocas_chaveiro.length === 0 ? <p className="muted">Nenhuma troca de ficha informada.</p> : (
+        <h2>Conquistas de tempo</h2>
+        {registro.trocas_chaveiro.length === 0 ? <p className="muted">Nenhuma conquista de tempo informada.</p> : (
           <ul className="list">
             {registro.trocas_chaveiro.map((entry) => <li key={entry.troca_chaveiro_id}>{tempoLimpoMapping.toSheet(entry.tempo_limpo)} · {entry.quantidade}</li>)}
           </ul>

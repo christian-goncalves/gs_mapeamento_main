@@ -54,6 +54,7 @@ const groupOne: Grupo = {
   email_acesso_grupo: "login-um@example.com",
   responsaveis_ata: "",
   link_formulario_ata: "grupo-um",
+  ultima_reuniao_anterior: 0,
   created_at: "2026-07-01T00:00:00.000Z",
   updated_at: "2026-07-01T00:00:00.000Z",
 };
@@ -69,6 +70,7 @@ const groupTwo: Grupo = {
   email_acesso_grupo: "login-dois@example.com",
   responsaveis_ata: "",
   link_formulario_ata: "grupo-dois",
+  ultima_reuniao_anterior: 12,
   created_at: "2026-07-01T00:00:00.000Z",
   updated_at: "2026-07-01T00:00:00.000Z",
 };
@@ -101,6 +103,7 @@ function groupForm(overrides: Partial<Grupo> = {}) {
   data.set("responsavel_grupo_nome", group.responsavel_grupo_nome);
   data.set("responsavel_grupo_email", group.responsavel_grupo_email);
   data.set("email_acesso_grupo", group.email_acesso_grupo);
+  data.set("ultima_reuniao_anterior", String(group.ultima_reuniao_anterior));
   return data;
 }
 
@@ -234,6 +237,7 @@ describe("Server Action de grupos", () => {
         responsavel_grupo_nome: "",
         responsavel_grupo_email: "",
         email_acesso_grupo: "",
+        ultima_reuniao_anterior: groupTwo.ultima_reuniao_anterior,
       }),
     );
     expect(duplicatedGroup.grupo_id).not.toBe(groupTwo.grupo_id);

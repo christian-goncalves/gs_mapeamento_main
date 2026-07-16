@@ -13,6 +13,8 @@ function hiddenPayload() {
       grupo_id: grupoId,
       data_reuniao: "2026-06-23",
       hora_inicio: "20:30",
+      duracao: "1:30",
+      formato_outros: "",
       preenchido_por: "Patricia",
       plataforma: "zoom",
       tipo_reuniao: "aberta",
@@ -20,7 +22,7 @@ function hiddenPayload() {
       total_membros_presentes: 20,
       total_partilhas: 6,
     },
-    servidores: [],
+    servidores: [{ nome: "Servidor", funcao: "Coordenação" }],
     participacao: [
       { localidade: "Itajaí - SC", presencas: 8 },
       { localidade: "Brusque - SC", presencas: 4 },
@@ -44,6 +46,7 @@ describe("normalização do formulário hidden", () => {
     const normalized = normalizeHiddenAtaSubmission(parsed);
     expect(normalized).toMatchObject({
       ata: { total_partilhas: 6 },
+      servidores: [{ nome: "Servidor", funcao: "Coordenação" }],
       participacao: [
         { localidade: "Itajaí", estado: "SC", pais: "Brasil", presencas: 8 },
         { localidade: "Brusque", estado: "SC", pais: "Brasil", presencas: 4 },
@@ -98,5 +101,33 @@ describe("normalização do formulário hidden", () => {
       ingressos: [{ nome: "", cidade: "" }],
     });
     expect(result.success).toBe(false);
+  });
+
+  it("mantem limites numericos do payload hidden", () => {
+    const payload = hiddenPayload();
+    expect(
+      hiddenAtaSubmissionSchema.safeParse({
+        ...payload,
+        ata: { ...payload.ata, total_membros_presentes: 0 },
+      }).success,
+    ).toBe(false);
+    expect(
+      hiddenAtaSubmissionSchema.safeParse({
+        ...payload,
+        ata: { ...payload.ata, total_partilhas: 0 },
+      }).success,
+    ).toBe(false);
+    expect(
+      hiddenAtaSubmissionSchema.safeParse({
+        ...payload,
+        participacao: [{ localidade: "Itajaí - SC", presencas: 0 }],
+      }).success,
+    ).toBe(false);
+    expect(
+      hiddenAtaSubmissionSchema.safeParse({
+        ...payload,
+        trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 0 }],
+      }).success,
+    ).toBe(false);
   });
 });

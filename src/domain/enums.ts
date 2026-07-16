@@ -68,6 +68,7 @@ export const formatoMapping = createEnumMapping({
   literatura: "Literatura",
   passos: "Passos",
   tradicoes: "Tradições",
+  outros: "Outros",
 } as const);
 
 export type Plataforma = (typeof plataformaMapping.codes)[number];

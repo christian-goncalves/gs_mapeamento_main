@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import type { AtaCompleta } from "@/domain/rules";
-import { buildAtomicAppendRequests, executeAtomicBatch } from "./write";
+import {
+  buildAtomicWriteRequests,
+  executeAtomicBatch,
+  firstEmptyDataRowNumber,
+} from "./write";
 
 const ataId = "93ef9660-8c64-4b51-9bc5-09069ce629c1";
 const audit = {
@@ -13,6 +17,8 @@ const registro: AtaCompleta = {
     grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
     data_reuniao: "2026-06-22",
     hora_inicio: "20:30",
+    duracao: "1:30",
+    formato_outros: "",
     preenchido_por: "Patricia",
     plataforma: "zoom",
     tipo_reuniao: "aberta",
@@ -26,6 +32,7 @@ const registro: AtaCompleta = {
       servidor_id: "a4e54dd9-8e3f-4d56-a932-00ea5c13fc88",
       ata_id: ataId,
       nome: "Servidor",
+      funcao: "Secretário",
       ordem: 1,
       ...audit,
     },
@@ -83,36 +90,58 @@ const sheetIds = {
 };
 
 describe("lote atômico do Sheets", () => {
-  it("gera um append por aba não vazia no mesmo lote", () => {
-    const requests = buildAtomicAppendRequests(registro, sheetIds);
+  const nextRows = {
+    atas: 2,
+    servidores: 3,
+    participacao: 4,
+    visitantes: 5,
+    ingressos: 6,
+    trocas_chaveiro: 7,
+  };
+
+  it("gera updates na primeira linha livre por aba no mesmo lote", () => {
+    const requests = buildAtomicWriteRequests(registro, sheetIds, nextRows);
     expect(requests).toHaveLength(6);
-    expect(requests.map((request) => request.appendCells?.sheetId)).toEqual([
+    expect(requests.map((request) => request.updateCells?.range?.sheetId)).toEqual([
       1, 2, 3, 4, 5, 6,
     ]);
+    expect(requests[0].updateCells?.range?.startRowIndex).toBe(1);
+    expect(requests[1].updateCells?.range?.startRowIndex).toBe(2);
+    expect(requests[1].updateCells?.range?.endRowIndex).toBe(3);
     expect(
-      requests[0].appendCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
+      requests[0].updateCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
     ).toEqual({ numberValue: 46195 });
     expect(
-      requests[0].appendCells?.rows?.[0]?.values?.[4]?.userEnteredValue,
+      requests[0].updateCells?.rows?.[0]?.values?.[4]?.userEnteredValue,
+    ).toEqual({ stringValue: "1:30" });
+    expect(
+      requests[0].updateCells?.rows?.[0]?.values?.[6]?.userEnteredValue,
     ).toEqual({ stringValue: "Patricia" });
     expect(
-      requests[0].appendCells?.rows?.[0]?.values?.[5]?.userEnteredValue,
+      requests[0].updateCells?.rows?.[0]?.values?.[7]?.userEnteredValue,
     ).toEqual({ stringValue: "Zoom" });
     expect(
-      requests[3].appendCells?.rows?.[0]?.values?.[4]?.userEnteredValue,
+      requests[3].updateCells?.rows?.[0]?.values?.[4]?.userEnteredValue,
     ).toEqual({ stringValue: "Outro" });
     expect(
-      requests[4].appendCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
+      requests[4].updateCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
     ).toEqual({ stringValue: "Anonimo" });
     expect(
-      requests[4].appendCells?.rows?.[0]?.values?.[3]?.userEnteredValue,
+      requests[4].updateCells?.rows?.[0]?.values?.[3]?.userEnteredValue,
     ).toEqual({ stringValue: "São Paulo - SP" });
     expect(
-      requests[5].appendCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
+      requests[5].updateCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
     ).toEqual({ stringValue: "1M" });
     expect(
-      requests[5].appendCells?.rows?.[0]?.values?.[3]?.userEnteredValue,
+      requests[5].updateCells?.rows?.[0]?.values?.[3]?.userEnteredValue,
     ).toEqual({ numberValue: 2 });
+  });
+
+  it("calcula a primeira linha livre pela coluna de ID", () => {
+    expect(firstEmptyDataRowNumber([["ata_id"], ["a"], [""], ["c"]])).toBe(3);
+    expect(firstEmptyDataRowNumber([["ata_id"], ["a"], ["b"]])).toBe(4);
+    expect(firstEmptyDataRowNumber([["ata_id"]])).toBe(2);
+    expect(firstEmptyDataRowNumber([["ata_id"], ["a"], [undefined, false]])).toBe(3);
   });
 
   it("faz uma única chamada e só resolve após confirmação da API", async () => {
@@ -126,7 +155,7 @@ describe("lote atômico do Sheets", () => {
     const pending = executeAtomicBatch(
       { spreadsheets: { batchUpdate } },
       "test-sheet",
-      buildAtomicAppendRequests(registro, sheetIds),
+      buildAtomicWriteRequests(registro, sheetIds, nextRows),
     );
     expect(batchUpdate).toHaveBeenCalledTimes(1);
     let settled = false;
@@ -146,7 +175,7 @@ describe("lote atômico do Sheets", () => {
       executeAtomicBatch(
         { spreadsheets: { batchUpdate } },
         "test-sheet",
-        buildAtomicAppendRequests(registro, sheetIds),
+        buildAtomicWriteRequests(registro, sheetIds, nextRows),
       ),
     ).rejects.toThrow("Falha simulada");
     expect(batchUpdate).toHaveBeenCalledTimes(1);
