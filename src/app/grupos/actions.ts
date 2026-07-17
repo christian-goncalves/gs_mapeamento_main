@@ -201,7 +201,7 @@ export async function saveGrupoAction(
   redirect(`/grupos/${grupoId}?status=${status}`);
 }
 
-export async function deleteGrupoAction(formData: FormData) {
+export async function deactivateGrupoAction(formData: FormData) {
   const grupoId = text(formData, "grupo_id");
   await requireAdminSession();
 
@@ -219,7 +219,37 @@ export async function deleteGrupoAction(formData: FormData) {
   revalidatePath("/");
   revalidatePath("/grupos");
   revalidatePath(`/grupos/${grupoId}`);
-  redirect("/grupos");
+  revalidatePath("/meu-grupo");
+  redirect("/grupos?status=deactivated");
+}
+
+export async function deleteGrupoAction(formData: FormData) {
+  return deactivateGrupoAction(formData);
+}
+
+export async function activateGrupoAction(formData: FormData) {
+  const grupoId = text(formData, "grupo_id");
+  await requireAdminSession();
+
+  const result = await readAggregatedAtas();
+  const group = result.grupos.find((item) => item.grupo_id === grupoId);
+  if (!group) throw new Error("Grupo não encontrado.");
+
+  if (group.ativo) {
+    revalidatePath("/");
+    revalidatePath("/grupos");
+    revalidatePath(`/grupos/${grupoId}`);
+    revalidatePath("/meu-grupo");
+    return redirect("/grupos?status=already-active");
+  }
+
+  await saveGrupo({ ...group, ativo: true });
+
+  revalidatePath("/");
+  revalidatePath("/grupos");
+  revalidatePath(`/grupos/${grupoId}`);
+  revalidatePath("/meu-grupo");
+  redirect("/grupos?status=activated");
 }
 
 export async function duplicateGrupoAction(formData: FormData) {

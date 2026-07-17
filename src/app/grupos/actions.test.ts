@@ -37,7 +37,8 @@ vi.mock("@/lib/email/activation-email", () => ({
 }));
 
 import {
-  deleteGrupoAction,
+  activateGrupoAction,
+  deactivateGrupoAction,
   duplicateGrupoAction,
   saveGrupoAction,
   saveHorariosGrupoAction,
@@ -73,6 +74,14 @@ const groupTwo: Grupo = {
   ultima_reuniao_anterior: 12,
   created_at: "2026-07-01T00:00:00.000Z",
   updated_at: "2026-07-01T00:00:00.000Z",
+};
+
+const inactiveGroup: Grupo = {
+  ...groupTwo,
+  grupo_id: "55555555-5555-4555-8555-555555555555",
+  grupo_nome: "Grupo Inativo",
+  ativo: false,
+  link_formulario_ata: "grupo-inativo",
 };
 
 const groupTwoSchedule: GrupoHorario = {
@@ -207,8 +216,8 @@ describe("Server Action de grupos", () => {
     );
   });
 
-  it("marca grupo e horarios ativos como inativos ao excluir", async () => {
-    await deleteGrupoAction(groupIdForm());
+  it("marca grupo e horarios ativos como inativos ao inativar", async () => {
+    await deactivateGrupoAction(groupIdForm());
 
     expect(mocks.saveGrupo).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -222,7 +231,57 @@ describe("Server Action de grupos", () => {
         ativo: false,
       }),
     );
-    expect(mocks.redirect).toHaveBeenCalledWith("/grupos");
+    expect(mocks.revalidatePath).toHaveBeenCalledWith("/");
+    expect(mocks.revalidatePath).toHaveBeenCalledWith("/grupos");
+    expect(mocks.revalidatePath).toHaveBeenCalledWith(`/grupos/${groupTwo.grupo_id}`);
+    expect(mocks.revalidatePath).toHaveBeenCalledWith("/meu-grupo");
+    expect(mocks.redirect).toHaveBeenCalledWith("/grupos?status=deactivated");
+  });
+
+  it("ativa grupo inativo sem reativar horarios automaticamente", async () => {
+    mocks.readAggregatedAtas.mockResolvedValueOnce({
+      grupos: [groupOne, groupTwo, inactiveGroup],
+      grupo_horarios: [groupTwoSchedule],
+      atas: [],
+      servidores: [],
+      participacao: [],
+      visitantes: [],
+      ingressos: [],
+      trocas_chaveiro: [],
+      invalidRows: [],
+    });
+
+    await activateGrupoAction(groupIdForm(inactiveGroup.grupo_id));
+
+    expect(mocks.saveGrupo).toHaveBeenCalledWith(
+      expect.objectContaining({
+        grupo_id: inactiveGroup.grupo_id,
+        ativo: true,
+      }),
+    );
+    expect(mocks.saveGrupoHorario).not.toHaveBeenCalled();
+    expect(mocks.revalidatePath).toHaveBeenCalledWith("/");
+    expect(mocks.revalidatePath).toHaveBeenCalledWith("/grupos");
+    expect(mocks.revalidatePath).toHaveBeenCalledWith(`/grupos/${inactiveGroup.grupo_id}`);
+    expect(mocks.revalidatePath).toHaveBeenCalledWith("/meu-grupo");
+    expect(mocks.redirect).toHaveBeenCalledWith("/grupos?status=activated");
+  });
+
+  it("nao altera grupo ja ativo ao ativar novamente", async () => {
+    await activateGrupoAction(groupIdForm(groupTwo.grupo_id));
+
+    expect(mocks.saveGrupo).not.toHaveBeenCalled();
+    expect(mocks.saveGrupoHorario).not.toHaveBeenCalled();
+    expect(mocks.redirect).toHaveBeenCalledWith("/grupos?status=already-active");
+  });
+
+  it("falha com erro controlado ao ativar grupo inexistente", async () => {
+    await expect(
+      activateGrupoAction(groupIdForm("99999999-9999-4999-8999-999999999999")),
+    ).rejects.toThrow("Grupo não encontrado.");
+
+    expect(mocks.saveGrupo).not.toHaveBeenCalled();
+    expect(mocks.redirect).not.toHaveBeenCalled();
   });
 
   it("duplica grupo com horarios ativos sem copiar emails de acesso", async () => {

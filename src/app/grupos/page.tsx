@@ -1,68 +1,50 @@
 import Link from "next/link";
 import { requireAdminSession } from "@/lib/auth/require-session";
 import { readAggregatedAtas } from "@/lib/sheets/repository";
-import { GroupListActions } from "./group-list-actions";
+import { AdminGroupsPanel } from "./admin-groups-panel";
+import { AdminShell } from "./admin-shell";
 
 export const dynamic = "force-dynamic";
 
-export default async function GruposPage() {
+type GruposPageProps = {
+  searchParams?: Promise<{
+    status?: string | string[];
+  }>;
+};
+
+export default async function GruposPage({ searchParams }: GruposPageProps) {
   await requireAdminSession();
+  const params = await searchParams;
+  const status = Array.isArray(params?.status)
+    ? params.status[0]
+    : params?.status;
   const result = await readAggregatedAtas();
   const groups = [...result.grupos].sort(
     (first, second) => first.grupo_nome.localeCompare(second.grupo_nome, "pt-BR"),
-  );
+  ).map((group) => ({
+    grupo_id: group.grupo_id,
+    grupo_nome: group.grupo_nome,
+    ativo: group.ativo,
+    created_at: group.created_at,
+    email_acesso_grupo: group.email_acesso_grupo,
+    responsavel_grupo_nome: group.responsavel_grupo_nome,
+    responsavel_grupo_email: group.responsavel_grupo_email,
+    activeSchedules: result.grupo_horarios.filter(
+      (schedule) => schedule.grupo_id === group.grupo_id && schedule.ativo,
+    ).length,
+  }));
 
   return (
-    <main className="shell">
-      <header className="section-heading">
+    <AdminShell>
+      <header className="admin-page-header">
         <div>
           <p className="eyebrow">Administração</p>
-          <h1>Grupos</h1>
+          <h1>Administração de grupos</h1>
         </div>
         <Link className="button-link" href="/grupos/novo">Novo grupo</Link>
       </header>
 
-      <section className="card">
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Grupo</th>
-                <th>Status</th>
-                <th>Horários ativos</th>
-                <th>E-mail de login</th>
-                <th>Responsável</th>
-                <th>E-mail responsável</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {groups.map((group) => {
-                const activeSchedules = result.grupo_horarios.filter(
-                  (schedule) =>
-                    schedule.grupo_id === group.grupo_id && schedule.ativo,
-                ).length;
-                return (
-                  <tr key={group.grupo_id}>
-                    <td>{group.grupo_nome}</td>
-                    <td>{group.ativo ? "Ativo" : "Inativo"}</td>
-                    <td>{activeSchedules}</td>
-                    <td>{group.email_acesso_grupo || "-"}</td>
-                    <td>{group.responsavel_grupo_nome || "-"}</td>
-                    <td>{group.responsavel_grupo_email || "-"}</td>
-                    <td>
-                      <GroupListActions
-                        grupoId={group.grupo_id}
-                        grupoNome={group.grupo_nome}
-                      />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </main>
+      <AdminGroupsPanel groups={groups} status={status} />
+    </AdminShell>
   );
 }
