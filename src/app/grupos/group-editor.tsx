@@ -107,7 +107,7 @@ export function GroupEditor({
 
   return (
     <main className="shell form-shell">
-      <Link className="back-link" href={canCreate ? "/grupos" : "/"}>
+      <Link className="back-link" href={canCreate ? "/admin/grupos" : "/"}>
         <span className="button-content">
           <FontAwesomeIcon icon={faArrowLeft} />
           Voltar

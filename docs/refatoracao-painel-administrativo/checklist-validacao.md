@@ -4,10 +4,14 @@ Use este checklist apos cada tiro.
 
 ## Rota e autenticacao
 
-- [ ] `/grupos` carrega para administrador.
-- [ ] Usuario nao administrador nao acessa `/grupos`.
-- [ ] `/grupos/novo` continua acessivel para administrador.
-- [ ] `/grupos/[grupoId]` continua carregando.
+- [ ] `/admin/grupos` carrega para administrador.
+- [ ] Usuario nao administrador nao acessa `/admin/grupos`.
+- [ ] `/admin/grupos/novo` continua acessivel para administrador.
+- [ ] `/admin/grupos/[grupoId]` continua carregando para administrador.
+- [ ] `/grupos` redireciona para `/admin/grupos`.
+- [ ] `/grupos/novo` redireciona para `/admin/grupos/novo`.
+- [ ] `/grupos/[grupoId]` redireciona administrador para `/admin/grupos/[grupoId]`.
+- [ ] `/grupos/[grupoId]` continua carregando para responsavel autorizado.
 - [ ] Nenhuma regra de autenticacao foi alterada sem decisao registrada.
 
 ## Dados
@@ -21,12 +25,12 @@ Use este checklist apos cada tiro.
 ## Interface
 
 - [ ] Sidebar mostra Grupos ativo.
-- [ ] Itens sem rota funcional nao navegam.
+- [ ] Itens de secoes futuras navegam para placeholders protegidos.
 - [ ] Sidebar tem comportamento validado em desktop.
 - [ ] Sidebar tem comportamento validado em tablet.
 - [ ] Sidebar tem comportamento validado em mobile.
 - [ ] Sidebar compacta preserva `aria-label` e `title`.
-- [ ] Botao `Novo grupo` aponta para `/grupos/novo`.
+- [ ] Botao `Novo grupo` aponta para `/admin/grupos/novo`.
 - [ ] Aba Ativos abre por padrao.
 - [ ] Abas Ativos/Inativos/Todos filtram corretamente.
 - [ ] Busca combina com a aba ativa.
@@ -63,7 +67,7 @@ Use este checklist apos cada tiro.
 
 ## Regressao
 
-- [ ] Home `/` continua carregando.
+- [ ] Home `/` redireciona por perfil.
 - [ ] Formulario `/atas/nova` continua carregando.
 - [ ] Detalhe de ata `/atas/[ataId]` continua carregando.
 - [ ] Painel do responsavel nao foi alterado.

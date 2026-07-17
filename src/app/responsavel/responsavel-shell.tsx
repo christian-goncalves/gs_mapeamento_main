@@ -7,13 +7,12 @@ import {
   faGear,
   faLayerGroup,
   faRightFromBracket,
-  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { signOut } from "@/auth";
 
-type AdminSection = "grupos" | "atas" | "usuarios" | "relatorios" | "configuracoes";
+type ResponsavelSection = "atas" | "relatorios" | "configuracoes";
 
-function NavItem({
+function ResponsavelNavItem({
   label,
   icon,
   href,
@@ -26,7 +25,7 @@ function NavItem({
 }) {
   return (
     <Link
-      className={active ? "admin-nav-item admin-nav-item-active" : "admin-nav-item"}
+      className={active ? "responsavel-nav-item responsavel-nav-item-active" : "responsavel-nav-item"}
       href={href}
       aria-current={active ? "page" : undefined}
       aria-label={label}
@@ -38,56 +37,46 @@ function NavItem({
   );
 }
 
-export function AdminShell({
+export function ResponsavelShell({
   children,
-  activeSection = "grupos",
+  activeSection,
+  settingsHref,
 }: {
   children: ReactNode;
-  activeSection?: AdminSection;
+  activeSection: ResponsavelSection;
+  settingsHref: string;
 }) {
   return (
-    <main className="admin-layout">
-      <aside className="admin-sidebar" aria-label="Navegação administrativa">
-        <div className="admin-brand" aria-label="GS Mapeamento">
+    <main className="responsavel-layout">
+      <aside className="responsavel-sidebar" aria-label="Navegação do responsável">
+        <div className="responsavel-brand" aria-label="GS Mapeamento">
           <FontAwesomeIcon icon={faLayerGroup} />
           <span>GS Mapeamento</span>
         </div>
 
-        <nav className="admin-nav" aria-label="Seções administrativas">
-          <NavItem
-            label="Grupos"
-            icon={faLayerGroup}
-            href="/admin/grupos"
-            active={activeSection === "grupos"}
-          />
-          <NavItem
+        <nav className="responsavel-nav" aria-label="Seções do responsável">
+          <ResponsavelNavItem
             label="Atas"
             icon={faFileLines}
-            href="/admin/atas"
+            href="/responsavel/atas"
             active={activeSection === "atas"}
           />
-          <NavItem
-            label="Usuários"
-            icon={faUser}
-            href="/admin/usuarios"
-            active={activeSection === "usuarios"}
-          />
-          <NavItem
+          <ResponsavelNavItem
             label="Relatórios"
             icon={faChartSimple}
-            href="/admin/relatorios"
+            href="/responsavel/relatorios"
             active={activeSection === "relatorios"}
           />
-          <NavItem
+          <ResponsavelNavItem
             label="Configurações"
             icon={faGear}
-            href="/admin/configuracoes"
+            href={settingsHref}
             active={activeSection === "configuracoes"}
           />
         </nav>
 
         <form
-          className="admin-signout-form"
+          className="responsavel-signout-form"
           action={async () => {
             "use server";
             await signOut({ redirectTo: "/login" });
@@ -95,7 +84,7 @@ export function AdminShell({
         >
           <button
             type="submit"
-            className="admin-nav-item admin-signout-button"
+            className="responsavel-nav-item responsavel-signout-button"
             aria-label="Sair"
             title="Sair"
           >
@@ -105,7 +94,7 @@ export function AdminShell({
         </form>
       </aside>
 
-      <div className="admin-main">{children}</div>
+      <div className="responsavel-main">{children}</div>
     </main>
   );
 }

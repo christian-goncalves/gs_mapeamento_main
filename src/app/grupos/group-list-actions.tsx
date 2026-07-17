@@ -52,7 +52,7 @@ export function GroupListActions({
     <div className="row-actions group-list-actions">
       <Link
         className="icon-button"
-        href={`/grupos/${grupoId}`}
+        href={`/admin/grupos/${grupoId}`}
         aria-label={`Visualizar ${grupoNome}`}
         title="Visualizar"
       >
@@ -60,7 +60,7 @@ export function GroupListActions({
       </Link>
       <Link
         className="icon-button"
-        href={`/grupos/${grupoId}`}
+        href={`/admin/grupos/${grupoId}`}
         aria-label={`Editar ${grupoNome}`}
         title="Editar"
       >

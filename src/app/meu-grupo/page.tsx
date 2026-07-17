@@ -5,8 +5,8 @@ export const dynamic = "force-dynamic";
 
 export default async function MyGroupPage() {
   const { access } = await requireAuthorizedSession();
-  if (access.role === "administrador") redirect("/grupos");
+  if (access.role === "administrador") redirect("/admin/grupos");
   const [group] = access.groups;
   if (!group) redirect("/login");
-  redirect(`/grupos/${group.grupo_id}`);
+  redirect("/responsavel/atas");
 }

@@ -855,3 +855,31 @@ Pendencias:
 Checkpoint:
 
 Proxima acao:
+## 2026-07-17 - Ciclo 4 - Rotas administrativas `/admin/*`
+
+Escopo executado:
+
+- `/` convertido em entrada inteligente por perfil;
+- `/admin/grupos`, `/admin/grupos/novo` e `/admin/grupos/[grupoId]` criados;
+- `/grupos` e `/grupos/novo` convertidos em redirects de compatibilidade;
+- `/grupos/[grupoId]` preservado para responsavel e redirecionando admin para
+  `/admin/grupos/[grupoId]`;
+- placeholders protegidos criados para `/admin/atas`, `/admin/usuarios`,
+  `/admin/relatorios` e `/admin/configuracoes`;
+- rota `/admin/logout` criada;
+- Server Actions de grupos atualizadas para redirects/revalidacoes
+  administrativas.
+
+Validacao:
+
+- `npm run lint`: passou;
+- `npm run test`: passou, 19 arquivos e 139 testes;
+- `git diff --check`: passou;
+- `npm run build`: falhou na pendencia preexistente
+  `scripts/reset-ata-record-sheets.ts:113`.
+
+Pendencia:
+
+- Validacao HTTP manual ficou indisponivel porque o servidor dev ativo na porta
+  3000 deixou de aceitar conexao durante a checagem. Repetir apos reiniciar o
+  servidor local.

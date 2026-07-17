@@ -248,3 +248,21 @@ nao tecnica quando a rota falha.
 
 Impacto: nenhuma regra de dados, autenticacao ou Sheets foi alterada. O erro
 mostra acao de tentar novamente sem expor detalhes tecnicos.
+
+## 2026-07-17 - Namespace administrativo em `/admin/*`
+
+Contexto: a rota `/` ainda renderizava a experiencia antiga e o painel
+administrativo estava exposto diretamente em `/grupos`.
+
+Decisao: `/` passa a ser uma entrada inteligente por perfil, administradores
+sao enviados para `/admin/grupos` e as secoes administrativas passam a usar o
+namespace `/admin/*`.
+
+Motivo: separar rotas administrativas do fluxo operacional do responsavel e
+criar base consistente para `/admin/atas`, `/admin/usuarios`,
+`/admin/relatorios` e `/admin/configuracoes`.
+
+Impacto: `/grupos` e `/grupos/novo` viram redirects de compatibilidade;
+`/grupos/[grupoId]` continua disponivel para responsaveis, mas redireciona
+administradores para `/admin/grupos/[grupoId]`. As rotas administrativas
+reservadas foram criadas como placeholders protegidos, sem funcionalidade nova.

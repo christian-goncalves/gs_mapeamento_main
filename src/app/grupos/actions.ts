@@ -26,6 +26,24 @@ import { z } from "zod";
 
 export type SaveGrupoState = { error?: string } | null;
 
+const ADMIN_GROUPS_PATH = "/admin/grupos";
+
+function adminGroupPath(grupoId: string) {
+  return `${ADMIN_GROUPS_PATH}/${grupoId}`;
+}
+
+function groupDetailPath(grupoId: string, isAdmin: boolean) {
+  return isAdmin ? adminGroupPath(grupoId) : `/grupos/${grupoId}`;
+}
+
+function revalidateGroupAdminPaths(grupoId: string) {
+  revalidatePath(ADMIN_GROUPS_PATH);
+  revalidatePath(adminGroupPath(grupoId));
+  revalidatePath(`/grupos/${grupoId}`);
+  revalidatePath("/meu-grupo");
+  revalidatePath("/responsavel/atas");
+}
+
 function text(formData: FormData, name: string) {
   const value = formData.get(name);
   return typeof value === "string" ? value.trim() : "";
@@ -188,17 +206,14 @@ export async function saveGrupoAction(
       activationInviteSent = true;
     }
   }
-  revalidatePath("/");
-  revalidatePath("/grupos");
-  revalidatePath(`/grupos/${grupoId}`);
-  revalidatePath("/meu-grupo");
+  revalidateGroupAdminPaths(grupoId);
   const status =
     existingGroup && previousEmail !== nextEmail && activationInviteSent
       ? "activation-invite-sent"
       : existingGroup
         ? "saved"
         : "created";
-  redirect(`/grupos/${grupoId}?status=${status}`);
+  redirect(`${groupDetailPath(grupoId, isAdmin)}?status=${status}`);
 }
 
 export async function deactivateGrupoAction(formData: FormData) {
@@ -216,11 +231,8 @@ export async function deactivateGrupoAction(formData: FormData) {
     await saveGrupoHorario({ ...horario, ativo: false });
   }
 
-  revalidatePath("/");
-  revalidatePath("/grupos");
-  revalidatePath(`/grupos/${grupoId}`);
-  revalidatePath("/meu-grupo");
-  redirect("/grupos?status=deactivated");
+  revalidateGroupAdminPaths(grupoId);
+  redirect(`${ADMIN_GROUPS_PATH}?status=deactivated`);
 }
 
 export async function deleteGrupoAction(formData: FormData) {
@@ -236,20 +248,14 @@ export async function activateGrupoAction(formData: FormData) {
   if (!group) throw new Error("Grupo não encontrado.");
 
   if (group.ativo) {
-    revalidatePath("/");
-    revalidatePath("/grupos");
-    revalidatePath(`/grupos/${grupoId}`);
-    revalidatePath("/meu-grupo");
-    return redirect("/grupos?status=already-active");
+    revalidateGroupAdminPaths(grupoId);
+    return redirect(`${ADMIN_GROUPS_PATH}?status=already-active`);
   }
 
   await saveGrupo({ ...group, ativo: true });
 
-  revalidatePath("/");
-  revalidatePath("/grupos");
-  revalidatePath(`/grupos/${grupoId}`);
-  revalidatePath("/meu-grupo");
-  redirect("/grupos?status=activated");
+  revalidateGroupAdminPaths(grupoId);
+  redirect(`${ADMIN_GROUPS_PATH}?status=activated`);
 }
 
 export async function duplicateGrupoAction(formData: FormData) {
@@ -288,9 +294,8 @@ export async function duplicateGrupoAction(formData: FormData) {
     });
   }
 
-  revalidatePath("/");
-  revalidatePath("/grupos");
-  redirect(`/grupos/${savedGroup.grupo_id}?status=created`);
+  revalidateGroupAdminPaths(savedGroup.grupo_id);
+  redirect(`${adminGroupPath(savedGroup.grupo_id)}?status=created`);
 }
 
 export async function saveHorarioAction(formData: FormData) {
@@ -320,9 +325,8 @@ export async function saveHorarioAction(formData: FormData) {
     horario_id: horarioId || undefined,
     ...parsed,
   });
-  revalidatePath(`/grupos/${grupoId}`);
-  revalidatePath("/meu-grupo");
-  redirect(`/grupos/${grupoId}`);
+  revalidateGroupAdminPaths(grupoId);
+  redirect(groupDetailPath(grupoId, current.access.role === "administrador"));
 }
 
 export async function saveHorariosGrupoAction(formData: FormData) {
@@ -384,9 +388,8 @@ export async function saveHorariosGrupoAction(formData: FormData) {
     });
   }
 
-  revalidatePath(`/grupos/${grupoId}`);
-  revalidatePath("/meu-grupo");
-  redirect(`/grupos/${grupoId}`);
+  revalidateGroupAdminPaths(grupoId);
+  redirect(groupDetailPath(grupoId, current.access.role === "administrador"));
 }
 
 export async function toggleHorarioAction(formData: FormData) {
@@ -402,7 +405,6 @@ export async function toggleHorarioAction(formData: FormData) {
   );
   if (!horario) throw new Error("Horário não encontrado.");
   await saveGrupoHorario({ ...horario, ativo: active });
-  revalidatePath(`/grupos/${grupoId}`);
-  revalidatePath("/meu-grupo");
-  redirect(`/grupos/${grupoId}`);
+  revalidateGroupAdminPaths(grupoId);
+  redirect(groupDetailPath(grupoId, current.access.role === "administrador"));
 }

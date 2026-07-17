@@ -40,7 +40,7 @@ export default async function LoginPage({
 }) {
   const session = await auth();
   const access = await resolveAccessByEmail(session?.user?.email);
-  if (access) redirect(access.role === "administrador" ? "/" : "/meu-grupo");
+  if (access) redirect(access.role === "administrador" ? "/admin/grupos" : "/responsavel/atas");
   const params = searchParams ? await searchParams : {};
   const accessDenied = params.error === "AccessDenied";
 

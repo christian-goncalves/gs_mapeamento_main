@@ -3,7 +3,7 @@ import { requireAdminSession } from "@/lib/auth/require-session";
 
 export const dynamic = "force-dynamic";
 
-export default async function LegacyNewGroupPage() {
+export default async function AdminPage() {
   await requireAdminSession();
-  redirect("/admin/grupos/novo");
+  redirect("/admin/grupos");
 }

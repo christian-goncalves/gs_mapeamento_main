@@ -179,7 +179,7 @@ describe("Server Action de grupos", () => {
       }),
     );
     expect(mocks.redirect).toHaveBeenCalledWith(
-      `/grupos/${groupTwo.grupo_id}?status=saved`,
+      `/admin/grupos/${groupTwo.grupo_id}?status=saved`,
     );
   });
 
@@ -197,7 +197,7 @@ describe("Server Action de grupos", () => {
 
     expect(mocks.sendActivationEmail).toHaveBeenCalledOnce();
     expect(mocks.redirect).toHaveBeenCalledWith(
-      `/grupos/${groupTwo.grupo_id}?status=activation-invite-sent`,
+      `/admin/grupos/${groupTwo.grupo_id}?status=activation-invite-sent`,
     );
   });
 
@@ -212,7 +212,7 @@ describe("Server Action de grupos", () => {
 
     expect(mocks.sendActivationEmail).not.toHaveBeenCalled();
     expect(mocks.redirect).toHaveBeenCalledWith(
-      `/grupos/${groupTwo.grupo_id}?status=saved`,
+      `/admin/grupos/${groupTwo.grupo_id}?status=saved`,
     );
   });
 
@@ -231,11 +231,10 @@ describe("Server Action de grupos", () => {
         ativo: false,
       }),
     );
-    expect(mocks.revalidatePath).toHaveBeenCalledWith("/");
-    expect(mocks.revalidatePath).toHaveBeenCalledWith("/grupos");
-    expect(mocks.revalidatePath).toHaveBeenCalledWith(`/grupos/${groupTwo.grupo_id}`);
+    expect(mocks.revalidatePath).toHaveBeenCalledWith("/admin/grupos");
+    expect(mocks.revalidatePath).toHaveBeenCalledWith(`/admin/grupos/${groupTwo.grupo_id}`);
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/meu-grupo");
-    expect(mocks.redirect).toHaveBeenCalledWith("/grupos?status=deactivated");
+    expect(mocks.redirect).toHaveBeenCalledWith("/admin/grupos?status=deactivated");
   });
 
   it("ativa grupo inativo sem reativar horarios automaticamente", async () => {
@@ -260,11 +259,10 @@ describe("Server Action de grupos", () => {
       }),
     );
     expect(mocks.saveGrupoHorario).not.toHaveBeenCalled();
-    expect(mocks.revalidatePath).toHaveBeenCalledWith("/");
-    expect(mocks.revalidatePath).toHaveBeenCalledWith("/grupos");
-    expect(mocks.revalidatePath).toHaveBeenCalledWith(`/grupos/${inactiveGroup.grupo_id}`);
+    expect(mocks.revalidatePath).toHaveBeenCalledWith("/admin/grupos");
+    expect(mocks.revalidatePath).toHaveBeenCalledWith(`/admin/grupos/${inactiveGroup.grupo_id}`);
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/meu-grupo");
-    expect(mocks.redirect).toHaveBeenCalledWith("/grupos?status=activated");
+    expect(mocks.redirect).toHaveBeenCalledWith("/admin/grupos?status=activated");
   });
 
   it("nao altera grupo ja ativo ao ativar novamente", async () => {
@@ -272,7 +270,7 @@ describe("Server Action de grupos", () => {
 
     expect(mocks.saveGrupo).not.toHaveBeenCalled();
     expect(mocks.saveGrupoHorario).not.toHaveBeenCalled();
-    expect(mocks.redirect).toHaveBeenCalledWith("/grupos?status=already-active");
+    expect(mocks.redirect).toHaveBeenCalledWith("/admin/grupos?status=already-active");
   });
 
   it("falha com erro controlado ao ativar grupo inexistente", async () => {
@@ -309,7 +307,7 @@ describe("Server Action de grupos", () => {
       }),
     );
     expect(mocks.redirect).toHaveBeenCalledWith(
-      `/grupos/${duplicatedGroup.grupo_id}?status=created`,
+      `/admin/grupos/${duplicatedGroup.grupo_id}?status=created`,
     );
   });
 
@@ -344,6 +342,6 @@ describe("Server Action de grupos", () => {
         ativo: false,
       }),
     );
-    expect(mocks.redirect).toHaveBeenCalledWith(`/grupos/${groupTwo.grupo_id}`);
+    expect(mocks.redirect).toHaveBeenCalledWith(`/admin/grupos/${groupTwo.grupo_id}`);
   });
 });
