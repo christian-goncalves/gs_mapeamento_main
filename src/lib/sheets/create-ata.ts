@@ -1,5 +1,9 @@
 import "server-only";
 
+import {
+  InvalidAtaIdentifiersError,
+  nextAtaCreationIdentifiers,
+} from "@/domain/ata-identifiers";
 import type { AtaSubmission } from "@/domain/form-schemas";
 import { assertCreationAllowed, type AtaBusinessKey } from "@/domain/creation";
 import { materializeAtaSubmission } from "@/domain/submission";
@@ -8,6 +12,7 @@ import { SHEET_HEADERS, type SheetName } from "./contract";
 import { parseRows, rowsToObjects, type SheetCell } from "./rows";
 import {
   sheetAtaBusinessKeySchema,
+  sheetAtaIdentifiersSchema,
   sheetGrupoSchema,
   sheetGrupoToDomain,
 } from "./schemas";
@@ -65,7 +70,16 @@ export async function createAtaInSheets(submission: AtaSubmission) {
     const result = sheetAtaBusinessKeySchema.safeParse(row.value);
     return result.success ? [result.data] : [];
   });
+  const existingIdentifiers = rows.atas.flatMap((row) => {
+    const result = sheetAtaIdentifiersSchema.safeParse(row.value);
+    if (!result.success) throw new InvalidAtaIdentifiersError();
+    return [result.data];
+  });
   assertCreationAllowed(submission, groups, existingKeys);
+  const identifiers = nextAtaCreationIdentifiers(
+    submission.ata.grupo_id,
+    existingIdentifiers,
+  );
 
   const sheetIds = Object.fromEntries(
     (metadataResponse.data.sheets ?? []).map((sheet) => [
@@ -79,7 +93,11 @@ export async function createAtaInSheets(submission: AtaSubmission) {
     }
   }
 
-  const registro = materializeAtaSubmission(submission);
+  const registro = materializeAtaSubmission(
+    submission,
+    undefined,
+    identifiers,
+  );
   const nextRows = {
     atas: firstEmptyDataRowNumber(sheetValues.atas),
     servidores: firstEmptyDataRowNumber(sheetValues.servidores),

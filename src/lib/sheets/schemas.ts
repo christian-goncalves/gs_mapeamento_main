@@ -112,6 +112,13 @@ export const sheetAtaBusinessKeySchema = z.object({
   hora_inicio: sheetTime,
 });
 
+export const sheetAtaIdentifiersSchema = z.object({
+  ata_id: uuid,
+  grupo_id: uuid,
+  numero_sequencial_grupo: sheetInteger(1),
+  indice_personalizado_grupo: sheetInteger(1),
+});
+
 export const sheetGrupoSchema = z.object({
   grupo_id: uuid,
   zoom_id: requiredSheetText,
@@ -156,6 +163,8 @@ export const sheetUsuarioGrupoSchema = z.object({
 export const sheetAtaSchema = z
   .object({
     ata_id: uuid,
+    numero_sequencial_grupo: sheetInteger(1),
+    indice_personalizado_grupo: sheetInteger(1),
     grupo_id: uuid,
     data_reuniao: sheetDate,
     hora_inicio: sheetTime,
@@ -307,6 +316,8 @@ export function sheetAtaToDomain(row: SheetAta): Ata {
   if (row.formato_outros) formatos.push("outros");
   return {
     ata_id: row.ata_id,
+    numero_sequencial_grupo: row.numero_sequencial_grupo,
+    indice_personalizado_grupo: row.indice_personalizado_grupo,
     grupo_id: row.grupo_id,
     data_reuniao: row.data_reuniao,
     hora_inicio: row.hora_inicio,
@@ -327,6 +338,8 @@ export function domainAtaToSheet(item: Ata): SheetAta {
   const formatos = new Set(item.formatos);
   return {
     ata_id: item.ata_id,
+    numero_sequencial_grupo: item.numero_sequencial_grupo,
+    indice_personalizado_grupo: item.indice_personalizado_grupo,
     grupo_id: item.grupo_id,
     data_reuniao: item.data_reuniao,
     hora_inicio: item.hora_inicio,

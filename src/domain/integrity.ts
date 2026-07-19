@@ -61,6 +61,18 @@ export function validateContractIntegrity(rows: ContractRows) {
       "ata_id duplicado.",
     ),
     ...duplicateDiagnostics(
+      rows.atas,
+      "numero_sequencial_grupo",
+      (item) => `${item.grupo_id}|${item.numero_sequencial_grupo}`,
+      "numero_sequencial_grupo duplicado para o mesmo grupo.",
+    ),
+    ...duplicateDiagnostics(
+      rows.atas,
+      "indice_personalizado_grupo",
+      (item) => `${item.grupo_id}|${item.indice_personalizado_grupo}`,
+      "indice_personalizado_grupo duplicado para o mesmo grupo.",
+    ),
+    ...duplicateDiagnostics(
       rows.servidores,
       "servidor_id",
       (item) => item.servidor_id,

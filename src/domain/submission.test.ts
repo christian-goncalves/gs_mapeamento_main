@@ -81,11 +81,22 @@ describe("envio imutável", () => {
 
   it("gera IDs, timestamp único e ordem pela posição do rascunho", () => {
     let id = 0;
-    const registro = materializeAtaSubmission(submission, {
-      now: () => "2026-06-22T12:00:00.000Z",
-      uuid: () => `00000000-0000-4000-8000-${String(++id).padStart(12, "0")}`,
-    });
+    const registro = materializeAtaSubmission(
+      submission,
+      {
+        now: () => "2026-06-22T12:00:00.000Z",
+        uuid: () => `00000000-0000-4000-8000-${String(++id).padStart(12, "0")}`,
+      },
+      {
+        numero_sequencial_grupo: 3,
+        indice_personalizado_grupo: 7,
+      },
+    );
     expect(registro.ata.ata_id).toBe("00000000-0000-4000-8000-000000000001");
+    expect(registro.ata).toMatchObject({
+      numero_sequencial_grupo: 3,
+      indice_personalizado_grupo: 7,
+    });
     expect(registro.servidores.map((item) => item.ordem)).toEqual([1, 2]);
     expect(registro.servidores[0]).toMatchObject({
       ata_id: registro.ata.ata_id,

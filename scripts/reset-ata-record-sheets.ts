@@ -9,9 +9,18 @@ import {
 } from "../src/lib/sheets/reset-ata-records";
 
 type ValidationCheck = {
-  sheet: AtaRecordSheet;
-  column: string;
-};
+  [Sheet in AtaRecordSheet]: {
+    sheet: Sheet;
+    column: (typeof SHEET_HEADERS)[Sheet][number];
+  };
+}[AtaRecordSheet];
+
+function validationCheck<Sheet extends AtaRecordSheet>(
+  sheet: Sheet,
+  column: (typeof SHEET_HEADERS)[Sheet][number],
+): ValidationCheck {
+  return { sheet, column } as ValidationCheck;
+}
 
 const validationChecks: ValidationCheck[] = [
   ...[
@@ -25,10 +34,15 @@ const validationChecks: ValidationCheck[] = [
     "formato_literatura",
     "formato_passos",
     "formato_tradicoes",
-  ].map((column) => ({ sheet: "atas" as const, column })),
-  { sheet: "visitantes", column: "categoria" },
-  { sheet: "visitantes", column: "origem_contato" },
-  { sheet: "trocas_chaveiro", column: "tempo_limpo" },
+  ].map((column) =>
+    validationCheck(
+      "atas",
+      column as (typeof SHEET_HEADERS)["atas"][number],
+    ),
+  ),
+  validationCheck("visitantes", "categoria"),
+  validationCheck("visitantes", "origem_contato"),
+  validationCheck("trocas_chaveiro", "tempo_limpo"),
 ];
 
 function required(name: string) {
@@ -110,7 +124,7 @@ async function readIdColumnCounts(
 function validationRanges(metadata: ResetSheetMetadata[]) {
   const rowCountBySheet = new Map(metadata.map((sheet) => [sheet.title, sheet.rowCount]));
   return validationChecks.map(({ sheet, column }) => {
-    const columnIndex = SHEET_HEADERS[sheet].indexOf(column);
+    const columnIndex = (SHEET_HEADERS[sheet] as readonly string[]).indexOf(column);
     if (columnIndex < 0) throw new Error(`Coluna ${column} não encontrada em ${sheet}.`);
     const endRow = Math.max(2, Math.min(rowCountBySheet.get(sheet) ?? 30, 30));
     const letter = columnLetter(columnIndex);

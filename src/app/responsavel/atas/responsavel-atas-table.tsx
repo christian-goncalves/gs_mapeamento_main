@@ -1,23 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEye,
+  faFilePdf,
   faPenToSquare,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
-import DataTable from "datatables.net-react";
-import DT from "datatables.net-dt";
 import type { ConfigColumns } from "datatables.net";
-
-DataTable["use"](DT);
 
 type ResponsavelAtaTab = "enviadas" | "por-servidor" | "todas";
 
 export type ResponsavelAtaRow = {
   ataId: string;
+  indicePersonalizadoGrupo: number;
   data: string;
   horario: string;
   servidor: string;
@@ -34,9 +32,11 @@ type ResponsavelAtaDataTableRow = [
   string,
   string,
   string,
+  string,
   ResponsavelAtaRow["status"],
   ResponsavelAtaRow,
 ];
+type DataTableComponent = typeof import("datatables.net-react").default;
 
 function formatDate(value: string) {
   const [year, month, day] = value.split("-");
@@ -63,6 +63,7 @@ function sortRows(rows: ResponsavelAtaRow[], tab: ResponsavelAtaTab) {
 
 function toDataTableRows(rows: ResponsavelAtaRow[]): ResponsavelAtaDataTableRow[] {
   return rows.map((row) => [
+    `#${row.indicePersonalizadoGrupo}`,
     row.data,
     row.horario,
     row.servidor || "Sem servidor",
@@ -72,9 +73,10 @@ function toDataTableRows(rows: ResponsavelAtaRow[]): ResponsavelAtaDataTableRow[
 }
 
 const columns: ConfigColumns[] = [
+  { title: "Ata", className: "responsavel-centered-column" },
   { title: "Data", className: "responsavel-data-column" },
   { title: "Horário", className: "responsavel-centered-column" },
-  { title: "Servidor", className: "responsavel-centered-column" },
+  { title: "Preenchido por", className: "responsavel-centered-column" },
   { title: "Status", className: "responsavel-centered-column", orderable: false },
   {
     title: "Ações",
@@ -85,6 +87,8 @@ const columns: ConfigColumns[] = [
 ];
 
 export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
+  const [DataTableComponent, setDataTableComponent] =
+    useState<DataTableComponent | null>(null);
   const [activeTab, setActiveTab] = useState<ResponsavelAtaTab>("enviadas");
   const tabs = ["enviadas", "por-servidor", "todas"] as const;
 
@@ -96,6 +100,24 @@ export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
   function updateTab(tab: ResponsavelAtaTab) {
     setActiveTab(tab);
   }
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadDataTable() {
+      const [{ default: DataTable }, { default: DT }] = await Promise.all([
+        import("datatables.net-react"),
+        import("datatables.net-dt"),
+      ]);
+      DataTable["use"](DT);
+      if (mounted) setDataTableComponent(() => DataTable);
+    }
+
+    void loadDataTable();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <section className="card responsavel-atas-card">
@@ -115,109 +137,106 @@ export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
       </div>
 
       <div className="responsavel-table-wrap">
-        <DataTable
-          key={activeTab}
-          className="responsavel-atas-table"
-          columns={columns}
-          data={tableRows}
-          options={{
-            autoWidth: false,
-            ordering: true,
-            order: activeTab === "por-servidor" ? [[2, "asc"], [0, "desc"]] : [[0, "desc"]],
-            orderFixed: { post: [[1, "asc"]] },
-            pageLength: 10,
-            lengthMenu: [10, 25, 50],
-            language: {
-              decimal: ",",
-              emptyTable: "Nenhuma ata encontrada.",
-              info: "_START_ - _END_ de _TOTAL_",
-              infoEmpty: "0 - 0 de 0",
-              infoFiltered: "(filtrado de _MAX_ atas)",
-              lengthMenu: "Mostrar _MENU_ atas",
-              loadingRecords: "Carregando...",
-              paginate: {
-                first: "Primeira",
-                last: "Última",
-                next: "Próxima",
-                previous: "Anterior",
+        {DataTableComponent ? (
+          <DataTableComponent
+            key={activeTab}
+            className="responsavel-atas-table"
+            columns={columns}
+            data={tableRows}
+            options={{
+              autoWidth: false,
+              ordering: true,
+              order: activeTab === "por-servidor" ? [[3, "asc"], [1, "desc"]] : [[1, "desc"]],
+              orderFixed: { post: [[2, "asc"]] },
+              pageLength: 10,
+              lengthMenu: [10, 25, 50],
+              language: {
+                decimal: ",",
+                emptyTable: "Nenhuma ata encontrada.",
+                info: "_START_ - _END_ de _TOTAL_",
+                infoEmpty: "0 - 0 de 0",
+                infoFiltered: "(filtrado de _MAX_ atas)",
+                lengthMenu: "Mostrar _MENU_ atas",
+                loadingRecords: "Carregando...",
+                paginate: {
+                  first: "Primeira",
+                  last: "Última",
+                  next: "Próxima",
+                  previous: "Anterior",
+                },
+                search: "Buscar:",
+                searchPlaceholder: "Buscar atas, datas ou servidores...",
+                zeroRecords: "Nenhuma ata encontrada.",
               },
-              search: "Buscar:",
-              searchPlaceholder: "Buscar atas, datas ou servidores...",
-              zeroRecords: "Nenhuma ata encontrada.",
-            },
-          }}
-          slots={{
-            0: (data: string, type: string, _row: ResponsavelAtaDataTableRow) => {
-              void _row;
-              const formattedDate = formatDate(data);
-              if (type === "display") return formattedDate;
-              if (type === "filter") return `${formattedDate} ${data}`;
-              return data;
-            },
-            3: (
-              data: ResponsavelAtaRow["status"],
-              type: string,
-              _row: ResponsavelAtaDataTableRow,
-            ) => {
-              void _row;
-              return type === "display" ? (
+            }}
+            slots={{
+              1: (data: string) => formatDate(data),
+              4: (data: ResponsavelAtaRow["status"]) => (
                 <span className="responsavel-status-badge">{data}</span>
-              ) : (
-                data
-              );
-            },
-            4: (_data: ResponsavelAtaRow, type: string, row: ResponsavelAtaDataTableRow) => {
-              const ata = row[4];
-              const dateLabel = formatDate(ata.data);
+              ),
+              5: (_data: ResponsavelAtaRow, row: ResponsavelAtaDataTableRow) => {
+                const ata = row[5];
+                const dateLabel = formatDate(ata.data);
 
-              if (type !== "display") return `${dateLabel} ${ata.horario} ${ata.servidor}`;
-
-              return (
-                <div
-                  className="row-actions responsavel-ata-actions"
-                  aria-label={`Ações da ata de ${dateLabel}`}
-                >
-                  <Link
-                    className="icon-button"
-                    href={`/atas/${ata.ataId}`}
-                    aria-label={`Visualizar ata de ${dateLabel} às ${ata.horario}`}
-                    title="Visualizar"
+                return (
+                  <div
+                    className="row-actions responsavel-ata-actions"
+                    aria-label={`Ações da ata de ${dateLabel}`}
                   >
-                    <FontAwesomeIcon icon={faEye} />
-                  </Link>
-                  <button
-                    type="button"
-                    className="icon-button"
-                    aria-label="Editar ata indisponível"
-                    title="Editar ata será implementado em ciclo próprio"
-                    disabled
-                  >
-                    <FontAwesomeIcon icon={faPenToSquare} />
-                  </button>
-                  <button
-                    type="button"
-                    className="danger-icon-button"
-                    aria-label="Excluir ata indisponível"
-                    title="Excluir ata será implementado em ciclo próprio"
-                    disabled
-                  >
-                    <FontAwesomeIcon icon={faTrashCan} />
-                  </button>
-                </div>
-              );
-            },
-          }}
-        >
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Horário</th>
-              <th>Servidor</th>
-              <th>Status</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-        </DataTable>
+                    <Link
+                      className="icon-button"
+                      href={`/atas/${ata.ataId}`}
+                      aria-label={`Visualizar ata de ${dateLabel} às ${ata.horario}`}
+                      title="Visualizar"
+                    >
+                      <FontAwesomeIcon icon={faEye} />
+                    </Link>
+                    <button
+                      type="button"
+                      className="icon-button"
+                      aria-label="Gerar PDF da ata indisponível"
+                      title="Gerar PDF será implementado em ciclo próprio"
+                      disabled
+                    >
+                      <FontAwesomeIcon icon={faFilePdf} />
+                    </button>
+                    <button
+                      type="button"
+                      className="icon-button"
+                      aria-label="Editar ata indisponível"
+                      title="Editar ata será implementado em ciclo próprio"
+                      disabled
+                    >
+                      <FontAwesomeIcon icon={faPenToSquare} />
+                    </button>
+                    <button
+                      type="button"
+                      className="danger-icon-button"
+                      aria-label="Excluir ata indisponível"
+                      title="Excluir ata será implementado em ciclo próprio"
+                      disabled
+                    >
+                      <FontAwesomeIcon icon={faTrashCan} />
+                    </button>
+                  </div>
+                );
+              },
+            }}
+          >
+            <thead>
+              <tr>
+                <th>Ata</th>
+                <th>Data</th>
+                <th>Horário</th>
+                <th>Preenchido por</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+          </DataTableComponent>
+        ) : (
+          <p className="empty-state" role="status">Carregando tabela...</p>
+        )}
       </div>
     </section>
   );

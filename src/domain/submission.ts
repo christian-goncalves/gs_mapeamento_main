@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import type { AtaCreationIdentifiers } from "./ata-identifiers";
 import { ataCompletaSchema, type AtaCompleta } from "./rules";
 import type { AtaSubmission } from "./form-schemas";
 
@@ -15,6 +16,10 @@ const defaultIdentity: SubmissionIdentity = {
 export function materializeAtaSubmission(
   submission: AtaSubmission,
   identity: SubmissionIdentity = defaultIdentity,
+  identifiers: AtaCreationIdentifiers = {
+    numero_sequencial_grupo: 1,
+    indice_personalizado_grupo: 1,
+  },
 ): AtaCompleta {
   const timestamp = identity.now();
   const ataId = identity.uuid();
@@ -22,6 +27,7 @@ export function materializeAtaSubmission(
   return ataCompletaSchema.parse({
     ata: {
       ata_id: ataId,
+      ...identifiers,
       ...submission.ata,
       ...audit,
     },

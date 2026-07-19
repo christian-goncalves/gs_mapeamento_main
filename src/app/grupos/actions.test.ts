@@ -40,9 +40,12 @@ import {
   activateGrupoAction,
   deactivateGrupoAction,
   duplicateGrupoAction,
+  rotateAtaLinkAction,
   saveGrupoAction,
   saveHorariosGrupoAction,
 } from "./actions";
+
+const ataLinkTokenPattern = /^[a-f0-9]{64}$/;
 
 const groupOne: Grupo = {
   grupo_id: "11111111-1111-4111-8111-111111111111",
@@ -176,7 +179,11 @@ describe("Server Action de grupos", () => {
         grupo_id: groupTwo.grupo_id,
         zoom_id: groupOne.zoom_id,
         email_acesso_grupo: groupTwo.email_acesso_grupo,
+        link_formulario_ata: expect.stringMatching(ataLinkTokenPattern),
       }),
+    );
+    expect(mocks.saveGrupo.mock.calls[0]?.[0].link_formulario_ata).not.toBe(
+      groupTwo.link_formulario_ata,
     );
     expect(mocks.redirect).toHaveBeenCalledWith(
       `/admin/grupos/${groupTwo.grupo_id}?status=saved`,
@@ -213,6 +220,25 @@ describe("Server Action de grupos", () => {
     expect(mocks.sendActivationEmail).not.toHaveBeenCalled();
     expect(mocks.redirect).toHaveBeenCalledWith(
       `/admin/grupos/${groupTwo.grupo_id}?status=saved`,
+    );
+  });
+
+  it("gera token seguro para link de ata ao criar grupo", async () => {
+    const data = groupForm({
+      grupo_id: "",
+      grupo_nome: "Grupo Novo",
+      email_acesso_grupo: "novo@example.com",
+      responsavel_grupo_email: "novo@example.com",
+    });
+    data.delete("grupo_id");
+
+    await saveGrupoAction(null, data);
+
+    const savedGroup = mocks.saveGrupo.mock.calls[0]?.[0] as Grupo;
+    expect(savedGroup.link_formulario_ata).toMatch(ataLinkTokenPattern);
+    expect(savedGroup.link_formulario_ata).not.toBe("grupo-novo");
+    expect(mocks.redirect).toHaveBeenCalledWith(
+      `/admin/grupos/${savedGroup.grupo_id}?status=created`,
     );
   });
 
@@ -298,6 +324,8 @@ describe("Server Action de grupos", () => {
       }),
     );
     expect(duplicatedGroup.grupo_id).not.toBe(groupTwo.grupo_id);
+    expect(duplicatedGroup.link_formulario_ata).toMatch(ataLinkTokenPattern);
+    expect(duplicatedGroup.link_formulario_ata).not.toBe(groupTwo.link_formulario_ata);
     expect(mocks.saveGrupoHorario).toHaveBeenCalledWith(
       expect.objectContaining({
         grupo_id: duplicatedGroup.grupo_id,
@@ -308,6 +336,25 @@ describe("Server Action de grupos", () => {
     );
     expect(mocks.redirect).toHaveBeenCalledWith(
       `/admin/grupos/${duplicatedGroup.grupo_id}?status=created`,
+    );
+  });
+
+  it("rotaciona o token do link de ata e invalida o valor anterior", async () => {
+    await rotateAtaLinkAction(groupIdForm());
+
+    const savedGroup = mocks.saveGrupo.mock.calls[0]?.[0] as Grupo;
+    expect(savedGroup).toEqual(
+      expect.objectContaining({
+        grupo_id: groupTwo.grupo_id,
+        grupo_nome: groupTwo.grupo_nome,
+      }),
+    );
+    expect(savedGroup.link_formulario_ata).toMatch(ataLinkTokenPattern);
+    expect(savedGroup.link_formulario_ata).not.toBe(groupTwo.link_formulario_ata);
+    expect(mocks.revalidatePath).toHaveBeenCalledWith(`/admin/grupos/${groupTwo.grupo_id}`);
+    expect(mocks.revalidatePath).toHaveBeenCalledWith(`/grupos/${groupTwo.grupo_id}`);
+    expect(mocks.redirect).toHaveBeenCalledWith(
+      `/admin/grupos/${groupTwo.grupo_id}?status=ata-link-rotated`,
     );
   });
 

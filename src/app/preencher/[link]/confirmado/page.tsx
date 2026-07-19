@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { getActiveGroupByAtaLink } from "@/lib/sheets/repository";
 
 export default async function PublicAtaConfirmedPage({
   params,
@@ -6,6 +8,9 @@ export default async function PublicAtaConfirmedPage({
   params: Promise<{ link: string }>;
 }) {
   const { link } = await params;
+  const group = await getActiveGroupByAtaLink(link);
+  if (!group) notFound();
+
   return (
     <main className="login">
       <section className="card">

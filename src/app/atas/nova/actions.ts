@@ -2,6 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import {
+  DuplicateAtaCustomIndexError,
+  DuplicateAtaSequenceError,
+  InvalidAtaIdentifiersError,
+} from "@/domain/ata-identifiers";
 import { DuplicateAtaError } from "@/domain/creation";
 import { ataSubmissionSchema, type AtaSubmission } from "@/domain/form-schemas";
 import {
@@ -49,7 +54,14 @@ async function persistSubmission(submission: AtaSubmission) {
   try {
     return await createAtaInSheets(submission);
   } catch (error) {
-    if (error instanceof DuplicateAtaError) return { error: error.message };
+    if (
+      error instanceof DuplicateAtaError ||
+      error instanceof DuplicateAtaCustomIndexError ||
+      error instanceof DuplicateAtaSequenceError ||
+      error instanceof InvalidAtaIdentifiersError
+    ) {
+      return { error: error.message };
+    }
     if (error instanceof Error && /Grupo (inexistente|inativo)/.test(error.message)) {
       return { error: error.message };
     }

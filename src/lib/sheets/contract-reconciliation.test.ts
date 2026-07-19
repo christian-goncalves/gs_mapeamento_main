@@ -26,6 +26,7 @@ function clientWith(options: {
   invalidHeader?: Partial<Record<SheetName, unknown[]>>;
   afterCreateIngressos?: boolean;
   afterMigration?: boolean;
+  sheetValues?: Partial<Record<SheetName, unknown[][]>>;
 } = {}) {
   const names = options.names ?? (Object.keys(SHEET_HEADERS) as SheetName[]);
   let migrated = false;
@@ -42,6 +43,9 @@ function clientWith(options: {
       }
       if (migrated && options.afterMigration) {
         return { data: { values: [[...SHEET_HEADERS[name]]] } };
+      }
+      if (range.endsWith("!A:Z") && options.sheetValues?.[name]) {
+        return { data: { values: options.sheetValues[name] } };
       }
       return {
         data: {
@@ -60,6 +64,37 @@ function clientWith(options: {
     },
   } as unknown as ContractReconciliationClient;
   return { client, batchUpdate, valuesGet };
+}
+
+const groupA = "fccced1d-92a5-4d24-b5af-da65cbbe467f";
+const groupB = "2bed9d1b-7fea-4cf4-9497-f0ccbcead41c";
+
+function ataRow(overrides: Record<string, unknown> = {}) {
+  return SHEET_HEADERS.atas.map((header) => {
+    const data: Record<string, unknown> = {
+      ata_id: "93ef9660-8c64-4b51-9bc5-09069ce629c1",
+      numero_sequencial_grupo: 1,
+      indice_personalizado_grupo: 1,
+      grupo_id: groupA,
+      data_reuniao: "2026-07-19",
+      hora_inicio: "10:00",
+      preenchido_por: "Coordenador",
+      plataforma: "Zoom",
+      tipo_reuniao: "Fechada",
+      formato_partilha: true,
+      formato_estudo: false,
+      formato_tematico: false,
+      formato_literatura: false,
+      formato_passos: false,
+      formato_tradicoes: false,
+      total_membros_presentes: 1,
+      total_partilhas: 1,
+      created_at: "2026-07-19T12:00:00.000Z",
+      updated_at: "2026-07-19T12:00:00.000Z",
+      ...overrides,
+    };
+    return data[header] ?? "";
+  });
 }
 
 describe("reconciliação do contrato Sheets", () => {
@@ -111,6 +146,65 @@ describe("reconciliação do contrato Sheets", () => {
     ).toBe(false);
   });
 
+  it("valida identificadores existentes em atas sem mutar quando estão corretos", async () => {
+    const { client } = clientWith({
+      sheetValues: {
+        atas: [
+          [...SHEET_HEADERS.atas],
+          ataRow(),
+          ataRow({
+            ata_id: "dbca5f07-744f-4e9f-9169-f7f66d4cbbcc",
+            grupo_id: groupB,
+          }),
+        ],
+      },
+    });
+
+    await expect(
+      reconcileSheetContract(client, "spreadsheet-test"),
+    ).resolves.toMatchObject({ validatedSheets: expect.arrayContaining(["atas"]) });
+  });
+
+  it.each([
+    ["ausente", { numero_sequencial_grupo: "" }, "numero_sequencial_grupo deve ser um inteiro positivo"],
+    ["não numérico", { indice_personalizado_grupo: "abc" }, "indice_personalizado_grupo deve ser um inteiro positivo"],
+    ["menor que 1", { numero_sequencial_grupo: 0 }, "numero_sequencial_grupo deve ser um inteiro positivo"],
+  ])("rejeita identificador %s em atas já migradas", async (_case, overrides, message) => {
+    const { client, batchUpdate } = clientWith({
+      sheetValues: {
+        atas: [[...SHEET_HEADERS.atas], ataRow(overrides)],
+      },
+    });
+
+    await expect(
+      reconcileSheetContract(client, "spreadsheet-test"),
+    ).rejects.toThrow(message);
+    expect(batchUpdate).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["numero_sequencial_grupo", { numero_sequencial_grupo: 1, indice_personalizado_grupo: 2 }],
+    ["indice_personalizado_grupo", { numero_sequencial_grupo: 2, indice_personalizado_grupo: 1 }],
+  ])("rejeita duplicidade de %s no mesmo grupo", async (field, overrides) => {
+    const { client, batchUpdate } = clientWith({
+      sheetValues: {
+        atas: [
+          [...SHEET_HEADERS.atas],
+          ataRow(),
+          ataRow({
+            ata_id: "dbca5f07-744f-4e9f-9169-f7f66d4cbbcc",
+            ...overrides,
+          }),
+        ],
+      },
+    });
+
+    await expect(
+      reconcileSheetContract(client, "spreadsheet-test"),
+    ).rejects.toThrow(`${field} duplicado para o mesmo grupo`);
+    expect(batchUpdate).not.toHaveBeenCalled();
+  });
+
   it("falha sem mutar quando ingressos existe com cabeçalho divergente", async () => {
     const { client, batchUpdate } = clientWith({
       invalidHeader: { ingressos: ["nome"] },
@@ -146,6 +240,81 @@ describe("reconciliação do contrato Sheets", () => {
             dimension: "COLUMNS",
             startIndex: SHEET_HEADERS.atas.indexOf("total_partilhas"),
           }),
+        }),
+      }),
+    );
+  });
+
+  it("migra identificadores de atas existentes numerando por grupo", async () => {
+    const identifierColumns = [
+      "numero_sequencial_grupo",
+      "indice_personalizado_grupo",
+    ];
+    const oldHeaders = SHEET_HEADERS.atas.filter(
+      (header) => !identifierColumns.includes(header),
+    );
+    const groupA = "fccced1d-92a5-4d24-b5af-da65cbbe467f";
+    const groupB = "2bed9d1b-7fea-4cf4-9497-f0ccbcead41c";
+    const row = (
+      ataId: string,
+      grupoId: string,
+      createdAt: string,
+      data: string,
+      hora: string,
+    ) =>
+      oldHeaders.map((header) => {
+        if (header === "ata_id") return ataId;
+        if (header === "grupo_id") return grupoId;
+        if (header === "created_at") return createdAt;
+        if (header === "updated_at") return createdAt;
+        if (header === "data_reuniao") return data;
+        if (header === "hora_inicio") return hora;
+        return "";
+      });
+    const { client, batchUpdate } = clientWith({
+      afterMigration: true,
+      invalidHeader: { atas: oldHeaders },
+      sheetValues: {
+        atas: [
+          oldHeaders,
+          row("93ef9660-8c64-4b51-9bc5-09069ce629c1", groupA, "2026-06-02T12:00:00.000Z", "2026-06-02", "10:00"),
+          row("dbca5f07-744f-4e9f-9169-f7f66d4cbbcc", groupB, "2026-06-01T12:00:00.000Z", "2026-06-01", "10:00"),
+          row("a4e54dd9-8e3f-4d56-a932-00ea5c13fc88", groupA, "2026-06-01T12:00:00.000Z", "2026-06-01", "10:00"),
+        ],
+      },
+    });
+
+    const result = await reconcileSheetContract(client, "spreadsheet-test");
+
+    for (const column of identifierColumns) {
+      expect(result.addedColumns).toContainEqual({ sheet: "atas", column });
+    }
+    const requests = batchUpdate.mock.calls[0][0].requestBody.requests;
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        insertDimension: expect.objectContaining({
+          range: expect.objectContaining({
+            dimension: "COLUMNS",
+            startIndex: SHEET_HEADERS.atas.indexOf(identifierColumns[0]),
+            endIndex:
+              SHEET_HEADERS.atas.indexOf(identifierColumns[0]) +
+              identifierColumns.length,
+          }),
+        }),
+      }),
+    );
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        updateCells: expect.objectContaining({
+          range: expect.objectContaining({
+            startRowIndex: 1,
+            startColumnIndex: SHEET_HEADERS.atas.indexOf(identifierColumns[0]),
+          }),
+          rows: [
+            { values: [{ userEnteredValue: { numberValue: 2 } }, { userEnteredValue: { numberValue: 2 } }] },
+            { values: [{ userEnteredValue: { numberValue: 1 } }, { userEnteredValue: { numberValue: 1 } }] },
+            { values: [{ userEnteredValue: { numberValue: 1 } }, { userEnteredValue: { numberValue: 1 } }] },
+          ],
         }),
       }),
     );

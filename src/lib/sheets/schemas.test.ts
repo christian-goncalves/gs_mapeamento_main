@@ -45,7 +45,8 @@ const valid = {
     ativo: "TRUE", ...audit,
   },
   ata: {
-    ata_id: ataId, grupo_id: groupId, data_reuniao: "2026-06-21", hora_inicio: "10:30",
+    ata_id: ataId, numero_sequencial_grupo: "1", indice_personalizado_grupo: "1",
+    grupo_id: groupId, data_reuniao: "2026-06-21", hora_inicio: "10:30",
     duracao: "1:30", formato_outros: "", preenchido_por: "Patricia", plataforma: "Zoom", tipo_reuniao: "Aberta", formato_partilha: "TRUE",
     formato_estudo: "FALSE", formato_tematico: "FALSE", formato_literatura: "FALSE",
     formato_passos: "FALSE", formato_tradicoes: "FALSE", total_membros_presentes: "3",

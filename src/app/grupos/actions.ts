@@ -15,6 +15,8 @@ import {
   requireAdminSession,
   requireAuthorizedSession,
 } from "@/lib/auth/require-session";
+import { isSecureAtaLinkToken } from "@/lib/ata-link-token";
+import { uniqueAtaLinkToken } from "@/lib/ata-link-token.server";
 import {
   deleteGrupoHorarios,
   saveGrupo,
@@ -67,30 +69,6 @@ const horariosPayloadSchema = z
   )
   .min(1, "Informe pelo menos um horário.");
 
-function slug(value: string) {
-  const normalized = value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLocaleLowerCase("en-US")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80);
-  return normalized || "grupo";
-}
-
-function uniqueSlug(base: string, groups: readonly Grupo[], currentGroupId: string) {
-  const used = new Set(
-    groups
-      .filter((group) => group.grupo_id !== currentGroupId)
-      .map((group) => group.link_formulario_ata)
-      .filter(Boolean),
-  );
-  if (!used.has(base)) return base;
-  let suffix = 2;
-  while (used.has(`${base}-${suffix}`)) suffix += 1;
-  return `${base}-${suffix}`;
-}
-
 function normalizeEmail(value: string) {
   return value.trim().toLocaleLowerCase("en-US");
 }
@@ -138,13 +116,24 @@ export async function saveGrupoAction(
     ? result.grupos.find((group) => group.grupo_id === existingGroupId)
     : undefined;
   const isAdmin = current.access.role === "administrador";
+  const grupoNome = text(formData, "grupo_nome");
+  const responsavelGrupoEmail =
+    text(formData, "responsavel_grupo_email") ||
+    existingGroup?.responsavel_grupo_email ||
+    "";
   const raw = {
     zoom_id: text(formData, "zoom_id"),
-    grupo_nome: text(formData, "grupo_nome"),
+    grupo_nome: grupoNome,
     ativo: bool(formData, "ativo"),
-    responsavel_grupo_nome: text(formData, "responsavel_grupo_nome"),
-    responsavel_grupo_email: text(formData, "responsavel_grupo_email"),
-    email_acesso_grupo: text(formData, "email_acesso_grupo"),
+    responsavel_grupo_nome:
+      text(formData, "responsavel_grupo_nome") ||
+      existingGroup?.responsavel_grupo_nome ||
+      grupoNome,
+    responsavel_grupo_email: responsavelGrupoEmail,
+    email_acesso_grupo:
+      text(formData, "email_acesso_grupo") ||
+      existingGroup?.email_acesso_grupo ||
+      responsavelGrupoEmail,
     ultima_reuniao_anterior: int(formData, "ultima_reuniao_anterior"),
   };
   const parsedResult = grupoFormSchema.safeParse(raw);
@@ -157,9 +146,11 @@ export async function saveGrupoAction(
   const ordem =
     existingGroup?.ordem ??
     Math.max(0, ...result.grupos.map((group) => group.ordem)) + 1;
+  const existingAtaLinkToken = existingGroup?.link_formulario_ata ?? "";
   const linkFormularioAta =
-    existingGroup?.link_formulario_ata ||
-    uniqueSlug(slug(parsed.grupo_nome), result.grupos, grupoId);
+    isSecureAtaLinkToken(existingAtaLinkToken)
+      ? existingAtaLinkToken
+      : uniqueAtaLinkToken(result.grupos, grupoId);
   const groupToSave = isAdmin
     ? {
         ...parsed,
@@ -235,6 +226,26 @@ export async function deactivateGrupoAction(formData: FormData) {
   redirect(`${ADMIN_GROUPS_PATH}?status=deactivated`);
 }
 
+export async function rotateAtaLinkAction(formData: FormData) {
+  const grupoId = text(formData, "grupo_id");
+  const current = await requireAuthorizedSession();
+  if (!canAccessGroup(current.access, grupoId)) redirect("/");
+
+  const result = await readAggregatedAtas();
+  const group = result.grupos.find((item) => item.grupo_id === grupoId);
+  if (!group) throw new Error("Grupo não encontrado.");
+
+  await saveGrupo({
+    ...group,
+    link_formulario_ata: uniqueAtaLinkToken(result.grupos, grupoId),
+  });
+
+  revalidateGroupAdminPaths(grupoId);
+  redirect(
+    `${groupDetailPath(grupoId, current.access.role === "administrador")}?status=ata-link-rotated`,
+  );
+}
+
 export async function deleteGrupoAction(formData: FormData) {
   return deactivateGrupoAction(formData);
 }
@@ -278,7 +289,7 @@ export async function duplicateGrupoAction(formData: FormData) {
     responsavel_grupo_email: "",
     email_acesso_grupo: "",
     responsaveis_ata: source.responsaveis_ata,
-    link_formulario_ata: uniqueSlug(slug(groupName), result.grupos, newGroupId),
+    link_formulario_ata: uniqueAtaLinkToken(result.grupos, newGroupId),
     ultima_reuniao_anterior: source.ultima_reuniao_anterior,
   });
 

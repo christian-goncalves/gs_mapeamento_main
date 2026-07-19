@@ -1,14 +1,17 @@
-import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { redirect } from "next/navigation";
 import { requireAuthorizedSession } from "@/lib/auth/require-session";
 import { listActiveGroupOptions } from "@/lib/sheets/repository";
+import { ResponsavelShell } from "@/app/responsavel/responsavel-shell";
 import { AtaForm } from "./ata-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function NewAtaPage() {
   const { access } = await requireAuthorizedSession();
+  if (access.role === "administrador") redirect("/admin/atas");
+  const [primaryGroup] = access.groups;
+  if (!primaryGroup) redirect("/login");
+
   const allowedGroupIds = new Set(access.groups.map((group) => group.grupo_id));
   const groups = (await listActiveGroupOptions()).filter((group) =>
     allowedGroupIds.has(group.grupo_id),
@@ -22,17 +25,13 @@ export default async function NewAtaPage() {
   }).format(now);
 
   return (
-    <main className="shell form-shell">
-      <Link className="back-link" href="/">
-        <span className="button-content">
-          <FontAwesomeIcon icon={faArrowLeft} />
-          Voltar para atas
-        </span>
-      </Link>
+    <ResponsavelShell activeSection="atas" settingsHref={`/grupos/${primaryGroup.grupo_id}`}>
       <header>
         <p className="eyebrow">Nova ata</p>
-        <h1>Registrar reunião</h1>
-        <p className="muted">O envio será imutável após a confirmação.</p>
+        <h1>{groups.length === 1 ? groups[0].grupo_nome : "Selecione o grupo"}</h1>
+        <p className="muted">
+          Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
+        </p>
       </header>
       {groups.length === 0 ? (
         <section className="card"><p>Nenhum grupo ativo disponível.</p></section>
@@ -51,6 +50,6 @@ export default async function NewAtaPage() {
           today={today}
         />
       )}
-    </main>
+    </ResponsavelShell>
   );
 }

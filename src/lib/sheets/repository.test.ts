@@ -19,7 +19,7 @@ vi.mock("./client", () => ({
 }));
 vi.mock("server-only", () => ({}));
 
-import { readAggregatedAtas } from "./repository";
+import { getActiveGroupByAtaLink, readAggregatedAtas } from "./repository";
 
 function sheetNameFromRange(range: string): SheetName {
   const [name] = range.split("!");
@@ -56,5 +56,12 @@ describe("repositório Sheets", () => {
       field: "aba",
       message: "Aba ausente no Sheets. Reconciliar o contrato antes de usar este dado.",
     });
+  });
+
+  it("rejeita slug previsível como credencial do link público da ata", async () => {
+    await expect(getActiveGroupByAtaLink("grupo-um")).resolves.toBeNull();
+
+    expect(mocks.batchGet).not.toHaveBeenCalled();
+    expect(mocks.get).not.toHaveBeenCalled();
   });
 });

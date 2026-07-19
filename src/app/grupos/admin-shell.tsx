@@ -84,25 +84,25 @@ export function AdminShell({
             href="/admin/configuracoes"
             active={activeSection === "configuracoes"}
           />
-        </nav>
 
-        <form
-          className="admin-signout-form"
-          action={async () => {
-            "use server";
-            await signOut({ redirectTo: "/login" });
-          }}
-        >
-          <button
-            type="submit"
-            className="admin-nav-item admin-signout-button"
-            aria-label="Sair"
-            title="Sair"
+          <form
+            className="admin-signout-form"
+            action={async () => {
+              "use server";
+              await signOut({ redirectTo: "/login" });
+            }}
           >
-            <FontAwesomeIcon icon={faRightFromBracket} />
-            <span>Sair</span>
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="admin-nav-item admin-signout-button"
+              aria-label="Sair"
+              title="Sair"
+            >
+              <FontAwesomeIcon icon={faRightFromBracket} />
+              <span>Sair</span>
+            </button>
+          </form>
+        </nav>
       </aside>
 
       <div className="admin-main">{children}</div>

@@ -73,25 +73,25 @@ export function ResponsavelShell({
             href={settingsHref}
             active={activeSection === "configuracoes"}
           />
-        </nav>
 
-        <form
-          className="responsavel-signout-form"
-          action={async () => {
-            "use server";
-            await signOut({ redirectTo: "/login" });
-          }}
-        >
-          <button
-            type="submit"
-            className="responsavel-nav-item responsavel-signout-button"
-            aria-label="Sair"
-            title="Sair"
+          <form
+            className="responsavel-signout-form"
+            action={async () => {
+              "use server";
+              await signOut({ redirectTo: "/login" });
+            }}
           >
-            <FontAwesomeIcon icon={faRightFromBracket} />
-            <span>Sair</span>
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="responsavel-nav-item responsavel-signout-button"
+              aria-label="Sair"
+              title="Sair"
+            >
+              <FontAwesomeIcon icon={faRightFromBracket} />
+              <span>Sair</span>
+            </button>
+          </form>
+        </nav>
       </aside>
 
       <div className="responsavel-main">{children}</div>

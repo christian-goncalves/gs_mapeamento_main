@@ -51,6 +51,11 @@ const autoCreatableSheets = new Set<SheetName>([
   "usuarios_grupo",
 ]);
 const sheetNames = Object.keys(SHEET_HEADERS) as SheetName[];
+const ataIdentifierColumns = [
+  "numero_sequencial_grupo",
+  "indice_personalizado_grupo",
+] as const;
+const ataIdentifierColumnSet = new Set<string>(ataIdentifierColumns);
 
 function headerMismatchMessage(
   sheet: SheetName,
@@ -74,11 +79,25 @@ function isHeaderPrefix(actual: unknown[], expectedPrefix: readonly string[]) {
   );
 }
 
+function headerIndex(sheet: SheetName, column: string) {
+  return (SHEET_HEADERS[sheet] as readonly string[]).indexOf(column);
+}
+
 function migratableMissingColumns(
   sheet: SheetName,
   actual: unknown[],
 ): { columns: string[]; insertIndex: number } | null {
   if (sheet === "atas") {
+    const expectedWithoutAtaIdentifierColumns = SHEET_HEADERS.atas.filter(
+      (header) => !ataIdentifierColumnSet.has(header),
+    );
+    if (isHeaderPrefix(actual, expectedWithoutAtaIdentifierColumns)) {
+      return {
+        columns: [...ataIdentifierColumns],
+        insertIndex: headerIndex("atas", ataIdentifierColumns[0]),
+      };
+    }
+
     const newAtaColumns = ["duracao", "formato_outros"];
     const expectedWithoutNewAtaColumns = SHEET_HEADERS.atas.filter(
       (header) => !newAtaColumns.includes(header),
@@ -86,7 +105,7 @@ function migratableMissingColumns(
     if (isHeaderPrefix(actual, expectedWithoutNewAtaColumns)) {
       return {
         columns: newAtaColumns,
-        insertIndex: SHEET_HEADERS.atas.indexOf(newAtaColumns[0]),
+        insertIndex: headerIndex("atas", newAtaColumns[0]),
       };
     }
 
@@ -96,7 +115,7 @@ function migratableMissingColumns(
     if (isHeaderPrefix(actual, expectedWithoutPreenchidoPor)) {
       return {
         columns: ["preenchido_por"],
-        insertIndex: SHEET_HEADERS.atas.indexOf("preenchido_por"),
+        insertIndex: headerIndex("atas", "preenchido_por"),
       };
     }
 
@@ -106,7 +125,7 @@ function migratableMissingColumns(
     if (isHeaderPrefix(actual, expectedWithoutTotalPartilhas)) {
       return {
         columns: ["total_partilhas"],
-        insertIndex: SHEET_HEADERS.atas.indexOf("total_partilhas"),
+        insertIndex: headerIndex("atas", "total_partilhas"),
       };
     }
   }
@@ -118,7 +137,7 @@ function migratableMissingColumns(
     if (isHeaderPrefix(actual, expectedWithoutQuantidade)) {
       return {
         columns: ["quantidade"],
-        insertIndex: SHEET_HEADERS.trocas_chaveiro.indexOf("quantidade"),
+        insertIndex: headerIndex("trocas_chaveiro", "quantidade"),
       };
     }
   }
@@ -130,7 +149,7 @@ function migratableMissingColumns(
     if (isHeaderPrefix(actual, expectedWithoutCidade)) {
       return {
         columns: ["cidade"],
-        insertIndex: SHEET_HEADERS.ingressos.indexOf("cidade"),
+        insertIndex: headerIndex("ingressos", "cidade"),
       };
     }
   }
@@ -151,7 +170,7 @@ function migratableMissingColumns(
     if (isHeaderPrefix(actual, expectedWithoutNewGroupColumns)) {
       return {
         columns: newGroupColumns,
-        insertIndex: SHEET_HEADERS.grupos.indexOf(firstGroupAccessColumn),
+        insertIndex: headerIndex("grupos", firstGroupAccessColumn),
       };
     }
 
@@ -161,7 +180,7 @@ function migratableMissingColumns(
     if (isHeaderPrefix(actual, expectedWithoutUltimaReuniao)) {
       return {
         columns: ["ultima_reuniao_anterior"],
-        insertIndex: SHEET_HEADERS.grupos.indexOf("ultima_reuniao_anterior"),
+        insertIndex: headerIndex("grupos", "ultima_reuniao_anterior"),
       };
     }
   }
@@ -173,7 +192,7 @@ function migratableMissingColumns(
     if (isHeaderPrefix(actual, expectedWithoutFuncao)) {
       return {
         columns: ["funcao"],
-        insertIndex: SHEET_HEADERS.servidores.indexOf("funcao"),
+        insertIndex: headerIndex("servidores", "funcao"),
       };
     }
   }
@@ -241,11 +260,192 @@ function atasValidationRequests(
       fields: "dataValidation",
     },
   });
+  const numberValidation = (
+    startColumnIndex: number,
+  ): sheets_v4.Schema$Request => ({
+    repeatCell: {
+      range: {
+        sheetId,
+        startRowIndex: 1,
+        endRowIndex: rowCount,
+        startColumnIndex,
+        endColumnIndex: startColumnIndex + 1,
+      },
+      cell: {
+        dataValidation: {
+          condition: {
+            type: "NUMBER_GREATER_THAN_EQ",
+            values: [{ userEnteredValue: "1" }],
+          },
+          strict: true,
+        },
+      },
+      fields: "dataValidation",
+    },
+  });
 
   return [
+    numberValidation(SHEET_HEADERS.atas.indexOf("numero_sequencial_grupo")),
+    numberValidation(SHEET_HEADERS.atas.indexOf("indice_personalizado_grupo")),
     listValidation(SHEET_HEADERS.atas.indexOf("plataforma"), ["Zoom"]),
     listValidation(SHEET_HEADERS.atas.indexOf("tipo_reuniao"), ["Aberta", "Fechada"]),
   ];
+}
+
+function cellText(value: unknown) {
+  if (value === null || typeof value === "undefined" || value === false) {
+    return "";
+  }
+  return String(value).trim();
+}
+
+function rowIsBlank(row: unknown[]) {
+  return row.every((cell) => cellText(cell) === "");
+}
+
+function rowObject(headers: unknown[], row: unknown[]) {
+  return Object.fromEntries(
+    headers.map((header, index) => [String(header), row[index] ?? ""]),
+  );
+}
+
+function migrationSortValue(value: unknown) {
+  if (typeof value === "number") return String(value).padStart(12, "0");
+  return cellText(value);
+}
+
+function migratedAtaIdentifierRows(
+  actualHeaders: unknown[],
+  values: unknown[][],
+) {
+  const rows = values.slice(1).map((row, index) => ({
+    row,
+    rowNumber: index + 2,
+    object: rowObject(actualHeaders, row),
+  }));
+  const dataRows = rows.filter(({ row }) => !rowIsBlank(row));
+  const grouped = new Map<string, typeof dataRows>();
+
+  for (const row of dataRows) {
+    const ataId = cellText(row.object.ata_id);
+    const grupoId = cellText(row.object.grupo_id);
+    if (!ataId || !grupoId) {
+      throw new Error(
+        `Não foi possível migrar identificadores da ata na linha ${row.rowNumber}: ata_id e grupo_id são obrigatórios.`,
+      );
+    }
+    const current = grouped.get(grupoId) ?? [];
+    current.push(row);
+    grouped.set(grupoId, current);
+  }
+
+  const byRowNumber = new Map<number, number>();
+  for (const groupRows of grouped.values()) {
+    groupRows
+      .sort(
+        (first, second) =>
+          migrationSortValue(first.object.created_at).localeCompare(
+            migrationSortValue(second.object.created_at),
+          ) ||
+          migrationSortValue(first.object.data_reuniao).localeCompare(
+            migrationSortValue(second.object.data_reuniao),
+          ) ||
+          migrationSortValue(first.object.hora_inicio).localeCompare(
+            migrationSortValue(second.object.hora_inicio),
+          ) ||
+          first.rowNumber - second.rowNumber,
+      )
+      .forEach((row, index) => byRowNumber.set(row.rowNumber, index + 1));
+  }
+
+  return rows.map(({ rowNumber }) => {
+    const number = byRowNumber.get(rowNumber);
+    return {
+      values: ataIdentifierColumns.map(() =>
+        number
+          ? { userEnteredValue: { numberValue: number } }
+          : { userEnteredValue: { stringValue: "" } },
+      ),
+    };
+  });
+}
+
+function parsePositiveIdentifier(value: unknown) {
+  if (typeof value === "number" && Number.isInteger(value) && value >= 1) {
+    return value;
+  }
+  if (typeof value === "string" && /^\d+$/.test(value.trim())) {
+    const number = Number(value);
+    if (Number.isInteger(number) && number >= 1) return number;
+  }
+  return null;
+}
+
+function assertValidExistingAtaIdentifiers(
+  actualHeaders: unknown[],
+  values: unknown[][],
+) {
+  const rows = values.slice(1).map((row, index) => ({
+    row,
+    rowNumber: index + 2,
+    object: rowObject(actualHeaders, row),
+  }));
+  const sequenceKeys = new Set<string>();
+  const customIndexKeys = new Set<string>();
+
+  for (const { row, rowNumber, object } of rows) {
+    if (rowIsBlank(row)) continue;
+    const ataId = cellText(object.ata_id);
+    const grupoId = cellText(object.grupo_id);
+    if (!ataId || !grupoId) {
+      throw new Error(
+        `Identificadores de ata inválidos na linha ${rowNumber}: ata_id e grupo_id são obrigatórios.`,
+      );
+    }
+
+    const sequence = parsePositiveIdentifier(object.numero_sequencial_grupo);
+    if (sequence == null) {
+      throw new Error(
+        `Identificadores de ata inválidos na linha ${rowNumber}: numero_sequencial_grupo deve ser um inteiro positivo.`,
+      );
+    }
+    const customIndex = parsePositiveIdentifier(
+      object.indice_personalizado_grupo,
+    );
+    if (customIndex == null) {
+      throw new Error(
+        `Identificadores de ata inválidos na linha ${rowNumber}: indice_personalizado_grupo deve ser um inteiro positivo.`,
+      );
+    }
+
+    const sequenceKey = `${grupoId}|${sequence}`;
+    if (sequenceKeys.has(sequenceKey)) {
+      throw new Error(
+        `Identificadores de ata inválidos na linha ${rowNumber}: numero_sequencial_grupo duplicado para o mesmo grupo.`,
+      );
+    }
+    sequenceKeys.add(sequenceKey);
+
+    const customIndexKey = `${grupoId}|${customIndex}`;
+    if (customIndexKeys.has(customIndexKey)) {
+      throw new Error(
+        `Identificadores de ata inválidos na linha ${rowNumber}: indice_personalizado_grupo duplicado para o mesmo grupo.`,
+      );
+    }
+    customIndexKeys.add(customIndexKey);
+  }
+}
+
+async function readSheetValues(
+  client: ContractReconciliationClient,
+  spreadsheetId: string,
+  sheet: SheetName,
+) {
+  const response = await client.spreadsheets.values.get({
+    spreadsheetId,
+    range: `${sheet}!A:Z`,
+  });
+  return response.data.values ?? [];
 }
 
 function gruposAccessColumnCleanupRequests(
@@ -380,6 +580,10 @@ export async function reconcileSheetContract(
     if (!byName.has(name)) continue;
     const actual = await readHeader(client, spreadsheetId, name);
     if (JSON.stringify(actual) === JSON.stringify([...SHEET_HEADERS[name]])) {
+      if (name === "atas") {
+        const values = await readSheetValues(client, spreadsheetId, "atas");
+        assertValidExistingAtaIdentifiers(actual, values);
+      }
       continue;
     }
 
@@ -420,6 +624,29 @@ export async function reconcileSheetContract(
         fields: "userEnteredValue",
       },
     });
+    if (
+      name === "atas" &&
+      migration.columns.every((column) => ataIdentifierColumnSet.has(column))
+    ) {
+      const values = await readSheetValues(client, spreadsheetId, "atas");
+      const migratedRows = migratedAtaIdentifierRows(actual, values);
+      if (migratedRows.length > 0) {
+        requests.push({
+          updateCells: {
+            range: {
+              sheetId,
+              startRowIndex: 1,
+              endRowIndex: 1 + migratedRows.length,
+              startColumnIndex: migration.insertIndex,
+              endColumnIndex:
+                migration.insertIndex + ataIdentifierColumns.length,
+            },
+            rows: migratedRows,
+            fields: "userEnteredValue",
+          },
+        });
+      }
+    }
     addedColumns.push(
       ...migration.columns.map((column) => ({ sheet: name, column })),
     );

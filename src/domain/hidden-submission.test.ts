@@ -71,6 +71,8 @@ describe("normalização do formulário hidden", () => {
     const registro = ataCompletaSchema.parse({
       ata: {
         ata_id: "93ef9660-8c64-4b51-9bc5-09069ce629c1",
+        numero_sequencial_grupo: 1,
+        indice_personalizado_grupo: 1,
         ...normalized.ata,
         created_at: "2026-06-23T12:00:00.000Z",
         updated_at: "2026-06-23T12:00:00.000Z",

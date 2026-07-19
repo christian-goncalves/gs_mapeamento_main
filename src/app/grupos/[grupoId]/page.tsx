@@ -1,7 +1,11 @@
+import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { requireGroupSession } from "@/lib/auth/require-session";
+import { requestOrigin } from "@/lib/http/request-origin";
+import { ensureSecureAtaLinkToken } from "@/lib/sheets/ensure-ata-link-token";
 import { readAggregatedAtas } from "@/lib/sheets/repository";
 import { GroupEditor } from "../group-editor";
+import { ResponsavelShell } from "@/app/responsavel/responsavel-shell";
 
 export const dynamic = "force-dynamic";
 
@@ -25,16 +29,25 @@ export default async function GroupDetailPage({
   const result = await readAggregatedAtas();
   const group = result.grupos.find((item) => item.grupo_id === grupoId);
   if (!group) notFound();
+  const groupWithSecureAtaLink = await ensureSecureAtaLinkToken(
+    group,
+    result.grupos,
+  );
   const horarios = result.grupo_horarios.filter(
     (horario) => horario.grupo_id === grupoId,
   );
+  const publicOrigin = requestOrigin(await headers());
   return (
-    <GroupEditor
-      group={group}
-      horarios={horarios}
-      canCreate={false}
-      canManageAccess={false}
-      status={status}
-    />
+    <ResponsavelShell activeSection="configuracoes" settingsHref={`/grupos/${grupoId}`}>
+      <GroupEditor
+        group={groupWithSecureAtaLink}
+        horarios={horarios}
+        canCreate={false}
+        canManageAccess={false}
+        status={status}
+        publicOrigin={publicOrigin}
+        variant="responsavel"
+      />
+    </ResponsavelShell>
   );
 }

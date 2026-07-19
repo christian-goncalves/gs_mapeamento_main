@@ -24,9 +24,11 @@ export default async function PublicAtaPage({
   return (
     <main className="shell form-shell">
       <header>
-        <p className="eyebrow">Ata do grupo</p>
+        <p className="eyebrow">Nova ata</p>
         <h1>{group.group.grupo_nome}</h1>
-        <p className="muted">Preencha e confirme a ata desta reunião.</p>
+        <p className="muted">
+          Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
+        </p>
       </header>
       <AtaForm
         action={createAtaByLinkAction}

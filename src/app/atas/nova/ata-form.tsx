@@ -40,6 +40,15 @@ const tipoReuniaoOptions: Draft["ata"]["tipo_reuniao"][] = [
   "fechada",
   "aberta",
 ];
+const preenchidoPorOptions = [
+  "Coordenador",
+  "Moderador",
+  "Secretário",
+  "Apoio",
+  "Anfitrião",
+  "Coanfitrião",
+  "Outros",
+];
 
 function clientId() {
   return globalThis.crypto.randomUUID();
@@ -282,29 +291,20 @@ export function AtaForm({
             </select>
           </label>
           <label>
-            Duração
-            <input
-              pattern="(?:[0-9]{1,2}):[0-5][0-9]"
-              placeholder="Ex.: 1:30"
-              title="Use o formato H:MM, por exemplo 1:30."
-              value={draft.ata.duracao}
-              onChange={(event) => setDraft((current) => ({
-                ...current,
-                ata: { ...current.ata, duracao: event.target.value },
-              }))}
-            />
-          </label>
-          <label>
             Preenchido por
-            <input
+            <select
               required
-              placeholder="Preenchido por..."
               value={draft.ata.preenchido_por}
               onChange={(event) => setDraft((current) => ({
                 ...current,
                 ata: { ...current.ata, preenchido_por: event.target.value },
               }))}
-            />
+            >
+              <option value="" disabled>Selecione...</option>
+              {preenchidoPorOptions.map((option) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
           </label>
           <label>
             Plataforma
@@ -535,7 +535,6 @@ export function AtaForm({
             <dl className="review-grid">
               <div><dt>Grupo</dt><dd>{selectedGroup?.name}</dd></div>
               <div><dt>Data e hora</dt><dd>{draft.ata.data_reuniao} às {draft.ata.hora_inicio}</dd></div>
-              {draft.ata.duracao && <div><dt>Duração</dt><dd>{draft.ata.duracao}</dd></div>}
               <div><dt>Preenchido por</dt><dd>{draft.ata.preenchido_por}</dd></div>
               <div><dt>Plataforma</dt><dd>{plataformaMapping.toSheet(draft.ata.plataforma)}</dd></div>
               <div><dt>Tipo</dt><dd>{tipoReuniaoMapping.toSheet(draft.ata.tipo_reuniao)}</dd></div>

@@ -14,6 +14,8 @@ const audit = {
 const registro: AtaCompleta = {
   ata: {
     ata_id: ataId,
+    numero_sequencial_grupo: 1,
+    indice_personalizado_grupo: 1,
     grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
     data_reuniao: "2026-06-22",
     hora_inicio: "20:30",
@@ -109,16 +111,16 @@ describe("lote atômico do Sheets", () => {
     expect(requests[1].updateCells?.range?.startRowIndex).toBe(2);
     expect(requests[1].updateCells?.range?.endRowIndex).toBe(3);
     expect(
-      requests[0].updateCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
+      requests[0].updateCells?.rows?.[0]?.values?.[4]?.userEnteredValue,
     ).toEqual({ numberValue: 46195 });
     expect(
-      requests[0].updateCells?.rows?.[0]?.values?.[4]?.userEnteredValue,
+      requests[0].updateCells?.rows?.[0]?.values?.[6]?.userEnteredValue,
     ).toEqual({ stringValue: "1:30" });
     expect(
-      requests[0].updateCells?.rows?.[0]?.values?.[6]?.userEnteredValue,
+      requests[0].updateCells?.rows?.[0]?.values?.[8]?.userEnteredValue,
     ).toEqual({ stringValue: "Patricia" });
     expect(
-      requests[0].updateCells?.rows?.[0]?.values?.[7]?.userEnteredValue,
+      requests[0].updateCells?.rows?.[0]?.values?.[9]?.userEnteredValue,
     ).toEqual({ stringValue: "Zoom" });
     expect(
       requests[3].updateCells?.rows?.[0]?.values?.[4]?.userEnteredValue,

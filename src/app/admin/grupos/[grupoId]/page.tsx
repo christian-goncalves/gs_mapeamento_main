@@ -1,5 +1,8 @@
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { requireAdminSession } from "@/lib/auth/require-session";
+import { requestOrigin } from "@/lib/http/request-origin";
+import { ensureSecureAtaLinkToken } from "@/lib/sheets/ensure-ata-link-token";
 import { getPendingActivationForGroup } from "@/lib/sheets/group-users";
 import { readAggregatedAtas } from "@/lib/sheets/repository";
 import { GroupEditor } from "@/app/grupos/group-editor";
@@ -19,14 +22,19 @@ export default async function AdminGroupDetailPage({
   const result = await readAggregatedAtas();
   const group = result.grupos.find((item) => item.grupo_id === grupoId);
   if (!group) notFound();
+  const groupWithSecureAtaLink = await ensureSecureAtaLinkToken(
+    group,
+    result.grupos,
+  );
   const horarios = result.grupo_horarios.filter(
     (horario) => horario.grupo_id === grupoId,
   );
   const pendingActivation = await getPendingActivationForGroup(grupoId);
+  const publicOrigin = requestOrigin(await headers());
 
   return (
     <GroupEditor
-      group={group}
+      group={groupWithSecureAtaLink}
       horarios={horarios}
       canCreate
       canManageAccess
@@ -36,6 +44,7 @@ export default async function AdminGroupDetailPage({
           : ""
       }
       status={status}
+      publicOrigin={publicOrigin}
     />
   );
 }

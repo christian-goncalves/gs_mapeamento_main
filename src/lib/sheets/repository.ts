@@ -1,6 +1,7 @@
 import "server-only";
 
 import { aggregateContractRows } from "@/domain/aggregate";
+import { isSecureAtaLinkToken } from "@/lib/ata-link-token";
 import type {
   Ata,
   Grupo,
@@ -161,6 +162,8 @@ export async function listActiveGroupOptions() {
 }
 
 export async function getActiveGroupByAtaLink(link: string) {
+  if (!isSecureAtaLinkToken(link)) return null;
+
   const result = await readAggregatedAtas();
   const group = result.grupos.find(
     (item) => item.link_formulario_ata === link,

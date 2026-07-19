@@ -53,6 +53,7 @@ export default async function ResponsavelAtasPage() {
     const { ata } = item.registro;
     return {
       ataId: ata.ata_id,
+      indicePersonalizadoGrupo: ata.indice_personalizado_grupo,
       data: ata.data_reuniao,
       horario: ata.hora_inicio,
       servidor: primaryServerName(item.registro.servidores),

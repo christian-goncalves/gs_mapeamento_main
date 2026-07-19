@@ -15,6 +15,7 @@ import {
 } from "@/domain/enums";
 import { requireAuthorizedSession } from "@/lib/auth/require-session";
 import { readAggregatedAtas } from "@/lib/sheets/repository";
+import { AtaIndexForm } from "./ata-index-form";
 
 export const dynamic = "force-dynamic";
 
@@ -44,13 +45,26 @@ export default async function AtaDetailPage({
       <header className="detail-header">
         <div>
           <p className="eyebrow">Ata somente leitura</p>
-          <h1>{grupo.grupo_nome}</h1>
+          <h1>Ata #{ata.indice_personalizado_grupo} · {grupo.grupo_nome}</h1>
           <p className="muted">
             {ata.data_reuniao} às {ata.hora_inicio}
           </p>
         </div>
         {!grupo.ativo && <span className="badge">Grupo inativo</span>}
       </header>
+
+      <section className="card">
+        <h2>Identificação da ata</h2>
+        <dl className="definition-grid">
+          <div><dt>Referência do grupo</dt><dd>#{ata.indice_personalizado_grupo}</dd></div>
+          <div><dt>Sequencial automático do grupo</dt><dd>{ata.numero_sequencial_grupo}</dd></div>
+          <div><dt>ID interno</dt><dd>{ata.ata_id}</dd></div>
+        </dl>
+        <AtaIndexForm
+          ataId={ata.ata_id}
+          currentIndex={ata.indice_personalizado_grupo}
+        />
+      </section>
 
       <section className="card">
         <h2>Informações gerais</h2>

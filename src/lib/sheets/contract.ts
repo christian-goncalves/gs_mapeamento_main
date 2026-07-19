@@ -13,7 +13,7 @@ export const SHEET_HEADERS = {
     "ativo", "created_at", "updated_at",
   ],
   atas: [
-    "ata_id", "grupo_id", "data_reuniao", "hora_inicio", "duracao", "formato_outros", "preenchido_por", "plataforma", "tipo_reuniao",
+    "ata_id", "numero_sequencial_grupo", "indice_personalizado_grupo", "grupo_id", "data_reuniao", "hora_inicio", "duracao", "formato_outros", "preenchido_por", "plataforma", "tipo_reuniao",
     "formato_partilha", "formato_estudo", "formato_tematico", "formato_literatura",
     "formato_passos", "formato_tradicoes", "total_membros_presentes", "total_partilhas", "created_at", "updated_at",
   ],

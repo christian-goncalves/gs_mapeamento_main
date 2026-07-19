@@ -67,7 +67,10 @@ export function normalizeHiddenAtaSubmission(
 ): AtaSubmission {
   return {
     ata: submission.ata,
-    servidores: submission.servidores,
+    servidores: submission.servidores.map((item) => ({
+      nome: item.nome,
+      funcao: item.funcao ?? "",
+    })),
     participacao: submission.participacao.map((item) => ({
       ...municipioParts(item.localidade),
       presencas: item.presencas,

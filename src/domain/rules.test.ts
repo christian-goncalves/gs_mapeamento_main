@@ -9,6 +9,8 @@ const audit = {
 const base = {
   ata: {
     ata_id: ataId,
+    numero_sequencial_grupo: 1,
+    indice_personalizado_grupo: 1,
     grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
     data_reuniao: "2026-06-21",
     hora_inicio: "10:30",

@@ -97,6 +97,8 @@ export const usuarioGrupoSchema = z.object({
 
 export const ataSchema = z.object({
   ata_id: uuid,
+  numero_sequencial_grupo: z.number().int().min(1),
+  indice_personalizado_grupo: z.number().int().min(1),
   grupo_id: uuid,
   data_reuniao: z.string().date(),
   hora_inicio: horaInicioSchema,

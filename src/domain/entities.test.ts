@@ -43,6 +43,8 @@ const valid = {
   },
   ata: {
     ata_id: ataId,
+    numero_sequencial_grupo: 1,
+    indice_personalizado_grupo: 1,
     grupo_id: grupoId,
     data_reuniao: "2026-06-21",
     hora_inicio: "10:30",
