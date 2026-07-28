@@ -1,0 +1,16 @@
+{
+  "files.watcherExclude": {
+    "**/.git-store/**": true,
+    "**/.next/**": true,
+    "**/coverage/**": true,
+    "**/node_modules/**": true,
+    "**/*.log": true
+  },
+  "search.exclude": {
+    "**/.git-store": true,
+    "**/.next": true,
+    "**/coverage": true,
+    "**/node_modules": true,
+    "**/*.log": true
+  }
+}
