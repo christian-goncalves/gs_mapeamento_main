@@ -20,6 +20,21 @@ export function createEnumMapping<const T extends Record<string, string>>(
   };
 }
 
+export function createEnumMappingWithAliases<const T extends Record<string, string>>(
+  labels: T,
+  aliases: Record<string, keyof T>,
+) {
+  const mapping = createEnumMapping(labels);
+
+  return {
+    ...mapping,
+    fromSheet(label: string) {
+      const alias = aliases[label];
+      return alias ?? mapping.fromSheet(label);
+    },
+  };
+}
+
 export const plataformaMapping = createEnumMapping({ zoom: "Zoom" } as const);
 
 export const tipoReuniaoMapping = createEnumMapping({
@@ -50,16 +65,28 @@ export const origemContatoMapping = createEnumMapping({
   outro: "Outro",
 } as const);
 
-export const tempoLimpoMapping = createEnumMapping({
-  "1M": "1M",
-  "2M": "2M",
-  "3M": "3M",
-  "6M": "6M",
-  "9M": "9M",
-  "12M": "12M",
-  "18M": "18M",
-  MULTIPLOS_ANOS: "MULTIPLOS_ANOS",
-} as const);
+export const tempoLimpoMapping = createEnumMappingWithAliases(
+  {
+    dias_30: "30 dias",
+    dias_60: "60 dias",
+    dias_90: "90 dias",
+    meses_6: "6 meses",
+    meses_9: "9 meses",
+    ano_1: "1 ano",
+    meses_18: "18 meses",
+    multiplos_anos: "Múltiplos anos",
+  } as const,
+  {
+    "1M": "dias_30",
+    "2M": "dias_60",
+    "3M": "dias_90",
+    "6M": "meses_6",
+    "9M": "meses_9",
+    "12M": "ano_1",
+    "18M": "meses_18",
+    MULTIPLOS_ANOS: "multiplos_anos",
+  },
+);
 
 export const formatoMapping = createEnumMapping({
   partilha: "Partilha",

@@ -1,0 +1,1256 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-26T00:34:35.179Z",
+  "countries": [
+    {
+      "codigo": "AF",
+      "codigo_iso3": "AFG",
+      "nome": "Afeganistão"
+    },
+    {
+      "codigo": "ZA",
+      "codigo_iso3": "ZAF",
+      "nome": "África do Sul"
+    },
+    {
+      "codigo": "AX",
+      "codigo_iso3": "ALA",
+      "nome": "Alândia"
+    },
+    {
+      "codigo": "AL",
+      "codigo_iso3": "ALB",
+      "nome": "Albânia"
+    },
+    {
+      "codigo": "DE",
+      "codigo_iso3": "DEU",
+      "nome": "Alemanha"
+    },
+    {
+      "codigo": "AD",
+      "codigo_iso3": "AND",
+      "nome": "Andorra"
+    },
+    {
+      "codigo": "AO",
+      "codigo_iso3": "AGO",
+      "nome": "Angola"
+    },
+    {
+      "codigo": "AI",
+      "codigo_iso3": "AIA",
+      "nome": "Anguilla"
+    },
+    {
+      "codigo": "AQ",
+      "codigo_iso3": "ATA",
+      "nome": "Antártida"
+    },
+    {
+      "codigo": "AG",
+      "codigo_iso3": "ATG",
+      "nome": "Antígua e Barbuda"
+    },
+    {
+      "codigo": "SA",
+      "codigo_iso3": "SAU",
+      "nome": "Arábia Saudita"
+    },
+    {
+      "codigo": "DZ",
+      "codigo_iso3": "DZA",
+      "nome": "Argélia"
+    },
+    {
+      "codigo": "AR",
+      "codigo_iso3": "ARG",
+      "nome": "Argentina"
+    },
+    {
+      "codigo": "AM",
+      "codigo_iso3": "ARM",
+      "nome": "Arménia"
+    },
+    {
+      "codigo": "AW",
+      "codigo_iso3": "ABW",
+      "nome": "Aruba"
+    },
+    {
+      "codigo": "AU",
+      "codigo_iso3": "AUS",
+      "nome": "Austrália"
+    },
+    {
+      "codigo": "AT",
+      "codigo_iso3": "AUT",
+      "nome": "Áustria"
+    },
+    {
+      "codigo": "AZ",
+      "codigo_iso3": "AZE",
+      "nome": "Azerbeijão"
+    },
+    {
+      "codigo": "BS",
+      "codigo_iso3": "BHS",
+      "nome": "Bahamas"
+    },
+    {
+      "codigo": "BH",
+      "codigo_iso3": "BHR",
+      "nome": "Bahrein"
+    },
+    {
+      "codigo": "BD",
+      "codigo_iso3": "BGD",
+      "nome": "Bangladesh"
+    },
+    {
+      "codigo": "BB",
+      "codigo_iso3": "BRB",
+      "nome": "Barbados"
+    },
+    {
+      "codigo": "BE",
+      "codigo_iso3": "BEL",
+      "nome": "Bélgica"
+    },
+    {
+      "codigo": "BZ",
+      "codigo_iso3": "BLZ",
+      "nome": "Belize"
+    },
+    {
+      "codigo": "BJ",
+      "codigo_iso3": "BEN",
+      "nome": "Benin"
+    },
+    {
+      "codigo": "BM",
+      "codigo_iso3": "BMU",
+      "nome": "Bermudas"
+    },
+    {
+      "codigo": "BY",
+      "codigo_iso3": "BLR",
+      "nome": "Bielorússia"
+    },
+    {
+      "codigo": "BO",
+      "codigo_iso3": "BOL",
+      "nome": "Bolívia"
+    },
+    {
+      "codigo": "BA",
+      "codigo_iso3": "BIH",
+      "nome": "Bósnia e Herzegovina"
+    },
+    {
+      "codigo": "BW",
+      "codigo_iso3": "BWA",
+      "nome": "Botswana"
+    },
+    {
+      "codigo": "BR",
+      "codigo_iso3": "BRA",
+      "nome": "Brasil"
+    },
+    {
+      "codigo": "BN",
+      "codigo_iso3": "BRN",
+      "nome": "Brunei"
+    },
+    {
+      "codigo": "BG",
+      "codigo_iso3": "BGR",
+      "nome": "Bulgária"
+    },
+    {
+      "codigo": "BF",
+      "codigo_iso3": "BFA",
+      "nome": "Burkina Faso"
+    },
+    {
+      "codigo": "BI",
+      "codigo_iso3": "BDI",
+      "nome": "Burundi"
+    },
+    {
+      "codigo": "BT",
+      "codigo_iso3": "BTN",
+      "nome": "Butão"
+    },
+    {
+      "codigo": "CV",
+      "codigo_iso3": "CPV",
+      "nome": "Cabo Verde"
+    },
+    {
+      "codigo": "CM",
+      "codigo_iso3": "CMR",
+      "nome": "Camarões"
+    },
+    {
+      "codigo": "KH",
+      "codigo_iso3": "KHM",
+      "nome": "Camboja"
+    },
+    {
+      "codigo": "CA",
+      "codigo_iso3": "CAN",
+      "nome": "Canadá"
+    },
+    {
+      "codigo": "QA",
+      "codigo_iso3": "QAT",
+      "nome": "Catar"
+    },
+    {
+      "codigo": "KZ",
+      "codigo_iso3": "KAZ",
+      "nome": "Cazaquistão"
+    },
+    {
+      "codigo": "TD",
+      "codigo_iso3": "TCD",
+      "nome": "Chade"
+    },
+    {
+      "codigo": "CZ",
+      "codigo_iso3": "CZE",
+      "nome": "Chéquia"
+    },
+    {
+      "codigo": "CL",
+      "codigo_iso3": "CHL",
+      "nome": "Chile"
+    },
+    {
+      "codigo": "CN",
+      "codigo_iso3": "CHN",
+      "nome": "China"
+    },
+    {
+      "codigo": "CY",
+      "codigo_iso3": "CYP",
+      "nome": "Chipre"
+    },
+    {
+      "codigo": "VA",
+      "codigo_iso3": "VAT",
+      "nome": "Cidade do Vaticano"
+    },
+    {
+      "codigo": "CO",
+      "codigo_iso3": "COL",
+      "nome": "Colômbia"
+    },
+    {
+      "codigo": "KM",
+      "codigo_iso3": "COM",
+      "nome": "Comores"
+    },
+    {
+      "codigo": "CG",
+      "codigo_iso3": "COG",
+      "nome": "Congo"
+    },
+    {
+      "codigo": "KP",
+      "codigo_iso3": "PRK",
+      "nome": "Coreia do Norte"
+    },
+    {
+      "codigo": "KR",
+      "codigo_iso3": "KOR",
+      "nome": "Coreia do Sul"
+    },
+    {
+      "codigo": "CI",
+      "codigo_iso3": "CIV",
+      "nome": "Costa do Marfim"
+    },
+    {
+      "codigo": "CR",
+      "codigo_iso3": "CRI",
+      "nome": "Costa Rica"
+    },
+    {
+      "codigo": "HR",
+      "codigo_iso3": "HRV",
+      "nome": "Croácia"
+    },
+    {
+      "codigo": "CU",
+      "codigo_iso3": "CUB",
+      "nome": "Cuba"
+    },
+    {
+      "codigo": "DK",
+      "codigo_iso3": "DNK",
+      "nome": "Dinamarca"
+    },
+    {
+      "codigo": "DJ",
+      "codigo_iso3": "DJI",
+      "nome": "Djibouti"
+    },
+    {
+      "codigo": "DM",
+      "codigo_iso3": "DMA",
+      "nome": "Dominica"
+    },
+    {
+      "codigo": "EG",
+      "codigo_iso3": "EGY",
+      "nome": "Egito"
+    },
+    {
+      "codigo": "SV",
+      "codigo_iso3": "SLV",
+      "nome": "El Salvador"
+    },
+    {
+      "codigo": "AE",
+      "codigo_iso3": "ARE",
+      "nome": "Emirados Árabes Unidos"
+    },
+    {
+      "codigo": "EC",
+      "codigo_iso3": "ECU",
+      "nome": "Equador"
+    },
+    {
+      "codigo": "ER",
+      "codigo_iso3": "ERI",
+      "nome": "Eritreia"
+    },
+    {
+      "codigo": "SK",
+      "codigo_iso3": "SVK",
+      "nome": "Eslováquia"
+    },
+    {
+      "codigo": "SI",
+      "codigo_iso3": "SVN",
+      "nome": "Eslovénia"
+    },
+    {
+      "codigo": "ES",
+      "codigo_iso3": "ESP",
+      "nome": "Espanha"
+    },
+    {
+      "codigo": "US",
+      "codigo_iso3": "USA",
+      "nome": "Estados Unidos"
+    },
+    {
+      "codigo": "EE",
+      "codigo_iso3": "EST",
+      "nome": "Estónia"
+    },
+    {
+      "codigo": "ET",
+      "codigo_iso3": "ETH",
+      "nome": "Etiópia"
+    },
+    {
+      "codigo": "FJ",
+      "codigo_iso3": "FJI",
+      "nome": "Fiji"
+    },
+    {
+      "codigo": "PH",
+      "codigo_iso3": "PHL",
+      "nome": "Filipinas"
+    },
+    {
+      "codigo": "FI",
+      "codigo_iso3": "FIN",
+      "nome": "Finlândia"
+    },
+    {
+      "codigo": "FR",
+      "codigo_iso3": "FRA",
+      "nome": "França"
+    },
+    {
+      "codigo": "GA",
+      "codigo_iso3": "GAB",
+      "nome": "Gabão"
+    },
+    {
+      "codigo": "GM",
+      "codigo_iso3": "GMB",
+      "nome": "Gâmbia"
+    },
+    {
+      "codigo": "GH",
+      "codigo_iso3": "GHA",
+      "nome": "Gana"
+    },
+    {
+      "codigo": "GE",
+      "codigo_iso3": "GEO",
+      "nome": "Geórgia"
+    },
+    {
+      "codigo": "GI",
+      "codigo_iso3": "GIB",
+      "nome": "Gibraltar"
+    },
+    {
+      "codigo": "GD",
+      "codigo_iso3": "GRD",
+      "nome": "Granada"
+    },
+    {
+      "codigo": "GR",
+      "codigo_iso3": "GRC",
+      "nome": "Grécia"
+    },
+    {
+      "codigo": "GL",
+      "codigo_iso3": "GRL",
+      "nome": "Gronelândia"
+    },
+    {
+      "codigo": "GP",
+      "codigo_iso3": "GLP",
+      "nome": "Guadalupe"
+    },
+    {
+      "codigo": "GU",
+      "codigo_iso3": "GUM",
+      "nome": "Guam"
+    },
+    {
+      "codigo": "GT",
+      "codigo_iso3": "GTM",
+      "nome": "Guatemala"
+    },
+    {
+      "codigo": "GG",
+      "codigo_iso3": "GGY",
+      "nome": "Guernsey"
+    },
+    {
+      "codigo": "GY",
+      "codigo_iso3": "GUY",
+      "nome": "Guiana"
+    },
+    {
+      "codigo": "GF",
+      "codigo_iso3": "GUF",
+      "nome": "Guiana Francesa"
+    },
+    {
+      "codigo": "GN",
+      "codigo_iso3": "GIN",
+      "nome": "Guiné"
+    },
+    {
+      "codigo": "GQ",
+      "codigo_iso3": "GNQ",
+      "nome": "Guiné Equatorial"
+    },
+    {
+      "codigo": "GW",
+      "codigo_iso3": "GNB",
+      "nome": "Guiné-Bissau"
+    },
+    {
+      "codigo": "HT",
+      "codigo_iso3": "HTI",
+      "nome": "Haiti"
+    },
+    {
+      "codigo": "NL",
+      "codigo_iso3": "NLD",
+      "nome": "Holanda"
+    },
+    {
+      "codigo": "HN",
+      "codigo_iso3": "HND",
+      "nome": "Honduras"
+    },
+    {
+      "codigo": "HK",
+      "codigo_iso3": "HKG",
+      "nome": "Hong Kong"
+    },
+    {
+      "codigo": "HU",
+      "codigo_iso3": "HUN",
+      "nome": "Hungria"
+    },
+    {
+      "codigo": "YE",
+      "codigo_iso3": "YEM",
+      "nome": "Iémen"
+    },
+    {
+      "codigo": "BV",
+      "codigo_iso3": "BVT",
+      "nome": "Ilha Bouvet"
+    },
+    {
+      "codigo": "CW",
+      "codigo_iso3": "CUW",
+      "nome": "ilha da Curação"
+    },
+    {
+      "codigo": "IM",
+      "codigo_iso3": "IMN",
+      "nome": "Ilha de Man"
+    },
+    {
+      "codigo": "CX",
+      "codigo_iso3": "CXR",
+      "nome": "Ilha do Natal"
+    },
+    {
+      "codigo": "TW",
+      "codigo_iso3": "TWN",
+      "nome": "Ilha Formosa"
+    },
+    {
+      "codigo": "HM",
+      "codigo_iso3": "HMD",
+      "nome": "Ilha Heard e Ilhas McDonald"
+    },
+    {
+      "codigo": "NF",
+      "codigo_iso3": "NFK",
+      "nome": "Ilha Norfolk"
+    },
+    {
+      "codigo": "KY",
+      "codigo_iso3": "CYM",
+      "nome": "Ilhas Caimão"
+    },
+    {
+      "codigo": "CC",
+      "codigo_iso3": "CCK",
+      "nome": "Ilhas Cocos (Keeling)"
+    },
+    {
+      "codigo": "CK",
+      "codigo_iso3": "COK",
+      "nome": "Ilhas Cook"
+    },
+    {
+      "codigo": "FO",
+      "codigo_iso3": "FRO",
+      "nome": "Ilhas Faroé"
+    },
+    {
+      "codigo": "GS",
+      "codigo_iso3": "SGS",
+      "nome": "Ilhas Geórgia do Sul e Sandwich do Sul"
+    },
+    {
+      "codigo": "FK",
+      "codigo_iso3": "FLK",
+      "nome": "Ilhas Malvinas"
+    },
+    {
+      "codigo": "MH",
+      "codigo_iso3": "MHL",
+      "nome": "Ilhas Marshall"
+    },
+    {
+      "codigo": "UM",
+      "codigo_iso3": "UMI",
+      "nome": "Ilhas Menores Distantes dos Estados Unidos"
+    },
+    {
+      "codigo": "PN",
+      "codigo_iso3": "PCN",
+      "nome": "Ilhas Pitcairn"
+    },
+    {
+      "codigo": "SB",
+      "codigo_iso3": "SLB",
+      "nome": "Ilhas Salomão"
+    },
+    {
+      "codigo": "SJ",
+      "codigo_iso3": "SJM",
+      "nome": "Ilhas Svalbard e Jan Mayen"
+    },
+    {
+      "codigo": "TC",
+      "codigo_iso3": "TCA",
+      "nome": "Ilhas Turks e Caicos"
+    },
+    {
+      "codigo": "VG",
+      "codigo_iso3": "VGB",
+      "nome": "Ilhas Virgens"
+    },
+    {
+      "codigo": "VI",
+      "codigo_iso3": "VIR",
+      "nome": "Ilhas Virgens dos Estados Unidos"
+    },
+    {
+      "codigo": "IN",
+      "codigo_iso3": "IND",
+      "nome": "Índia"
+    },
+    {
+      "codigo": "ID",
+      "codigo_iso3": "IDN",
+      "nome": "Indonésia"
+    },
+    {
+      "codigo": "IR",
+      "codigo_iso3": "IRN",
+      "nome": "Irão"
+    },
+    {
+      "codigo": "IQ",
+      "codigo_iso3": "IRQ",
+      "nome": "Iraque"
+    },
+    {
+      "codigo": "IE",
+      "codigo_iso3": "IRL",
+      "nome": "Irlanda"
+    },
+    {
+      "codigo": "IS",
+      "codigo_iso3": "ISL",
+      "nome": "Islândia"
+    },
+    {
+      "codigo": "IL",
+      "codigo_iso3": "ISR",
+      "nome": "Israel"
+    },
+    {
+      "codigo": "IT",
+      "codigo_iso3": "ITA",
+      "nome": "Itália"
+    },
+    {
+      "codigo": "JM",
+      "codigo_iso3": "JAM",
+      "nome": "Jamaica"
+    },
+    {
+      "codigo": "JP",
+      "codigo_iso3": "JPN",
+      "nome": "Japão"
+    },
+    {
+      "codigo": "JE",
+      "codigo_iso3": "JEY",
+      "nome": "Jersey"
+    },
+    {
+      "codigo": "JO",
+      "codigo_iso3": "JOR",
+      "nome": "Jordânia"
+    },
+    {
+      "codigo": "KI",
+      "codigo_iso3": "KIR",
+      "nome": "Kiribati"
+    },
+    {
+      "codigo": "XK",
+      "codigo_iso3": "UNK",
+      "nome": "Kosovo"
+    },
+    {
+      "codigo": "KW",
+      "codigo_iso3": "KWT",
+      "nome": "Kuwait"
+    },
+    {
+      "codigo": "LA",
+      "codigo_iso3": "LAO",
+      "nome": "Laos"
+    },
+    {
+      "codigo": "LS",
+      "codigo_iso3": "LSO",
+      "nome": "Lesoto"
+    },
+    {
+      "codigo": "LV",
+      "codigo_iso3": "LVA",
+      "nome": "Letónia"
+    },
+    {
+      "codigo": "LB",
+      "codigo_iso3": "LBN",
+      "nome": "Líbano"
+    },
+    {
+      "codigo": "LR",
+      "codigo_iso3": "LBR",
+      "nome": "Libéria"
+    },
+    {
+      "codigo": "LY",
+      "codigo_iso3": "LBY",
+      "nome": "Líbia"
+    },
+    {
+      "codigo": "LI",
+      "codigo_iso3": "LIE",
+      "nome": "Liechtenstein"
+    },
+    {
+      "codigo": "LT",
+      "codigo_iso3": "LTU",
+      "nome": "Lituânia"
+    },
+    {
+      "codigo": "LU",
+      "codigo_iso3": "LUX",
+      "nome": "Luxemburgo"
+    },
+    {
+      "codigo": "MO",
+      "codigo_iso3": "MAC",
+      "nome": "Macau"
+    },
+    {
+      "codigo": "MK",
+      "codigo_iso3": "MKD",
+      "nome": "Macedónia do Norte"
+    },
+    {
+      "codigo": "MG",
+      "codigo_iso3": "MDG",
+      "nome": "Madagáscar"
+    },
+    {
+      "codigo": "MY",
+      "codigo_iso3": "MYS",
+      "nome": "Malásia"
+    },
+    {
+      "codigo": "MW",
+      "codigo_iso3": "MWI",
+      "nome": "Malawi"
+    },
+    {
+      "codigo": "MV",
+      "codigo_iso3": "MDV",
+      "nome": "Maldivas"
+    },
+    {
+      "codigo": "ML",
+      "codigo_iso3": "MLI",
+      "nome": "Mali"
+    },
+    {
+      "codigo": "MT",
+      "codigo_iso3": "MLT",
+      "nome": "Malta"
+    },
+    {
+      "codigo": "MP",
+      "codigo_iso3": "MNP",
+      "nome": "Marianas Setentrionais"
+    },
+    {
+      "codigo": "MA",
+      "codigo_iso3": "MAR",
+      "nome": "Marrocos"
+    },
+    {
+      "codigo": "MQ",
+      "codigo_iso3": "MTQ",
+      "nome": "Martinica"
+    },
+    {
+      "codigo": "MU",
+      "codigo_iso3": "MUS",
+      "nome": "Maurício"
+    },
+    {
+      "codigo": "MR",
+      "codigo_iso3": "MRT",
+      "nome": "Mauritânia"
+    },
+    {
+      "codigo": "YT",
+      "codigo_iso3": "MYT",
+      "nome": "Mayotte"
+    },
+    {
+      "codigo": "MX",
+      "codigo_iso3": "MEX",
+      "nome": "México"
+    },
+    {
+      "codigo": "FM",
+      "codigo_iso3": "FSM",
+      "nome": "Micronésia"
+    },
+    {
+      "codigo": "MZ",
+      "codigo_iso3": "MOZ",
+      "nome": "Moçambique"
+    },
+    {
+      "codigo": "MD",
+      "codigo_iso3": "MDA",
+      "nome": "Moldávia"
+    },
+    {
+      "codigo": "MC",
+      "codigo_iso3": "MCO",
+      "nome": "Mónaco"
+    },
+    {
+      "codigo": "MN",
+      "codigo_iso3": "MNG",
+      "nome": "Mongólia"
+    },
+    {
+      "codigo": "ME",
+      "codigo_iso3": "MNE",
+      "nome": "Montenegro"
+    },
+    {
+      "codigo": "MS",
+      "codigo_iso3": "MSR",
+      "nome": "Montserrat"
+    },
+    {
+      "codigo": "MM",
+      "codigo_iso3": "MMR",
+      "nome": "Myanmar"
+    },
+    {
+      "codigo": "NA",
+      "codigo_iso3": "NAM",
+      "nome": "Namíbia"
+    },
+    {
+      "codigo": "NR",
+      "codigo_iso3": "NRU",
+      "nome": "Nauru"
+    },
+    {
+      "codigo": "NP",
+      "codigo_iso3": "NPL",
+      "nome": "Nepal"
+    },
+    {
+      "codigo": "NI",
+      "codigo_iso3": "NIC",
+      "nome": "Nicarágua"
+    },
+    {
+      "codigo": "NE",
+      "codigo_iso3": "NER",
+      "nome": "Níger"
+    },
+    {
+      "codigo": "NG",
+      "codigo_iso3": "NGA",
+      "nome": "Nigéria"
+    },
+    {
+      "codigo": "NU",
+      "codigo_iso3": "NIU",
+      "nome": "Niue"
+    },
+    {
+      "codigo": "NO",
+      "codigo_iso3": "NOR",
+      "nome": "Noruega"
+    },
+    {
+      "codigo": "NC",
+      "codigo_iso3": "NCL",
+      "nome": "Nova Caledónia"
+    },
+    {
+      "codigo": "NZ",
+      "codigo_iso3": "NZL",
+      "nome": "Nova Zelândia"
+    },
+    {
+      "codigo": "OM",
+      "codigo_iso3": "OMN",
+      "nome": "Omã"
+    },
+    {
+      "codigo": "BQ",
+      "codigo_iso3": "BES",
+      "nome": "Países Baixos Caribenhos"
+    },
+    {
+      "codigo": "PW",
+      "codigo_iso3": "PLW",
+      "nome": "Palau"
+    },
+    {
+      "codigo": "PS",
+      "codigo_iso3": "PSE",
+      "nome": "Palestina"
+    },
+    {
+      "codigo": "PA",
+      "codigo_iso3": "PAN",
+      "nome": "Panamá"
+    },
+    {
+      "codigo": "PG",
+      "codigo_iso3": "PNG",
+      "nome": "Papua Nova Guiné"
+    },
+    {
+      "codigo": "PK",
+      "codigo_iso3": "PAK",
+      "nome": "Paquistão"
+    },
+    {
+      "codigo": "PY",
+      "codigo_iso3": "PRY",
+      "nome": "Paraguai"
+    },
+    {
+      "codigo": "PE",
+      "codigo_iso3": "PER",
+      "nome": "Perú"
+    },
+    {
+      "codigo": "PF",
+      "codigo_iso3": "PYF",
+      "nome": "Polinésia Francesa"
+    },
+    {
+      "codigo": "PL",
+      "codigo_iso3": "POL",
+      "nome": "Polónia"
+    },
+    {
+      "codigo": "PR",
+      "codigo_iso3": "PRI",
+      "nome": "Porto Rico"
+    },
+    {
+      "codigo": "PT",
+      "codigo_iso3": "PRT",
+      "nome": "Portugal"
+    },
+    {
+      "codigo": "KE",
+      "codigo_iso3": "KEN",
+      "nome": "Quénia"
+    },
+    {
+      "codigo": "KG",
+      "codigo_iso3": "KGZ",
+      "nome": "Quirguistão"
+    },
+    {
+      "codigo": "GB",
+      "codigo_iso3": "GBR",
+      "nome": "Reino Unido"
+    },
+    {
+      "codigo": "CF",
+      "codigo_iso3": "CAF",
+      "nome": "República Centro-Africana"
+    },
+    {
+      "codigo": "CD",
+      "codigo_iso3": "COD",
+      "nome": "República Democrática do Congo"
+    },
+    {
+      "codigo": "DO",
+      "codigo_iso3": "DOM",
+      "nome": "República Dominicana"
+    },
+    {
+      "codigo": "RE",
+      "codigo_iso3": "REU",
+      "nome": "Reunião"
+    },
+    {
+      "codigo": "RO",
+      "codigo_iso3": "ROU",
+      "nome": "Roménia"
+    },
+    {
+      "codigo": "RW",
+      "codigo_iso3": "RWA",
+      "nome": "Ruanda"
+    },
+    {
+      "codigo": "RU",
+      "codigo_iso3": "RUS",
+      "nome": "Rússia"
+    },
+    {
+      "codigo": "EH",
+      "codigo_iso3": "ESH",
+      "nome": "Saara Ocidental"
+    },
+    {
+      "codigo": "PM",
+      "codigo_iso3": "SPM",
+      "nome": "Saint-Pierre e Miquelon"
+    },
+    {
+      "codigo": "WS",
+      "codigo_iso3": "WSM",
+      "nome": "Samoa"
+    },
+    {
+      "codigo": "AS",
+      "codigo_iso3": "ASM",
+      "nome": "Samoa Americana"
+    },
+    {
+      "codigo": "SM",
+      "codigo_iso3": "SMR",
+      "nome": "San Marino"
+    },
+    {
+      "codigo": "SH",
+      "codigo_iso3": "SHN",
+      "nome": "Santa Helena, Ascensão e Tristão da Cunha"
+    },
+    {
+      "codigo": "LC",
+      "codigo_iso3": "LCA",
+      "nome": "Santa Lúcia"
+    },
+    {
+      "codigo": "BL",
+      "codigo_iso3": "BLM",
+      "nome": "São Bartolomeu"
+    },
+    {
+      "codigo": "KN",
+      "codigo_iso3": "KNA",
+      "nome": "São Cristóvão e Nevis"
+    },
+    {
+      "codigo": "SX",
+      "codigo_iso3": "SXM",
+      "nome": "São Martinho"
+    },
+    {
+      "codigo": "MF",
+      "codigo_iso3": "MAF",
+      "nome": "São Martinho"
+    },
+    {
+      "codigo": "ST",
+      "codigo_iso3": "STP",
+      "nome": "São Tomé e Príncipe"
+    },
+    {
+      "codigo": "VC",
+      "codigo_iso3": "VCT",
+      "nome": "São Vincente e Granadinas"
+    },
+    {
+      "codigo": "SC",
+      "codigo_iso3": "SYC",
+      "nome": "Seicheles"
+    },
+    {
+      "codigo": "SN",
+      "codigo_iso3": "SEN",
+      "nome": "Senegal"
+    },
+    {
+      "codigo": "SL",
+      "codigo_iso3": "SLE",
+      "nome": "Serra Leoa"
+    },
+    {
+      "codigo": "RS",
+      "codigo_iso3": "SRB",
+      "nome": "Sérvia"
+    },
+    {
+      "codigo": "SG",
+      "codigo_iso3": "SGP",
+      "nome": "Singapura"
+    },
+    {
+      "codigo": "SY",
+      "codigo_iso3": "SYR",
+      "nome": "Síria"
+    },
+    {
+      "codigo": "SO",
+      "codigo_iso3": "SOM",
+      "nome": "Somália"
+    },
+    {
+      "codigo": "LK",
+      "codigo_iso3": "LKA",
+      "nome": "Sri Lanka"
+    },
+    {
+      "codigo": "SZ",
+      "codigo_iso3": "SWZ",
+      "nome": "Suazilândia"
+    },
+    {
+      "codigo": "SD",
+      "codigo_iso3": "SDN",
+      "nome": "Sudão"
+    },
+    {
+      "codigo": "SS",
+      "codigo_iso3": "SSD",
+      "nome": "Sudão do Sul"
+    },
+    {
+      "codigo": "SE",
+      "codigo_iso3": "SWE",
+      "nome": "Suécia"
+    },
+    {
+      "codigo": "CH",
+      "codigo_iso3": "CHE",
+      "nome": "Suíça"
+    },
+    {
+      "codigo": "SR",
+      "codigo_iso3": "SUR",
+      "nome": "Suriname"
+    },
+    {
+      "codigo": "TH",
+      "codigo_iso3": "THA",
+      "nome": "Tailândia"
+    },
+    {
+      "codigo": "TJ",
+      "codigo_iso3": "TJK",
+      "nome": "Tajiquistão"
+    },
+    {
+      "codigo": "TZ",
+      "codigo_iso3": "TZA",
+      "nome": "Tanzânia"
+    },
+    {
+      "codigo": "TF",
+      "codigo_iso3": "ATF",
+      "nome": "Terras Austrais e Antárticas Francesas"
+    },
+    {
+      "codigo": "IO",
+      "codigo_iso3": "IOT",
+      "nome": "Território Britânico do Oceano Índico"
+    },
+    {
+      "codigo": "TL",
+      "codigo_iso3": "TLS",
+      "nome": "Timor-Leste"
+    },
+    {
+      "codigo": "TG",
+      "codigo_iso3": "TGO",
+      "nome": "Togo"
+    },
+    {
+      "codigo": "TK",
+      "codigo_iso3": "TKL",
+      "nome": "Tokelau"
+    },
+    {
+      "codigo": "TO",
+      "codigo_iso3": "TON",
+      "nome": "Tonga"
+    },
+    {
+      "codigo": "TT",
+      "codigo_iso3": "TTO",
+      "nome": "Trinidade e Tobago"
+    },
+    {
+      "codigo": "TN",
+      "codigo_iso3": "TUN",
+      "nome": "Tunísia"
+    },
+    {
+      "codigo": "TM",
+      "codigo_iso3": "TKM",
+      "nome": "Turquemenistão"
+    },
+    {
+      "codigo": "TR",
+      "codigo_iso3": "TUR",
+      "nome": "Turquia"
+    },
+    {
+      "codigo": "TV",
+      "codigo_iso3": "TUV",
+      "nome": "Tuvalu"
+    },
+    {
+      "codigo": "UA",
+      "codigo_iso3": "UKR",
+      "nome": "Ucrânia"
+    },
+    {
+      "codigo": "UG",
+      "codigo_iso3": "UGA",
+      "nome": "Uganda"
+    },
+    {
+      "codigo": "UY",
+      "codigo_iso3": "URY",
+      "nome": "Uruguai"
+    },
+    {
+      "codigo": "UZ",
+      "codigo_iso3": "UZB",
+      "nome": "Uzbequistão"
+    },
+    {
+      "codigo": "VU",
+      "codigo_iso3": "VUT",
+      "nome": "Vanuatu"
+    },
+    {
+      "codigo": "VE",
+      "codigo_iso3": "VEN",
+      "nome": "Venezuela"
+    },
+    {
+      "codigo": "VN",
+      "codigo_iso3": "VNM",
+      "nome": "Vietname"
+    },
+    {
+      "codigo": "WF",
+      "codigo_iso3": "WLF",
+      "nome": "Wallis e Futuna"
+    },
+    {
+      "codigo": "ZM",
+      "codigo_iso3": "ZMB",
+      "nome": "Zâmbia"
+    },
+    {
+      "codigo": "ZW",
+      "codigo_iso3": "ZWE",
+      "nome": "Zimbabwe"
+    }
+  ]
+}

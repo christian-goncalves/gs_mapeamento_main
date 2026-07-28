@@ -126,7 +126,7 @@ export const participacaoSchema = z
   .object({
     participacao_id: uuid,
     ata_id: uuid,
-    localidade: requiredText,
+    localidade: z.string().trim(),
     estado: z.string().trim(),
     pais: requiredText,
     presencas: z.number().int().min(1),
@@ -136,6 +136,13 @@ export const participacaoSchema = z
     const brasil = item.pais.localeCompare("Brasil", "pt-BR", {
       sensitivity: "accent",
     }) === 0;
+    if (brasil && !item.localidade) {
+      context.addIssue({
+        code: "custom",
+        path: ["localidade"],
+        message: "Localidade é obrigatória quando o país é Brasil.",
+      });
+    }
     if (brasil && !item.estado) {
       context.addIssue({
         code: "custom",
@@ -157,8 +164,8 @@ export const visitanteSchema = z.object({
   ata_id: uuid,
   nome: requiredText,
   cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
-  categoria: z.enum(categoriaVisitanteMapping.codes),
-  origem_contato: z.enum(origemContatoMapping.codes),
+  descricao: z.enum(categoriaVisitanteMapping.codes),
+  como_chegou_a_na: z.enum(origemContatoMapping.codes),
   ...auditFields,
 });
 

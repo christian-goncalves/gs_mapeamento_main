@@ -9,10 +9,13 @@
     "lint": "eslint .",
     "test": "vitest run",
     "municipios:update": "node scripts/update-municipios.mjs",
+    "paises:update": "node scripts/update-paises.mjs",
+    "ata-suggestions:rebuild": "tsx --env-file=.env.local scripts/rebuild-ata-name-suggestions.ts",
     "sheets:reconcile-contract": "tsx --env-file=.env.local scripts/reconcile-sheet-contract.ts",
     "sheets:reconcile-protections": "tsx --env-file=.env.local scripts/reconcile-sheet-protections.ts",
     "sheets:reset-ata-records:dry-run": "tsx --env-file=.env.local scripts/reset-ata-record-sheets.ts",
-    "sheets:reset-ata-records": "tsx --env-file=.env.local scripts/reset-ata-record-sheets.ts --execute"
+    "sheets:reset-ata-records": "tsx --env-file=.env.local scripts/reset-ata-record-sheets.ts --execute",
+    "playwright:responsive-audit": "node scripts/playwright-responsive-audit.mjs"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.3.0",
@@ -30,6 +33,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.0",
     "@types/node": "^24.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

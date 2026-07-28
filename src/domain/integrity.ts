@@ -24,7 +24,7 @@ export type ContractRows = {
 };
 
 function duplicateDiagnostics<T>(
-  rows: ValidRow<T>[],
+  rows: ValidRow<T>[] = [],
   field: string,
   keyOf: (data: T) => string,
   message: string,

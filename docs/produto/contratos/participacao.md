@@ -17,10 +17,10 @@ valor é persistido na aba `atas`.
 interface oferece lista suspensa de 1 a 30 e inicia em 5. O valor é persistido
 na aba `atas`.
 
-## Localidade - Cidades (UF)
+## Localidade
 
 A seção Participação contém somente os totais. As cidades e quantidades da
-reunião ficam em uma seção própria chamada `Localidade - Cidades (UF)`. Cada
+reunião ficam em uma seção própria chamada `Localidade`. Cada
 cidade adicionada gera uma linha na aba `participacao`.
 
 | Campo | Controle | Regra |
@@ -30,9 +30,26 @@ cidade adicionada gera uma linha na aba `participacao`.
 | pais | derivado | Sempre `Brasil` no MVP |
 | presencas | quantidade | Obrigatória e maior que zero |
 
-A soma das presenças registradas para uma ata não pode superar
-`total_membros_presentes`. A quantidade de membros sem localidade informada é a
-diferença entre esses valores e será calculada pelo backend.
+A soma das presenças nacionais e internacionais registradas para uma ata não
+pode superar `total_membros_presentes`. A quantidade de membros sem localidade
+informada é a diferença entre esses valores e será calculada pelo backend.
+
+## Membros internacionais
+
+Cada registro internacional também gera uma linha na aba `participacao`. Para
+esses registros, `localidade` e `estado` ficam vazios, `pais` recebe o país
+selecionado e `presencas` mantém a quantidade informada.
+
+| Campo | Controle | Regra |
+| --- | --- | --- |
+| localidade | não exibido | Vazia para membros internacionais |
+| pais | seleção | Obrigatório; carregado do cache local de países |
+| presencas | quantidade | Obrigatória e maior que zero |
+
+A aplicação consome o cache local `data/paises.json` durante o preenchimento.
+Esse arquivo é atualizado pela REST Countries API através do script
+`npm run paises:update`, que pode ser agendado diariamente no ambiente de
+execução.
 
 ## Visitantes
 
@@ -40,13 +57,13 @@ Cada visitante gera uma linha na aba `visitantes`.
 
 | Campo | Controle | Regra |
 | --- | --- | --- |
-| nome | texto | Se vazio, persistir `Anonimo` |
+| nome | gerado pelo backend | `visitante_1`, `visitante_2` e assim por diante, por ata |
 | cidade | autocomplete | Município brasileiro obrigatório, no formato `Nome - UF` |
-| categoria | seleção | Obrigatória |
-| origem_contato | seleção | Obrigatória |
+| descricao | seleção | Obrigatória; usa os valores controlados de categoria |
+| como_chegou_a_na | seleção | Obrigatória; usa os valores controlados de origem do contato |
 
-Na interface, o campo de nome usa `Anonimo` como placeholder. O usuário pode
-clicar e escrever um nome; se deixar vazio, o backend persiste `Anonimo`.
+A interface não exibe campo de nome para visitantes. O backend gera o nome técnico
+pela posição final do visitante na ata, reiniciando a contagem em cada ata.
 
 ### Categorias
 
@@ -84,14 +101,14 @@ contrato existente; a interface usa `Troca de ficha`.
 
 Valores aceitos:
 
-- `1M`
-- `2M`
-- `3M`
-- `6M`
-- `9M`
-- `12M`
-- `18M`
-- `MULTIPLOS_ANOS`
+- `30 dias`
+- `60 dias`
+- `90 dias`
+- `6 meses`
+- `9 meses`
+- `1 ano`
+- `18 meses`
+- `Múltiplos anos`
 
 Nome e padrinho ou madrinha não são coletados no MVP.
 
@@ -104,9 +121,9 @@ Cada ingresso gera uma linha na aba `ingressos`.
 | nome | texto | Se vazio, persistir `Anonimo` |
 | cidade | autocomplete | Município brasileiro obrigatório, no formato `Nome - UF` |
 
-Ingressos seguem a mesma lógica visual de visitantes: o campo de nome usa
-`Anonimo` como placeholder, o usuário pode escrever um nome e, se deixar vazio,
-o backend persiste `Anonimo`. `total_ingressos` é derivado pela contagem de
+A interface não exibe campo de nome para ingressos. O backend persiste
+`Anonimo` para manter compatibilidade com a aba `ingressos`. Um ingresso só pode
+ser registrado quando a ata possui pelo menos um visitante. `total_ingressos` é derivado pela contagem de
 linhas válidas na aba `ingressos`.
 
 ## Valores derivados

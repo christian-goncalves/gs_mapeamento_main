@@ -116,7 +116,7 @@ Table servidores {
 Table participacao {
   participacao_id uuid [pk]
   ata_id uuid [not null]
-  localidade varchar [not null]
+  localidade varchar [note: 'Obrigatoria para Brasil; vazia para membros internacionais']
   estado varchar [note: 'Obrigatorio quando pais for Brasil']
   pais varchar [not null]
   presencas integer [not null, note: 'Inteiro maior que zero']
@@ -127,10 +127,10 @@ Table participacao {
 Table visitantes {
   visitante_id uuid [pk]
   ata_id uuid [not null]
-  nome varchar [not null]
+  nome varchar [not null, note: 'Gerado como visitante_N pela ordem dentro da ata']
   cidade varchar [not null, note: 'Municipio brasileiro controlado no formato Nome - UF']
-  categoria categoria_visitante [not null]
-  origem_contato origem_contato [not null]
+  descricao categoria_visitante [not null]
+  como_chegou_a_na origem_contato [not null]
   created_at timestamp [not null]
   updated_at timestamp [not null]
 }
@@ -138,7 +138,7 @@ Table visitantes {
 Table trocas_chaveiro {
   troca_chaveiro_id uuid [pk]
   ata_id uuid [not null]
-  tempo_limpo varchar [not null, note: '1M, 2M, 3M, 6M, 9M, 12M, 18M ou MULTIPLOS_ANOS']
+  tempo_limpo varchar [not null, note: '30 dias, 60 dias, 90 dias, 6 meses, 9 meses, 1 ano, 18 meses ou Múltiplos anos']
   quantidade integer [not null, note: 'Inteiro maior que zero']
   created_at timestamp [not null]
   updated_at timestamp [not null]

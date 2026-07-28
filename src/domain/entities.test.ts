@@ -80,8 +80,8 @@ const valid = {
     ata_id: ataId,
     nome: "João",
     cidade: "São Paulo - SP",
-    categoria: "provavel_adicto",
-    origem_contato: "internet",
+    descricao: "provavel_adicto",
+    como_chegou_a_na: "internet",
     ...audit,
   },
   ingresso: {
@@ -94,7 +94,7 @@ const valid = {
   troca: {
     troca_chaveiro_id: "e13f1e7e-e67e-4482-a5e0-897bb52a50d5",
     ata_id: ataId,
-    tempo_limpo: "1M",
+    tempo_limpo: "dias_30",
     quantidade: 2,
     ...audit,
   },
@@ -163,5 +163,22 @@ describe("schemas de domínio", () => {
 
   it("exige estado vazio para outros países", () => {
     expect(participacaoSchema.safeParse({ ...valid.participacao, pais: "Portugal" }).success).toBe(false);
+  });
+
+  it("aceita localidade vazia somente para outros países", () => {
+    expect(
+      participacaoSchema.safeParse({
+        ...valid.participacao,
+        localidade: "",
+        estado: "",
+        pais: "Portugal",
+      }).success,
+    ).toBe(true);
+    expect(
+      participacaoSchema.safeParse({
+        ...valid.participacao,
+        localidade: "",
+      }).success,
+    ).toBe(false);
   });
 });

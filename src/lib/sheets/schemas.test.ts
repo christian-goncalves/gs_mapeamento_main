@@ -62,11 +62,11 @@ const valid = {
   },
   visitante: {
     visitante_id: "a86f8bc3-e943-48e8-8853-cabbb41ab071", ata_id: ataId, nome: "João",
-    cidade: "São Paulo - SP", categoria: "Provável adicto", origem_contato: "Internet", ...audit,
+    cidade: "São Paulo - SP", descricao: "Provável adicto", como_chegou_a_na: "Internet", ...audit,
   },
   troca: {
     troca_chaveiro_id: "e13f1e7e-e67e-4482-a5e0-897bb52a50d5", ata_id: ataId,
-    tempo_limpo: "1M", quantidade: "2", ...audit,
+    tempo_limpo: "30 dias", quantidade: "2", ...audit,
   },
   ingresso: {
     ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d", ata_id: ataId,
@@ -94,13 +94,30 @@ describe("schemas das linhas do Sheets", () => {
     ["atas", sheetAtaSchema, { ...valid.ata, plataforma: "Meet" }],
     ["servidores", sheetServidorSchema, { ...valid.servidor, nome: "" }],
     ["participacao", sheetParticipacaoSchema, { ...valid.participacao, estado: "" }],
-    ["visitantes", sheetVisitanteSchema, { ...valid.visitante, categoria: "Desconhecida" }],
+    ["visitantes", sheetVisitanteSchema, { ...valid.visitante, descricao: "Desconhecida" }],
     ["ingressos", sheetIngressoSchema, { ...valid.ingresso, nome: "" }],
     ["ingressos", sheetIngressoSchema, { ...valid.ingresso, cidade: "" }],
     ["trocas_chaveiro", sheetTrocaChaveiroSchema, { ...valid.troca, tempo_limpo: "10 dias" }],
     ["trocas_chaveiro", sheetTrocaChaveiroSchema, { ...valid.troca, quantidade: "0" }],
   ])("rejeita linha inválida de %s", (_name, schema, value) => {
     expect(schema.safeParse(value).success).toBe(false);
+  });
+
+  it("aceita localidade vazia somente em participação internacional", () => {
+    expect(
+      sheetParticipacaoSchema.safeParse({
+        ...valid.participacao,
+        localidade: "",
+        estado: "",
+        pais: "Portugal",
+      }).success,
+    ).toBe(true);
+    expect(
+      sheetParticipacaoSchema.safeParse({
+        ...valid.participacao,
+        localidade: "",
+      }).success,
+    ).toBe(false);
   });
 
   it("converte ata do Sheets e volta sem perda", () => {

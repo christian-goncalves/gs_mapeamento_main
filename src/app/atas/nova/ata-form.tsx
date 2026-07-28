@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faClipboardCheck,
@@ -10,23 +10,36 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import type { HiddenAtaSubmission } from "@/domain/hidden-submission";
+import type { Pais } from "@/domain/paises";
 import {
+  categoriaVisitanteMapping,
   formatoMapping,
+  origemContatoMapping,
   plataformaMapping,
   tempoLimpoMapping,
   tipoReuniaoMapping,
 } from "@/domain/enums";
 import { createAtaAction, type CreateAtaState } from "./actions";
 import { MunicipioAutocomplete } from "./municipio-autocomplete";
+import { TextAutocomplete } from "./text-autocomplete";
 
 type ClientRow = { clientId: string };
+type VisitorSubmission = HiddenAtaSubmission["visitantes"][number];
+type VisitorDraft = Omit<
+  VisitorSubmission,
+  "descricao" | "como_chegou_a_na"
+> & {
+  descricao: VisitorSubmission["descricao"] | "";
+  como_chegou_a_na: VisitorSubmission["como_chegou_a_na"] | "";
+};
 type Draft = Omit<
   HiddenAtaSubmission,
-  "servidores" | "participacao" | "visitantes" | "ingressos" | "trocas_chaveiro"
+  "servidores" | "participacao" | "membros_internacionais" | "visitantes" | "ingressos" | "trocas_chaveiro"
 > & {
   servidores: (HiddenAtaSubmission["servidores"][number] & ClientRow)[];
   participacao: (HiddenAtaSubmission["participacao"][number] & ClientRow)[];
-  visitantes: (HiddenAtaSubmission["visitantes"][number] & ClientRow)[];
+  membros_internacionais: (HiddenAtaSubmission["membros_internacionais"][number] & ClientRow)[];
+  visitantes: (VisitorDraft & ClientRow)[];
   ingressos: (HiddenAtaSubmission["ingressos"][number] & ClientRow)[];
   trocas_chaveiro: (HiddenAtaSubmission["trocas_chaveiro"][number] & ClientRow)[];
 };
@@ -40,7 +53,7 @@ const tipoReuniaoOptions: Draft["ata"]["tipo_reuniao"][] = [
   "fechada",
   "aberta",
 ];
-const preenchidoPorOptions = [
+const servidorFuncaoOptions = [
   "Coordenador",
   "Moderador",
   "Secretário",
@@ -50,13 +63,25 @@ const preenchidoPorOptions = [
   "Outros",
 ];
 
+type AtaNameSuggestions = {
+  preenchido_por: string[];
+  servidores: string[];
+};
+
 function clientId() {
   return globalThis.crypto.randomUUID();
+}
+
+function cidadeEstado(value: string) {
+  const match = value.match(/^(.*)\s+-\s+([A-Z]{2})$/);
+  if (!match) return { cidade: value, estado: "—" };
+  return { cidade: match[1], estado: match[2] };
 }
 
 function NumberStepper({
   id,
   label,
+  showLabel = true,
   value,
   min = 1,
   max,
@@ -64,6 +89,7 @@ function NumberStepper({
 }: {
   id: string;
   label: string;
+  showLabel?: boolean;
   value: number;
   min?: number;
   max?: number;
@@ -86,7 +112,7 @@ function NumberStepper({
 
   return (
     <label htmlFor={id}>
-      {label}
+      {showLabel && <span>{label}</span>}
       <span className="number-stepper">
         <button
           type="button"
@@ -99,6 +125,7 @@ function NumberStepper({
         </button>
         <input
           id={id}
+          aria-label={showLabel ? undefined : label}
           type="number"
           required
           min={min}
@@ -122,7 +149,7 @@ function NumberStepper({
   );
 }
 
-function submissionFromDraft(draft: Draft): HiddenAtaSubmission {
+function submissionFromDraft(draft: Draft) {
   return {
     ata: draft.ata,
     servidores: draft.servidores.map(({ nome, funcao }) => ({ nome, funcao })),
@@ -132,13 +159,17 @@ function submissionFromDraft(draft: Draft): HiddenAtaSubmission {
         presencas,
       }),
     ),
+    membros_internacionais: draft.membros_internacionais.map(
+      ({ pais, presencas }) => ({ pais, presencas }),
+    ),
     visitantes: draft.visitantes.map(
-      ({ nome, cidade }) => ({
-        nome,
+      ({ cidade, descricao, como_chegou_a_na }) => ({
         cidade,
+        descricao,
+        como_chegou_a_na,
       }),
     ),
-    ingressos: draft.ingressos.map(({ nome, cidade }) => ({ nome, cidade })),
+    ingressos: draft.ingressos.map(({ cidade }) => ({ cidade })),
     trocas_chaveiro: draft.trocas_chaveiro.map(({ tempo_limpo, quantidade }) => ({
       tempo_limpo,
       quantidade,
@@ -169,6 +200,11 @@ export function AtaForm({
   const formRef = useRef<HTMLFormElement>(null);
   const [reviewing, setReviewing] = useState(false);
   const [clientError, setClientError] = useState<string>();
+  const [nameSuggestions, setNameSuggestions] = useState<AtaNameSuggestions>({
+    preenchido_por: [],
+    servidores: [],
+  });
+  const [paises, setPaises] = useState<Pais[]>([]);
   const [actionState, formAction, pending] = useActionState(
     action,
     initialActionState,
@@ -192,12 +228,20 @@ export function AtaForm({
     },
     servidores: [],
     participacao: [],
+    membros_internacionais: [],
     visitantes: [],
     ingressos: [],
     trocas_chaveiro: [],
   });
   const submission = submissionFromDraft(draft);
   const selectedGroup = groups.find((group) => group.id === draft.ata.grupo_id);
+  const paisSuggestions = paises.map((pais) => pais.nome);
+  const reviewConquistasTempo = draft.trocas_chaveiro.flatMap((item) =>
+    Array.from({ length: item.quantidade }, (_, index) => ({
+      id: `${item.clientId}-${index}`,
+      tempo: tempoLimpoMapping.toSheet(item.tempo_limpo),
+    })),
+  );
   const horarioOptions = Array.from(
     new Set(
       (selectedGroup?.horarios?.length
@@ -206,6 +250,71 @@ export function AtaForm({
     ),
   ).sort();
 
+  useEffect(() => {
+    const controller = new AbortController();
+    async function loadPaises() {
+      try {
+        const response = await fetch("/api/paises", { signal: controller.signal });
+        if (!response.ok) throw new Error("Países indisponíveis.");
+        const data = (await response.json()) as { countries?: Pais[] };
+        setPaises(data.countries ?? []);
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === "AbortError")) {
+          setPaises([]);
+        }
+      }
+    }
+    void loadPaises();
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    const grupoId = draft.ata.grupo_id;
+    const controller = new AbortController();
+    async function loadSuggestions() {
+      try {
+        const response = await fetch(
+          `/api/ata-name-suggestions?grupo_id=${encodeURIComponent(grupoId)}`,
+          { signal: controller.signal },
+        );
+        if (!response.ok) throw new Error("Sugestões indisponíveis.");
+        const data = (await response.json()) as {
+          suggestions?: Partial<AtaNameSuggestions>;
+        };
+        setNameSuggestions({
+          preenchido_por: data.suggestions?.preenchido_por ?? [],
+          servidores: data.suggestions?.servidores ?? [],
+        });
+      } catch (error) {
+        if (!(error instanceof DOMException && error.name === "AbortError")) {
+          setNameSuggestions({ preenchido_por: [], servidores: [] });
+        }
+      }
+    }
+    void loadSuggestions();
+    return () => controller.abort();
+  }, [draft.ata.grupo_id]);
+
+  function removeVisitante(clientIdToRemove: string) {
+    const remainingVisitors = draft.visitantes.filter(
+      (item) => item.clientId !== clientIdToRemove,
+    );
+    const removingLastVisitor = remainingVisitors.length === 0;
+    if (removingLastVisitor && draft.ingressos.length > 0) {
+      const confirmed = window.confirm(
+        "Ao remover o último visitante, os ingressos informados também serão removidos. Deseja continuar?",
+      );
+      if (!confirmed) return;
+    }
+    setDraft((current) => ({
+      ...current,
+      visitantes: current.visitantes.filter(
+        (item) => item.clientId !== clientIdToRemove,
+      ),
+      ingressos: removingLastVisitor ? [] : current.ingressos,
+    }));
+  }
+
   function review() {
     setClientError(undefined);
     if (!formRef.current?.reportValidity()) return;
@@ -213,12 +322,12 @@ export function AtaForm({
       setClientError("Selecione pelo menos um formato de reunião.");
       return;
     }
-    const presencas = draft.participacao.reduce(
-      (total, item) => total + item.presencas,
-      0,
-    );
+    const presencas = [
+      ...draft.participacao,
+      ...draft.membros_internacionais,
+    ].reduce((total, item) => total + item.presencas, 0);
     if (presencas > draft.ata.total_membros_presentes) {
-      setClientError("A soma das presenças supera o total de membros presentes.");
+      setClientError("A soma das presenças por localidade supera o total de membros presentes.");
       return;
     }
     setReviewing(true);
@@ -241,9 +350,9 @@ export function AtaForm({
 
       <section className="card form-section">
         <h2>Informações gerais</h2>
-        <div className="form-grid">
+        <div className="form-grid ata-general-info-grid">
           {!fixedGroupId && (
-            <label>
+            <label className="ata-group-field">
               Grupo
               <select
                 required
@@ -292,19 +401,16 @@ export function AtaForm({
           </label>
           <label>
             Preenchido por
-            <select
+            <TextAutocomplete
               required
               value={draft.ata.preenchido_por}
+              placeholder="Preenchido por..."
+              suggestions={nameSuggestions.preenchido_por}
               onChange={(event) => setDraft((current) => ({
                 ...current,
-                ata: { ...current.ata, preenchido_por: event.target.value },
+                ata: { ...current.ata, preenchido_por: event },
               }))}
-            >
-              <option value="" disabled>Selecione...</option>
-              {preenchidoPorOptions.map((option) => (
-                <option key={option} value={option}>{option}</option>
-              ))}
-            </select>
+            />
           </label>
           <label>
             Plataforma
@@ -376,7 +482,7 @@ export function AtaForm({
         <div className="section-heading">
           <h2>Participação</h2>
         </div>
-        <div className="form-grid">
+        <div className="form-grid ata-participation-grid">
           <NumberStepper
             id="total-membros-presentes"
             label="Membros presentes"
@@ -406,16 +512,21 @@ export function AtaForm({
         <div className="section-heading">
           <h2>Servidores</h2>
         </div>
-        {draft.servidores.map((item) => (
-          <div className="repeat-row repeat-row--double" key={item.clientId}>
-            <label>Nome<input required value={item.nome} placeholder="Nome..." onChange={(event) => setDraft((current) => ({
+        {draft.servidores.map((item, index) => (
+          <div className="repeat-row repeat-row--double repeat-row--server repeat-row--unseparated" key={item.clientId}>
+            <label>{index === 0 && <span>Nome</span>}<TextAutocomplete ariaLabel={index === 0 ? undefined : "Nome do servidor"} required value={item.nome} placeholder="Nome..." suggestions={nameSuggestions.servidores} onChange={(value) => setDraft((current) => ({
               ...current,
-              servidores: current.servidores.map((server) => server.clientId === item.clientId ? { ...server, nome: event.target.value } : server),
+              servidores: current.servidores.map((server) => server.clientId === item.clientId ? { ...server, nome: value } : server),
             }))} /></label>
-            <label>Função<input value={item.funcao ?? ""} placeholder="Função..." onChange={(event) => setDraft((current) => ({
+            <label>{index === 0 && <span>Função</span>}<select aria-label={index === 0 ? undefined : "Função do servidor"} value={item.funcao ?? ""} onChange={(event) => setDraft((current) => ({
               ...current,
               servidores: current.servidores.map((server) => server.clientId === item.clientId ? { ...server, funcao: event.target.value } : server),
-            }))} /></label>
+            }))}>
+              <option value="">Selecione...</option>
+              {servidorFuncaoOptions.map((option) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select></label>
             <button type="button" className="danger-icon-button" aria-label="Remover servidor" title="Remover servidor" onClick={() => setDraft((current) => ({ ...current, servidores: current.servidores.filter((server) => server.clientId !== item.clientId) }))}><FontAwesomeIcon icon={faTrashCan} /></button>
           </div>
         ))}
@@ -427,20 +538,21 @@ export function AtaForm({
               ...current,
               servidores: [...current.servidores, { clientId: clientId(), nome: "", funcao: "" }],
             }))}
-          ><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar servidor</span></button>
+          ><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
         </div>
       </section>
 
       <section className="card form-section">
         <div className="section-heading">
-          <h2>Localidade - Cidades (UF)</h2>
+          <h2>Localidade</h2>
         </div>
-        {draft.participacao.map((item) => (
-          <div className="repeat-row repeat-row--city" key={item.clientId}>
-            <label htmlFor={`participation-city-${item.clientId}`}>Cidade<MunicipioAutocomplete id={`participation-city-${item.clientId}`} placeholder="Cidade..." value={item.localidade} onChange={(value) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, localidade: value } : entry) }))} /></label>
+        {draft.participacao.map((item, index) => (
+          <div className="repeat-row repeat-row--city repeat-row--locality repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId}>
+            <label htmlFor={`participation-city-${item.clientId}`}>{index === 0 && <span>Cidade</span>}<MunicipioAutocomplete ariaLabel={index === 0 ? undefined : "Cidade"} id={`participation-city-${item.clientId}`} placeholder="Cidade..." value={item.localidade} onChange={(value) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, localidade: value } : entry) }))} /></label>
             <NumberStepper
               id={`participation-count-${item.clientId}`}
               label="Quantidade"
+              showLabel={index === 0}
               value={item.presencas}
               min={1}
               max={10}
@@ -453,7 +565,35 @@ export function AtaForm({
           <button type="button" className="secondary" onClick={() => setDraft((current) => ({
             ...current,
             participacao: [...current.participacao, { clientId: clientId(), localidade: "", presencas: 1 }],
-          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar cidade</span></button>
+          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
+        </div>
+      </section>
+
+
+      <section className="card form-section">
+        <div className="section-heading">
+          <h2>Membros internacionais</h2>
+        </div>
+        {draft.membros_internacionais.map((item, index) => (
+          <div className="repeat-row repeat-row--international repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId}>
+            <label>{index === 0 && <span>País</span>}<TextAutocomplete ariaLabel={index === 0 ? undefined : "País"} required value={item.pais} placeholder="Digite o país..." suggestions={paisSuggestions} onChange={(value) => setDraft((current) => ({ ...current, membros_internacionais: current.membros_internacionais.map((entry) => entry.clientId === item.clientId ? { ...entry, pais: value } : entry) }))} /></label>
+            <NumberStepper
+              id={`international-count-${item.clientId}`}
+              label="Quantidade"
+              showLabel={index === 0}
+              value={item.presencas}
+              min={1}
+              max={100}
+              onChange={(value) => setDraft((current) => ({ ...current, membros_internacionais: current.membros_internacionais.map((entry) => entry.clientId === item.clientId ? { ...entry, presencas: value } : entry) }))}
+            />
+            <button type="button" className="danger-icon-button" aria-label="Remover membro internacional" title="Remover membro internacional" onClick={() => setDraft((current) => ({ ...current, membros_internacionais: current.membros_internacionais.filter((entry) => entry.clientId !== item.clientId) }))}><FontAwesomeIcon icon={faTrashCan} /></button>
+          </div>
+        ))}
+        <div className="section-footer">
+          <button type="button" className="secondary" onClick={() => setDraft((current) => ({
+            ...current,
+            membros_internacionais: [...current.membros_internacionais, { clientId: clientId(), pais: "", presencas: 1 }],
+          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
         </div>
       </section>
 
@@ -461,18 +601,23 @@ export function AtaForm({
         <div className="section-heading">
           <h2>Visitantes</h2>
         </div>
-        {draft.visitantes.map((item) => (
-          <div className="repeat-row repeat-row--compact" key={item.clientId}>
-            <label>Nome<input value={item.nome ?? ""} placeholder="Anônimo" onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, nome: event.target.value } : entry) }))} /></label>
-            <label htmlFor={`city-${item.clientId}`}>Cidade<MunicipioAutocomplete id={`city-${item.clientId}`} placeholder="Cidade..." value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
-            <button type="button" className="danger-icon-button" aria-label="Remover visitante" title="Remover visitante" onClick={() => setDraft((current) => ({ ...current, visitantes: current.visitantes.filter((entry) => entry.clientId !== item.clientId) }))}><FontAwesomeIcon icon={faTrashCan} /></button>
+        {draft.visitantes.map((item, index) => (
+          <div className="repeat-row repeat-row--visitor repeat-row--unseparated" key={item.clientId}>
+            <div className="visitor-primary-row">
+              <label htmlFor={`city-${item.clientId}`}>{index === 0 && <span>Cidade</span>}<MunicipioAutocomplete ariaLabel={index === 0 ? undefined : "Cidade do visitante"} id={`city-${item.clientId}`} placeholder="Cidade..." value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
+            </div>
+            <div className="visitor-secondary-row">
+              <label>{index === 0 && <span>Descrição</span>}<select required aria-label={index === 0 ? undefined : "Descrição do visitante"} value={item.descricao} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, descricao: event.target.value as typeof entry.descricao } : entry) }))}><option value="" disabled>Escolha...</option>{categoriaVisitanteMapping.codes.map((code) => <option key={code} value={code}>{categoriaVisitanteMapping.toSheet(code)}</option>)}</select></label>
+              <label>{index === 0 && <span>Como chegou a NA?</span>}<select required aria-label={index === 0 ? undefined : "Como o visitante chegou a NA"} value={item.como_chegou_a_na} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, como_chegou_a_na: event.target.value as typeof entry.como_chegou_a_na } : entry) }))}><option value="" disabled>Escolha...</option>{origemContatoMapping.codes.map((code) => <option key={code} value={code}>{origemContatoMapping.toSheet(code)}</option>)}</select></label>
+              <button type="button" className="danger-icon-button" aria-label="Remover visitante" title="Remover visitante" onClick={() => removeVisitante(item.clientId)}><FontAwesomeIcon icon={faTrashCan} /></button>
+            </div>
           </div>
         ))}
         <div className="section-footer">
           <button type="button" className="secondary" onClick={() => setDraft((current) => ({
             ...current,
-            visitantes: [...current.visitantes, { clientId: clientId(), nome: "", cidade: "" }],
-          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar visitante</span></button>
+            visitantes: [...current.visitantes, { clientId: clientId(), cidade: "", descricao: "", como_chegou_a_na: "" }],
+          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
         </div>
       </section>
 
@@ -480,31 +625,39 @@ export function AtaForm({
         <div className="section-heading">
           <h2>Ingressos</h2>
         </div>
-        {draft.ingressos.map((item) => (
-          <div className="repeat-row repeat-row--double" key={item.clientId}>
-            <label>Nome<input value={item.nome ?? ""} placeholder="Anônimo" onChange={(event) => setDraft((current) => ({ ...current, ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId ? { ...entry, nome: event.target.value } : entry) }))} /></label>
-            <label htmlFor={`ingresso-city-${item.clientId}`}>Cidade<MunicipioAutocomplete id={`ingresso-city-${item.clientId}`} placeholder="Cidade..." value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
+        {draft.visitantes.length === 0 ? (
+          <p className="field-hint" role="status">
+            Para registrar um ingresso, registre primeiro pelo menos um visitante.
+          </p>
+        ) : (
+          <>
+        {draft.ingressos.map((item, index) => (
+          <div className="repeat-row repeat-row--single repeat-row--unseparated" key={item.clientId}>
+            <label htmlFor={`ingresso-city-${item.clientId}`}>{index === 0 && <span>Cidade</span>}<MunicipioAutocomplete ariaLabel={index === 0 ? undefined : "Cidade do ingresso"} id={`ingresso-city-${item.clientId}`} placeholder="Cidade..." value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
             <button type="button" className="danger-icon-button" aria-label="Remover ingresso" title="Remover ingresso" onClick={() => setDraft((current) => ({ ...current, ingressos: current.ingressos.filter((entry) => entry.clientId !== item.clientId) }))}><FontAwesomeIcon icon={faTrashCan} /></button>
           </div>
         ))}
         <div className="section-footer">
           <button type="button" className="secondary" onClick={() => setDraft((current) => ({
             ...current,
-            ingressos: [...current.ingressos, { clientId: clientId(), nome: "", cidade: "" }],
-          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar ingresso</span></button>
+            ingressos: [...current.ingressos, { clientId: clientId(), cidade: "" }],
+          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
         </div>
+          </>
+        )}
       </section>
 
       <section className="card form-section">
         <div className="section-heading">
           <h2>Conquistas de tempo</h2>
         </div>
-        {draft.trocas_chaveiro.map((item) => (
-          <div className="repeat-row repeat-row--double" key={item.clientId}>
-            <label>Tempo limpo<select value={item.tempo_limpo} onChange={(event) => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.map((entry) => entry.clientId === item.clientId ? { ...entry, tempo_limpo: event.target.value as typeof entry.tempo_limpo } : entry) }))}>{tempoLimpoMapping.codes.map((code) => <option key={code} value={code}>{tempoLimpoMapping.toSheet(code)}</option>)}</select></label>
+        {draft.trocas_chaveiro.map((item, index) => (
+          <div className="repeat-row repeat-row--double repeat-row--clean-time repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId}>
+            <label>{index === 0 && <span>Tempo limpo</span>}<select aria-label={index === 0 ? undefined : "Tempo limpo"} value={item.tempo_limpo} onChange={(event) => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.map((entry) => entry.clientId === item.clientId ? { ...entry, tempo_limpo: event.target.value as typeof entry.tempo_limpo } : entry) }))}>{tempoLimpoMapping.codes.map((code) => <option key={code} value={code}>{tempoLimpoMapping.toSheet(code)}</option>)}</select></label>
             <NumberStepper
               id={`clean-time-count-${item.clientId}`}
               label="Quantidade"
+              showLabel={index === 0}
               value={item.quantidade}
               min={1}
               onChange={(value) => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.map((entry) => entry.clientId === item.clientId ? { ...entry, quantidade: value } : entry) }))}
@@ -515,8 +668,8 @@ export function AtaForm({
         <div className="section-footer">
           <button type="button" className="secondary" onClick={() => setDraft((current) => ({
             ...current,
-            trocas_chaveiro: [...current.trocas_chaveiro, { clientId: clientId(), tempo_limpo: "1M", quantidade: 1 }],
-          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar conquista</span></button>
+            trocas_chaveiro: [...current.trocas_chaveiro, { clientId: clientId(), tempo_limpo: "dias_30", quantidade: 1 }],
+          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
         </div>
       </section>
 
@@ -545,14 +698,37 @@ export function AtaForm({
             <div className="review-lists">
               <h3>Servidores ({draft.servidores.length})</h3>
               <ol>{draft.servidores.map((item) => <li key={item.clientId}>{item.nome}{item.funcao ? ` · ${item.funcao}` : ""}</li>)}</ol>
-              <h3>Localidade - Cidades (UF) ({draft.participacao.length})</h3>
+              <h3>Localidade ({draft.participacao.length})</h3>
               <ul>{draft.participacao.map((item) => <li key={item.clientId}>{item.localidade} · {item.presencas}</li>)}</ul>
+              <h3>Membros internacionais ({draft.membros_internacionais.length})</h3>
+              <ul>{draft.membros_internacionais.map((item) => <li key={item.clientId}>{item.pais} · {item.presencas}</li>)}</ul>
               <h3>Visitantes ({draft.visitantes.length})</h3>
-              <ul>{draft.visitantes.map((item) => <li key={item.clientId}>{item.nome?.trim() || "Anonimo"} · {item.cidade}</li>)}</ul>
+              <div className="table-wrap">
+                <table><thead><tr><th>Visitante</th><th>Cidade</th><th>Categoria</th><th>Origem</th></tr></thead>
+                  <tbody>{draft.visitantes.map((item, index) => (
+                    <tr key={item.clientId}><td>Visitante {index + 1}</td><td>{item.cidade}</td><td>{item.descricao ? categoriaVisitanteMapping.toSheet(item.descricao) : "Escolha..."}</td><td>{item.como_chegou_a_na ? origemContatoMapping.toSheet(item.como_chegou_a_na) : "Escolha..."}</td></tr>
+                  ))}</tbody>
+                </table>
+              </div>
               <h3>Ingressos ({draft.ingressos.length})</h3>
-              <ul>{draft.ingressos.map((item) => <li key={item.clientId}>{item.nome?.trim() || "Anonimo"} · {item.cidade}</li>)}</ul>
-              <h3>Conquistas de tempo ({draft.trocas_chaveiro.reduce((total, item) => total + item.quantidade, 0)})</h3>
-              <ul>{draft.trocas_chaveiro.map((item) => <li key={item.clientId}>{tempoLimpoMapping.toSheet(item.tempo_limpo)} · {item.quantidade}</li>)}</ul>
+              <div className="table-wrap">
+                <table><thead><tr><th>Ingresso</th><th>Cidade</th><th>Estado</th></tr></thead>
+                  <tbody>{draft.ingressos.map((item, index) => {
+                    const localidade = cidadeEstado(item.cidade);
+                    return (
+                      <tr key={item.clientId}><td>Ingresso {index + 1}</td><td>{localidade.cidade}</td><td>{localidade.estado}</td></tr>
+                    );
+                  })}</tbody>
+                </table>
+              </div>
+              <h3>Conquistas de tempo ({reviewConquistasTempo.length})</h3>
+              <div className="table-wrap">
+                <table><thead><tr><th>Conquista</th><th>Tempo</th></tr></thead>
+                  <tbody>{reviewConquistasTempo.map((item, index) => (
+                    <tr key={item.id}><td>Conquista {index + 1}</td><td>{item.tempo}</td></tr>
+                  ))}</tbody>
+                </table>
+              </div>
             </div>
             {actionState.error && <p className="form-error" role="alert">{actionState.error}</p>}
             <div className="modal-actions">

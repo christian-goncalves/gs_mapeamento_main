@@ -23,8 +23,15 @@ coverage/
 dist/
 *.log
 
+# Cache local derivado de dados pessoais do Google Sheets
+data/ata-name-suggestions.json
+
 # Configuracao local de agentes e sistema
-.agents/
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/gs-mapeamento-atas/
+!.agents/skills/gs-mapeamento-atas/**
 .codex/
 .git-store/
 .git.empty-backup-*/

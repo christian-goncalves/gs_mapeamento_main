@@ -19,6 +19,18 @@ import { AtaIndexForm } from "./ata-index-form";
 
 export const dynamic = "force-dynamic";
 
+function cidadeEstado(value: string) {
+  const match = value.match(/^(.*)\s+-\s+([A-Z]{2})$/);
+  if (!match) return { cidade: value, estado: "—" };
+  return { cidade: match[1], estado: match[2] };
+}
+
+function formatBrazilianDate(value: string) {
+  const [year, month, day] = value.split("-");
+  if (!year || !month || !day) return value;
+  return `${day}/${month}/${year}`;
+}
+
 export default async function AtaDetailPage({
   params,
 }: {
@@ -33,21 +45,28 @@ export default async function AtaDetailPage({
 
   const { grupo, registro, indicadores } = item;
   const { ata } = registro;
+  const participacaoBrasil = registro.participacao.filter((entry) => entry.pais === "Brasil");
+  const membrosInternacionais = registro.participacao.filter((entry) => entry.pais !== "Brasil");
+  const conquistasTempo = registro.trocas_chaveiro.flatMap((entry) =>
+    Array.from({ length: entry.quantidade }, (_, index) => ({
+      id: `${entry.troca_chaveiro_id}-${index}`,
+      tempo: tempoLimpoMapping.toSheet(entry.tempo_limpo),
+    })),
+  );
 
   return (
     <main className="shell detail-shell">
-      <Link className="back-link" href="/">
-        <span className="button-content">
-          <FontAwesomeIcon icon={faArrowLeft} />
-          Voltar para atas
-        </span>
-      </Link>
       <header className="detail-header">
         <div>
-          <p className="eyebrow">Ata somente leitura</p>
-          <h1>Ata #{ata.indice_personalizado_grupo} · {grupo.grupo_nome}</h1>
+          <Link className="button-link detail-panel-link" href="/">
+            <span className="button-content">
+              <FontAwesomeIcon icon={faArrowLeft} />
+              Voltar
+            </span>
+          </Link>
+          <h1>ATA {ata.indice_personalizado_grupo} - {grupo.grupo_nome}</h1>
           <p className="muted">
-            {ata.data_reuniao} às {ata.hora_inicio}
+            {formatBrazilianDate(ata.data_reuniao)} às {ata.hora_inicio}
           </p>
         </div>
         {!grupo.ativo && <span className="badge">Grupo inativo</span>}
@@ -89,7 +108,7 @@ export default async function AtaDetailPage({
           <div><dt>Visitantes</dt><dd>{indicadores.total_visitantes}</dd></div>
           <div><dt>Ingressos</dt><dd>{indicadores.total_ingressos}</dd></div>
           <div><dt>Conquistas de tempo</dt><dd>{indicadores.total_trocas_chaveiro}</dd></div>
-          <div><dt>Sem localidade</dt><dd>{indicadores.membros_sem_localidade}</dd></div>
+          <div><dt>Membros que não indicaram localidade</dt><dd>{indicadores.membros_sem_localidade}</dd></div>
         </dl>
       </section>
 
@@ -109,11 +128,24 @@ export default async function AtaDetailPage({
 
       <section className="card">
         <h2>Participação por localidade</h2>
-        {registro.participacao.length === 0 ? <p className="muted">Nenhuma localidade válida informada.</p> : (
+        {participacaoBrasil.length === 0 ? <p className="muted">Nenhuma localidade válida informada.</p> : (
           <div className="table-wrap">
             <table><thead><tr><th>Localidade</th><th>Estado</th><th>País</th><th>Presenças</th></tr></thead>
-              <tbody>{registro.participacao.map((entry) => (
+              <tbody>{participacaoBrasil.map((entry) => (
                 <tr key={entry.participacao_id}><td>{entry.localidade}</td><td>{entry.estado || "—"}</td><td>{entry.pais}</td><td>{entry.presencas}</td></tr>
+              ))}</tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
+      <section className="card">
+        <h2>Membros internacionais</h2>
+        {membrosInternacionais.length === 0 ? <p className="muted">Nenhum membro internacional informado.</p> : (
+          <div className="table-wrap">
+            <table><thead><tr><th>País</th><th>Presenças</th></tr></thead>
+              <tbody>{membrosInternacionais.map((entry) => (
+                <tr key={entry.participacao_id}><td>{entry.pais}</td><td>{entry.presencas}</td></tr>
               ))}</tbody>
             </table>
           </div>
@@ -124,9 +156,9 @@ export default async function AtaDetailPage({
         <h2>Visitantes</h2>
         {registro.visitantes.length === 0 ? <p className="muted">Nenhum visitante informado.</p> : (
           <div className="table-wrap">
-            <table><thead><tr><th>Nome</th><th>Cidade</th><th>Categoria</th><th>Origem</th></tr></thead>
-              <tbody>{registro.visitantes.map((visitor) => (
-                <tr key={visitor.visitante_id}><td>{visitor.nome}</td><td>{visitor.cidade}</td><td>{categoriaVisitanteMapping.toSheet(visitor.categoria)}</td><td>{origemContatoMapping.toSheet(visitor.origem_contato)}</td></tr>
+            <table><thead><tr><th>Visitante</th><th>Cidade</th><th>Categoria</th><th>Origem</th></tr></thead>
+              <tbody>{registro.visitantes.map((visitor, index) => (
+                <tr key={visitor.visitante_id}><td>Visitante {index + 1}</td><td>{visitor.cidade}</td><td>{categoriaVisitanteMapping.toSheet(visitor.descricao)}</td><td>{origemContatoMapping.toSheet(visitor.como_chegou_a_na)}</td></tr>
               ))}</tbody>
             </table>
           </div>
@@ -136,18 +168,29 @@ export default async function AtaDetailPage({
       <section className="card">
         <h2>Ingressos</h2>
         {registro.ingressos.length === 0 ? <p className="muted">Nenhum ingresso informado.</p> : (
-          <ul className="list">
-            {registro.ingressos.map((entry) => <li key={entry.ingresso_id}>{entry.nome} · {entry.cidade}</li>)}
-          </ul>
+          <div className="table-wrap">
+            <table><thead><tr><th>Ingresso</th><th>Cidade</th><th>Estado</th></tr></thead>
+              <tbody>{registro.ingressos.map((entry, index) => {
+                const localidade = cidadeEstado(entry.cidade);
+                return (
+                  <tr key={entry.ingresso_id}><td>Ingresso {index + 1}</td><td>{localidade.cidade}</td><td>{localidade.estado}</td></tr>
+                );
+              })}</tbody>
+            </table>
+          </div>
         )}
       </section>
 
       <section className="card">
         <h2>Conquistas de tempo</h2>
         {registro.trocas_chaveiro.length === 0 ? <p className="muted">Nenhuma conquista de tempo informada.</p> : (
-          <ul className="list">
-            {registro.trocas_chaveiro.map((entry) => <li key={entry.troca_chaveiro_id}>{tempoLimpoMapping.toSheet(entry.tempo_limpo)} · {entry.quantidade}</li>)}
-          </ul>
+          <div className="table-wrap">
+            <table><thead><tr><th>Conquista</th><th>Tempo</th></tr></thead>
+              <tbody>{conquistasTempo.map((entry, index) => (
+                <tr key={entry.id}><td>Conquista {index + 1}</td><td>{entry.tempo}</td></tr>
+              ))}</tbody>
+            </table>
+          </div>
         )}
       </section>
     </main>

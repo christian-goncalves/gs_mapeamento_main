@@ -56,8 +56,8 @@ const registro: AtaCompleta = {
       ata_id: ataId,
       nome: "Visitante",
       cidade: "São Paulo - SP",
-      categoria: "outro",
-      origem_contato: "internet",
+      descricao: "outro",
+      como_chegou_a_na: "internet",
       ...audit,
     },
   ],
@@ -74,7 +74,7 @@ const registro: AtaCompleta = {
     {
       troca_chaveiro_id: "e13f1e7e-e67e-4482-a5e0-897bb52a50d5",
       ata_id: ataId,
-      tempo_limpo: "1M",
+      tempo_limpo: "dias_30",
       quantidade: 2,
       ...audit,
     },
@@ -133,7 +133,7 @@ describe("lote atômico do Sheets", () => {
     ).toEqual({ stringValue: "São Paulo - SP" });
     expect(
       requests[5].updateCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
-    ).toEqual({ stringValue: "1M" });
+    ).toEqual({ stringValue: "30 dias" });
     expect(
       requests[5].updateCells?.rows?.[0]?.values?.[3]?.userEnteredValue,
     ).toEqual({ numberValue: 2 });

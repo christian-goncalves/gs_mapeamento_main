@@ -83,13 +83,20 @@ export const servidorFormSchema = z.object({
 
 export const participacaoFormSchema = z
   .object({
-    localidade: requiredText,
+    localidade: z.string().trim(),
     estado: z.string().trim(),
     pais: requiredText,
     presencas: z.number().int().min(1),
   })
   .superRefine((item, context) => {
     const brasil = item.pais === "Brasil";
+    if (brasil && !item.localidade) {
+      context.addIssue({
+        code: "custom",
+        path: ["localidade"],
+        message: "Localidade é obrigatória quando o país é Brasil.",
+      });
+    }
     if (brasil === Boolean(item.estado)) return;
     context.addIssue({
       code: "custom",
@@ -101,10 +108,9 @@ export const participacaoFormSchema = z
   });
 
 export const visitanteFormSchema = z.object({
-  nome: requiredText,
   cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
-  categoria: z.enum(categoriaVisitanteMapping.codes),
-  origem_contato: z.enum(origemContatoMapping.codes),
+  descricao: z.enum(categoriaVisitanteMapping.codes),
+  como_chegou_a_na: z.enum(origemContatoMapping.codes),
 });
 
 export const ingressoFormSchema = z.object({
@@ -135,7 +141,15 @@ export const ataSubmissionSchema = z
       context.addIssue({
         code: "custom",
         path: ["participacao"],
-        message: "A soma das presenças supera o total de membros presentes.",
+        message: "A soma das presenças por localidade supera o total de membros presentes.",
+      });
+    }
+    if (submission.ingressos.length > 0 && submission.visitantes.length === 0) {
+      context.addIssue({
+        code: "custom",
+        path: ["ingressos"],
+        message:
+          "Para registrar um ingresso, registre primeiro pelo menos um visitante.",
       });
     }
   });

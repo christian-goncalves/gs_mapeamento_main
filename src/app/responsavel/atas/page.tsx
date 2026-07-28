@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarDays,
-  faFileCirclePlus,
   faFileLines,
+  faPlus,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { requireAuthorizedSession } from "@/lib/auth/require-session";
@@ -62,16 +62,16 @@ export default async function ResponsavelAtasPage() {
   });
 
   return (
-    <ResponsavelShell activeSection="atas" settingsHref={`/grupos/${group.grupo_id}`}>
+    <ResponsavelShell activeSection="responsavel" settingsHref={`/grupos/${group.grupo_id}`}>
       <header className="responsavel-page-header">
         <div>
           <p className="eyebrow">Responsável</p>
           <h1>GRUPO {group.grupo_nome.toLocaleUpperCase("pt-BR")}</h1>
         </div>
-        <Link className="button-link" href="/atas/nova">
+        <Link className="button-link responsavel-new-ata-button" href="/atas/nova">
           <span className="button-content">
-            <FontAwesomeIcon icon={faFileCirclePlus} />
-            Nova ata
+            <FontAwesomeIcon icon={faPlus} />
+            Nova Ata
           </span>
         </Link>
       </header>

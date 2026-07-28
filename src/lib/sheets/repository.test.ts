@@ -19,7 +19,11 @@ vi.mock("./client", () => ({
 }));
 vi.mock("server-only", () => ({}));
 
-import { getActiveGroupByAtaLink, readAggregatedAtas } from "./repository";
+import {
+  getActiveGroupByAtaLink,
+  listVisitantes,
+  readAggregatedAtas,
+} from "./repository";
 
 function sheetNameFromRange(range: string): SheetName {
   const [name] = range.split("!");
@@ -55,6 +59,41 @@ describe("repositório Sheets", () => {
       rowNumber: 1,
       field: "aba",
       message: "Aba ausente no Sheets. Reconciliar o contrato antes de usar este dado.",
+    });
+  });
+
+  it("lê visitantes com o cabeçalho atual enquanto a reconciliação não foi executada", async () => {
+    const headers: string[] = [...SHEET_HEADERS.visitantes];
+    headers[SHEET_HEADERS.visitantes.indexOf("como_chegou_a_na")] =
+      "como_chegou_a_na?";
+    mocks.get.mockResolvedValue({
+      data: {
+        values: [
+          headers,
+          [
+            "a86f8bc3-e943-48e8-8853-cabbb41ab071",
+            "93ef9660-8c64-4b51-9bc5-09069ce629c1",
+            "visitante_1",
+            "Itajaí - SC",
+            "Outro",
+            "Internet",
+            "2026-07-25T12:00:00.000Z",
+            "2026-07-25T12:00:00.000Z",
+          ],
+        ],
+      },
+    });
+
+    const result = await listVisitantes();
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({
+      valid: true,
+      data: {
+        nome: "visitante_1",
+        descricao: "outro",
+        como_chegou_a_na: "internet",
+      },
     });
   });
 

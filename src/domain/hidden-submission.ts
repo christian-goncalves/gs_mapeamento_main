@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { tempoLimpoMapping } from "./enums";
+import {
+  categoriaVisitanteMapping,
+  origemContatoMapping,
+  tempoLimpoMapping,
+} from "./enums";
 import { ataFormSchema, type AtaSubmission } from "./form-schemas";
 import { isMunicipioOption } from "./municipios";
 
@@ -14,8 +18,15 @@ export const hiddenParticipacaoSchema = z.object({
   presencas: z.number().int().min(1),
 });
 
-export const hiddenVisitanteSchema = optionalPersonNameSchema.extend({
+export const hiddenMembroInternacionalSchema = z.object({
+  pais: requiredText,
+  presencas: z.number().int().min(1),
+});
+
+export const hiddenVisitanteSchema = z.object({
   cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
+  descricao: z.enum(categoriaVisitanteMapping.codes),
+  como_chegou_a_na: z.enum(origemContatoMapping.codes),
 });
 
 export const hiddenIngressoSchema = optionalPersonNameSchema.extend({
@@ -32,20 +43,29 @@ export const hiddenAtaSubmissionSchema = z
     ata: ataFormSchema,
     servidores: z.array(z.object({ nome: requiredText, funcao: z.string().trim().optional() })),
     participacao: z.array(hiddenParticipacaoSchema),
+    membros_internacionais: z.array(hiddenMembroInternacionalSchema).default([]),
     visitantes: z.array(hiddenVisitanteSchema),
     ingressos: z.array(hiddenIngressoSchema),
     trocas_chaveiro: z.array(hiddenTrocaChaveiroSchema),
   })
   .superRefine((submission, context) => {
-    const total = submission.participacao.reduce(
-      (sum, item) => sum + item.presencas,
-      0,
-    );
+    const total = [
+      ...submission.participacao,
+      ...submission.membros_internacionais,
+    ].reduce((sum, item) => sum + item.presencas, 0);
     if (total > submission.ata.total_membros_presentes) {
       context.addIssue({
         code: "custom",
         path: ["participacao"],
-        message: "A soma das presenças supera o total de membros presentes.",
+        message: "A soma das presenças por localidade supera o total de membros presentes.",
+      });
+    }
+    if (submission.ingressos.length > 0 && submission.visitantes.length === 0) {
+      context.addIssue({
+        code: "custom",
+        path: ["ingressos"],
+        message:
+          "Para registrar um ingresso, registre primeiro pelo menos um visitante.",
       });
     }
   });
@@ -71,15 +91,22 @@ export function normalizeHiddenAtaSubmission(
       nome: item.nome,
       funcao: item.funcao ?? "",
     })),
-    participacao: submission.participacao.map((item) => ({
-      ...municipioParts(item.localidade),
-      presencas: item.presencas,
-    })),
+    participacao: [
+      ...submission.participacao.map((item) => ({
+        ...municipioParts(item.localidade),
+        presencas: item.presencas,
+      })),
+      ...submission.membros_internacionais.map((item) => ({
+        localidade: "",
+        estado: "",
+        pais: item.pais,
+        presencas: item.presencas,
+      })),
+    ],
     visitantes: submission.visitantes.map((item) => ({
-      nome: personName(item),
       cidade: item.cidade,
-      categoria: "outro",
-      origem_contato: "outro",
+      descricao: item.descricao,
+      como_chegou_a_na: item.como_chegou_a_na,
     })),
     ingressos: submission.ingressos.map((item) => ({
       nome: personName(item),

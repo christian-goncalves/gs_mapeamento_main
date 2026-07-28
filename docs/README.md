@@ -11,7 +11,8 @@ execução do MVP.
 4. [Contrato de Participação](produto/contratos/participacao.md)
 5. [Arquitetura de dados](arquitetura/arquitetura-de-dados.md)
 6. [Plano de desenvolvimento](desenvolvimento/plano-de-desenvolvimento.md)
-7. [Checklist executivo](desenvolvimento/checklist-executivo.md)
+7. [Plano operacional Mobile First](desenvolvimento/plano-mobile-first.md)
+8. [Checklist executivo](desenvolvimento/checklist-executivo.md)
 
 ## Mapa das fontes canônicas
 
@@ -25,6 +26,7 @@ execução do MVP.
 | Representação visual do modelo | [Modelo DBML](arquitetura/modelo-de-dados.dbml) |
 | Ambiente, OAuth e segredos | [Ambiente local](desenvolvimento/ambiente-local.md) |
 | Fases e critérios de aceite | [Plano de desenvolvimento](desenvolvimento/plano-de-desenvolvimento.md) |
+| Adequação exclusiva da interface Mobile | [Plano operacional Mobile First](desenvolvimento/plano-mobile-first.md) |
 | Tarefas e estado da execução | [Checklist executivo](desenvolvimento/checklist-executivo.md) |
 | Marcos já concluídos | [Histórico](projeto/historico.md) |
 | Refatoração do painel administrativo | [Índice da refatoração](refatoracao-painel-administrativo/README.md) |

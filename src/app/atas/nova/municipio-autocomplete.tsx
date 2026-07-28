@@ -6,11 +6,13 @@ type Suggestion = { id: number; nome: string; uf: string; label: string };
 
 export function MunicipioAutocomplete({
   id,
+  ariaLabel,
   placeholder = "Digite nome ou UF",
   value,
   onChange,
 }: {
   id: string;
+  ariaLabel?: string;
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
@@ -53,6 +55,7 @@ export function MunicipioAutocomplete({
     <div className="autocomplete">
       <input
         id={id}
+        aria-label={ariaLabel}
         required
         value={value}
         onChange={(event) => onChange(event.target.value)}

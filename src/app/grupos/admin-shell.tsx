@@ -8,6 +8,7 @@ import {
   faLayerGroup,
   faRightFromBracket,
   faUser,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { signOut } from "@/auth";
 
@@ -48,15 +49,20 @@ export function AdminShell({
   return (
     <main className="admin-layout">
       <aside className="admin-sidebar" aria-label="Navegação administrativa">
-        <div className="admin-brand" aria-label="GS Mapeamento">
+        <Link
+          className="admin-brand"
+          href="/admin/grupos"
+          aria-label="Página inicial administrativa"
+          title="Página inicial administrativa"
+        >
           <FontAwesomeIcon icon={faLayerGroup} />
           <span>GS Mapeamento</span>
-        </div>
+        </Link>
 
         <nav className="admin-nav" aria-label="Seções administrativas">
           <NavItem
             label="Grupos"
-            icon={faLayerGroup}
+            icon={faUsers}
             href="/admin/grupos"
             active={activeSection === "grupos"}
           />

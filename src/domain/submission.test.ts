@@ -30,14 +30,18 @@ const submission = {
   ],
   visitantes: [
     {
-      nome: "Visitante",
       cidade: "São Paulo - SP",
-      categoria: "outro",
-      origem_contato: "internet",
+      descricao: "outro",
+      como_chegou_a_na: "internet",
+    },
+    {
+      cidade: "Itajaí - SC",
+      descricao: "provavel_adicto",
+      como_chegou_a_na: "indicacao_pessoal",
     },
   ],
   ingressos: [{ nome: "Anonimo", cidade: "Itajaí - SC" }],
-  trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 2 }],
+  trocas_chaveiro: [{ tempo_limpo: "dias_30", quantidade: 2 }],
 } satisfies AtaSubmission;
 const group = {
   grupo_id: grupoId,
@@ -103,13 +107,17 @@ describe("envio imutável", () => {
       created_at: "2026-06-22T12:00:00.000Z",
       updated_at: "2026-06-22T12:00:00.000Z",
     });
+    expect(registro.visitantes.map((item) => item.nome)).toEqual([
+      "visitante_1",
+      "visitante_2",
+    ]);
     expect(registro.ingressos[0]).toMatchObject({
       ata_id: registro.ata.ata_id,
       nome: "Anonimo",
       cidade: "Itajaí - SC",
     });
     expect(registro.trocas_chaveiro[0]).toMatchObject({
-      tempo_limpo: "1M",
+      tempo_limpo: "dias_30",
       quantidade: 2,
     });
   });

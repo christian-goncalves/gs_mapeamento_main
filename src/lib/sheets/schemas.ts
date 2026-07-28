@@ -208,7 +208,7 @@ export const sheetParticipacaoSchema = z
   .object({
     participacao_id: uuid,
     ata_id: uuid,
-    localidade: requiredText,
+    localidade: optionalText,
     estado: z.string().trim(),
     pais: requiredText,
     presencas: sheetInteger(1),
@@ -216,6 +216,13 @@ export const sheetParticipacaoSchema = z
   })
   .superRefine((item, context) => {
     const brasil = item.pais === "Brasil";
+    if (brasil && !item.localidade) {
+      context.addIssue({
+        code: "custom",
+        path: ["localidade"],
+        message: "Localidade é obrigatória quando o país é Brasil.",
+      });
+    }
     if (brasil === Boolean(item.estado)) return;
     context.addIssue({
       code: "custom",
@@ -231,14 +238,14 @@ export const sheetVisitanteSchema = z.object({
   ata_id: uuid,
   nome: requiredText,
   cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
-  categoria: z.enum([
+  descricao: z.enum([
     "Provável adicto",
     "Familiar",
     "Profissional",
     "Estudante",
     "Outro",
   ]),
-  origem_contato: z.enum([
+  como_chegou_a_na: z.enum([
     "Indicação pessoal",
     "Familiar",
     "Profissional",
@@ -258,16 +265,14 @@ export const sheetVisitanteSchema = z.object({
 export const sheetTrocaChaveiroSchema = z.object({
   troca_chaveiro_id: uuid,
   ata_id: uuid,
-  tempo_limpo: z.enum([
-    "1M",
-    "2M",
-    "3M",
-    "6M",
-    "9M",
-    "12M",
-    "18M",
-    "MULTIPLOS_ANOS",
-  ]),
+  tempo_limpo: z.string().refine((value) => {
+    try {
+      tempoLimpoMapping.fromSheet(value);
+      return true;
+    } catch {
+      return false;
+    }
+  }, "Tempo limpo inválido."),
   quantidade: sheetInteger(1),
   ...auditFields,
 });
@@ -373,16 +378,16 @@ export const domainParticipacaoToSheet = (
 export function sheetVisitanteToDomain(row: SheetVisitante): Visitante {
   return {
     ...row,
-    categoria: categoriaVisitanteMapping.fromSheet(row.categoria),
-    origem_contato: origemContatoMapping.fromSheet(row.origem_contato),
+    descricao: categoriaVisitanteMapping.fromSheet(row.descricao),
+    como_chegou_a_na: origemContatoMapping.fromSheet(row.como_chegou_a_na),
   };
 }
 
 export function domainVisitanteToSheet(item: Visitante): SheetVisitante {
   return {
     ...item,
-    categoria: categoriaVisitanteMapping.toSheet(item.categoria),
-    origem_contato: origemContatoMapping.toSheet(item.origem_contato),
+    descricao: categoriaVisitanteMapping.toSheet(item.descricao),
+    como_chegou_a_na: origemContatoMapping.toSheet(item.como_chegou_a_na),
   };
 }
 

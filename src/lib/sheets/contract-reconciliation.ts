@@ -1,6 +1,10 @@
 import type { sheets_v4 } from "googleapis";
 
-import { tempoLimpoMapping } from "@/domain/enums";
+import {
+  categoriaVisitanteMapping,
+  origemContatoMapping,
+  tempoLimpoMapping,
+} from "@/domain/enums";
 import { SHEET_HEADERS, type SheetName } from "./contract";
 
 type SheetSnapshot = {
@@ -81,6 +85,35 @@ function isHeaderPrefix(actual: unknown[], expectedPrefix: readonly string[]) {
 
 function headerIndex(sheet: SheetName, column: string) {
   return (SHEET_HEADERS[sheet] as readonly string[]).indexOf(column);
+}
+
+const visitorHeaderAliases: Record<string, readonly string[]> = {
+  descricao: ["categoria"],
+  como_chegou_a_na: ["origem_contato", "como_chegou_a_na?"],
+};
+
+function migratableRenamedHeaders(
+  sheet: SheetName,
+  actual: unknown[],
+): { startIndex: number; headers: string[] } | null {
+  if (sheet !== "visitantes" || actual.length !== SHEET_HEADERS.visitantes.length) {
+    return null;
+  }
+  const expected = [...SHEET_HEADERS.visitantes];
+  const isCompatible = actual.every((header, index) => {
+    const canonical = expected[index];
+    return header === canonical || visitorHeaderAliases[canonical]?.includes(String(header));
+  });
+  if (!isCompatible || actual.every((header, index) => header === expected[index])) {
+    return null;
+  }
+  return {
+    startIndex: headerIndex("visitantes", "descricao"),
+    headers: expected.slice(
+      headerIndex("visitantes", "descricao"),
+      headerIndex("visitantes", "como_chegou_a_na") + 1,
+    ),
+  };
 }
 
 function migratableMissingColumns(
@@ -474,6 +507,64 @@ function gruposAccessColumnCleanupRequests(
   ];
 }
 
+function atasFreeTextColumnCleanupRequests(
+  sheetId: number,
+  rowCount: number,
+): sheets_v4.Schema$Request[] {
+  const startColumnIndex = SHEET_HEADERS.atas.indexOf("duracao");
+  const endColumnIndex = SHEET_HEADERS.atas.indexOf("preenchido_por") + 1;
+  return [
+    {
+      repeatCell: {
+        range: {
+          sheetId,
+          startRowIndex: 1,
+          endRowIndex: rowCount,
+          startColumnIndex,
+          endColumnIndex,
+        },
+        cell: {},
+        fields: "dataValidation",
+      },
+    },
+  ];
+}
+
+function visitantesValidationRequests(
+  sheetId: number,
+  rowCount: number,
+): sheets_v4.Schema$Request[] {
+  const listValidation = (column: "descricao" | "como_chegou_a_na", values: string[]): sheets_v4.Schema$Request => {
+    const startColumnIndex = SHEET_HEADERS.visitantes.indexOf(column);
+    return {
+      repeatCell: {
+        range: {
+          sheetId,
+          startRowIndex: 1,
+          endRowIndex: rowCount,
+          startColumnIndex,
+          endColumnIndex: startColumnIndex + 1,
+        },
+        cell: {
+          dataValidation: {
+            condition: {
+              type: "ONE_OF_LIST",
+              values: values.map((userEnteredValue) => ({ userEnteredValue })),
+            },
+            strict: true,
+            showCustomUi: true,
+          },
+        },
+        fields: "dataValidation",
+      },
+    };
+  };
+  return [
+    listValidation("descricao", [...categoriaVisitanteMapping.labels]),
+    listValidation("como_chegou_a_na", [...origemContatoMapping.labels]),
+  ];
+}
+
 function trocasChaveiroValidationRequests(
   sheetId: number,
   rowCount: number,
@@ -492,7 +583,7 @@ function trocasChaveiroValidationRequests(
           dataValidation: {
             condition: {
               type: "ONE_OF_LIST",
-              values: tempoLimpoMapping.codes.map((userEnteredValue) => ({
+              values: tempoLimpoMapping.labels.map((userEnteredValue) => ({
                 userEnteredValue,
               })),
             },
@@ -575,6 +666,7 @@ export async function reconcileSheetContract(
   const requests: sheets_v4.Schema$Request[] = [];
   const createdSheets: SheetName[] = [];
   const addedColumns: Array<{ sheet: SheetName; column: string }> = [];
+  const renamedSheets = new Set<SheetName>();
 
   for (const name of sheetNames) {
     if (!byName.has(name)) continue;
@@ -587,8 +679,28 @@ export async function reconcileSheetContract(
       continue;
     }
 
-    const migration = migratableMissingColumns(name, actual);
     const sheetId = byName.get(name)?.properties?.sheetId;
+    const renamedHeaders = migratableRenamedHeaders(name, actual);
+    if (renamedHeaders && Number.isInteger(sheetId) && sheetId != null) {
+      requests.push({
+        updateCells: {
+          range: {
+            sheetId,
+            startRowIndex: 0,
+            endRowIndex: 1,
+            startColumnIndex: renamedHeaders.startIndex,
+            endColumnIndex:
+              renamedHeaders.startIndex + renamedHeaders.headers.length,
+          },
+          rows: [{ values: headerCells(renamedHeaders.headers) }],
+          fields: "userEnteredValue",
+        },
+      });
+      renamedSheets.add(name);
+      continue;
+    }
+
+    const migration = migratableMissingColumns(name, actual);
     if (!migration || !Number.isInteger(sheetId) || sheetId == null) {
       assertHeader(name, actual);
       continue;
@@ -684,6 +796,9 @@ export async function reconcileSheetContract(
   if (!Number.isInteger(atasSheetId) || atasSheetId == null) {
     throw new Error("ID da aba atas não encontrado ou inválido.");
   }
+  requests.push(
+    ...atasFreeTextColumnCleanupRequests(atasSheetId, atasRowCount ?? 1000),
+  );
   requests.push(...atasValidationRequests(atasSheetId, atasRowCount ?? 1000));
 
   const gruposSheetId = byName.get("grupos")?.properties?.sheetId;
@@ -693,6 +808,16 @@ export async function reconcileSheetContract(
   }
   requests.push(
     ...gruposAccessColumnCleanupRequests(gruposSheetId, gruposRowCount ?? 1000),
+  );
+
+  const visitantesSheetId = byName.get("visitantes")?.properties?.sheetId;
+  const visitantesRowCount =
+    byName.get("visitantes")?.properties?.gridProperties?.rowCount;
+  if (!Number.isInteger(visitantesSheetId) || visitantesSheetId == null) {
+    throw new Error("ID da aba visitantes não encontrado ou inválido.");
+  }
+  requests.push(
+    ...visitantesValidationRequests(visitantesSheetId, visitantesRowCount ?? 1000),
   );
 
   const trocasChaveiroSheetId = byName.get("trocas_chaveiro")?.properties?.sheetId;
@@ -718,7 +843,7 @@ export async function reconcileSheetContract(
     });
   }
 
-  for (const name of [...createdSheets, ...addedColumns.map((item) => item.sheet)]) {
+  for (const name of [...createdSheets, ...addedColumns.map((item) => item.sheet), ...renamedSheets]) {
     try {
       const actual = await readHeader(client, spreadsheetId, name);
       assertHeader(name, actual);

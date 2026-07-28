@@ -7,10 +7,11 @@ import {
   faGear,
   faLayerGroup,
   faRightFromBracket,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { signOut } from "@/auth";
 
-type ResponsavelSection = "atas" | "relatorios" | "configuracoes";
+type ResponsavelSection = "responsavel" | "atas" | "relatorios" | "configuracoes";
 
 function ResponsavelNavItem({
   label,
@@ -49,16 +50,27 @@ export function ResponsavelShell({
   return (
     <main className="responsavel-layout">
       <aside className="responsavel-sidebar" aria-label="Navegação do responsável">
-        <div className="responsavel-brand" aria-label="GS Mapeamento">
+        <Link
+          className="responsavel-brand"
+          href="/responsavel/atas"
+          aria-label="Página inicial do responsável"
+          title="Página inicial do responsável"
+        >
           <FontAwesomeIcon icon={faLayerGroup} />
           <span>GS Mapeamento</span>
-        </div>
+        </Link>
 
         <nav className="responsavel-nav" aria-label="Seções do responsável">
           <ResponsavelNavItem
+            label="Responsável"
+            icon={faUser}
+            href="/responsavel/atas"
+            active={activeSection === "responsavel"}
+          />
+          <ResponsavelNavItem
             label="Atas"
             icon={faFileLines}
-            href="/responsavel/atas"
+            href="/responsavel/atas/nova"
             active={activeSection === "atas"}
           />
           <ResponsavelNavItem

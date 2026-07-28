@@ -7,9 +7,13 @@ const mocks = vi.hoisted(() => ({
   batchGet: vi.fn(),
   get: vi.fn(),
   batchUpdate: vi.fn(),
+  updateAtaNameSuggestionsFromSubmission: vi.fn(),
 }));
 
 vi.mock("server-only", () => ({}));
+vi.mock("@/lib/ata-name-suggestions.server", () => ({
+  updateAtaNameSuggestionsFromSubmission: mocks.updateAtaNameSuggestionsFromSubmission,
+}));
 vi.mock("./client", () => ({
   getSpreadsheetId: () => "spreadsheet-test",
   getSheetsClient: () => ({
@@ -70,6 +74,7 @@ describe("criação de ata no Sheets", () => {
       },
     });
     mocks.batchUpdate.mockResolvedValue({});
+    mocks.updateAtaNameSuggestionsFromSubmission.mockResolvedValue({});
   });
 
   it("aborta quando uma ata existente tem identificadores inválidos", async () => {
@@ -113,5 +118,46 @@ describe("criação de ata no Sheets", () => {
       InvalidAtaIdentifiersError,
     );
     expect(mocks.batchUpdate).not.toHaveBeenCalled();
+    expect(mocks.updateAtaNameSuggestionsFromSubmission).not.toHaveBeenCalled();
+  });
+
+  it("atualiza sugestões de nomes após gravar a ata", async () => {
+    const legacyVisitantesHeaders = [...SHEET_HEADERS.visitantes];
+    legacyVisitantesHeaders[
+      SHEET_HEADERS.visitantes.indexOf("como_chegou_a_na")
+    ] = "como_chegou_a_na?";
+    mocks.batchGet.mockResolvedValue({
+      data: {
+        valueRanges: values({
+          grupos: [
+            [...SHEET_HEADERS.grupos],
+            row("grupos", {
+              grupo_id: groupId,
+              zoom_id: "123",
+              grupo_nome: "Grupo",
+              ordem: 1,
+              ativo: true,
+              link_formulario_ata: "token",
+              ultima_reuniao_anterior: 0,
+              ...audit,
+            }),
+          ],
+          visitantes: [legacyVisitantesHeaders],
+        }),
+      },
+    });
+
+    await createAtaInSheets({
+      ...submission,
+      servidores: [{ nome: "Hércules", funcao: "Coordenador" }],
+    });
+
+    expect(mocks.batchUpdate).toHaveBeenCalledOnce();
+    expect(mocks.updateAtaNameSuggestionsFromSubmission).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ata: expect.objectContaining({ preenchido_por: "Coordenador" }),
+        servidores: [{ nome: "Hércules", funcao: "Coordenador" }],
+      }),
+    );
   });
 });

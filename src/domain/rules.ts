@@ -51,7 +51,7 @@ export const ataCompletaSchema = z
       context.addIssue({
         code: "custom",
         path: ["participacao"],
-        message: "A soma das presenças supera o total de membros presentes.",
+        message: "A soma das presenças por localidade supera o total de membros presentes.",
       });
     }
   });
@@ -60,9 +60,11 @@ export type AtaCompleta = z.infer<typeof ataCompletaSchema>;
 
 export function calcularIndicadores(registro: AtaCompleta) {
   const localidades = new Set(
-    registro.participacao.map((item) =>
-      `${item.localidade}|${item.estado}|${item.pais}`.toLocaleLowerCase("pt-BR"),
-    ),
+    registro.participacao
+      .filter((item) => item.localidade.trim())
+      .map((item) =>
+        `${item.localidade}|${item.estado}|${item.pais}`.toLocaleLowerCase("pt-BR"),
+      ),
   );
   const estados = new Set(
     registro.participacao

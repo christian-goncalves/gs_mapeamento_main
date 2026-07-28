@@ -29,19 +29,19 @@ function hiddenPayload() {
       { localidade: "Joinville - SC", presencas: 3 },
     ],
     visitantes: [
-      { nome: "", cidade: "Itajaí - SC" },
-      { nome: "Visitante", cidade: "Brusque - SC" },
+      { cidade: "Itajaí - SC", descricao: "outro", como_chegou_a_na: "outro" },
+      { cidade: "Brusque - SC", descricao: "provavel_adicto", como_chegou_a_na: "internet" },
     ],
     ingressos: [
       { nome: "", cidade: "Itajaí - SC" },
       { nome: "Ingressante", cidade: "Joinville - SC" },
     ],
-    trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 2 }],
+    trocas_chaveiro: [{ tempo_limpo: "dias_30", quantidade: 2 }],
   } as const;
 }
 
 describe("normalização do formulário hidden", () => {
-  it("deriva contrato full e preserva Anonimo no backend", () => {
+  it("deriva o contrato full sem nome de visitante no payload", () => {
     const parsed = hiddenAtaSubmissionSchema.parse(hiddenPayload());
     const normalized = normalizeHiddenAtaSubmission(parsed);
     expect(normalized).toMatchObject({
@@ -53,14 +53,14 @@ describe("normalização do formulário hidden", () => {
         { localidade: "Joinville", estado: "SC", pais: "Brasil", presencas: 3 },
       ],
       visitantes: [
-        { nome: "Anonimo", categoria: "outro", origem_contato: "outro" },
-        { nome: "Visitante", categoria: "outro", origem_contato: "outro" },
+        { cidade: "Itajaí - SC", descricao: "outro", como_chegou_a_na: "outro" },
+        { cidade: "Brusque - SC", descricao: "provavel_adicto", como_chegou_a_na: "internet" },
       ],
       ingressos: [
         { nome: "Anonimo", cidade: "Itajaí - SC" },
         { nome: "Ingressante", cidade: "Joinville - SC" },
       ],
-      trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 2 }],
+      trocas_chaveiro: [{ tempo_limpo: "dias_30", quantidade: 2 }],
     });
   });
 
@@ -96,6 +96,21 @@ describe("normalização do formulário hidden", () => {
     expect(calcularIndicadores(registro).membros_sem_localidade).toBe(5);
   });
 
+  it("normaliza membro internacional com localidade vazia", () => {
+    const payload = hiddenPayload();
+    const parsed = hiddenAtaSubmissionSchema.parse({
+      ...payload,
+      membros_internacionais: [{ pais: "Portugal", presencas: 2 }],
+    });
+
+    expect(normalizeHiddenAtaSubmission(parsed).participacao.at(-1)).toEqual({
+      localidade: "",
+      estado: "",
+      pais: "Portugal",
+      presencas: 2,
+    });
+  });
+
   it("exige cidade dos ingressos", () => {
     const payload = hiddenPayload();
     const result = hiddenAtaSubmissionSchema.safeParse({
@@ -103,6 +118,20 @@ describe("normalização do formulário hidden", () => {
       ingressos: [{ nome: "", cidade: "" }],
     });
     expect(result.success).toBe(false);
+  });
+
+  it("rejeita ingresso hidden quando não há visitante", () => {
+    const payload = hiddenPayload();
+    const result = hiddenAtaSubmissionSchema.safeParse({
+      ...payload,
+      visitantes: [],
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0]?.message).toBe(
+        "Para registrar um ingresso, registre primeiro pelo menos um visitante.",
+      );
+    }
   });
 
   it("mantem limites numericos do payload hidden", () => {
@@ -128,7 +157,7 @@ describe("normalização do formulário hidden", () => {
     expect(
       hiddenAtaSubmissionSchema.safeParse({
         ...payload,
-        trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 0 }],
+        trocas_chaveiro: [{ tempo_limpo: "dias_30", quantidade: 0 }],
       }).success,
     ).toBe(false);
   });

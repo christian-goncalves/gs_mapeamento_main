@@ -61,9 +61,9 @@ const hiddenPayload = JSON.stringify({
   },
   servidores: [],
   participacao: [{ localidade: "Itajaí - SC", presencas: 8 }],
-  visitantes: [{ nome: "", cidade: "Itajaí - SC" }],
+  visitantes: [{ cidade: "Itajaí - SC", descricao: "outro", como_chegou_a_na: "outro" }],
   ingressos: [{ nome: "", cidade: "Brusque - SC" }],
-  trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 1 }],
+  trocas_chaveiro: [{ tempo_limpo: "dias_30", quantidade: 1 }],
 });
 
 function formData(confirmed: boolean) {
@@ -127,9 +127,9 @@ describe("Server Action de criação", () => {
         ],
         visitantes: [
           expect.objectContaining({
-            nome: "Anonimo",
-            categoria: "outro",
-            origem_contato: "outro",
+            cidade: "Itajaí - SC",
+            descricao: "outro",
+            como_chegou_a_na: "outro",
           }),
         ],
         ingressos: [expect.objectContaining({ nome: "Anonimo", cidade: "Brusque - SC" })],

@@ -40,8 +40,8 @@ const validationChecks: ValidationCheck[] = [
       column as (typeof SHEET_HEADERS)["atas"][number],
     ),
   ),
-  validationCheck("visitantes", "categoria"),
-  validationCheck("visitantes", "origem_contato"),
+  validationCheck("visitantes", "descricao"),
+  validationCheck("visitantes", "como_chegou_a_na"),
   validationCheck("trocas_chaveiro", "tempo_limpo"),
 ];
 

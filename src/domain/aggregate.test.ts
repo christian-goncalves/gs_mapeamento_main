@@ -90,8 +90,8 @@ function baseRows(): ParsedContractRows {
         ata_id: ataId,
         nome: "João",
         cidade: "São Paulo - SP",
-        categoria: "provavel_adicto" as const,
-        origem_contato: "internet" as const,
+        descricao: "provavel_adicto" as const,
+        como_chegou_a_na: "internet" as const,
         ...audit,
       }),
     ],
@@ -108,7 +108,7 @@ function baseRows(): ParsedContractRows {
       valid("trocas_chaveiro", 2, {
         troca_chaveiro_id: "e13f1e7e-e67e-4482-a5e0-897bb52a50d5",
         ata_id: ataId,
-        tempo_limpo: "1M" as const,
+        tempo_limpo: "dias_30" as const,
         quantidade: 2,
         ...audit,
       }),
@@ -128,7 +128,7 @@ describe("leitura agregada", () => {
         participacao: [{ presencas: 2 }],
         visitantes: [{ nome: "João" }],
         ingressos: [{ nome: "Anonimo", cidade: "São Paulo - SP" }],
-        trocas_chaveiro: [{ tempo_limpo: "1M", quantidade: 2 }],
+        trocas_chaveiro: [{ tempo_limpo: "dias_30", quantidade: 2 }],
       },
       indicadores: {
         total_localidades: 1,

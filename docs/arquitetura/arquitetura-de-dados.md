@@ -46,6 +46,10 @@ tokens, expiração ou auditoria de acesso.
 Esse campo substitui a necessidade de cadastro separado de responsáveis pela
 ata.
 
+Em `participacao`, `localidade` permanece obrigatória para registros do Brasil e
+fica vazia para membros internacionais, identificados pelo país e pela
+quantidade de presenças.
+
 Os campos e valores aceitos estão nos contratos de
 [Informações Gerais](../produto/contratos/informacoes-gerais.md) e
 [Participação](../produto/contratos/participacao.md).
@@ -118,11 +122,21 @@ externo não faz parte do MVP.
 
 - O domínio usa códigos internos para enums.
 - O Sheets mantém rótulos em português quando o enum possui rótulo externo; os
-  códigos de `tempo_limpo` são persistidos como `1M`, `2M`, `3M`, `6M`, `9M`,
-  `12M`, `18M` e `MULTIPLOS_ANOS`.
+  valores de `tempo_limpo` são persistidos como `30 dias`, `60 dias`, `90 dias`, `6 meses`, `9 meses`,
+  `1 ano`, `18 meses` e `Múltiplos anos`.
 - O adaptador converte nos dois sentidos e rejeita valores desconhecidos.
 - `plataforma` aceita inicialmente somente `Zoom`.
+- `duracao`, `formato_outros` e `preenchido_por` sao textos livres e nao
+  recebem dropdown no Sheets.
+- O autocomplete de nomes da aplicacao oferece sugestoes por grupo sem
+  restringir os valores persistidos.
 - `visitantes.cidade` e `ingressos.cidade` persistem `Nome - UF`.
+- Membros internacionais tambem usam a aba `participacao`: `estado` fica vazio
+  e `pais` vem do cache local `data/paises.json`, atualizado via REST Countries
+  por `npm run paises:update`.
+- `visitantes.nome` é gerado como `visitante_N` pela ordem final dentro da ata.
+- `visitantes.descricao` e `visitantes.como_chegou_a_na` são enums controlados.
+- `ingressos` só aceita registros quando a mesma ata possui ao menos um visitante.
 
 ## Base de municípios
 
@@ -154,7 +168,7 @@ criadas manualmente.
 
 O backend calcula, sem persistir:
 
-- total de localidades;
+- total de localidades não vazias;
 - total de estados;
 - total de países;
 - total de visitantes;

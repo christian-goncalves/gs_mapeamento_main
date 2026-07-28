@@ -64,6 +64,25 @@ describe("schemas de formulário", () => {
     ).toBe(false);
   });
 
+  it("aceita localidade vazia somente fora do Brasil", () => {
+    expect(
+      participacaoFormSchema.safeParse({
+        localidade: "",
+        estado: "",
+        pais: "Portugal",
+        presencas: 1,
+      }).success,
+    ).toBe(true);
+    expect(
+      participacaoFormSchema.safeParse({
+        localidade: "",
+        estado: "BA",
+        pais: "Brasil",
+        presencas: 1,
+      }).success,
+    ).toBe(false);
+  });
+
   it("exige descrição quando formato outros é selecionado", () => {
     expect(
       ataFormSchema.safeParse({
@@ -85,10 +104,9 @@ describe("schemas de formulário", () => {
   it("valida visitante com a mesma base municipal do runtime", () => {
     expect(
       visitanteFormSchema.safeParse({
-        nome: "Pessoa",
         cidade: "Inexistente - SP",
-        categoria: "outro",
-        origem_contato: "outro",
+        descricao: "outro",
+        como_chegou_a_na: "outro",
       }).success,
     ).toBe(false);
   });
@@ -96,9 +114,38 @@ describe("schemas de formulário", () => {
   it("valida ingresso e troca de chaveiro full", () => {
     expect(ingressoFormSchema.safeParse({ nome: "Anonimo", cidade: "Itajaí - SC" }).success).toBe(true);
     expect(ingressoFormSchema.safeParse({ nome: "Anonimo", cidade: "" }).success).toBe(false);
-    expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "1M", quantidade: 1 }).success).toBe(true);
-    expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "dias_30", quantidade: 1 }).success).toBe(false);
-    expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "1M", quantidade: 0 }).success).toBe(false);
+    expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "dias_30", quantidade: 1 }).success).toBe(true);
+    expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "valor_invalido", quantidade: 1 }).success).toBe(false);
+    expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "dias_30", quantidade: 0 }).success).toBe(false);
+  });
+
+  it("rejeita ingressos quando não há visitante", () => {
+    const result = ataSubmissionSchema.safeParse({
+      ata: {
+        grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
+        data_reuniao: "2026-06-22",
+        hora_inicio: "20:30",
+        duracao: "",
+        formato_outros: "",
+        preenchido_por: "Patricia",
+        plataforma: "zoom",
+        tipo_reuniao: "aberta",
+        formatos: ["partilha"],
+        total_membros_presentes: 1,
+        total_partilhas: 1,
+      },
+      servidores: [],
+      participacao: [],
+      visitantes: [],
+      ingressos: [{ nome: "Anonimo", cidade: "Itajaí - SC" }],
+      trocas_chaveiro: [],
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0]?.message).toBe(
+        "Para registrar um ingresso, registre primeiro pelo menos um visitante.",
+      );
+    }
   });
 
   it("aceita envio completo com listas vazias", () => {

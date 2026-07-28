@@ -205,6 +205,42 @@ describe("reconciliação do contrato Sheets", () => {
     expect(batchUpdate).not.toHaveBeenCalled();
   });
 
+  it.each([
+    ["nomes antigos", "categoria", "origem_contato"],
+    ["cabeçalho atual com interrogação", "descricao", "como_chegou_a_na?"],
+  ])("renomeia %s sem duplicar colunas", async (_case, descricao, origem) => {
+    const headers: string[] = [...SHEET_HEADERS.visitantes];
+    headers[SHEET_HEADERS.visitantes.indexOf("descricao")] = descricao;
+    headers[SHEET_HEADERS.visitantes.indexOf("como_chegou_a_na")] = origem;
+    const { client, batchUpdate } = clientWith({
+      afterMigration: true,
+      invalidHeader: { visitantes: headers },
+    });
+
+    await reconcileSheetContract(client, "spreadsheet-test");
+
+    const requests = batchUpdate.mock.calls[0][0].requestBody.requests;
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        updateCells: expect.objectContaining({
+          range: expect.objectContaining({
+            startRowIndex: 0,
+            endRowIndex: 1,
+            startColumnIndex: SHEET_HEADERS.visitantes.indexOf("descricao"),
+          }),
+          rows: [{
+            values: ["descricao", "como_chegou_a_na"].map((header) => ({
+              userEnteredValue: { stringValue: header },
+            })),
+          }],
+        }),
+      }),
+    );
+    expect(
+      requests.some((request: object) => "insertDimension" in request),
+    ).toBe(false);
+  });
+
   it("falha sem mutar quando ingressos existe com cabeçalho divergente", async () => {
     const { client, batchUpdate } = clientWith({
       invalidHeader: { ingressos: ["nome"] },
@@ -490,6 +526,27 @@ describe("reconciliação do contrato Sheets", () => {
     });
   });
 
+  it("reconcilia validações controladas de visitantes", async () => {
+    const { client, batchUpdate } = clientWith();
+
+    await reconcileSheetContract(client, "spreadsheet-test");
+
+    const requests = batchUpdate.mock.calls[0][0].requestBody.requests;
+    for (const column of ["descricao", "como_chegou_a_na"] as const) {
+      expect(requests).toContainEqual(
+        expect.objectContaining({
+          repeatCell: expect.objectContaining({
+            range: expect.objectContaining({
+              startColumnIndex: SHEET_HEADERS.visitantes.indexOf(column),
+              endColumnIndex: SHEET_HEADERS.visitantes.indexOf(column) + 1,
+            }),
+            fields: "dataValidation",
+          }),
+        }),
+      );
+    }
+  });
+
   it("reconcilia validações de trocas_chaveiro com o contrato atual", async () => {
     const { client, batchUpdate } = clientWith();
 
@@ -508,7 +565,7 @@ describe("reconciliação do contrato Sheets", () => {
             dataValidation: expect.objectContaining({
               condition: {
                 type: "ONE_OF_LIST",
-                values: tempoLimpoMapping.codes.map((userEnteredValue) => ({
+                values: tempoLimpoMapping.labels.map((userEnteredValue) => ({
                   userEnteredValue,
                 })),
               },
@@ -571,6 +628,29 @@ describe("reconciliação do contrato Sheets", () => {
     );
   });
 
+  it("remove dropdowns herdados das colunas textuais de atas", async () => {
+    const { client, batchUpdate } = clientWith();
+
+    await reconcileSheetContract(client, "spreadsheet-test");
+
+    const requests = batchUpdate.mock.calls[0][0].requestBody.requests;
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        repeatCell: expect.objectContaining({
+          range: expect.objectContaining({
+            sheetId:
+              (Object.keys(SHEET_HEADERS) as SheetName[]).indexOf("atas") + 1,
+            startColumnIndex: SHEET_HEADERS.atas.indexOf("duracao"),
+            endColumnIndex:
+              SHEET_HEADERS.atas.indexOf("preenchido_por") + 1,
+          }),
+          cell: {},
+          fields: "dataValidation",
+        }),
+      }),
+    );
+  });
+
   it("não aplica dropdown de tempo limpo na coluna quantidade", async () => {
     const { client, batchUpdate } = clientWith();
 
@@ -587,7 +667,7 @@ describe("reconciliação do contrato Sheets", () => {
     expect(
       quantidadeValidation?.repeatCell?.cell?.dataValidation?.condition?.values,
     ).not.toEqual(
-      tempoLimpoMapping.codes.map((userEnteredValue) => ({
+      tempoLimpoMapping.labels.map((userEnteredValue) => ({
         userEnteredValue,
       })),
     );

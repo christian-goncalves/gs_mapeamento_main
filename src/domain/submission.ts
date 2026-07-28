@@ -45,9 +45,10 @@ export function materializeAtaSubmission(
       ...item,
       ...audit,
     })),
-    visitantes: submission.visitantes.map((item) => ({
+    visitantes: submission.visitantes.map((item, index) => ({
       visitante_id: identity.uuid(),
       ata_id: ataId,
+      nome: "visitante_" + (index + 1),
       ...item,
       ...audit,
     })),

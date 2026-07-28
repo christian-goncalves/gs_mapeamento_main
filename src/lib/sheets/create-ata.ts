@@ -7,6 +7,7 @@ import {
 import type { AtaSubmission } from "@/domain/form-schemas";
 import { assertCreationAllowed, type AtaBusinessKey } from "@/domain/creation";
 import { materializeAtaSubmission } from "@/domain/submission";
+import { updateAtaNameSuggestionsFromSubmission } from "@/lib/ata-name-suggestions.server";
 import { getSheetsClient, getSpreadsheetId } from "./client";
 import { SHEET_HEADERS, type SheetName } from "./contract";
 import { parseRows, rowsToObjects, type SheetCell } from "./rows";
@@ -21,6 +22,19 @@ import {
   executeAtomicBatch,
   firstEmptyDataRowNumber,
 } from "./write";
+
+function normalizeHeaderAliases(name: SheetName, values: SheetCell[][]) {
+  if (name !== "visitantes" || values.length === 0) return values;
+  const [headers, ...rows] = values;
+  const normalizedHeaders = headers.map((header) => {
+    if (header === "categoria") return "descricao";
+    if (header === "origem_contato" || header === "como_chegou_a_na?") {
+      return "como_chegou_a_na";
+    }
+    return header;
+  });
+  return [normalizedHeaders, ...rows];
+}
 
 export async function createAtaInSheets(submission: AtaSubmission) {
   const spreadsheetId = getSpreadsheetId();
@@ -53,7 +67,7 @@ export async function createAtaInSheets(submission: AtaSubmission) {
       name,
       rowsToObjects(
         SHEET_HEADERS[name],
-        sheetValues[name],
+        normalizeHeaderAliases(name, sheetValues[name]),
       ),
     ]),
   ) as Record<SheetName, ReturnType<typeof rowsToObjects>>;
@@ -112,5 +126,13 @@ export async function createAtaInSheets(submission: AtaSubmission) {
     nextRows,
   );
   await executeAtomicBatch(sheets, spreadsheetId, requests);
+  try {
+    await updateAtaNameSuggestionsFromSubmission(submission);
+  } catch (error) {
+    console.error(
+      "Falha ao atualizar sugestões de nomes da ata:",
+      error instanceof Error ? error.message : "erro desconhecido",
+    );
+  }
   return registro.ata.ata_id;
 }

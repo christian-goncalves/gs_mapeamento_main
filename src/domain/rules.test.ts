@@ -69,4 +69,29 @@ describe("regras agregadas", () => {
       membros_sem_localidade: 1,
     });
   });
+
+  it("não conta localidade vazia de membro internacional", () => {
+    const parsed = ataCompletaSchema.parse({
+      ...base,
+      ata: { ...base.ata, total_membros_presentes: 4 },
+      participacao: [
+        ...base.participacao,
+        {
+          participacao_id: "203f2ba7-87d0-46dd-a90c-2747300b22ca",
+          ata_id: ataId,
+          localidade: "",
+          estado: "",
+          pais: "Portugal",
+          presencas: 1,
+          ...audit,
+        },
+      ],
+    });
+
+    expect(calcularIndicadores(parsed)).toMatchObject({
+      total_localidades: 1,
+      total_paises: 2,
+      membros_sem_localidade: 1,
+    });
+  });
 });

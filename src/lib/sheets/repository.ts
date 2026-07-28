@@ -40,6 +40,21 @@ import {
   sheetVisitanteToDomain,
 } from "./schemas";
 
+type SheetValue = string | number | boolean;
+
+function normalizeHeaderAliases(name: SheetName, values: SheetValue[][]) {
+  if (name !== "visitantes" || values.length === 0) return values;
+  const [headers, ...rows] = values;
+  const normalizedHeaders = headers.map((header) => {
+    if (header === "categoria") return "descricao";
+    if (header === "origem_contato" || header === "como_chegou_a_na?") {
+      return "como_chegou_a_na";
+    }
+    return header;
+  });
+  return [normalizedHeaders, ...rows];
+}
+
 async function readSheet(name: SheetName) {
   const sheets = getSheetsClient();
   const response = await sheets.spreadsheets.values.get({
@@ -48,9 +63,10 @@ async function readSheet(name: SheetName) {
     valueRenderOption: "UNFORMATTED_VALUE",
     dateTimeRenderOption: "SERIAL_NUMBER",
   });
+  const values = (response.data.values as SheetValue[][] | undefined) ?? [];
   return rowsToObjects(
     SHEET_HEADERS[name],
-    (response.data.values as (string | number | boolean)[][] | undefined) ?? [],
+    normalizeHeaderAliases(name, values),
   );
 }
 
@@ -88,9 +104,12 @@ async function readContractSheets() {
           name,
           rowsToObjects(
             SHEET_HEADERS[name],
-            (response.data.valueRanges?.[index]?.values as
-              | (string | number | boolean)[][]
-              | undefined) ?? [],
+            normalizeHeaderAliases(
+              name,
+              (response.data.valueRanges?.[index]?.values as
+                | SheetValue[][]
+                | undefined) ?? [],
+            ),
           ),
         ]),
       ) as Record<SheetName, LocatedObject[]>,
