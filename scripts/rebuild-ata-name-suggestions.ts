@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { google } from "googleapis";
+import { sheets as createSheetsClient } from "@googleapis/sheets";
+import { JWT } from "google-auth-library";
 import {
   buildAtaNameSuggestionsDocument,
   type AtaNameSuggestionInput,
@@ -21,12 +22,12 @@ function required(name: string) {
 }
 
 async function main() {
-const auth = new google.auth.JWT({
+const auth = new JWT({
   email: required("GOOGLE_SERVICE_ACCOUNT_EMAIL"),
   key: required("GOOGLE_PRIVATE_KEY").replace(/\\n/g, "\n"),
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
-const sheets = google.sheets({ version: "v4", auth });
+const sheets = createSheetsClient({ version: "v4", auth });
 const spreadsheetId = required("GOOGLE_SHEETS_ID");
 const response = await sheets.spreadsheets.values.batchGet({
   spreadsheetId,

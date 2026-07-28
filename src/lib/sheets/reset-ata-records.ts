@@ -1,4 +1,4 @@
-import type { sheets_v4 } from "googleapis";
+import type { sheets_v4 } from "@googleapis/sheets";
 import { SHEET_HEADERS, type SheetName } from "./contract";
 
 export const ATA_RECORD_SHEETS = [

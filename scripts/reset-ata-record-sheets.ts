@@ -1,4 +1,5 @@
-import { google, type sheets_v4 } from "googleapis";
+import { sheets as createSheetsClient, type sheets_v4 } from "@googleapis/sheets";
+import { JWT } from "google-auth-library";
 import { SHEET_HEADERS } from "../src/lib/sheets/contract";
 import {
   ATA_RECORD_SHEETS,
@@ -162,12 +163,12 @@ async function readValidationSnapshot(
 
 async function main() {
   const execute = process.argv.includes("--execute");
-  const auth = new google.auth.JWT({
+  const auth = new JWT({
     email: required("GOOGLE_SERVICE_ACCOUNT_EMAIL"),
     key: required("GOOGLE_PRIVATE_KEY").replace(/\\n/g, "\n"),
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
-  const sheets = google.sheets({ version: "v4", auth });
+  const sheets = createSheetsClient({ version: "v4", auth });
   const spreadsheetId = required("GOOGLE_SHEETS_ID");
 
   const metadata = await readMetadata(sheets, spreadsheetId);

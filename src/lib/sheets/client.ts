@@ -1,6 +1,7 @@
 import "server-only";
 
-import { google } from "googleapis";
+import { sheets as createSheetsClient } from "@googleapis/sheets";
+import { JWT } from "google-auth-library";
 
 function requiredEnvironment(name: string) {
   const value = process.env[name];
@@ -9,13 +10,13 @@ function requiredEnvironment(name: string) {
 }
 
 export function getSheetsClient() {
-  const auth = new google.auth.JWT({
+  const auth = new JWT({
     email: requiredEnvironment("GOOGLE_SERVICE_ACCOUNT_EMAIL"),
     key: requiredEnvironment("GOOGLE_PRIVATE_KEY").replace(/\\n/g, "\n"),
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
 
-  return google.sheets({ version: "v4", auth });
+  return createSheetsClient({ version: "v4", auth });
 }
 
 export function getSpreadsheetId() {
