@@ -30,6 +30,7 @@ execução do MVP.
 | Tarefas e estado da execução | [Checklist executivo](desenvolvimento/checklist-executivo.md) |
 | Marcos já concluídos | [Histórico](projeto/historico.md) |
 | Refatoração do painel administrativo | [Índice da refatoração](refatoracao-painel-administrativo/README.md) |
+| Layout aprovado do Resumo da ata | [Registro da refatoração](refatoracao_resumo_da_ata/README.md) |
 
 ## Referências
 

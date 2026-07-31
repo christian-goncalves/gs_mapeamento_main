@@ -217,3 +217,18 @@ canônico.
 - A nova execucao completa tambem passou ate o Teste 14. O unico ajuste final
   foi impedir reenvio de convite quando o responsavel continua pendente com o
   mesmo e-mail.
+
+## 31 de julho de 2026 — Aprovação do novo Resumo da ata
+
+- O resumo anterior ao envio da ata recebeu nova hierarquia visual, cartões de
+  identificação, indicadores agregados e seções detalhadas responsivas.
+- Desktop, Tablet e Mobile receberam comportamentos próprios, incluindo a grade
+  `3 x 2` dos indicadores em até 720 px e o empilhamento dos botões em até
+  360 px.
+- A validação visual com Playwright cobriu 1280, 768, 720, 390, 360 e 320 px sem
+  encontrar overflow horizontal.
+- A implementação foi registrada no commit `72e457f`, com 219 testes, lint e
+  build aprovados.
+- O layout foi aprovado pelo usuário como “ótimo” e “excelente”.
+- O contrato aprovado está documentado em
+  [Refatoração do Resumo da ata](../refatoracao_resumo_da_ata/README.md).
