@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { formatReviewDate, getReviewMetricCounts } from "./ata-review";
+import {
+  formatReviewDate,
+  formatReviewLocation,
+  getAtaDetailBackHref,
+  getReviewMetricCounts,
+} from "./ata-review";
 
 describe("resumo da ata", () => {
   it("apresenta a data brasileira sem alterar o valor persistido", () => {
@@ -22,5 +27,15 @@ describe("resumo da ata", () => {
       ingressos: 0,
       conquistasTempo: 3,
     });
+  });
+
+  it("retorna para a listagem correspondente ao perfil autenticado", () => {
+    expect(getAtaDetailBackHref("administrador")).toBe("/admin/atas");
+    expect(getAtaDetailBackHref("responsavel_grupo")).toBe("/responsavel/atas");
+  });
+
+  it("exibe a UF ao lado da cidade sem incluir o país", () => {
+    expect(formatReviewLocation("Itajaí", "SC")).toBe("Itajaí - SC");
+    expect(formatReviewLocation("Lisboa", "")).toBe("Lisboa");
   });
 });

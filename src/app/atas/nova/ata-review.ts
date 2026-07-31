@@ -22,3 +22,13 @@ export function getReviewMetricCounts(
     conquistasTempo,
   };
 }
+
+export function getAtaDetailBackHref(
+  role: "administrador" | "responsavel_grupo",
+) {
+  return role === "administrador" ? "/admin/atas" : "/responsavel/atas";
+}
+
+export function formatReviewLocation(localidade: string, estado: string) {
+  return estado ? `${localidade} - ${estado}` : localidade;
+}

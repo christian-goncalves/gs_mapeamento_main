@@ -151,9 +151,14 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .message-close:hover { background: rgb(0 0 0 / 6%); }
 .modal-backdrop { position: fixed; z-index: 20; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgb(16 28 21 / 65%); }
 .confirmation-modal { width: min(1040px, 100%); max-height: calc(100vh - 2rem); overflow-y: auto; border-radius: 16px; padding: 1.5rem; background: var(--surface); box-shadow: 0 20px 60px rgb(0 0 0 / 25%); scrollbar-gutter: stable; }
-.confirmation-modal h2 { margin: 0; }
+.ata-review-layout h1, .ata-review-layout h2 { margin: 0; }
+.ata-detail-review-shell { width: min(1120px, calc(100% - 2rem)); }
+.ata-review-page { border: 1px solid var(--line); border-radius: 16px; padding: 1.5rem; background: var(--surface); box-shadow: 0 14px 36px rgb(16 28 21 / 8%); }
+.review-layout-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.review-layout-header-actions { display: flex; flex: 0 0 auto; align-items: center; justify-content: flex-end; gap: .6rem; }
+.review-back-link { min-width: 7rem; }
 .review-modal-header { display: flex; align-items: flex-start; gap: 1rem; }
-.review-modal-header h2 { font-size: 1.5rem; line-height: 1.2; }
+.review-modal-header h1, .review-modal-header h2 { font-size: 1.5rem; line-height: 1.2; }
 .review-modal-header p { max-width: 44rem; margin: .25rem 0 0; color: var(--muted); line-height: 1.35; }
 .review-modal-header-icon, .review-info-icon, .review-section-icon { display: inline-grid; flex: 0 0 auto; place-items: center; border-radius: 999px; background: #edf7f1; color: #00865f; }
 .review-modal-header-icon { width: 3rem; height: 3rem; font-size: 1.35rem; }
@@ -162,12 +167,24 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .review-info-icon { width: 2.5rem; height: 2.5rem; font-size: 1.05rem; }
 .review-info-card dt { line-height: 1.15; }
 .review-info-card dd { margin-top: .1rem; line-height: 1.25; }
+.review-additional-information { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; margin: .5rem 0 0; }
+.review-additional-information > div { min-width: 0; border: 1px solid #e5e9e6; border-radius: 9px; padding: .65rem .75rem; background: #fff; }
+.review-identification { margin-top: 1rem; border: 1px solid #e5e9e6; border-radius: 10px; padding: .8rem; background: #fff; }
+.review-identification-heading { display: flex; align-items: center; gap: .5rem; }
+.review-identification-heading h2 { font-size: 1rem; }
+.review-identification-grid { display: grid; grid-template-columns: .8fr .8fr 2fr; gap: .75rem; margin: .75rem 0 0; }
+.review-identification-grid > div { min-width: 0; border-top: 1px solid var(--line); padding-top: .55rem; }
+.review-identification-grid dd { font-size: .9rem; }
+.review-identification .ata-index-form { max-width: 34rem; margin-top: .75rem; }
 .review-metrics { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); margin: 1rem 0 0; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
 .review-metrics > div { display: grid; min-width: 0; min-height: 7.25rem; place-items: center; align-content: center; gap: .25rem; padding: .75rem .35rem; text-align: center; }
 .review-metrics > div + div { border-left: 1px solid var(--line); }
 .review-metrics svg { color: #00865f; font-size: 1.1rem; }
 .review-metrics dt { min-height: 2.5em; color: #52645c; font-size: clamp(.68rem, 1vw, .78rem); font-weight: 700; line-height: 1.2; }
 .review-metrics dd { margin: 0; color: #10291f; font-size: 1.45rem; line-height: 1; }
+.review-supplemental-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin: .5rem 0 0; }
+.review-supplemental-metrics > div { min-width: 0; border: 1px solid #e5e9e6; border-radius: 9px; padding: .55rem .75rem; background: #fff; text-align: center; }
+.review-supplemental-metrics dd { color: var(--brand); font-size: 1.1rem; }
 .review-sections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: .65rem; margin-top: 1rem; }
 .review-section { min-width: 0; overflow: hidden; border: 1px solid #e5e9e6; border-radius: 9px; background: #fff; }
 .review-section:nth-child(n + 5) { grid-column: 1 / -1; }
@@ -187,6 +204,8 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .review-item-list li { display: flex; align-items: center; gap: .65rem; min-height: 2.5rem; border: 1px solid #edf0ee; border-radius: 7px; padding: .45rem .65rem; }
 .review-item-list li > span:first-of-type { min-width: 0; overflow-wrap: anywhere; }
 .review-item-list li > :last-child { margin-left: auto; }
+.review-item-main { display: grid; }
+.review-item-main small { color: var(--muted); font-size: .72rem; }
 .review-item-badge { border-radius: 6px; padding: .2rem .5rem; background: #e5f5ea; color: #087649; font-size: .75rem; font-weight: 700; }
 .review-empty-state { display: grid; min-height: 4.5rem; place-items: center; align-content: center; gap: .35rem; color: #819089; font-size: .85rem; text-align: center; }
 .review-empty-state svg { color: #b6d8c8; font-size: 1.5rem; opacity: .75; }
@@ -261,9 +280,14 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .admin-groups-card { padding: 0; overflow: hidden; }
 .status-tabs { display: flex; gap: 2rem; border-bottom: 1px solid var(--line); padding: 0 1.5rem; }
 .status-tab { position: relative; min-height: 4rem; border-radius: 0; padding: 1rem 0; background: transparent; color: var(--muted); font-weight: 800; }
-.status-tab:hover, .status-tab:focus-visible { background: transparent; color: var(--brand); outline: 2px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: -4px; }
+.status-tab::after { position: absolute; right: 0; bottom: 0; left: 0; height: 2px; border-radius: 999px 999px 0 0; background: color-mix(in srgb, var(--brand) 55%, white); content: ""; opacity: 0; transform: scaleX(.55); transition: height .15s ease, opacity .15s ease, transform .15s ease, background-color .15s ease; }
+.status-tab:hover, .status-tab:active, .status-tab:focus-visible { background: transparent; color: var(--brand); outline: 0; }
+.status-tab:hover::after, .status-tab:active::after { opacity: 1; transform: scaleX(1); }
+.status-tab:focus-visible::after { height: 4px; background: color-mix(in srgb, var(--brand) 78%, white); opacity: 1; transform: scaleX(1); }
 .status-tab-active { color: #007a55; }
-.status-tab-active::after { position: absolute; right: 0; bottom: 0; left: 0; height: 3px; border-radius: 999px 999px 0 0; background: #007a55; content: ""; }
+.status-tab-active::after { height: 3px; background: #007a55; opacity: 1; transform: scaleX(1); }
+.status-tab-active:hover::after, .status-tab-active:active::after { height: 4px; background: #006744; }
+.status-tab-active:focus-visible::after { height: 5px; background: #005c3c; }
 .group-search { display: grid; gap: .45rem; padding: 1.5rem 1.5rem .75rem; }
 .group-search label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .group-search-field { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .75rem; max-width: 36rem; min-width: 0; border: 1px solid var(--line); border-radius: 8px; padding: 0 .75rem; background: white; color: var(--muted); }
@@ -602,17 +626,24 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .admin-date-desktop, .admin-date-tablet { display: none; }
   .admin-date-mobile { display: block; overflow: hidden; white-space: nowrap; }
   .admin-group-name { text-align: left; }
+  .ata-detail-review-shell { width: calc(100% - .5rem); padding: .25rem 0; }
+  .ata-review-page { border-radius: 12px; padding: .85rem; }
   .modal-backdrop { place-items: stretch center; padding: .25rem; }
   .confirmation-modal { width: 100%; max-height: calc(100dvh - .5rem); border-radius: 12px; padding: .85rem; scrollbar-gutter: auto; }
+  .review-layout-header { display: grid; }
+  .review-layout-header-actions { justify-content: flex-start; }
+  .review-layout-header-actions .review-back-link { width: 100%; }
   .review-modal-header { gap: .75rem; }
   .review-modal-header-icon { width: 2.5rem; height: 2.5rem; font-size: 1.1rem; }
-  .review-modal-header h2 { font-size: 1.25rem; }
+  .review-modal-header h1, .review-modal-header h2 { font-size: 1.25rem; }
   .review-modal-header p { font-size: .85rem; }
-  .confirmation-modal .review-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .4rem; }
+  .ata-review-layout .review-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .4rem; }
   .review-info-card { grid-template-columns: 2rem minmax(0, 1fr); gap: .5rem; min-height: 3.6rem; padding: .5rem; }
   .review-info-icon { width: 2rem; height: 2rem; font-size: .9rem; }
   .review-info-card dt { font-size: .72rem; }
   .review-info-card dd { font-size: .88rem; }
+  .review-identification-grid { grid-template-columns: 1fr; gap: .4rem; }
+  .review-identification-grid > div { border: 0; padding-top: 0; }
   .review-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .review-metrics > div { min-height: 6.25rem; padding: .65rem .25rem; }
   .review-metrics > div:nth-child(4) { border-left: 0; }
@@ -631,7 +662,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .confirmation-modal .modal-actions button { min-width: 0; padding-inline: .55rem; font-size: .85rem; }
 }
 @media (max-width: 360px) {
-  .confirmation-modal .review-grid { grid-template-columns: 1fr; }
+  .ata-review-layout .review-grid, .review-additional-information { grid-template-columns: 1fr; }
   .confirmation-modal .modal-actions { grid-template-columns: 1fr; }
   .responsavel-atas-card .responsavel-status-column .dt-column-title,
   .responsavel-atas-card .responsavel-actions-column .dt-column-title { font-size: 0; }
