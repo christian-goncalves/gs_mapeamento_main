@@ -1,13 +1,27 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState, type ReactNode } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
+  faCalendarDays,
+  faChevronDown,
   faClipboardCheck,
+  faClock,
+  faComments,
+  faDesktop,
+  faFileCircleCheck,
+  faFolder,
+  faGlobe,
+  faLocationDot,
   faPaperPlane,
   faPenToSquare,
   faPlus,
+  faTableCellsLarge,
+  faTicket,
   faTrashCan,
+  faUser,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import type { HiddenAtaSubmission } from "@/domain/hidden-submission";
 import type { Pais } from "@/domain/paises";
@@ -21,6 +35,7 @@ import {
   tipoReuniaoMapping,
 } from "@/domain/enums";
 import { createAtaAction, type CreateAtaState } from "./actions";
+import { formatReviewDate, getReviewMetricCounts } from "./ata-review";
 import { MunicipioAutocomplete } from "./municipio-autocomplete";
 import { TextAutocomplete } from "./text-autocomplete";
 
@@ -69,6 +84,55 @@ function cidadeEstado(value: string) {
   const match = value.match(/^(.*)\s+-\s+([A-Z]{2})$/);
   if (!match) return { cidade: value, estado: "—" };
   return { cidade: match[1], estado: match[2] };
+}
+
+function ReviewSection({
+  icon,
+  title,
+  count,
+  desktop,
+  children,
+}: {
+  icon: IconDefinition;
+  title: string;
+  count: number;
+  desktop: boolean;
+  children: ReactNode;
+}) {
+  const [open, setOpen] = useState(count > 0);
+
+  return (
+    <details
+      className="review-section"
+      open={desktop || open}
+      onToggle={(event) => {
+        if (!desktop) setOpen(event.currentTarget.open);
+      }}
+    >
+      <summary>
+        <span className="review-section-heading">
+          <span className="review-section-icon" aria-hidden="true">
+            <FontAwesomeIcon icon={icon} />
+          </span>
+          <span>{title}</span>
+        </span>
+        <span className="review-section-summary-end">
+          <span className="review-section-count" aria-label={`${count} registros`}>{count}</span>
+          <FontAwesomeIcon className="review-section-chevron" icon={faChevronDown} aria-hidden="true" />
+        </span>
+      </summary>
+      <div className="review-section-content">{children}</div>
+    </details>
+  );
+}
+
+function ReviewEmptyState({ icon, children }: { icon: IconDefinition; children: ReactNode }) {
+  return (
+    <div className="review-empty-state">
+      <FontAwesomeIcon icon={icon} aria-hidden="true" />
+      <span>{children}</span>
+    </div>
+  );
 }
 
 function NumberStepper({
@@ -192,6 +256,7 @@ export function AtaForm({
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [reviewing, setReviewing] = useState(false);
+  const [desktopReviewLayout, setDesktopReviewLayout] = useState(false);
   const [clientError, setClientError] = useState<string>();
   const [nameSuggestions, setNameSuggestions] = useState<AtaNameSuggestions>({
     preenchido_por: [],
@@ -235,6 +300,10 @@ export function AtaForm({
       tempo: tempoLimpoMapping.toSheet(item.tempo_limpo),
     })),
   );
+  const reviewMetricCounts = getReviewMetricCounts(
+    draft,
+    reviewConquistasTempo.length,
+  );
   const horarioOptions = Array.from(
     new Set(
       (selectedGroup?.horarios?.length
@@ -242,6 +311,14 @@ export function AtaForm({
         : horarios),
     ),
   ).sort();
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 981px)");
+    const updateLayout = () => setDesktopReviewLayout(media.matches);
+    updateLayout();
+    media.addEventListener("change", updateLayout);
+    return () => media.removeEventListener("change", updateLayout);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -676,52 +753,141 @@ export function AtaForm({
       {reviewing && (
         <div className="modal-backdrop">
           <section className="confirmation-modal" role="dialog" aria-modal="true" aria-labelledby="confirmation-title">
-            <h2 id="confirmation-title">Resumo da ata</h2>
-            <p className="muted">Confira os dados antes de enviar. Após a confirmação, a ata ficará registrada como somente leitura.</p>
+            <header className="review-modal-header">
+              <span className="review-modal-header-icon" aria-hidden="true">
+                <FontAwesomeIcon icon={faFileCircleCheck} />
+              </span>
+              <div>
+                <h2 id="confirmation-title">Resumo da ata</h2>
+                <p>Confira os dados antes de enviar. Após a confirmação, a ata ficará registrada como somente leitura.</p>
+              </div>
+            </header>
+
             <dl className="review-grid">
-              <div><dt>Grupo</dt><dd>{selectedGroup?.name}</dd></div>
-              <div><dt>Data e hora</dt><dd>{draft.ata.data_reuniao} às {draft.ata.hora_inicio}</dd></div>
-              <div><dt>Preenchido por</dt><dd>{draft.ata.preenchido_por}</dd></div>
-              <div><dt>Plataforma</dt><dd>{plataformaMapping.toSheet(draft.ata.plataforma)}</dd></div>
-              <div><dt>Tipo</dt><dd>{tipoReuniaoMapping.toSheet(draft.ata.tipo_reuniao)}</dd></div>
-              <div><dt>Formatos</dt><dd>{draft.ata.formatos.map((code) => formatoMapping.toSheet(code)).join(", ")}</dd></div>
-              <div><dt>Membros presentes</dt><dd>{draft.ata.total_membros_presentes}</dd></div>
-              <div><dt>Partilhas</dt><dd>{draft.ata.total_partilhas}</dd></div>
+              <div className="review-info-card">
+                <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faUsers} /></span>
+                <div><dt>Grupo</dt><dd>{selectedGroup?.name}</dd></div>
+              </div>
+              <div className="review-info-card">
+                <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faCalendarDays} /></span>
+                <div><dt>Data e hora</dt><dd>{formatReviewDate(draft.ata.data_reuniao)} às {draft.ata.hora_inicio}</dd></div>
+              </div>
+              <div className="review-info-card">
+                <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faUser} /></span>
+                <div><dt>Preenchido por</dt><dd>{draft.ata.preenchido_por}</dd></div>
+              </div>
+              <div className="review-info-card">
+                <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faDesktop} /></span>
+                <div><dt>Plataforma</dt><dd>{plataformaMapping.toSheet(draft.ata.plataforma)}</dd></div>
+              </div>
+              <div className="review-info-card">
+                <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faFolder} /></span>
+                <div><dt>Tipo</dt><dd>{tipoReuniaoMapping.toSheet(draft.ata.tipo_reuniao)}</dd></div>
+              </div>
+              <div className="review-info-card">
+                <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faTableCellsLarge} /></span>
+                <div><dt>Formatos</dt><dd>{draft.ata.formatos.map((code) => formatoMapping.toSheet(code)).join(", ")}</dd></div>
+              </div>
+              <div className="review-info-card">
+                <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faUsers} /></span>
+                <div><dt>Membros presentes</dt><dd>{draft.ata.total_membros_presentes}</dd></div>
+              </div>
+              <div className="review-info-card">
+                <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faComments} /></span>
+                <div><dt>Partilhas</dt><dd>{draft.ata.total_partilhas}</dd></div>
+              </div>
             </dl>
-            <div className="review-lists">
-              <h3>Servidores ({draft.servidores.length})</h3>
-              <ol>{draft.servidores.map((item) => <li key={item.clientId}>{item.nome}{item.funcao ? ` · ${item.funcao}` : ""}</li>)}</ol>
-              <h3>Localidade ({draft.participacao.length})</h3>
-              <ul>{draft.participacao.map((item) => <li key={item.clientId}>{item.localidade} · {item.presencas}</li>)}</ul>
-              <h3>Membros internacionais ({draft.membros_internacionais.length})</h3>
-              <ul>{draft.membros_internacionais.map((item) => <li key={item.clientId}>{item.pais} · {item.presencas}</li>)}</ul>
-              <h3>Visitantes ({draft.visitantes.length})</h3>
-              <div className="table-wrap">
-                <table><thead><tr><th>Visitante</th><th>Cidade</th><th>Categoria</th><th>Origem</th></tr></thead>
-                  <tbody>{draft.visitantes.map((item, index) => (
-                    <tr key={item.clientId}><td>Visitante {index + 1}</td><td>{item.cidade}</td><td>{item.descricao ? categoriaVisitanteMapping.toSheet(item.descricao) : "Escolha..."}</td><td>{item.como_chegou_a_na ? origemContatoMapping.toSheet(item.como_chegou_a_na) : "Escolha..."}</td></tr>
-                  ))}</tbody>
-                </table>
-              </div>
-              <h3>Ingressos ({draft.ingressos.length})</h3>
-              <div className="table-wrap">
-                <table><thead><tr><th>Ingresso</th><th>Cidade</th><th>Estado</th></tr></thead>
-                  <tbody>{draft.ingressos.map((item, index) => {
-                    const localidade = cidadeEstado(item.cidade);
-                    return (
-                      <tr key={item.clientId}><td>Ingresso {index + 1}</td><td>{localidade.cidade}</td><td>{localidade.estado}</td></tr>
-                    );
-                  })}</tbody>
-                </table>
-              </div>
-              <h3>Conquistas de tempo ({reviewConquistasTempo.length})</h3>
-              <div className="table-wrap">
-                <table><thead><tr><th>Conquista</th><th>Tempo</th></tr></thead>
-                  <tbody>{reviewConquistasTempo.map((item, index) => (
-                    <tr key={item.id}><td>Conquista {index + 1}</td><td>{item.tempo}</td></tr>
-                  ))}</tbody>
-                </table>
-              </div>
+
+            <dl className="review-metrics" aria-label="Totais da ata">
+              <div><FontAwesomeIcon icon={faUsers} aria-hidden="true" /><dt>Servidores</dt><dd>{reviewMetricCounts.servidores}</dd></div>
+              <div><FontAwesomeIcon icon={faLocationDot} aria-hidden="true" /><dt>Localidades</dt><dd>{reviewMetricCounts.localidades}</dd></div>
+              <div><FontAwesomeIcon icon={faGlobe} aria-hidden="true" /><dt>Membros internacionais</dt><dd>{reviewMetricCounts.membrosInternacionais}</dd></div>
+              <div><FontAwesomeIcon icon={faUsers} aria-hidden="true" /><dt>Visitantes</dt><dd>{reviewMetricCounts.visitantes}</dd></div>
+              <div><FontAwesomeIcon icon={faTicket} aria-hidden="true" /><dt>Ingressos</dt><dd>{reviewMetricCounts.ingressos}</dd></div>
+              <div><FontAwesomeIcon icon={faClock} aria-hidden="true" /><dt>Conquistas de tempo</dt><dd>{reviewMetricCounts.conquistasTempo}</dd></div>
+            </dl>
+
+            <div className="review-sections">
+              <ReviewSection icon={faUsers} title="Servidores" count={draft.servidores.length} desktop={desktopReviewLayout}>
+                {draft.servidores.length ? (
+                  <ol className="review-item-list review-item-list--ordered">
+                    {draft.servidores.map((item) => (
+                      <li key={item.clientId}>
+                        <span>{item.nome}</span>
+                        {item.funcao && <span className="review-item-badge">{item.funcao}</span>}
+                      </li>
+                    ))}
+                  </ol>
+                ) : <ReviewEmptyState icon={faUsers}>Nenhum servidor registrado.</ReviewEmptyState>}
+              </ReviewSection>
+
+              <ReviewSection icon={faLocationDot} title="Localidades" count={draft.participacao.length} desktop={desktopReviewLayout}>
+                {draft.participacao.length ? (
+                  <ul className="review-item-list">
+                    {draft.participacao.map((item) => (
+                      <li key={item.clientId}><span>{item.localidade}</span><span className="review-item-count">{item.presencas}</span></li>
+                    ))}
+                  </ul>
+                ) : <ReviewEmptyState icon={faLocationDot}>Nenhuma localidade registrada.</ReviewEmptyState>}
+              </ReviewSection>
+
+              <ReviewSection icon={faGlobe} title="Membros internacionais" count={draft.membros_internacionais.length} desktop={desktopReviewLayout}>
+                {draft.membros_internacionais.length ? (
+                  <ul className="review-item-list">
+                    {draft.membros_internacionais.map((item) => (
+                      <li key={item.clientId}><span>{item.pais}</span><span className="review-item-count">{item.presencas}</span></li>
+                    ))}
+                  </ul>
+                ) : <ReviewEmptyState icon={faGlobe}>Nenhum membro internacional registrado.</ReviewEmptyState>}
+              </ReviewSection>
+
+              <ReviewSection icon={faUsers} title="Visitantes" count={draft.visitantes.length} desktop={desktopReviewLayout}>
+                {draft.visitantes.length ? (
+                  <div className="review-table-wrap">
+                    <table className="review-table"><thead><tr><th>Visitante</th><th>Cidade</th><th>Categoria</th><th>Origem</th></tr></thead>
+                      <tbody>{draft.visitantes.map((item, index) => (
+                        <tr key={item.clientId}>
+                          <td data-label="Visitante">Visitante {index + 1}</td>
+                          <td data-label="Cidade">{item.cidade}</td>
+                          <td data-label="Categoria">{item.descricao ? categoriaVisitanteMapping.toSheet(item.descricao) : "Não informado"}</td>
+                          <td data-label="Origem">{item.como_chegou_a_na ? origemContatoMapping.toSheet(item.como_chegou_a_na) : "Não informada"}</td>
+                        </tr>
+                      ))}</tbody>
+                    </table>
+                  </div>
+                ) : <ReviewEmptyState icon={faUsers}>Nenhum visitante registrado.</ReviewEmptyState>}
+              </ReviewSection>
+
+              <ReviewSection icon={faTicket} title="Ingressos" count={draft.ingressos.length} desktop={desktopReviewLayout}>
+                {draft.ingressos.length ? (
+                  <div className="review-table-wrap">
+                    <table className="review-table"><thead><tr><th>Ingresso</th><th>Cidade</th><th>Estado</th></tr></thead>
+                      <tbody>{draft.ingressos.map((item, index) => {
+                        const localidade = cidadeEstado(item.cidade);
+                        return (
+                          <tr key={item.clientId}>
+                            <td data-label="Ingresso">Ingresso {index + 1}</td>
+                            <td data-label="Cidade">{localidade.cidade}</td>
+                            <td data-label="Estado">{localidade.estado}</td>
+                          </tr>
+                        );
+                      })}</tbody>
+                    </table>
+                  </div>
+                ) : <ReviewEmptyState icon={faTicket}>Nenhum ingresso registrado.</ReviewEmptyState>}
+              </ReviewSection>
+
+              <ReviewSection icon={faClock} title="Conquistas de tempo" count={reviewConquistasTempo.length} desktop={desktopReviewLayout}>
+                {reviewConquistasTempo.length ? (
+                  <div className="review-table-wrap">
+                    <table className="review-table"><thead><tr><th>Conquista</th><th>Tempo</th></tr></thead>
+                      <tbody>{reviewConquistasTempo.map((item, index) => (
+                        <tr key={item.id}><td data-label="Conquista">Conquista {index + 1}</td><td data-label="Tempo">{item.tempo}</td></tr>
+                      ))}</tbody>
+                    </table>
+                  </div>
+                ) : <ReviewEmptyState icon={faClock}>Nenhuma conquista registrada.</ReviewEmptyState>}
+              </ReviewSection>
             </div>
             {actionState.error && <p className="form-error" role="alert">{actionState.error}</p>}
             <div className="modal-actions">
