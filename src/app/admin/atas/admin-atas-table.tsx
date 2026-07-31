@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faEllipsisVertical,
   faEye,
   faFilePdf,
   faPenToSquare,
@@ -17,11 +19,12 @@ type AdminAtaDataTableRow = [
   string,
   string,
   string,
-  string,
   AdminAtaStatus,
   AdminAtaRow,
 ];
 type DataTableComponent = typeof import("datatables.net-react").default;
+
+export const DEFAULT_ADMIN_ATA_STATUS_FILTER = "todos" as const;
 
 const statusOptions: { value: "todos" | AdminAtaStatus; label: string }[] = [
   { value: "todos", label: "Todos" },
@@ -36,40 +39,220 @@ function formatDate(value: string) {
   return `${day}-${month}-${year}`;
 }
 
+function formatMobileDate(value: string) {
+  const [, month, day] = value.split("-");
+  if (!month || !day) return value;
+  return `${day}/${month}`;
+}
+
+function formatTabletDate(value: string) {
+  const [year, month, day] = value.split("-");
+  if (!year || !month || !day) return value;
+  return `${day}/${month}/${year}`;
+}
+
 function normalize(value: string) {
   return value.trim().replace(/\s+/g, " ").toLocaleLowerCase("pt-BR");
 }
 
-function toDataTableRows(rows: AdminAtaRow[]): AdminAtaDataTableRow[] {
+export function toAdminAtaDataTableRows(
+  rows: AdminAtaRow[],
+): AdminAtaDataTableRow[] {
   return rows.map((row) => [
     row.indicePersonalizadoGrupo ? `#${row.indicePersonalizadoGrupo}` : "-",
     row.data,
     row.horario,
     row.grupo,
-    row.preenchidoPor || "-",
     row.status,
     row,
   ]);
 }
 
-function statusLabel(status: AdminAtaStatus) {
-  if (status === "Não enviada") return "Não enviada";
-  if (status === "Pendente de revisão") return "Pendente de revisão";
-  return status;
+function statusToneClass(status: AdminAtaStatus) {
+  if (status === "Pendente de revisão") return "admin-status-review";
+  if (status === "Não enviada") return "admin-status-missing";
+  return "admin-status-sent";
 }
 
-function statusBadgeClass(status: AdminAtaStatus) {
-  if (status === "Não enviada") {
-    return "responsavel-status-badge admin-status-badge-missing";
-  }
-  if (status === "Pendente de revisão") {
-    return "responsavel-status-badge admin-status-badge-review";
-  }
-  return "responsavel-status-badge admin-status-badge-sent";
+function AdminAtaStatus({ status }: { status: AdminAtaStatus }) {
+  return (
+    <span
+      className={`admin-status-display ${statusToneClass(status)}`}
+      aria-label={`Status: ${status}`}
+      title={status}
+    >
+      <span className="admin-status-dot" aria-hidden="true" />
+      <span>{status}</span>
+    </span>
+  );
 }
 
-function statusBadgeHtml(status: AdminAtaStatus) {
-  return `<span class="${statusBadgeClass(status)}">${statusLabel(status)}</span>`;
+function AdminAtaActions({ ata }: { ata: AdminAtaRow }) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuId = useId();
+  const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const dateLabel = formatDate(ata.data);
+
+  function updatePosition() {
+    const button = buttonRef.current;
+    if (!button) return;
+
+    const rect = button.getBoundingClientRect();
+    const menuWidth = Math.min(224, window.innerWidth - 16);
+    const menuHeight = menuRef.current?.offsetHeight ?? 232;
+    const left = Math.min(
+      window.innerWidth - menuWidth - 8,
+      Math.max(8, rect.right - menuWidth),
+    );
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const top =
+      spaceBelow >= menuHeight + 8
+        ? rect.bottom + 8
+        : Math.max(8, rect.top - menuHeight - 8);
+
+    setPosition({ top, left });
+  }
+
+  function toggleMenu() {
+    if (!open) updatePosition();
+    setOpen((current) => !current);
+  }
+
+  useEffect(() => {
+    if (!open) return;
+
+    updatePosition();
+
+    function closeOnPointerDown(event: PointerEvent) {
+      const target = event.target as Node;
+      if (
+        !buttonRef.current?.contains(target) &&
+        !menuRef.current?.contains(target)
+      ) {
+        setOpen(false);
+      }
+    }
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      buttonRef.current?.focus();
+    }
+
+    function repositionMenu() {
+      updatePosition();
+    }
+
+    document.addEventListener("pointerdown", closeOnPointerDown);
+    document.addEventListener("keydown", closeOnEscape);
+    window.addEventListener("resize", repositionMenu);
+    window.addEventListener("scroll", repositionMenu, true);
+
+    return () => {
+      document.removeEventListener("pointerdown", closeOnPointerDown);
+      document.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("resize", repositionMenu);
+      window.removeEventListener("scroll", repositionMenu, true);
+    };
+  }, [open]);
+
+  return (
+    <>
+      <button
+        ref={buttonRef}
+        type="button"
+        className="responsavel-action-menu-trigger"
+        aria-label={`Abrir ações da ata de ${dateLabel}`}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={menuId}
+        title="Ações"
+        onClick={toggleMenu}
+      >
+        <FontAwesomeIcon icon={faEllipsisVertical} />
+      </button>
+      {open
+        ? createPortal(
+            <div
+              ref={menuRef}
+              id={menuId}
+              className="responsavel-action-menu"
+              role="menu"
+              aria-label={`Ações da ata de ${dateLabel}`}
+              style={{ top: position.top, left: position.left }}
+            >
+              <div className="admin-ata-action-context" role="note">
+                <span>Status</span>
+                <AdminAtaStatus status={ata.status} />
+              </div>
+              <div className="admin-ata-action-context" role="note">
+                <span>Preenchido por</span>
+                <strong>{ata.preenchidoPor || "Não informado"}</strong>
+              </div>
+              {ata.ataId ? (
+                <Link
+                  className="responsavel-action-menu-item"
+                  href={`/atas/${ata.ataId}`}
+                  role="menuitem"
+                  aria-label={`Visualizar ata de ${dateLabel} às ${ata.horario}`}
+                >
+                  <FontAwesomeIcon icon={faEye} />
+                  <span>Visualizar</span>
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  className="responsavel-action-menu-item"
+                  role="menuitem"
+                  aria-label="Visualizar ata indisponível"
+                  disabled
+                >
+                  <FontAwesomeIcon icon={faEye} />
+                  <span>Visualizar</span>
+                  <small>Indisponível</small>
+                </button>
+              )}
+              <button
+                type="button"
+                className="responsavel-action-menu-item"
+                role="menuitem"
+                title="Gerar PDF será implementado em ciclo próprio"
+                disabled
+              >
+                <FontAwesomeIcon icon={faFilePdf} />
+                <span>Gerar PDF</span>
+                <small>Indisponível</small>
+              </button>
+              <button
+                type="button"
+                className="responsavel-action-menu-item"
+                role="menuitem"
+                title="Editar ata será implementado em ciclo próprio"
+                disabled
+              >
+                <FontAwesomeIcon icon={faPenToSquare} />
+                <span>Editar</span>
+                <small>Indisponível</small>
+              </button>
+              <button
+                type="button"
+                className="responsavel-action-menu-item responsavel-action-menu-item-danger"
+                role="menuitem"
+                title="Excluir ata será implementado em ciclo próprio"
+                disabled
+              >
+                <FontAwesomeIcon icon={faTrashCan} />
+                <span>Excluir</span>
+                <small>Indisponível</small>
+              </button>
+            </div>,
+            document.body,
+          )
+        : null}
+    </>
+  );
 }
 
 const columns: ConfigColumns[] = [
@@ -83,19 +266,22 @@ const columns: ConfigColumns[] = [
       return data;
     },
   },
-  { title: "Horário", className: "responsavel-centered-column" },
-  { title: "Grupo", className: "responsavel-centered-column" },
-  { title: "Preenchido por", className: "responsavel-centered-column" },
+  {
+    title: "Horário",
+    className: "responsavel-centered-column admin-time-column",
+  },
+  {
+    title: "Grupo",
+    className: "responsavel-centered-column admin-group-column",
+  },
   {
     title: "Status",
-    className: "responsavel-centered-column",
+    className: "responsavel-centered-column admin-status-column",
     orderable: false,
-    render: (data: AdminAtaStatus, type: string) =>
-      type === "display" ? statusBadgeHtml(data) : statusLabel(data),
   },
   {
     title: "Ações",
-    className: "responsavel-centered-column",
+    className: "responsavel-centered-column admin-actions-column",
     orderable: false,
     searchable: false,
   },
@@ -116,7 +302,9 @@ export function AdminAtasTable({
   const [endDate, setEndDate] = useState(monthEnd);
   const [groupId, setGroupId] = useState("todos");
   const [filledBy, setFilledBy] = useState("");
-  const [status, setStatus] = useState<"todos" | AdminAtaStatus>("todos");
+  const [status, setStatus] = useState<"todos" | AdminAtaStatus>(
+    DEFAULT_ADMIN_ATA_STATUS_FILTER,
+  );
 
   const groups = useMemo(
     () =>
@@ -149,7 +337,10 @@ export function AdminAtasTable({
     [endDate, groupId, normalizedFilledBy, rows, startDate, status],
   );
 
-  const tableRows = useMemo(() => toDataTableRows(filteredRows), [filteredRows]);
+  const tableRows = useMemo(
+    () => toAdminAtaDataTableRows(filteredRows),
+    [filteredRows],
+  );
 
   useEffect(() => {
     let mounted = true;
@@ -243,7 +434,7 @@ export function AdminAtasTable({
               info: "_START_ - _END_ de _TOTAL_",
               infoEmpty: "0 - 0 de 0",
               infoFiltered: "(filtrado de _MAX_ registros)",
-              lengthMenu: "Mostrar _MENU_ registros",
+              lengthMenu: "Mostrar _MENU_",
               loadingRecords: "Carregando...",
               paginate: {
                 first: "Primeira",
@@ -252,13 +443,32 @@ export function AdminAtasTable({
                 previous: "Anterior",
               },
               search: "Buscar:",
-              searchPlaceholder: "Buscar na tabela...",
+              searchPlaceholder: "Buscar...",
               zeroRecords: "Nenhum registro encontrado.",
             },
           }}
           slots={{
-            6: (_data: AdminAtaRow, row: AdminAtaDataTableRow) => {
-              const ata = row[6];
+            1: (data: string, row: AdminAtaDataTableRow) => (
+              <>
+                <span className="admin-date-desktop">{formatDate(data)}</span>
+                <span className="admin-date-tablet">
+                  {formatTabletDate(data)} <span aria-hidden="true">|</span>{" "}
+                  {row[2]}
+                </span>
+                <span className="admin-date-mobile">
+                  {formatMobileDate(data)} <span aria-hidden="true">|</span>{" "}
+                  {row[2]}
+                </span>
+              </>
+            ),
+            3: (data: string) => (
+              <span className="admin-group-name" title={data}>
+                {data}
+              </span>
+            ),
+            4: (data: AdminAtaStatus) => <AdminAtaStatus status={data} />,
+            5: (_data: AdminAtaRow, row: AdminAtaDataTableRow) => {
+              const ata = row[5];
               const dateLabel = formatDate(ata.data);
 
               return (
@@ -266,53 +476,7 @@ export function AdminAtasTable({
                   className="row-actions responsavel-ata-actions"
                   aria-label={`Ações da ata de ${dateLabel}`}
                 >
-                  {ata.ataId ? (
-                    <Link
-                      className="icon-button"
-                      href={`/atas/${ata.ataId}`}
-                      aria-label={`Visualizar ata de ${dateLabel} às ${ata.horario}`}
-                      title="Visualizar"
-                    >
-                      <FontAwesomeIcon icon={faEye} />
-                    </Link>
-                  ) : (
-                    <button
-                      type="button"
-                      className="icon-button"
-                      aria-label="Visualizar ata indisponível"
-                      title="Ata ainda não enviada"
-                      disabled
-                    >
-                      <FontAwesomeIcon icon={faEye} />
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    className="icon-button"
-                    aria-label="Gerar PDF da ata indisponível"
-                    title="Gerar PDF será implementado em ciclo próprio"
-                    disabled
-                  >
-                    <FontAwesomeIcon icon={faFilePdf} />
-                  </button>
-                  <button
-                    type="button"
-                    className="icon-button"
-                    aria-label="Editar ata indisponível"
-                    title="Editar ata será implementado em ciclo próprio"
-                    disabled
-                  >
-                    <FontAwesomeIcon icon={faPenToSquare} />
-                  </button>
-                  <button
-                    type="button"
-                    className="danger-icon-button"
-                    aria-label="Excluir ata indisponível"
-                    title="Excluir ata será implementado em ciclo próprio"
-                    disabled
-                  >
-                    <FontAwesomeIcon icon={faTrashCan} />
-                  </button>
+                  <AdminAtaActions ata={ata} />
                 </div>
               );
             },
@@ -324,7 +488,6 @@ export function AdminAtasTable({
               <th>Data</th>
               <th>Horário</th>
               <th>Grupo</th>
-              <th>Preenchido por</th>
               <th>Status</th>
               <th>Ações</th>
             </tr>

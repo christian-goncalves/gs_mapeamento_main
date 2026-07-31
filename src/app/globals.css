@@ -252,11 +252,17 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .admin-atas-filters label { display: grid; gap: .45rem; color: var(--muted); font-size: .9rem; font-weight: 800; }
 .admin-atas-filters input, .admin-atas-filters select { min-height: 2.75rem; }
 .admin-atas-table-wrap { padding-top: 1.25rem; }
-.admin-atas-table { min-width: 980px; }
-.admin-atas-table-wrap .dt-container { min-width: 980px; }
-.admin-atas-table .admin-status-badge-sent { border-color: #94d7b6; background: #dff7ea; color: #006f4e; }
-.admin-atas-table .admin-status-badge-review { border-color: #f2c96d; background: #fff1c2; color: #745100; }
-.admin-atas-table .admin-status-badge-missing { border-color: #ef9a9a; background: #ffe1e1; color: #9f1d1d; }
+.admin-atas-table { min-width: 760px; }
+.admin-atas-table-wrap .dt-container { min-width: 760px; }
+.admin-date-tablet, .admin-date-mobile { display: none; }
+.admin-group-name { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.admin-status-display { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; max-width: 100%; color: var(--muted); font-size: .8125rem; font-weight: 800; line-height: 1.2; }
+.admin-status-dot { display: inline-block; width: .7rem; height: .7rem; flex: 0 0 .7rem; border: 2px solid white; border-radius: 999px; background: currentColor; box-shadow: 0 0 0 1px currentColor; }
+.admin-status-sent { color: #087a55; }
+.admin-status-review { color: #9b6b00; }
+.admin-status-missing { color: #a52e2e; }
+.admin-ata-action-context { display: grid; gap: .2rem; border-bottom: 1px solid var(--line); padding: .55rem .65rem .7rem; color: var(--muted); font-size: .75rem; line-height: 1.25; }
+.admin-ata-action-context strong { overflow-wrap: anywhere; color: var(--ink); font-size: .875rem; }
 .responsavel-page-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
 .responsavel-page-header h1 { margin: 0; font-size: clamp(2rem, 4vw, 2.65rem); line-height: 1.1; color: #102033; }
 .responsavel-page-description { margin: .55rem 0 0; color: #526070; font-size: .82rem; font-weight: 700; line-height: 1.35; }
@@ -353,6 +359,31 @@ legend { padding: 0 .35rem; font-weight: 700; }
 }
 @media (min-width: 721px) and (max-width: 980px) {
   .admin-atas-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-atas-card .admin-atas-table th,
+  .admin-atas-card .admin-atas-table td { padding: .75rem .65rem; font-size: .875rem; }
+  .admin-atas-card .admin-atas-table-wrap .dt-container,
+  .admin-atas-card .admin-atas-table { min-width: 0; }
+  .admin-atas-card .admin-atas-table-wrap .dt-container > .dt-layout-row:first-child { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); align-items: center; gap: 1rem; }
+  .admin-atas-card .admin-atas-table-wrap .dt-container > .dt-layout-row:first-child .dt-layout-cell { width: auto !important; min-width: 0; }
+  .admin-atas-card .admin-atas-table-wrap .dt-search,
+  .admin-atas-card .admin-atas-table-wrap .dt-search label { min-width: 0; width: 100%; }
+  .admin-atas-card .admin-atas-table-wrap .dt-search input { min-width: 0; width: 100%; }
+  .admin-atas-card .admin-atas-table { table-layout: fixed; }
+  .admin-atas-card .admin-atas-table th:nth-child(1),
+  .admin-atas-card .admin-atas-table td:nth-child(1) { width: 12% !important; }
+  .admin-atas-card .admin-atas-table th:nth-child(2),
+  .admin-atas-card .admin-atas-table td:nth-child(2) { width: 26% !important; }
+  .admin-atas-card .admin-atas-table th:nth-child(3),
+  .admin-atas-card .admin-atas-table td:nth-child(3) { display: none; }
+  .admin-atas-card .admin-atas-table th:nth-child(4),
+  .admin-atas-card .admin-atas-table td:nth-child(4) { width: 32% !important; }
+  .admin-atas-card .admin-atas-table th:nth-child(5),
+  .admin-atas-card .admin-atas-table td:nth-child(5) { width: 20% !important; }
+  .admin-atas-card .admin-atas-table th:nth-child(6),
+  .admin-atas-card .admin-atas-table td:nth-child(6) { width: 10% !important; }
+  .admin-date-desktop { display: none; }
+  .admin-date-tablet { display: block; overflow: hidden; white-space: nowrap; }
+  .admin-atas-card .admin-status-display { white-space: normal; font-size: .75rem; }
   .responsavel-atas-card .responsavel-atas-table th,
   .responsavel-atas-card .responsavel-atas-table td { font-size: .875rem; }
   .responsavel-atas-card .responsavel-atas-table th,
@@ -430,7 +461,6 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .admin-group-actions { justify-content: flex-start; min-width: 0; }
   .admin-group-actions .group-list-actions { flex-wrap: wrap; justify-content: flex-start; gap: .45rem; }
   .admin-atas-filters { grid-template-columns: 1fr; padding: 1rem; }
-  .admin-atas-table-wrap .dt-container, .admin-atas-table { min-width: 980px; }
   .responsavel-page-header { display: grid; align-items: stretch; }
   .responsavel-config-page .responsavel-page-header { grid-template-columns: minmax(0, 1fr); }
   .responsavel-page-header .button-link { width: 100%; text-align: center; }
@@ -487,10 +517,50 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .responsavel-server-name { text-align: left; }
   .responsavel-status-dot { width: .7rem; height: .7rem; flex-basis: .7rem; }
   .responsavel-action-menu-trigger { width: 2.5rem; height: 2.5rem; min-width: 2.5rem; min-height: 2.5rem; }
+  .admin-atas-card .admin-atas-table-wrap { padding: .75rem .5rem; overflow-x: visible; }
+  .admin-atas-card .admin-atas-table-wrap .dt-container { gap: .75rem; min-width: 0; width: 100%; }
+  .admin-atas-card .admin-atas-table-wrap .dt-container > .dt-layout-row { display: grid; min-width: 0; gap: .5rem; }
+  .admin-atas-card .admin-atas-table-wrap .dt-container > .dt-layout-row:first-child { grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: end; }
+  .admin-atas-card .admin-atas-table-wrap .dt-container > .dt-layout-row:last-child { grid-template-columns: 1fr; }
+  .admin-atas-card .admin-atas-table-wrap .dt-layout-cell { min-width: 0; justify-content: stretch; gap: .35rem; }
+  .admin-atas-card .admin-atas-table-wrap .dt-layout-cell.dt-layout-full { overflow-x: visible; }
+  .admin-atas-card .admin-atas-table-wrap .dt-length,
+  .admin-atas-card .admin-atas-table-wrap .dt-search { min-width: 0; width: 100%; }
+  .admin-atas-card .admin-atas-table-wrap .dt-length { display: grid; grid-template-rows: auto 2.25rem; justify-content: start; align-content: start; gap: .35rem; text-align: left; }
+  .admin-atas-card .admin-atas-table-wrap .dt-length label { display: block; min-width: 0; width: 100%; font-size: .8125rem; line-height: 1.25; text-align: left; }
+  .admin-atas-card .admin-atas-table-wrap .dt-search { display: grid; grid-template-rows: auto 2.25rem; align-content: start; gap: .35rem; }
+  .admin-atas-card .admin-atas-table-wrap .dt-search label { display: block; min-width: 0; width: 100%; font-size: .8125rem; line-height: 1.25; text-align: left; }
+  .admin-atas-card .admin-atas-table-wrap .dt-length select { min-width: 3.25rem; min-height: 2.25rem; padding: .4rem 1.35rem .4rem .4rem; font-size: 1rem; }
+  .admin-atas-card .admin-atas-table-wrap .dt-search input { min-width: 0; min-height: 2.25rem; width: 100%; margin-left: 0; padding: .4rem .5rem; font-size: 1rem; }
+  .admin-atas-card .admin-atas-table-wrap .dt-info { font-size: .8125rem; }
+  .admin-atas-card .admin-atas-table-wrap .dt-paging { justify-content: flex-start; flex-wrap: wrap; gap: .25rem; }
+  .admin-atas-card .admin-atas-table-wrap .dt-paging .dt-paging-button { min-width: 2.25rem; min-height: 2.25rem; padding: .4rem .55rem; font-size: .8125rem; }
+  .admin-atas-card .admin-atas-table-wrap .dt-paging .dt-paging-button.first,
+  .admin-atas-card .admin-atas-table-wrap .dt-paging .dt-paging-button.last { display: none; }
+  .admin-atas-card .admin-atas-table { min-width: 0; width: 100% !important; table-layout: fixed; }
+  .admin-atas-card .admin-atas-table th,
+  .admin-atas-card .admin-atas-table td { padding: .55rem .25rem; font-size: .8125rem; line-height: 1.25; }
+  .admin-atas-card .admin-atas-table th:nth-child(1),
+  .admin-atas-card .admin-atas-table td:nth-child(1) { width: 15% !important; }
+  .admin-atas-card .admin-atas-table th:nth-child(2),
+  .admin-atas-card .admin-atas-table td:nth-child(2) { width: 30% !important; }
+  .admin-atas-card .admin-atas-table th:nth-child(3),
+  .admin-atas-card .admin-atas-table td:nth-child(3) { display: none; }
+  .admin-atas-card .admin-atas-table th:nth-child(4),
+  .admin-atas-card .admin-atas-table td:nth-child(4) { width: 36% !important; }
+  .admin-atas-card .admin-atas-table th:nth-child(5),
+  .admin-atas-card .admin-atas-table td:nth-child(5) { display: none; }
+  .admin-atas-card .admin-atas-table th:nth-child(6),
+  .admin-atas-card .admin-atas-table td:nth-child(6) { width: 19% !important; padding-inline: 0; }
+  .admin-date-desktop, .admin-date-tablet { display: none; }
+  .admin-date-mobile { display: block; overflow: hidden; white-space: nowrap; }
+  .admin-group-name { text-align: left; }
 }
 @media (max-width: 360px) {
   .responsavel-atas-card .responsavel-status-column .dt-column-title,
   .responsavel-atas-card .responsavel-actions-column .dt-column-title { font-size: 0; }
   .responsavel-atas-card .responsavel-status-column .dt-column-title::after { content: "St."; font-size: .8125rem; }
   .responsavel-atas-card .responsavel-actions-column .dt-column-title::after { content: "Ação"; font-size: .8125rem; }
+  .admin-atas-card .admin-actions-column .dt-column-title { font-size: 0; }
+  .admin-atas-card .admin-actions-column .dt-column-title::after { content: "Ação"; font-size: .8125rem; }
 }
