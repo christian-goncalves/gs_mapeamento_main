@@ -77,3 +77,66 @@ DataTables.
 - `git diff --check`: passou;
 - `npm run build`: compilou, mas falhou no type check por pendencia
   preexistente em `scripts/reset-ata-record-sheets.ts:113`.
+
+## Refatoracao responsiva do DataTables
+
+Decisao aprovada em 2026-07-30 para `/responsavel/atas`:
+
+- manter o DataTables e o formato de tabela;
+- aplicar a apresentacao compacta de status e acoes em Mobile, Tablet e
+  Desktop;
+- eliminar a rolagem horizontal em uso normal no Mobile;
+- usar `13px` nas celulas e cabecalhos Mobile, `14px` no Tablet e preservar
+  `16px` no Desktop;
+- apresentar data e horario no Mobile como `31-08 | 21:30`;
+- manter Data e Horario em colunas separadas acima de `720px`;
+- representar o status por circulo colorido com texto acessivel e legenda:
+  verde para `Enviada`, amarelo para `Pendente de revisao` e vermelho para
+  `Nao enviada`;
+- substituir os quatro botoes por um menu unico de acoes, mantendo
+  `Visualizar` disponivel e PDF, Editar e Excluir indisponiveis;
+- manter `Mostrar X registros` e `Buscar` lado a lado no mesmo container;
+- manter as opcoes de 10, 25 e 50 registros;
+- ocultar somente `Primeira` e `Ultima` na paginacao Mobile;
+- preservar busca, ordenacao, quantidade, paginacao, abas e rotas existentes.
+
+### Limites
+
+- A compactacao pertence somente a card de atas do responsavel. A tabela
+  administrativa nao recebe as larguras Mobile desta etapa.
+- Nao alterar schemas, payloads, autenticacao, permissoes ou Google Sheets.
+- Nao implementar PDF, edicao ou exclusao.
+- Preservar as alteracoes preexistentes no worktree.
+
+### Criterios de aceite
+
+- a tabela nao produz rolagem horizontal com dados normais entre `320px` e
+  `720px`;
+- Ata, Data/Hora, Preenchido por, Status e Acoes permanecem simultaneamente
+  visiveis;
+- nomes longos sao truncados sem alargar a tabela e mantem acesso ao valor
+  completo;
+- o menu de acoes abre por mouse, toque e teclado, fecha por clique externo ou
+  `Escape` e nao e cortado pelo container;
+- cor nao e a unica forma de identificar o status;
+- busca, ordenacao, seletor, abas e paginacao continuam funcionais;
+- Tablet e Desktop permanecem funcionais;
+- validar visualmente `320`, `360`, `390`, `400`, `425`, `720`, `721`, `980`
+  e uma largura Desktop;
+- executar `npm run test`, `npm run lint`, `npm run build` e
+  `git diff --check`.
+
+### Resultado da implementacao
+
+Validado em 2026-07-30 na rota autenticada:
+
+- overflow horizontal igual a zero em `320`, `360`, `390`, `400`, `425`,
+  `720`, `721`, `980` e `1280px`;
+- fonte computada de `13px` no Mobile, `14px` no Tablet e `16px` no Desktop;
+- `Mostrar X registros` e `Buscar` lado a lado e sem sobreposicao;
+- alternancia de 10 para 25 registros, busca por ata, abas e ordenacao
+  funcionais;
+- menu de acoes dentro da viewport, com Visualizar disponivel, tres itens
+  indisponiveis e fechamento por `Escape`;
+- `npm run test`: 30 arquivos e 213 testes passaram;
+- `npm run lint`, `npm run build` e `git diff --check`: passaram.

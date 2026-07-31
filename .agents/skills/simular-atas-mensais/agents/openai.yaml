@@ -1,0 +1,4 @@
+interface:
+  display_name: "Simular atas mensais"
+  short_description: "Planeja e grava atas simuladas somente em DEV"
+  default_prompt: "Use $simular-atas-mensais para planejar e, após autorização, persistir atas mensais simuladas no Google Sheets DEV."

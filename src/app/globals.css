@@ -289,6 +289,13 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-config-panel .group-save-footer .group-wide-action { width: auto; }
 .responsavel-schedules-section .schedule-summary-table { margin-top: 0; }
 .responsavel-atas-card { margin-top: 1.5rem; padding: 0; overflow: hidden; }
+.responsavel-status-legend { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem 1rem; padding: .8rem 1.5rem 0; color: var(--muted); font-size: .875rem; }
+.responsavel-status-legend-title { font-weight: 800; }
+.responsavel-status-legend-item { display: inline-flex; align-items: center; gap: .4rem; }
+.responsavel-status-dot { display: inline-block; width: .75rem; height: .75rem; flex: 0 0 .75rem; border: 2px solid white; border-radius: 999px; box-shadow: 0 0 0 1px currentColor; }
+.responsavel-status-dot-sent { background: #15966b; color: #087a55; }
+.responsavel-status-dot-review { background: #e3a928; color: #9b6b00; }
+.responsavel-status-dot-missing { background: #d95b5b; color: #a52e2e; }
 .responsavel-table-wrap { padding: 1.25rem 1.5rem 1.5rem; overflow-x: auto; }
 .responsavel-table-wrap .dt-container { display: grid; gap: 1rem; min-width: 760px; color: var(--ink); font: inherit; }
 .responsavel-table-wrap .dt-layout-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0; }
@@ -313,9 +320,26 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-atas-table thead th.dt-orderable-asc, .responsavel-atas-table thead th.dt-orderable-desc { cursor: pointer; }
 .responsavel-atas-table thead th.dt-orderable-none { cursor: default; }
 .responsavel-status-badge { display: inline-flex; justify-content: center; min-width: 5.5rem; border: 1px solid #bfdfcf; border-radius: 8px; padding: .35rem .75rem; background: #e6f4ed; color: #007a55; font-weight: 800; }
+.responsavel-atas-card .responsavel-status-column,
+.responsavel-atas-card .responsavel-actions-column { width: 4rem; }
+.responsavel-date-mobile { display: none; }
+.responsavel-server-name { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .responsavel-ata-actions { flex-wrap: nowrap; justify-content: center; }
 .responsavel-ata-actions .icon-button, .responsavel-ata-actions .danger-icon-button { width: 2.5rem; height: 2.5rem; min-width: 2.5rem; align-self: center; }
 .responsavel-ata-actions .danger-icon-button:disabled { background: #f5e7e7; color: color-mix(in srgb, var(--danger) 70%, white); cursor: not-allowed; }
+.responsavel-action-menu-trigger { display: inline-grid; width: 2.5rem; height: 2.5rem; min-width: 2.5rem; min-height: 2.5rem; place-items: center; padding: 0; background: #e7eee9; color: var(--brand); }
+.responsavel-action-menu-trigger svg { width: 1rem; height: 1rem; }
+.responsavel-action-menu-trigger:hover,
+.responsavel-action-menu-trigger:focus-visible { background: color-mix(in srgb, var(--brand) 18%, white); outline: 2px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: 2px; }
+.responsavel-action-menu { position: fixed; z-index: 100; display: grid; width: min(14rem, calc(100vw - 1rem)); overflow: hidden; border: 1px solid var(--line); border-radius: 10px; padding: .35rem; background: white; box-shadow: 0 14px 35px rgb(16 32 24 / 22%); }
+.responsavel-action-menu-item { display: grid; grid-template-columns: 1.25rem minmax(0, 1fr) auto; align-items: center; gap: .55rem; min-height: 2.5rem; width: 100%; border-radius: 7px; padding: .55rem .65rem; background: transparent; color: var(--ink); font-size: .875rem; line-height: 1.2; text-align: left; text-decoration: none; }
+.responsavel-action-menu-item svg { width: .95rem; height: .95rem; color: var(--brand); }
+.responsavel-action-menu-item small { color: var(--muted); font-size: .7rem; }
+.responsavel-action-menu-item:hover,
+.responsavel-action-menu-item:focus-visible { background: #edf4ef; outline: 2px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: -2px; }
+.responsavel-action-menu-item:disabled { background: transparent; color: color-mix(in srgb, var(--muted) 70%, white); opacity: 1; }
+.responsavel-action-menu-item:disabled svg { color: color-mix(in srgb, var(--muted) 55%, white); }
+.responsavel-action-menu-item-danger svg { color: var(--danger); }
 .responsavel-placeholder-card { padding: 0; overflow: hidden; }
 @media (min-width: 981px) and (max-width: 1200px) {
   .admin-page-header,
@@ -345,6 +369,30 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .responsavel-signout-form { width: 3rem; }
   .responsavel-signout-button { justify-content: center; }
   .responsavel-main { padding: 2rem 1.25rem; }
+  .responsavel-atas-card .responsavel-atas-table th,
+  .responsavel-atas-card .responsavel-atas-table td { font-size: .875rem; }
+  .responsavel-atas-card .responsavel-atas-table th,
+  .responsavel-atas-card .responsavel-atas-table td { padding: .75rem .65rem; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-container,
+  .responsavel-atas-card .responsavel-atas-table { min-width: 0; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:first-child { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); align-items: center; gap: 1rem; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:first-child .dt-layout-cell { width: auto !important; min-width: 0; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-search,
+  .responsavel-atas-card .responsavel-table-wrap .dt-search label { min-width: 0; width: 100%; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-search input { min-width: 0; width: 100%; }
+  .responsavel-atas-card .responsavel-atas-table { table-layout: fixed; }
+  .responsavel-atas-card .responsavel-atas-table th:nth-child(1),
+  .responsavel-atas-card .responsavel-atas-table td:nth-child(1) { width: 10% !important; }
+  .responsavel-atas-card .responsavel-atas-table th:nth-child(2),
+  .responsavel-atas-card .responsavel-atas-table td:nth-child(2) { width: 17% !important; }
+  .responsavel-atas-card .responsavel-atas-table th:nth-child(3),
+  .responsavel-atas-card .responsavel-atas-table td:nth-child(3) { width: 14% !important; }
+  .responsavel-atas-card .responsavel-atas-table th:nth-child(4),
+  .responsavel-atas-card .responsavel-atas-table td:nth-child(4) { width: 37% !important; }
+  .responsavel-atas-card .responsavel-atas-table th:nth-child(5),
+  .responsavel-atas-card .responsavel-atas-table td:nth-child(5),
+  .responsavel-atas-card .responsavel-atas-table th:nth-child(6),
+  .responsavel-atas-card .responsavel-atas-table td:nth-child(6) { width: 11% !important; }
 }
 @media (max-width: 720px) {
   .grid, .definition-grid, .metrics, .form-grid, .four-columns, .review-grid { grid-template-columns: 1fr; }
@@ -429,11 +477,55 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .responsavel-config-panel .group-save-footer { display: grid; }
   .responsavel-config-panel .group-save-footer .group-wide-action,
   .responsavel-config-panel .group-save-footer .secondary { width: 100%; }
+  .responsavel-atas-card .status-tabs { justify-content: space-between; gap: .5rem; overflow: visible; padding-inline: .75rem; }
+  .responsavel-atas-card .status-tab { min-height: 3.25rem; padding: .75rem 0; font-size: .8125rem; white-space: nowrap; }
+  .responsavel-status-legend { gap: .35rem .75rem; padding: .65rem .75rem 0; font-size: .75rem; }
+  .responsavel-status-legend-title { width: 100%; }
   .responsavel-table-wrap { padding: 0 1rem; }
-  .responsavel-table-wrap .dt-container { min-width: 760px; }
-  .responsavel-table-wrap .dt-layout-row { display: grid; gap: .75rem; }
-  .responsavel-table-wrap .dt-layout-cell { justify-content: stretch; }
-  .responsavel-table-wrap .dt-search label { display: grid; align-items: stretch; width: 100%; }
-  .responsavel-table-wrap .dt-search input { width: 100%; margin-left: 0; }
-  .responsavel-table-wrap .dt-paging { justify-content: flex-start; flex-wrap: wrap; }
+  .responsavel-atas-card .responsavel-table-wrap { padding: .75rem .5rem; overflow-x: visible; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-container { gap: .75rem; min-width: 0; width: 100%; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row { display: grid; min-width: 0; gap: .5rem; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:first-child { grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: end; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:last-child { grid-template-columns: 1fr; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-layout-cell { min-width: 0; justify-content: stretch; gap: .35rem; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-layout-cell.dt-layout-full { overflow-x: visible; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-length,
+  .responsavel-atas-card .responsavel-table-wrap .dt-search { min-width: 0; width: 100%; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-length { display: grid; grid-template-rows: auto 2.25rem; justify-content: start; align-content: start; gap: .35rem; text-align: left; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-length label { display: block; min-width: 0; width: 100%; font-size: .8125rem; line-height: 1.25; text-align: left; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-search { display: grid; grid-template-rows: auto 2.25rem; align-content: start; gap: .35rem; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-search label { display: block; min-width: 0; width: 100%; font-size: .8125rem; line-height: 1.25; text-align: left; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-length select { min-width: 3.25rem; min-height: 2.25rem; padding: .4rem 1.35rem .4rem .4rem; font-size: 1rem; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-search input { min-width: 0; min-height: 2.25rem; width: 100%; margin-left: 0; padding: .4rem .5rem; font-size: 1rem; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-info { font-size: .8125rem; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-paging { justify-content: flex-start; flex-wrap: wrap; gap: .25rem; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-paging .dt-paging-button { min-width: 2.25rem; min-height: 2.25rem; padding: .4rem .55rem; font-size: .8125rem; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-paging .dt-paging-button.first,
+  .responsavel-atas-card .responsavel-table-wrap .dt-paging .dt-paging-button.last { display: none; }
+  .responsavel-atas-card .responsavel-atas-table { min-width: 0; width: 100% !important; table-layout: fixed; }
+  .responsavel-atas-card .responsavel-atas-table th,
+  .responsavel-atas-card .responsavel-atas-table td { padding: .55rem .25rem; font-size: .8125rem; line-height: 1.25; }
+  .responsavel-atas-card .responsavel-atas-table th:nth-child(1),
+  .responsavel-atas-card .responsavel-atas-table td:nth-child(1) { width: 14% !important; }
+  .responsavel-atas-card .responsavel-atas-table th:nth-child(2),
+  .responsavel-atas-card .responsavel-atas-table td:nth-child(2) { width: 31% !important; }
+  .responsavel-atas-card .responsavel-atas-table th:nth-child(3),
+  .responsavel-atas-card .responsavel-atas-table td:nth-child(3) { display: none; }
+  .responsavel-atas-card .responsavel-atas-table th:nth-child(4),
+  .responsavel-atas-card .responsavel-atas-table td:nth-child(4) { width: 27% !important; }
+  .responsavel-atas-card .responsavel-atas-table th:nth-child(5),
+  .responsavel-atas-card .responsavel-atas-table td:nth-child(5) { width: 12% !important; padding-inline: .1rem; }
+  .responsavel-atas-card .responsavel-atas-table th:nth-child(6),
+  .responsavel-atas-card .responsavel-atas-table td:nth-child(6) { width: 16% !important; padding-inline: 0; }
+  .responsavel-date-desktop { display: none; }
+  .responsavel-date-mobile { display: block; overflow: hidden; white-space: nowrap; }
+  .responsavel-server-name { text-align: left; }
+  .responsavel-status-dot { width: .7rem; height: .7rem; flex-basis: .7rem; }
+  .responsavel-action-menu-trigger { width: 2.5rem; height: 2.5rem; min-width: 2.5rem; min-height: 2.5rem; }
+}
+@media (max-width: 360px) {
+  .responsavel-atas-card .responsavel-status-column .dt-column-title,
+  .responsavel-atas-card .responsavel-actions-column .dt-column-title { font-size: 0; }
+  .responsavel-atas-card .responsavel-status-column .dt-column-title::after { content: "St."; font-size: .8125rem; }
+  .responsavel-atas-card .responsavel-actions-column .dt-column-title::after { content: "Ação"; font-size: .8125rem; }
 }

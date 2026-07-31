@@ -98,6 +98,20 @@ export const formatoMapping = createEnumMapping({
   outros: "Outros",
 } as const);
 
+export const servidorFuncoesSimulacao = [
+  "Coordenador",
+  "Moderador",
+  "Secretário",
+  "Apoio",
+  "Anfitrião",
+  "Coanfitrião",
+] as const;
+
+export const servidorFuncoes = [
+  ...servidorFuncoesSimulacao,
+  "Outros",
+] as const;
+
 export type Plataforma = (typeof plataformaMapping.codes)[number];
 export type TipoReuniao = (typeof tipoReuniaoMapping.codes)[number];
 export type CategoriaVisitante =

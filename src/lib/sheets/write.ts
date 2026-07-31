@@ -58,14 +58,30 @@ export function buildAtomicWriteRequests(
   sheetIds: SheetIds,
   nextRows: NextRows,
 ): sheets_v4.Schema$Request[] {
+  return buildMonthlyAtomicWriteRequests([registro], sheetIds, nextRows);
+}
+
+export function buildMonthlyAtomicWriteRequests(
+  registros: readonly AtaCompleta[],
+  sheetIds: SheetIds,
+  nextRows: NextRows,
+): sheets_v4.Schema$Request[] {
   const rows = {
-    atas: [domainAtaToSheet(registro.ata)],
-    servidores: registro.servidores.map(domainServidorToSheet),
-    participacao: registro.participacao.map(domainParticipacaoToSheet),
-    visitantes: registro.visitantes.map(domainVisitanteToSheet),
-    ingressos: registro.ingressos.map(domainIngressoToSheet),
-    trocas_chaveiro: registro.trocas_chaveiro.map(
-      domainTrocaChaveiroToSheet,
+    atas: registros.map((registro) => domainAtaToSheet(registro.ata)),
+    servidores: registros.flatMap((registro) =>
+      registro.servidores.map(domainServidorToSheet),
+    ),
+    participacao: registros.flatMap((registro) =>
+      registro.participacao.map(domainParticipacaoToSheet),
+    ),
+    visitantes: registros.flatMap((registro) =>
+      registro.visitantes.map(domainVisitanteToSheet),
+    ),
+    ingressos: registros.flatMap((registro) =>
+      registro.ingressos.map(domainIngressoToSheet),
+    ),
+    trocas_chaveiro: registros.flatMap((registro) =>
+      registro.trocas_chaveiro.map(domainTrocaChaveiroToSheet),
     ),
   };
 

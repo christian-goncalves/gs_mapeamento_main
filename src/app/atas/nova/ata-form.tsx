@@ -16,6 +16,7 @@ import {
   formatoMapping,
   origemContatoMapping,
   plataformaMapping,
+  servidorFuncoes,
   tempoLimpoMapping,
   tipoReuniaoMapping,
 } from "@/domain/enums";
@@ -53,15 +54,7 @@ const tipoReuniaoOptions: Draft["ata"]["tipo_reuniao"][] = [
   "fechada",
   "aberta",
 ];
-const servidorFuncaoOptions = [
-  "Coordenador",
-  "Moderador",
-  "Secretário",
-  "Apoio",
-  "Anfitrião",
-  "Coanfitrião",
-  "Outros",
-];
+const servidorFuncaoOptions = servidorFuncoes;
 
 type AtaNameSuggestions = {
   preenchido_por: string[];

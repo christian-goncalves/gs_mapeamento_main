@@ -32,9 +32,14 @@ data/ata-name-suggestions.json
 .agents/skills/*
 !.agents/skills/gs-mapeamento-atas/
 !.agents/skills/gs-mapeamento-atas/**
+!.agents/skills/simular-atas-mensais/
+!.agents/skills/simular-atas-mensais/**
 .codex/
 .git-store/
-.git.empty-backup-*/
+.git-empty-backup-*/
+
+# Artefatos locais de simulacoes (podem conter nomes informados)
+artifacts/ata-simulations/
 
 # Sistema operacional
 .DS_Store

@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faEllipsisVertical,
   faEye,
   faFilePdf,
   faPenToSquare,
@@ -28,6 +30,12 @@ const tabLabels: Record<ResponsavelAtaTab, string> = {
   todas: "Todas",
 };
 
+const statusLegend = [
+  { label: "Enviada", className: "responsavel-status-dot-sent" },
+  { label: "Pendente de revisão", className: "responsavel-status-dot-review" },
+  { label: "Não enviada", className: "responsavel-status-dot-missing" },
+] as const;
+
 type ResponsavelAtaDataTableRow = [
   string,
   string,
@@ -42,6 +50,154 @@ function formatDate(value: string) {
   const [year, month, day] = value.split("-");
   if (!year || !month || !day) return value;
   return `${day}-${month}-${year}`;
+}
+
+function formatMobileDate(value: string) {
+  const [, month, day] = value.split("-");
+  if (!month || !day) return value;
+  return `${day}-${month}`;
+}
+
+function ResponsavelAtaActions({ ata }: { ata: ResponsavelAtaRow }) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuId = useId();
+  const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const dateLabel = formatDate(ata.data);
+
+  function updatePosition() {
+    const button = buttonRef.current;
+    if (!button) return;
+
+    const rect = button.getBoundingClientRect();
+    const menuWidth = Math.min(224, window.innerWidth - 16);
+    const menuHeight = menuRef.current?.offsetHeight ?? 188;
+    const left = Math.min(
+      window.innerWidth - menuWidth - 8,
+      Math.max(8, rect.right - menuWidth),
+    );
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const top =
+      spaceBelow >= menuHeight + 8
+        ? rect.bottom + 8
+        : Math.max(8, rect.top - menuHeight - 8);
+
+    setPosition({ top, left });
+  }
+
+  function toggleMenu() {
+    if (!open) updatePosition();
+    setOpen((current) => !current);
+  }
+
+  useEffect(() => {
+    if (!open) return;
+
+    updatePosition();
+
+    function closeOnPointerDown(event: PointerEvent) {
+      const target = event.target as Node;
+      if (
+        !buttonRef.current?.contains(target) &&
+        !menuRef.current?.contains(target)
+      ) {
+        setOpen(false);
+      }
+    }
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      buttonRef.current?.focus();
+    }
+
+    function repositionMenu() {
+      updatePosition();
+    }
+
+    document.addEventListener("pointerdown", closeOnPointerDown);
+    document.addEventListener("keydown", closeOnEscape);
+    window.addEventListener("resize", repositionMenu);
+    window.addEventListener("scroll", repositionMenu, true);
+
+    return () => {
+      document.removeEventListener("pointerdown", closeOnPointerDown);
+      document.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("resize", repositionMenu);
+      window.removeEventListener("scroll", repositionMenu, true);
+    };
+  }, [open]);
+
+  return (
+    <>
+      <button
+        ref={buttonRef}
+        type="button"
+        className="responsavel-action-menu-trigger"
+        aria-label={`Abrir ações da ata de ${dateLabel}`}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={menuId}
+        title="Ações"
+        onClick={toggleMenu}
+      >
+        <FontAwesomeIcon icon={faEllipsisVertical} />
+      </button>
+      {open
+        ? createPortal(
+            <div
+              ref={menuRef}
+              id={menuId}
+              className="responsavel-action-menu"
+              role="menu"
+              aria-label={`Ações da ata de ${dateLabel}`}
+              style={{ top: position.top, left: position.left }}
+            >
+              <Link
+                className="responsavel-action-menu-item"
+                href={`/atas/${ata.ataId}`}
+                role="menuitem"
+              >
+                <FontAwesomeIcon icon={faEye} />
+                <span>Visualizar</span>
+              </Link>
+              <button
+                type="button"
+                className="responsavel-action-menu-item"
+                role="menuitem"
+                disabled
+              >
+                <FontAwesomeIcon icon={faFilePdf} />
+                <span>Gerar PDF</span>
+                <small>Indisponível</small>
+              </button>
+              <button
+                type="button"
+                className="responsavel-action-menu-item"
+                role="menuitem"
+                disabled
+              >
+                <FontAwesomeIcon icon={faPenToSquare} />
+                <span>Editar</span>
+                <small>Indisponível</small>
+              </button>
+              <button
+                type="button"
+                className="responsavel-action-menu-item responsavel-action-menu-item-danger"
+                role="menuitem"
+                disabled
+              >
+                <FontAwesomeIcon icon={faTrashCan} />
+                <span>Excluir</span>
+                <small>Indisponível</small>
+              </button>
+            </div>,
+            document.body,
+          )
+        : null}
+    </>
+  );
 }
 
 function sortRows(rows: ResponsavelAtaRow[], tab: ResponsavelAtaTab) {
@@ -73,14 +229,27 @@ function toDataTableRows(rows: ResponsavelAtaRow[]): ResponsavelAtaDataTableRow[
 }
 
 const columns: ConfigColumns[] = [
-  { title: "Ata", className: "responsavel-centered-column" },
+  {
+    title: "Ata",
+    className: "responsavel-centered-column responsavel-ata-number-column",
+  },
   { title: "Data", className: "responsavel-data-column" },
-  { title: "Horário", className: "responsavel-centered-column" },
-  { title: "Preenchido por", className: "responsavel-centered-column" },
-  { title: "Status", className: "responsavel-centered-column", orderable: false },
+  {
+    title: "Horário",
+    className: "responsavel-centered-column responsavel-time-column",
+  },
+  {
+    title: "Preenchido por",
+    className: "responsavel-centered-column responsavel-server-column",
+  },
+  {
+    title: "Status",
+    className: "responsavel-centered-column responsavel-status-column",
+    orderable: false,
+  },
   {
     title: "Ações",
-    className: "responsavel-centered-column",
+    className: "responsavel-centered-column responsavel-actions-column",
     orderable: false,
     searchable: false,
   },
@@ -136,6 +305,19 @@ export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
         ))}
       </div>
 
+      <div className="responsavel-status-legend" aria-label="Legenda dos status">
+        <span className="responsavel-status-legend-title">Status:</span>
+        {statusLegend.map((status) => (
+          <span className="responsavel-status-legend-item" key={status.label}>
+            <span
+              className={`responsavel-status-dot ${status.className}`}
+              aria-hidden="true"
+            />
+            {status.label}
+          </span>
+        ))}
+      </div>
+
       <div className="responsavel-table-wrap">
         {DataTableComponent ? (
           <DataTableComponent
@@ -156,7 +338,7 @@ export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
                 info: "_START_ - _END_ de _TOTAL_",
                 infoEmpty: "0 - 0 de 0",
                 infoFiltered: "(filtrado de _MAX_ atas)",
-                lengthMenu: "Mostrar _MENU_ atas",
+                lengthMenu: "Mostrar _MENU_",
                 loadingRecords: "Carregando...",
                 paginate: {
                   first: "Primeira",
@@ -165,59 +347,41 @@ export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
                   previous: "Anterior",
                 },
                 search: "Buscar:",
-                searchPlaceholder: "Buscar atas, datas ou servidores...",
+                searchPlaceholder: "Buscar...",
                 zeroRecords: "Nenhuma ata encontrada.",
               },
             }}
             slots={{
-              1: (data: string) => formatDate(data),
+              1: (data: string, row: ResponsavelAtaDataTableRow) => (
+                <>
+                  <span className="responsavel-date-desktop">{formatDate(data)}</span>
+                  <span className="responsavel-date-mobile">
+                    {formatMobileDate(data)} <span aria-hidden="true">|</span>{" "}
+                    {row[2]}
+                  </span>
+                </>
+              ),
+              3: (data: string) => (
+                <span className="responsavel-server-name" title={data}>
+                  {data}
+                </span>
+              ),
               4: (data: ResponsavelAtaRow["status"]) => (
-                <span className="responsavel-status-badge">{data}</span>
+                <span
+                  className="responsavel-status-dot responsavel-status-dot-sent"
+                  role="img"
+                  aria-label={`Status: ${data}`}
+                  title={data}
+                />
               ),
               5: (_data: ResponsavelAtaRow, row: ResponsavelAtaDataTableRow) => {
                 const ata = row[5];
-                const dateLabel = formatDate(ata.data);
 
                 return (
                   <div
                     className="row-actions responsavel-ata-actions"
-                    aria-label={`Ações da ata de ${dateLabel}`}
                   >
-                    <Link
-                      className="icon-button"
-                      href={`/atas/${ata.ataId}`}
-                      aria-label={`Visualizar ata de ${dateLabel} às ${ata.horario}`}
-                      title="Visualizar"
-                    >
-                      <FontAwesomeIcon icon={faEye} />
-                    </Link>
-                    <button
-                      type="button"
-                      className="icon-button"
-                      aria-label="Gerar PDF da ata indisponível"
-                      title="Gerar PDF será implementado em ciclo próprio"
-                      disabled
-                    >
-                      <FontAwesomeIcon icon={faFilePdf} />
-                    </button>
-                    <button
-                      type="button"
-                      className="icon-button"
-                      aria-label="Editar ata indisponível"
-                      title="Editar ata será implementado em ciclo próprio"
-                      disabled
-                    >
-                      <FontAwesomeIcon icon={faPenToSquare} />
-                    </button>
-                    <button
-                      type="button"
-                      className="danger-icon-button"
-                      aria-label="Excluir ata indisponível"
-                      title="Excluir ata será implementado em ciclo próprio"
-                      disabled
-                    >
-                      <FontAwesomeIcon icon={faTrashCan} />
-                    </button>
+                    <ResponsavelAtaActions ata={ata} />
                   </div>
                 );
               },
