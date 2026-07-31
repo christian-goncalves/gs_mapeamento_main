@@ -5,38 +5,25 @@ import {
   faChartSimple,
   faFileLines,
   faGear,
-  faLayerGroup,
   faRightFromBracket,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { signOut } from "@/auth";
+import { AppShell } from "@/app/app-shell";
+import {
+  responsavelNavigationItems,
+  type ResponsavelSection,
+} from "@/app/navigation-config";
 
-type ResponsavelSection = "responsavel" | "atas" | "relatorios" | "configuracoes";
-
-function ResponsavelNavItem({
-  label,
-  icon,
-  href,
-  active,
-}: {
-  label: string;
-  icon: Parameters<typeof FontAwesomeIcon>[0]["icon"];
-  href: string;
-  active: boolean;
-}) {
-  return (
-    <Link
-      className={active ? "responsavel-nav-item responsavel-nav-item-active" : "responsavel-nav-item"}
-      href={href}
-      aria-current={active ? "page" : undefined}
-      aria-label={label}
-      title={label}
-    >
-      <FontAwesomeIcon icon={icon} />
-      <span>{label}</span>
-    </Link>
-  );
-}
+const responsavelIcons: Record<
+  ResponsavelSection,
+  Parameters<typeof FontAwesomeIcon>[0]["icon"]
+> = {
+  responsavel: faUser,
+  atas: faFileLines,
+  relatorios: faChartSimple,
+  configuracoes: faGear,
+};
 
 export function ResponsavelShell({
   children,
@@ -48,46 +35,33 @@ export function ResponsavelShell({
   settingsHref: string;
 }) {
   return (
-    <main className="responsavel-layout">
-      <aside className="responsavel-sidebar" aria-label="Navegação do responsável">
-        <Link
-          className="responsavel-brand"
-          href="/responsavel/atas"
-          aria-label="Página inicial do responsável"
-          title="Página inicial do responsável"
-        >
-          <FontAwesomeIcon icon={faLayerGroup} />
-          <span>GS Mapeamento</span>
-        </Link>
-
-        <nav className="responsavel-nav" aria-label="Seções do responsável">
-          <ResponsavelNavItem
-            label="Responsável"
-            icon={faUser}
-            href="/responsavel/atas"
-            active={activeSection === "responsavel"}
-          />
-          <ResponsavelNavItem
-            label="Atas"
-            icon={faFileLines}
-            href="/responsavel/atas/nova"
-            active={activeSection === "atas"}
-          />
-          <ResponsavelNavItem
-            label="Relatórios"
-            icon={faChartSimple}
-            href="/responsavel/relatorios"
-            active={activeSection === "relatorios"}
-          />
-          <ResponsavelNavItem
-            label="Configurações"
-            icon={faGear}
-            href={settingsHref}
-            active={activeSection === "configuracoes"}
-          />
+    <AppShell
+      variant="responsavel"
+      homeHref="/responsavel/atas"
+      homeLabel="Página inicial do responsável"
+      navigationLabel="Navegação do responsável"
+      navigation={
+        <>
+          {responsavelNavigationItems(settingsHref).map((item) => (
+            <Link
+              key={item.section}
+              className={
+                activeSection === item.section
+                  ? "app-nav-item app-nav-item-active"
+                  : "app-nav-item"
+              }
+              href={item.href}
+              aria-current={activeSection === item.section ? "page" : undefined}
+              aria-label={item.label}
+              title={item.label}
+            >
+              <FontAwesomeIcon icon={responsavelIcons[item.section]} />
+              <span>{item.label}</span>
+            </Link>
+          ))}
 
           <form
-            className="responsavel-signout-form"
+            className="app-signout-form"
             action={async () => {
               "use server";
               await signOut({ redirectTo: "/login" });
@@ -95,7 +69,7 @@ export function ResponsavelShell({
           >
             <button
               type="submit"
-              className="responsavel-nav-item responsavel-signout-button"
+              className="app-nav-item app-signout-button"
               aria-label="Sair"
               title="Sair"
             >
@@ -103,10 +77,10 @@ export function ResponsavelShell({
               <span>Sair</span>
             </button>
           </form>
-        </nav>
-      </aside>
-
-      <div className="responsavel-main">{children}</div>
-    </main>
+        </>
+      }
+    >
+      {children}
+    </AppShell>
   );
 }

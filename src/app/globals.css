@@ -194,20 +194,22 @@ legend { padding: 0 .35rem; font-weight: 700; }
   0% { background-position: 100% 0; }
   100% { background-position: -120% 0; }
 }
-.admin-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); min-height: 100vh; overflow-x: clip; background: var(--paper); }
-.admin-sidebar { position: sticky; top: 0; display: grid; grid-template-rows: auto 1fr; min-height: 100vh; border-right: 1px solid var(--line); padding: 1.5rem 1rem; background: color-mix(in srgb, var(--surface) 88%, var(--paper)); }
-.admin-brand { display: flex; align-items: center; gap: .75rem; min-height: 3rem; padding: .35rem .5rem; color: #102033; font-size: 1.15rem; font-weight: 800; line-height: 1.1; text-decoration: none; }
-.admin-brand svg { width: 1.75rem; height: 1.75rem; color: #007a55; }
-.admin-nav { display: grid; align-content: start; gap: .5rem; margin-top: 2.5rem; }
-.admin-nav-item { display: flex; align-items: center; gap: .75rem; min-height: 2.75rem; width: 100%; border-radius: 8px; padding: .65rem .75rem; background: transparent; color: var(--ink); text-align: left; text-decoration: none; font-weight: 700; }
-.admin-nav-item svg { width: 1.1rem; height: 1.1rem; flex: 0 0 auto; color: currentColor; }
-.admin-nav-item:hover, .admin-nav-item:focus-visible { background: #eaf2ec; outline: 2px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: 2px; color: var(--brand); }
-.admin-nav-item-active { background: #e2eee6; color: #007a55; }
-.admin-nav-item-disabled, .admin-nav-item-disabled:disabled { background: transparent; color: color-mix(in srgb, var(--muted) 72%, white); cursor: not-allowed; opacity: 1; }
-.admin-signout-form { width: 100%; margin: 0; }
-.admin-signout-button { justify-content: flex-start; color: var(--danger); }
-.admin-signout-button:hover, .admin-signout-button:focus-visible { background: #f5e7e7; color: var(--danger); }
-.admin-main { width: min(1040px, 100%); min-width: 0; padding: 2.5rem 1.75rem; }
+.app-layout, .admin-layout, .responsavel-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); min-height: 100vh; overflow-x: clip; background: var(--paper); }
+.app-sidebar, .admin-sidebar, .responsavel-sidebar { position: sticky; top: 0; display: grid; grid-template-rows: auto 1fr; min-height: 100vh; border-right: 1px solid var(--line); padding: 1.5rem 1rem; background: color-mix(in srgb, var(--surface) 88%, var(--paper)); }
+.app-navigation-header { min-width: 0; }
+.app-brand, .admin-brand, .responsavel-brand { display: flex; align-items: center; gap: .75rem; min-height: 3rem; padding: .35rem .5rem; color: #102033; font-size: 1.15rem; font-weight: 800; line-height: 1.1; text-decoration: none; }
+.app-brand svg, .admin-brand svg, .responsavel-brand svg { width: 1.75rem; height: 1.75rem; flex: 0 0 auto; color: #007a55; }
+.app-nav, .admin-nav, .responsavel-nav { display: grid; align-content: start; gap: .5rem; margin-top: 2.5rem; }
+.app-nav-item { display: flex; align-items: center; justify-content: flex-start; gap: .75rem; min-height: 2.75rem; width: 100%; border-radius: 8px; padding: .65rem .75rem; background: transparent; color: var(--ink); text-align: left; text-decoration: none; font-weight: 700; }
+.app-nav-item svg { width: 1.1rem; height: 1.1rem; flex: 0 0 auto; color: currentColor; }
+.app-nav-item:hover, .app-nav-item:focus-visible { background: #eaf2ec; outline: 2px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: 2px; color: var(--brand); }
+.app-nav-item-active { background: #e2eee6; color: #007a55; }
+.app-signout-form { width: 100%; margin: 0; }
+.app-signout-button { justify-content: flex-start; color: var(--danger); }
+.app-signout-button:hover, .app-signout-button:focus-visible { background: #f5e7e7; color: var(--danger); }
+.app-menu-trigger { display: none; width: 2.75rem; height: 2.75rem; min-width: 2.75rem; min-height: 2.75rem; padding: 0; background: #e7eee9; color: var(--brand); }
+.app-menu-trigger:hover, .app-menu-trigger:focus-visible { background: color-mix(in srgb, var(--brand) 18%, white); outline: 2px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: 2px; }
+.app-main, .admin-main, .responsavel-main { width: min(1040px, 100%); min-width: 0; padding: 2.5rem 1.75rem; }
 .admin-page-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; }
 .admin-page-header h1 { margin: 0; font-size: clamp(2rem, 4vw, 2.65rem); line-height: 1.1; color: #102033; }
 .admin-groups-panel { display: grid; gap: 1.5rem; }
@@ -255,19 +257,6 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .admin-atas-table .admin-status-badge-sent { border-color: #94d7b6; background: #dff7ea; color: #006f4e; }
 .admin-atas-table .admin-status-badge-review { border-color: #f2c96d; background: #fff1c2; color: #745100; }
 .admin-atas-table .admin-status-badge-missing { border-color: #ef9a9a; background: #ffe1e1; color: #9f1d1d; }
-.responsavel-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); min-height: 100vh; overflow-x: clip; background: var(--paper); }
-.responsavel-sidebar { position: sticky; top: 0; display: grid; grid-template-rows: auto 1fr; min-height: 100vh; border-right: 1px solid var(--line); padding: 1.5rem 1rem; background: color-mix(in srgb, var(--surface) 88%, var(--paper)); }
-.responsavel-brand { display: flex; align-items: center; gap: .75rem; min-height: 3rem; padding: .35rem .5rem; color: #102033; font-size: 1.15rem; font-weight: 800; line-height: 1.1; text-decoration: none; }
-.responsavel-brand svg { width: 1.75rem; height: 1.75rem; color: #007a55; }
-.responsavel-nav { display: grid; align-content: start; gap: .5rem; margin-top: 2.5rem; }
-.responsavel-nav-item { display: flex; align-items: center; gap: .75rem; min-height: 2.75rem; width: 100%; border-radius: 8px; padding: .65rem .75rem; background: transparent; color: var(--ink); text-align: left; text-decoration: none; font-weight: 700; }
-.responsavel-nav-item svg { width: 1.1rem; height: 1.1rem; flex: 0 0 auto; color: currentColor; }
-.responsavel-nav-item:hover, .responsavel-nav-item:focus-visible { background: #eaf2ec; outline: 2px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: 2px; color: var(--brand); }
-.responsavel-nav-item-active { background: #e2eee6; color: #007a55; }
-.responsavel-signout-form { width: 100%; margin: 0; }
-.responsavel-signout-button { justify-content: flex-start; color: var(--danger); }
-.responsavel-signout-button:hover, .responsavel-signout-button:focus-visible { background: #f5e7e7; color: var(--danger); }
-.responsavel-main { width: min(1040px, 100%); min-width: 0; padding: 2.5rem 1.75rem; }
 .responsavel-page-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
 .responsavel-page-header h1 { margin: 0; font-size: clamp(2rem, 4vw, 2.65rem); line-height: 1.1; color: #102033; }
 .responsavel-page-description { margin: .55rem 0 0; color: #526070; font-size: .82rem; font-weight: 700; line-height: 1.35; }
@@ -349,26 +338,21 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .responsavel-header-actions,
   .responsavel-config-panel .group-save-footer { justify-content: flex-start; }
 }
+@media (max-width: 980px) {
+  .app-layout, .admin-layout, .responsavel-layout { grid-template-columns: 1fr; grid-template-rows: auto 1fr; align-content: start; }
+  .app-sidebar, .admin-sidebar, .responsavel-sidebar { position: relative; display: block; min-height: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: .75rem 1rem; }
+  .app-navigation-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-width: 0; }
+  .app-brand, .admin-brand, .responsavel-brand { min-width: 0; padding: .35rem 0; }
+  .app-brand span, .admin-brand span, .responsavel-brand span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .app-menu-trigger { display: inline-grid; flex: 0 0 auto; place-items: center; }
+  .app-nav, .admin-nav, .responsavel-nav { position: absolute; z-index: 30; top: calc(100% + .5rem); right: 1rem; display: none; width: min(20rem, calc(100vw - 2rem)); gap: .35rem; margin: 0; border: 1px solid var(--line); border-radius: 10px; padding: .5rem; background: var(--surface); box-shadow: 0 14px 35px rgb(16 32 24 / 22%); }
+  .app-nav[data-open="true"] { display: grid; }
+  .app-nav-item { min-height: 2.75rem; padding: .7rem .75rem; }
+  .app-signout-form { width: 100%; }
+  .app-main, .admin-main, .responsavel-main { padding: 2rem 1.25rem; }
+}
 @media (min-width: 721px) and (max-width: 980px) {
-  .admin-layout { grid-template-columns: 76px minmax(0, 1fr); }
-  .admin-sidebar { align-content: start; align-items: stretch; grid-template-rows: auto auto; padding: 1.25rem .6rem; }
-  .admin-brand { justify-content: center; padding-inline: 0; }
-  .admin-brand span, .admin-nav-item span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .admin-nav { justify-items: center; width: 100%; gap: .65rem; margin-top: 1rem; }
-  .admin-nav-item { justify-content: center; width: 3rem; min-height: 3rem; padding: .75rem; }
-  .admin-signout-form { width: 3rem; }
-  .admin-signout-button { justify-content: center; }
-  .admin-main { padding: 2rem 1.25rem; }
   .admin-atas-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .responsavel-layout { grid-template-columns: 76px minmax(0, 1fr); }
-  .responsavel-sidebar { align-content: start; align-items: stretch; grid-template-rows: auto auto; padding: 1.25rem .6rem; }
-  .responsavel-brand { justify-content: center; padding-inline: 0; }
-  .responsavel-brand span, .responsavel-nav-item span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .responsavel-nav { justify-items: center; width: 100%; gap: .65rem; margin-top: 1rem; }
-  .responsavel-nav-item { justify-content: center; width: 3rem; min-height: 3rem; padding: .75rem; }
-  .responsavel-signout-form { width: 3rem; }
-  .responsavel-signout-button { justify-content: center; }
-  .responsavel-main { padding: 2rem 1.25rem; }
   .responsavel-atas-card .responsavel-atas-table th,
   .responsavel-atas-card .responsavel-atas-table td { font-size: .875rem; }
   .responsavel-atas-card .responsavel-atas-table th,
@@ -433,16 +417,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .schedule-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .5rem; }
   .schedule-review-list { grid-template-columns: 1fr; }
   .modal-actions { display: grid; }
-  .admin-layout { grid-template-columns: 1fr; grid-template-rows: auto 1fr; align-content: start; }
-  .admin-sidebar { position: static; display: flex; align-items: center; justify-content: flex-start; min-height: auto; gap: .4rem; padding: .9rem 1rem; border-right: 0; border-bottom: 1px solid var(--line); }
-  .admin-brand { justify-content: center; min-width: 2.75rem; width: auto; min-height: 2.75rem; padding: .65rem; }
-  .admin-brand span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .admin-nav { display: flex; flex: 1 1 auto; gap: .4rem; margin-top: 0; overflow-x: auto; overscroll-behavior-inline: contain; padding-bottom: 0; }
-  .admin-nav-item { justify-content: center; min-width: 2.75rem; width: auto; min-height: 2.75rem; padding: .65rem; }
-  .admin-nav-item span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .admin-signout-form { flex: 0 0 auto; width: auto; margin: 0 0 0 auto; }
-  .admin-signout-button { justify-content: center; }
-  .admin-main { padding: 1.25rem 1rem 2rem; }
+  .app-main, .admin-main, .responsavel-main { padding: 1.25rem 1rem 2rem; }
   .admin-page-header { display: grid; align-items: stretch; }
   .admin-page-header .button-link { width: 100%; text-align: center; }
   .summary-cards { grid-template-columns: 1fr; gap: .75rem; }
@@ -456,16 +431,6 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .admin-group-actions .group-list-actions { flex-wrap: wrap; justify-content: flex-start; gap: .45rem; }
   .admin-atas-filters { grid-template-columns: 1fr; padding: 1rem; }
   .admin-atas-table-wrap .dt-container, .admin-atas-table { min-width: 980px; }
-  .responsavel-layout { grid-template-columns: 1fr; grid-template-rows: auto 1fr; align-content: start; }
-  .responsavel-sidebar { position: static; display: flex; align-items: center; justify-content: flex-start; min-height: auto; gap: .4rem; padding: .9rem 1rem; border-right: 0; border-bottom: 1px solid var(--line); }
-  .responsavel-brand { justify-content: center; min-width: 2.75rem; width: auto; min-height: 2.75rem; padding: .65rem; }
-  .responsavel-brand span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .responsavel-nav { display: flex; flex: 1 1 auto; gap: .4rem; margin-top: 0; overflow-x: auto; overscroll-behavior-inline: contain; padding-bottom: 0; }
-  .responsavel-nav-item { justify-content: center; min-width: 2.75rem; width: auto; min-height: 2.75rem; padding: .65rem; }
-  .responsavel-nav-item span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .responsavel-signout-form { flex: 0 0 auto; width: auto; margin: 0 0 0 auto; }
-  .responsavel-signout-button { justify-content: center; }
-  .responsavel-main { padding: 1.25rem 1rem 2rem; }
   .responsavel-page-header { display: grid; align-items: stretch; }
   .responsavel-config-page .responsavel-page-header { grid-template-columns: minmax(0, 1fr); }
   .responsavel-page-header .button-link { width: 100%; text-align: center; }
