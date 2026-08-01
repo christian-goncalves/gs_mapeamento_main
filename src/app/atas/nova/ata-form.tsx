@@ -419,9 +419,10 @@ export function AtaForm({
               </select>
             </label>
           )}
-          <label>
+          <label className="ata-date-field">
             Data da reunião
             <input
+              className="ata-date-input"
               type="date"
               required
               value={draft.ata.data_reuniao}

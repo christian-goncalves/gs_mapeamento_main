@@ -493,7 +493,20 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .ata-general-info-grid .ata-group-field { grid-column: 1 / -1; }
   .ata-general-info-grid { grid-template-columns: minmax(0, 1.18fr) minmax(0, .82fr); gap: .75rem; }
   .ata-general-info-grid input,
-  .ata-general-info-grid select { min-width: 0; width: 100%; }
+  .ata-general-info-grid select { min-width: 0; max-width: 100%; width: 100%; }
+  .ata-general-info-grid .ata-date-field { min-inline-size: 0; max-inline-size: 100%; }
+  .ata-general-info-grid .ata-date-input {
+    display: block;
+    inline-size: 100%;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .ata-general-info-grid .ata-date-input::-webkit-date-and-time-value {
+    min-inline-size: 0;
+    text-align: left;
+  }
   .ata-participation-grid > label { font-size: clamp(.78rem, 3.6vw, .9rem); }
   .ata-participation-grid .number-stepper { grid-template-columns: 2.25rem minmax(2.5rem, 1fr) 2.25rem; gap: .2rem; }
   .ata-participation-grid .number-stepper .icon-button { width: 2.25rem; min-width: 2.25rem; }
