@@ -120,7 +120,7 @@ export function AtaReviewLayout({
   className = "",
 }: {
   title: string;
-  description: string;
+  description?: string;
   titleId: string;
   headingLevel?: "h1" | "h2";
   data: AtaReviewLayoutData;
@@ -150,7 +150,7 @@ export function AtaReviewLayout({
           </span>
           <div>
             <Heading id={titleId}>{title}</Heading>
-            <p>{description}</p>
+            {description && <p>{description}</p>}
           </div>
         </div>
         {(headerAction || headerBadge) && (

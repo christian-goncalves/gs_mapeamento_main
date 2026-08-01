@@ -3,7 +3,6 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChartSimple,
-  faFileLines,
   faGear,
   faRightFromBracket,
   faUser,
@@ -20,7 +19,6 @@ const responsavelIcons: Record<
   Parameters<typeof FontAwesomeIcon>[0]["icon"]
 > = {
   responsavel: faUser,
-  atas: faFileLines,
   relatorios: faChartSimple,
   configuracoes: faGear,
 };

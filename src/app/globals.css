@@ -397,6 +397,10 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-action-menu-item:disabled { background: transparent; color: color-mix(in srgb, var(--muted) 70%, white); opacity: 1; }
 .responsavel-action-menu-item:disabled svg { color: color-mix(in srgb, var(--muted) 55%, white); }
 .responsavel-action-menu-item-danger svg { color: var(--danger); }
+.ata-pdf-action-compact { display: contents; }
+.ata-pdf-action { display: grid; gap: .25rem; }
+.ata-pdf-action .field-error { max-width: 18rem; font-size: .75rem; }
+.review-pdf-button { border: 0; }
 .responsavel-placeholder-card { padding: 0; overflow: hidden; }
 @media (min-width: 981px) {
   .review-section summary { cursor: default; pointer-events: none; }
@@ -487,6 +491,9 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .ata-general-info-grid > label,
   .ata-participation-grid > label { min-width: 0; }
   .ata-general-info-grid .ata-group-field { grid-column: 1 / -1; }
+  .ata-general-info-grid { grid-template-columns: minmax(0, 1.18fr) minmax(0, .82fr); gap: .75rem; }
+  .ata-general-info-grid input,
+  .ata-general-info-grid select { min-width: 0; width: 100%; }
   .ata-participation-grid > label { font-size: clamp(.78rem, 3.6vw, .9rem); }
   .ata-participation-grid .number-stepper { grid-template-columns: 2.25rem minmax(2.5rem, 1fr) 2.25rem; gap: .2rem; }
   .ata-participation-grid .number-stepper .icon-button { width: 2.25rem; min-width: 2.25rem; }
@@ -632,7 +639,10 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .confirmation-modal { width: 100%; max-height: calc(100dvh - .5rem); border-radius: 12px; padding: .85rem; scrollbar-gutter: auto; }
   .review-layout-header { display: grid; }
   .review-layout-header-actions { justify-content: flex-start; }
-  .review-layout-header-actions .review-back-link { width: 100%; }
+  .review-layout-header-actions { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+  .review-layout-header-actions .review-back-link,
+  .review-layout-header-actions .ata-pdf-action,
+  .review-layout-header-actions .review-pdf-button { width: 100%; }
   .review-modal-header { gap: .75rem; }
   .review-modal-header-icon { width: 2.5rem; height: 2.5rem; font-size: 1.1rem; }
   .review-modal-header h1, .review-modal-header h2 { font-size: 1.25rem; }

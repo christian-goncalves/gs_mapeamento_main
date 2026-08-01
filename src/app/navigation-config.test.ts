@@ -31,11 +31,6 @@ describe("navigation config", () => {
         href: "/responsavel/atas",
       },
       {
-        section: "atas",
-        label: "Atas",
-        href: "/responsavel/atas/nova",
-      },
-      {
         section: "relatorios",
         label: "Relatórios",
         href: "/responsavel/relatorios",

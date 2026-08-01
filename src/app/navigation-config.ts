@@ -7,7 +7,6 @@ export type AdminSection =
 
 export type ResponsavelSection =
   | "responsavel"
-  | "atas"
   | "relatorios"
   | "configuracoes";
 
@@ -38,7 +37,6 @@ export function responsavelNavigationItems(
       label: "Responsável",
       href: "/responsavel/atas",
     },
-    { section: "atas", label: "Atas", href: "/responsavel/atas/nova" },
     {
       section: "relatorios",
       label: "Relatórios",

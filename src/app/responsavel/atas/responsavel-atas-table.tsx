@@ -7,10 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEllipsisVertical,
   faEye,
-  faFilePdf,
   faPenToSquare,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
+import { AtaPdfDownloadButton } from "@/app/atas/ata-pdf-download-button";
 import type { ConfigColumns } from "datatables.net";
 
 type ResponsavelAtaTab = "enviadas" | "por-servidor" | "todas";
@@ -162,16 +162,11 @@ function ResponsavelAtaActions({ ata }: { ata: ResponsavelAtaRow }) {
                 <FontAwesomeIcon icon={faEye} />
                 <span>Visualizar</span>
               </Link>
-              <button
-                type="button"
-                className="responsavel-action-menu-item"
-                role="menuitem"
-                disabled
-              >
-                <FontAwesomeIcon icon={faFilePdf} />
-                <span>Gerar PDF</span>
-                <small>Indisponível</small>
-              </button>
+              <AtaPdfDownloadButton
+                ataId={ata.ataId}
+                onComplete={() => setOpen(false)}
+                compact
+              />
               <button
                 type="button"
                 className="responsavel-action-menu-item"

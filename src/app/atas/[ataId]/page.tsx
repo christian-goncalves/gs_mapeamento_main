@@ -22,6 +22,7 @@ import {
   getAtaDetailBackHref,
 } from "../nova/ata-review";
 import { AtaIndexForm } from "./ata-index-form";
+import { AtaPdfDownloadButton } from "../ata-pdf-download-button";
 
 export const dynamic = "force-dynamic";
 
@@ -125,22 +126,27 @@ export default async function AtaDetailPage({
     <main className="shell ata-detail-review-shell">
       <AtaReviewLayout
         className="ata-review-page"
-        title={`Ata #${ata.indice_personalizado_grupo} — ${grupo.grupo_nome}`}
-        description="Consulte os dados registrados nesta ata. O conteúdo permanece disponível somente para os perfis autorizados."
+        title={`Ata ${ata.indice_personalizado_grupo} — ${grupo.grupo_nome}`}
         titleId="ata-detail-title"
         headingLevel="h1"
         data={reviewData}
         headerBadge={!grupo.ativo ? <span className="badge">Grupo inativo</span> : undefined}
         headerAction={(
-          <Link className="button-link secondary review-back-link" href={backHref}>
-            <span className="button-content">
-              <FontAwesomeIcon icon={faArrowLeft} />
-              Voltar
-            </span>
-          </Link>
+          <>
+            <Link className="button-link secondary review-back-link" href={backHref}>
+              <span className="button-content">
+                <FontAwesomeIcon icon={faArrowLeft} />
+                Voltar
+              </span>
+            </Link>
+            <AtaPdfDownloadButton
+              ataId={ata.ata_id}
+              className="button-link secondary review-pdf-button"
+            />
+          </>
         )}
         identification={{
-          groupReference: `#${ata.indice_personalizado_grupo}`,
+          groupReference: String(ata.indice_personalizado_grupo),
           sequential: ata.numero_sequencial_grupo,
           internalId: ata.ata_id,
           editor: (

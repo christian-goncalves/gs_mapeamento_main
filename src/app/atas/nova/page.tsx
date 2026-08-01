@@ -25,7 +25,7 @@ export default async function NewAtaPage() {
   }).format(now);
 
   return (
-    <ResponsavelShell activeSection="atas" settingsHref={`/grupos/${primaryGroup.grupo_id}`}>
+    <ResponsavelShell activeSection="responsavel" settingsHref={`/grupos/${primaryGroup.grupo_id}`}>
       <header>
         <p className="eyebrow">Nova ata</p>
         <h1>{groups.length === 1 ? groups[0].grupo_nome : "Selecione o grupo"}</h1>
