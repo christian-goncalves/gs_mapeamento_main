@@ -15,7 +15,7 @@ As imagens foram usadas como direção visual. O comportamento final foi ajustad
 
 ## Layout aprovado
 
-### Desktop — 981 px ou mais
+### Desktop - 981 px ou mais
 
 - Modal com largura máxima de 1040 px.
 - Informações gerais organizadas em duas colunas.
@@ -26,7 +26,7 @@ As imagens foram usadas como direção visual. O comportamento final foi ajustad
 - Ingressos e Conquistas de tempo ocupando a largura completa.
 - Ações finais lado a lado e alinhadas à direita.
 
-### Tablet — entre 721 px e 980 px
+### Tablet - entre 721 px e 980 px
 
 - Informações gerais mantidas em duas colunas.
 - Seis indicadores mantidos em uma única linha.
@@ -34,7 +34,7 @@ As imagens foram usadas como direção visual. O comportamento final foi ajustad
 - Seções com dados iniciam abertas; seções vazias iniciam fechadas.
 - Ações finais permanecem lado a lado.
 
-### Mobile — 720 px ou menos
+### Mobile - 720 px ou menos
 
 - Informações gerais em duas colunas enquanto houver espaço suficiente.
 - Seis indicadores distribuídos em duas linhas de três itens.
@@ -44,7 +44,7 @@ As imagens foram usadas como direção visual. O comportamento final foi ajustad
   horizontal.
 - Ações finais permanecem lado a lado acima de 360 px.
 
-### Mobile compacto — 360 px ou menos
+### Mobile compacto - 360 px ou menos
 
 - Informações gerais passam para uma única coluna.
 - Indicadores permanecem em duas linhas de três itens.

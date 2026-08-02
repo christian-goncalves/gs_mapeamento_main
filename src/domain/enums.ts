@@ -35,7 +35,18 @@ export function createEnumMappingWithAliases<const T extends Record<string, stri
   };
 }
 
-export const plataformaMapping = createEnumMapping({ zoom: "Zoom" } as const);
+export const plataformaMapping = createEnumMapping({
+  zoom: "Zoom",
+  zello: "Zello",
+  whatsapp: "WhatsApp",
+} as const);
+
+export const fusoHorarioMapping = createEnumMapping({
+  "America/Noronha": "Fernando de Noronha (UTC-02:00)",
+  "America/Sao_Paulo": "Brasília (UTC-03:00)",
+  "America/Manaus": "Manaus (UTC-04:00)",
+  "America/Rio_Branco": "Rio Branco (UTC-05:00)",
+} as const);
 
 export const tipoReuniaoMapping = createEnumMapping({
   aberta: "Aberta",
@@ -113,6 +124,7 @@ export const servidorFuncoes = [
 ] as const;
 
 export type Plataforma = (typeof plataformaMapping.codes)[number];
+export type FusoHorario = (typeof fusoHorarioMapping.codes)[number];
 export type TipoReuniao = (typeof tipoReuniaoMapping.codes)[number];
 export type CategoriaVisitante =
   (typeof categoriaVisitanteMapping.codes)[number];

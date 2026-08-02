@@ -116,24 +116,26 @@ export async function saveGrupoAction(
     ? result.grupos.find((group) => group.grupo_id === existingGroupId)
     : undefined;
   const isAdmin = current.access.role === "administrador";
-  const grupoNome = text(formData, "grupo_nome");
+  const responsavelGrupoNome =
+    text(formData, "responsavel_grupo_nome") ||
+    existingGroup?.responsavel_grupo_nome ||
+    "";
   const responsavelGrupoEmail =
     text(formData, "responsavel_grupo_email") ||
     existingGroup?.responsavel_grupo_email ||
     "";
   const raw = {
-    zoom_id: text(formData, "zoom_id"),
-    grupo_nome: grupoNome,
+    acesso_plataforma: text(formData, "acesso_plataforma"),
+    plataforma: text(formData, "plataforma"),
+    fuso_horario: text(formData, "fuso_horario"),
+    grupo_nome: text(formData, "grupo_nome"),
     ativo: bool(formData, "ativo"),
-    responsavel_grupo_nome:
-      text(formData, "responsavel_grupo_nome") ||
-      existingGroup?.responsavel_grupo_nome ||
-      grupoNome,
+    responsavel_grupo_nome: responsavelGrupoNome,
     responsavel_grupo_email: responsavelGrupoEmail,
     email_acesso_grupo:
       text(formData, "email_acesso_grupo") ||
       existingGroup?.email_acesso_grupo ||
-      responsavelGrupoEmail,
+      "",
     ultima_reuniao_anterior: int(formData, "ultima_reuniao_anterior"),
   };
   const parsedResult = grupoFormSchema.safeParse(raw);
@@ -154,13 +156,14 @@ export async function saveGrupoAction(
   const groupToSave = isAdmin
     ? {
         ...parsed,
+        zoom_id: existingGroup?.zoom_id ?? parsed.acesso_plataforma,
         ordem,
         responsaveis_ata: existingGroup?.responsaveis_ata ?? "",
         link_formulario_ata: linkFormularioAta,
         ultima_reuniao_anterior: parsed.ultima_reuniao_anterior,
       }
     : {
-        zoom_id: parsed.zoom_id,
+        zoom_id: existingGroup?.zoom_id ?? parsed.acesso_plataforma,
         grupo_nome: parsed.grupo_nome,
         ordem,
         ativo: existingGroup?.ativo ?? true,
@@ -170,6 +173,9 @@ export async function saveGrupoAction(
         responsaveis_ata: existingGroup?.responsaveis_ata ?? "",
         link_formulario_ata: linkFormularioAta,
         ultima_reuniao_anterior: existingGroup?.ultima_reuniao_anterior ?? 0,
+        fuso_horario: parsed.fuso_horario,
+        plataforma: parsed.plataforma,
+        acesso_plataforma: parsed.acesso_plataforma,
       };
   try {
     assertUniqueGroupFields(
@@ -291,6 +297,9 @@ export async function duplicateGrupoAction(formData: FormData) {
     responsaveis_ata: source.responsaveis_ata,
     link_formulario_ata: uniqueAtaLinkToken(result.grupos, newGroupId),
     ultima_reuniao_anterior: source.ultima_reuniao_anterior,
+    fuso_horario: source.fuso_horario,
+    plataforma: source.plataforma,
+    acesso_plataforma: source.acesso_plataforma,
   });
 
   for (const horario of result.grupo_horarios.filter(

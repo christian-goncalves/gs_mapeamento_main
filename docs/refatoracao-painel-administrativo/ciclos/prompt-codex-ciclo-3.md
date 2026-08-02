@@ -1,4 +1,4 @@
-# Prompt para o Codex — estruturar Ciclo 3 do painel administrativo
+# Prompt para o Codex - estruturar Ciclo 3 do painel administrativo
 
 Analise integralmente a documentação em `docs/refatoracao-painel-administrativo/` e o código atual.
 
@@ -76,7 +76,7 @@ Atualize, se necessário:
 
 ## Conteúdo obrigatório de `execucao-ciclo-3.md`
 
-### Tiro 1 — Sidebar responsiva
+### Tiro 1 - Sidebar responsiva
 - desktop;
 - tablet;
 - mobile;
@@ -84,7 +84,7 @@ Atualize, se necessário:
 - Sair;
 - tooltips.
 
-### Tiro 2 — Lista e ações mobile
+### Tiro 2 - Lista e ações mobile
 - cards;
 - nomes longos;
 - ações por ícone;
@@ -92,7 +92,7 @@ Atualize, se necessário:
 - área de toque;
 - sem overflow.
 
-### Tiro 3 — Acessibilidade e estados
+### Tiro 3 - Acessibilidade e estados
 - tabs;
 - foco;
 - teclado;
@@ -102,7 +102,7 @@ Atualize, se necessário:
 - vazio;
 - ação em andamento.
 
-### Tiro 4 — Refinamento e regressão
+### Tiro 4 - Refinamento e regressão
 - revisão visual;
 - desktop;
 - tablet;

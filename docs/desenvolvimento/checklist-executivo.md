@@ -8,13 +8,13 @@ da implementação. As fases e critérios gerais estão no
 
 Legenda: `[x]` concluído, `[ ]` pendente, `[!]` bloqueado.
 
-## Fase 1 — Contrato e modelo
+## Fase 1 - Contrato e modelo
 
 - [x] Harmonizar contratos das entidades iniciais.
 - [x] Criar DBML e estruturar as abas iniciais do Google Sheets.
 - [x] Migrar grupos para UUID e preservar `zoom_id`.
 
-## Fase 2 — Fundação
+## Fase 2 - Fundação
 
 - [x] Proteger segredos locais e remover JSONs de credenciais.
 - [x] Inicializar Next.js App Router com TypeScript.
@@ -23,7 +23,7 @@ Legenda: `[x]` concluído, `[ ]` pendente, `[!]` bloqueado.
 - [x] Criar schemas iniciais e testes básicos do domínio.
 - [x] Registrar decisões de imutabilidade, duplicidade, municípios e testes.
 
-## Fase 3 — Contratos executáveis
+## Fase 3 - Contratos executáveis
 
 - [x] Separar schemas de formulário, domínio e linhas persistidas.
 - [x] Criar schemas positivos e negativos para as seis entidades.
@@ -56,7 +56,7 @@ Critério de aceite:
 - [x] Município ausente da base é rejeitado.
 - [x] O autocomplete funciona sem chamada externa em tempo de execução.
 
-## Fase 4 — Leitura agregada
+## Fase 4 - Leitura agregada
 
 - [x] Ler e validar as abas vigentes na fase.
 - [x] Reconstruir ata completa por `ata_id`.
@@ -70,7 +70,7 @@ Critério de aceite:
 - [x] Edição manual inválida não entra em indicadores e produz diagnóstico
   localizado.
 
-## Fase 5 — Criação imutável
+## Fase 5 - Criação imutável
 
 - [x] Construir formulário com Informações Gerais e Participação.
 - [x] Manter o rascunho somente no navegador.
@@ -92,7 +92,7 @@ Critério de aceite:
 - [ ] Ata enviada aparece na listagem e no detalhe somente leitura em validação
   funcional com Google Sheets.
 
-## Fase 6 — Política de edição manual
+## Fase 6 - Política de edição manual
 
 - [x] Adicionar `MANUAL_SHEETS_EDIT_ENABLED=true` ao contrato de ambiente.
 - [x] Ler proteções e IDs das abas vigentes na fase.
@@ -106,7 +106,7 @@ Critério de aceite:
 - [x] Executar a reconciliação repetidamente não duplica proteções.
 - [x] A configuração declarada corresponde ao estado real das abas.
 
-## Fase 7 — Validação e implantação
+## Fase 7 - Validação e implantação
 
 - [x] Reconciliar contrato estrutural de DEV com sete abas.
 - [x] Reconciliar contrato estrutural de PROD com sete abas.
@@ -129,7 +129,7 @@ Critério de aceite:
 - [ ] MVP opera somente para usuários autorizados, sem banco local, sem Jotform,
   sem segredo no navegador e sem sucesso falso.
 
-## Refatoracao ATA Full — 23 de junho de 2026
+## Refatoracao ATA Full - 23 de junho de 2026
 
 - [x] TIRO 1: diagnostico documentado sem alterar `src/`.
 - [x] TIRO 1: `npm test`, `npm run lint` e `npm run build` aprovados.
@@ -148,7 +148,7 @@ Critério de aceite:
 - [x] Reconciliação Sheets: DEV e PROD atualizadas para o contrato ATA Full com
   sete abas.
 
-## Refatoração UX — contrato operacional da ata
+## Refatoração UX - contrato operacional da ata
 
 - [x] Etapa 1: documentar regras de Participação, Localidade, Visitantes,
   Ingressos e Troca de ficha.

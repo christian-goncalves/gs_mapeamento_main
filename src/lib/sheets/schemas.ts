@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   categoriaVisitanteMapping,
+  fusoHorarioMapping,
   origemContatoMapping,
   plataformaMapping,
   tempoLimpoMapping,
@@ -131,6 +132,15 @@ export const sheetGrupoSchema = z.object({
   responsaveis_ata: optionalText,
   link_formulario_ata: optionalSlug,
   ultima_reuniao_anterior: sheetOptionalInteger(0),
+  fuso_horario: optionalText.refine(
+    (value) => !value || fusoHorarioMapping.codes.includes(value as never),
+    "Fuso horário inválido.",
+  ),
+  plataforma: optionalText.refine(
+    (value) => !value || plataformaMapping.labels.includes(value as never),
+    "Plataforma inválida.",
+  ),
+  acesso_plataforma: optionalText,
   ...auditFields,
 });
 
@@ -171,7 +181,7 @@ export const sheetAtaSchema = z
     duracao: sheetOptionalDuration,
     formato_outros: optionalText,
     preenchido_por: historicalRequiredText,
-    plataforma: z.literal("Zoom"),
+    plataforma: z.enum(["Zoom", "Zello", "WhatsApp"]),
     tipo_reuniao: z.enum(["Aberta", "Fechada"]),
     formato_partilha: sheetBoolean,
     formato_estudo: sheetBoolean,
@@ -295,8 +305,21 @@ export type SheetVisitante = z.infer<typeof sheetVisitanteSchema>;
 export type SheetIngresso = z.infer<typeof sheetIngressoSchema>;
 export type SheetTrocaChaveiro = z.infer<typeof sheetTrocaChaveiroSchema>;
 
-export const sheetGrupoToDomain = (row: SheetGrupo): Grupo => row;
-export const domainGrupoToSheet = (item: Grupo): SheetGrupo => item;
+export const sheetGrupoToDomain = (row: SheetGrupo): Grupo => ({
+  ...row,
+  fuso_horario: row.fuso_horario
+    ? (row.fuso_horario as Grupo["fuso_horario"])
+    : "America/Sao_Paulo",
+  plataforma: row.plataforma
+    ? plataformaMapping.fromSheet(row.plataforma)
+    : "zoom",
+  acesso_plataforma: row.acesso_plataforma || row.zoom_id,
+});
+export const domainGrupoToSheet = (item: Grupo): SheetGrupo => ({
+  ...item,
+  fuso_horario: item.fuso_horario,
+  plataforma: plataformaMapping.toSheet(item.plataforma),
+});
 export const sheetGrupoHorarioToDomain = (
   row: SheetGrupoHorario,
 ): GrupoHorario => row;

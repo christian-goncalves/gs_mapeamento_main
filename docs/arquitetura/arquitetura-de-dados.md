@@ -34,8 +34,15 @@ Uma pasta de trabalho contém oito abas:
 | `ingressos` | Ingressos vinculados por `ata_id` |
 | `trocas_chaveiro` | Trocas de ficha vinculadas por `ata_id` |
 
-`grupo_id` é o identificador interno dos grupos. `zoom_id` é um atributo externo
-repetível e nunca é usado como chave de relacionamento.
+`grupo_id` é o identificador interno dos grupos. `zoom_id` permanece como
+atributo legado para compatibilidade e nunca é usado como chave de
+relacionamento. O acesso atual da reunião fica em `acesso_plataforma`, associado
+à `plataforma` controlada do grupo (`Zoom`, `Zello` ou `WhatsApp`). Grupos
+anteriores a essas colunas usam `Zoom` e o próprio `zoom_id` como fallback.
+
+`grupos.fuso_horario` armazena um identificador IANA brasileiro. Células legadas
+vazias usam `America/Sao_Paulo`. Nesta etapa o campo é cadastral e não converte
+datas, horários recorrentes ou timestamps de auditoria.
 
 `grupos.link_formulario_ata` é o identificador do link simplificado de
 preenchimento da ata. Esse link é gerado pela aplicação a partir do nome do
@@ -98,6 +105,13 @@ Administradores são os e-mails em `AUTH_ALLOWED_EMAILS`. Responsáveis de grupo
 são reconhecidos pelo campo `email_acesso_grupo` da aba `grupos`. O link
 `/preencher/{link_formulario_ata}` permite abrir somente o formulário do grupo
 correspondente, sem login Google e sem acesso a painel administrativo.
+
+`/admin/grupos/[grupoId]` é a página administrativa de edição dos dados e dos
+horários do grupo. O acesso utiliza `grupos.email_acesso_grupo` e
+`usuarios_grupo.email`. Os metadados `responsavel_grupo_nome`,
+`responsavel_grupo_email` e `usuarios_grupo.nome` são opcionais e nunca recebem
+`grupo_nome` ou o e-mail de login como fallback. As colunas permanecem no
+contrato para eventual uso futuro.
 
 ## Criação atômica
 

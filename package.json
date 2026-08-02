@@ -24,6 +24,7 @@
     "@fortawesome/free-solid-svg-icons": "^7.3.0",
     "@fortawesome/react-fontawesome": "^3.3.1",
     "@googleapis/sheets": "^13.0.2",
+    "@react-pdf/renderer": "^4.5.1",
     "datatables.net-dt": "^2.3.8",
     "datatables.net-react": "^1.0.2",
     "google-auth-library": "^10.5.0",

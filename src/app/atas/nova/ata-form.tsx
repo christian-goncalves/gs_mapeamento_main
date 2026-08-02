@@ -10,6 +10,7 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import type { HiddenAtaSubmission } from "@/domain/hidden-submission";
+import type { Plataforma } from "@/domain/enums";
 import type { Pais } from "@/domain/paises";
 import {
   categoriaVisitanteMapping,
@@ -68,7 +69,7 @@ function clientId() {
 
 function cidadeEstado(value: string) {
   const match = value.match(/^(.*)\s+-\s+([A-Z]{2})$/);
-  if (!match) return { cidade: value, estado: "—" };
+  if (!match) return { cidade: value, estado: "-" };
   return { cidade: match[1], estado: match[2] };
 }
 
@@ -181,6 +182,7 @@ export function AtaForm({
   groups: {
     id: string;
     name: string;
+    plataforma: Plataforma;
     horarios?: { dia_semana: string; hora_inicio: string; link_reuniao: string }[];
   }[];
   today: string;
@@ -214,7 +216,7 @@ export function AtaForm({
       duracao: "",
       formato_outros: "",
       preenchido_por: "",
-      plataforma: "zoom",
+      plataforma: initialGroup?.plataforma ?? "zoom",
       tipo_reuniao: "fechada",
       formatos: [],
       total_membros_presentes: 0,
@@ -408,6 +410,9 @@ export function AtaForm({
                     ata: {
                       ...current.ata,
                       grupo_id: event.target.value,
+                      plataforma:
+                        groups.find((group) => group.id === event.target.value)
+                          ?.plataforma ?? current.ata.plataforma,
                       hora_inicio:
                         groups.find((group) => group.id === event.target.value)
                           ?.horarios?.[0]?.hora_inicio ?? current.ata.hora_inicio,
@@ -461,7 +466,9 @@ export function AtaForm({
           <label>
             Plataforma
             <select value={draft.ata.plataforma} disabled>
-              <option value="zoom">Zoom</option>
+              {plataformaMapping.codes.map((code) => (
+                <option key={code} value={code}>{plataformaMapping.toSheet(code)}</option>
+              ))}
             </select>
           </label>
         </div>
@@ -677,18 +684,18 @@ export function AtaForm({
           </p>
         ) : (
           <>
-        {draft.ingressos.map((item, index) => (
-          <div className="repeat-row repeat-row--single repeat-row--unseparated" key={item.clientId}>
-            <label htmlFor={`ingresso-city-${item.clientId}`}>{index === 0 && <span>Cidade</span>}<MunicipioAutocomplete ariaLabel={index === 0 ? undefined : "Cidade do ingresso"} id={`ingresso-city-${item.clientId}`} placeholder="Cidade..." value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
-            <button type="button" className="danger-icon-button" aria-label="Remover ingresso" title="Remover ingresso" onClick={() => setDraft((current) => ({ ...current, ingressos: current.ingressos.filter((entry) => entry.clientId !== item.clientId) }))}><FontAwesomeIcon icon={faTrashCan} /></button>
-          </div>
-        ))}
-        <div className="section-footer">
-          <button type="button" className="secondary" onClick={() => setDraft((current) => ({
-            ...current,
-            ingressos: [...current.ingressos, { clientId: clientId(), cidade: "" }],
-          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
-        </div>
+            {draft.ingressos.map((item, index) => (
+              <div className="repeat-row repeat-row--single repeat-row--unseparated" key={item.clientId}>
+                <label htmlFor={`ingresso-city-${item.clientId}`}>{index === 0 && <span>Cidade</span>}<MunicipioAutocomplete ariaLabel={index === 0 ? undefined : "Cidade do ingresso"} id={`ingresso-city-${item.clientId}`} placeholder="Cidade..." value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
+                <button type="button" className="danger-icon-button" aria-label="Remover ingresso" title="Remover ingresso" onClick={() => setDraft((current) => ({ ...current, ingressos: current.ingressos.filter((entry) => entry.clientId !== item.clientId) }))}><FontAwesomeIcon icon={faTrashCan} /></button>
+              </div>
+            ))}
+            <div className="section-footer">
+              <button type="button" className="secondary" onClick={() => setDraft((current) => ({
+                ...current,
+                ingressos: [...current.ingressos, { clientId: clientId(), cidade: "" }],
+              }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
+            </div>
           </>
         )}
       </section>

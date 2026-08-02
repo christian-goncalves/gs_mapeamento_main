@@ -39,6 +39,12 @@ Enum dia_semana {
   sabado
 }
 
+Enum plataforma {
+  zoom
+  zello
+  whatsapp
+}
+
 Table grupos {
   grupo_id uuid [pk]
   zoom_id varchar [not null, note: 'ID externo do Zoom; pode se repetir']
@@ -52,6 +58,9 @@ Table grupos {
   link_formulario_ata varchar [unique, note: 'Identificador gerado para /preencher/{link}']
   created_at timestamp [not null]
   updated_at timestamp [not null]
+  fuso_horario varchar [not null, default: 'America/Sao_Paulo', note: 'Identificador IANA brasileiro; cadastral nesta etapa']
+  plataforma plataforma [not null, default: 'zoom']
+  acesso_plataforma varchar [not null, note: 'Identificador ou link de acesso; fallback legado para zoom_id']
 
   indexes {
     zoom_id

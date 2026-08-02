@@ -13,6 +13,29 @@ describe("linhas do Sheets", () => {
     ]);
   });
 
+  it("aceita colunas finais ausentes somente quando a migração é permitida", () => {
+    expect(
+      rowsToObjects(
+        ["id", "nome", "fuso_horario", "plataforma", "acesso_plataforma"],
+        [["id", "nome"], ["1", "Grupo"]],
+        { allowMissingTrailingHeaders: 3 },
+      ),
+    ).toEqual([{
+      rowNumber: 2,
+      value: {
+        id: "1",
+        nome: "Grupo",
+        fuso_horario: "",
+        plataforma: "",
+        acesso_plataforma: "",
+      },
+    }]);
+  });
+
+  it("continua recusando coluna ausente sem permissão explícita", () => {
+    expect(() => rowsToObjects(["id", "nome"], [["id"]])).toThrow("Cabeçalho inválido");
+  });
+
   it("ignora linhas vazias com FALSE herdado de checkbox", () => {
     expect(
       rowsToObjects(

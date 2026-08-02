@@ -59,6 +59,9 @@ const groupOne: Grupo = {
   responsaveis_ata: "",
   link_formulario_ata: "grupo-um",
   ultima_reuniao_anterior: 0,
+  fuso_horario: "America/Sao_Paulo",
+  plataforma: "zoom",
+  acesso_plataforma: "12345678",
   created_at: "2026-07-01T00:00:00.000Z",
   updated_at: "2026-07-01T00:00:00.000Z",
 };
@@ -75,6 +78,9 @@ const groupTwo: Grupo = {
   responsaveis_ata: "",
   link_formulario_ata: "grupo-dois",
   ultima_reuniao_anterior: 12,
+  fuso_horario: "America/Sao_Paulo",
+  plataforma: "zoom",
+  acesso_plataforma: "87654321",
   created_at: "2026-07-01T00:00:00.000Z",
   updated_at: "2026-07-01T00:00:00.000Z",
 };
@@ -109,11 +115,11 @@ function groupForm(overrides: Partial<Grupo> = {}) {
   const data = new FormData();
   const group = { ...groupTwo, ...overrides };
   data.set("grupo_id", group.grupo_id);
-  data.set("zoom_id", group.zoom_id);
+  data.set("acesso_plataforma", group.acesso_plataforma);
+  data.set("plataforma", group.plataforma);
+  data.set("fuso_horario", group.fuso_horario);
   data.set("grupo_nome", group.grupo_nome);
   if (group.ativo) data.set("ativo", "on");
-  data.set("responsavel_grupo_nome", group.responsavel_grupo_nome);
-  data.set("responsavel_grupo_email", group.responsavel_grupo_email);
   data.set("email_acesso_grupo", group.email_acesso_grupo);
   data.set("ultima_reuniao_anterior", String(group.ultima_reuniao_anterior));
   return data;
@@ -171,13 +177,14 @@ describe("Server Action de grupos", () => {
     expect(mocks.redirect).not.toHaveBeenCalled();
   });
 
-  it("permite Zoom ID repetido entre grupos", async () => {
-    await saveGrupoAction(null, groupForm({ zoom_id: groupOne.zoom_id }));
+  it("permite identificador de plataforma repetido entre grupos", async () => {
+    await saveGrupoAction(null, groupForm({ acesso_plataforma: groupOne.acesso_plataforma }));
 
     expect(mocks.saveGrupo).toHaveBeenCalledWith(
       expect.objectContaining({
         grupo_id: groupTwo.grupo_id,
-        zoom_id: groupOne.zoom_id,
+        zoom_id: groupTwo.zoom_id,
+        acesso_plataforma: groupOne.acesso_plataforma,
         email_acesso_grupo: groupTwo.email_acesso_grupo,
         link_formulario_ata: expect.stringMatching(ataLinkTokenPattern),
       }),
@@ -228,18 +235,51 @@ describe("Server Action de grupos", () => {
       grupo_id: "",
       grupo_nome: "Grupo Novo",
       email_acesso_grupo: "novo@example.com",
-      responsavel_grupo_email: "novo@example.com",
     });
     data.delete("grupo_id");
 
     await saveGrupoAction(null, data);
 
     const savedGroup = mocks.saveGrupo.mock.calls[0]?.[0] as Grupo;
+    expect(savedGroup).toEqual(
+      expect.objectContaining({
+        grupo_nome: "Grupo Novo",
+        responsavel_grupo_nome: "",
+        responsavel_grupo_email: "",
+        email_acesso_grupo: "novo@example.com",
+      }),
+    );
+    expect(mocks.syncResponsibleGroupUser).toHaveBeenCalledWith(savedGroup);
     expect(savedGroup.link_formulario_ata).toMatch(ataLinkTokenPattern);
     expect(savedGroup.link_formulario_ata).not.toBe("grupo-novo");
     expect(mocks.redirect).toHaveBeenCalledWith(
       `/admin/grupos/${savedGroup.grupo_id}?status=created`,
     );
+  });
+
+  it("preserva metadados legados do responsável quando não vêm do formulário", async () => {
+    await saveGrupoAction(null, groupForm());
+
+    expect(mocks.saveGrupo).toHaveBeenCalledWith(
+      expect.objectContaining({
+        grupo_id: groupTwo.grupo_id,
+        responsavel_grupo_nome: groupTwo.responsavel_grupo_nome,
+        responsavel_grupo_email: groupTwo.responsavel_grupo_email,
+        email_acesso_grupo: groupTwo.email_acesso_grupo,
+      }),
+    );
+  });
+
+  it("não usa o e-mail do responsável como fallback do login", async () => {
+    const data = groupForm({ grupo_id: "" });
+    data.delete("grupo_id");
+    data.delete("email_acesso_grupo");
+    data.set("responsavel_grupo_email", "responsavel@example.com");
+
+    await expect(saveGrupoAction(null, data)).resolves.toEqual({
+      error: "Campo obrigatório.",
+    });
+    expect(mocks.saveGrupo).not.toHaveBeenCalled();
   });
 
   it("marca grupo e horarios ativos como inativos ao inativar", async () => {

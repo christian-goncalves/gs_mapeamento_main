@@ -67,6 +67,7 @@ async function readSheet(name: SheetName) {
   return rowsToObjects(
     SHEET_HEADERS[name],
     normalizeHeaderAliases(name, values),
+    name === "grupos" ? { allowMissingTrailingHeaders: 3 } : undefined,
   );
 }
 
@@ -110,6 +111,7 @@ async function readContractSheets() {
                 | SheetValue[][]
                 | undefined) ?? [],
             ),
+            name === "grupos" ? { allowMissingTrailingHeaders: 3 } : undefined,
           ),
         ]),
       ) as Record<SheetName, LocatedObject[]>,

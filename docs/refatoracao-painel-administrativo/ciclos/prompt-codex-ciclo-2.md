@@ -1,4 +1,4 @@
-# Prompt para o Codex — estruturar Ciclo 2 do painel administrativo
+# Prompt para o Codex - estruturar Ciclo 2 do painel administrativo
 
 Analise integralmente a pasta `docs/refatoracao-painel-administrativo/` e o código atual do projeto.
 
@@ -69,20 +69,20 @@ Atualize, se necessário:
 
 Divida em tiros pequenos:
 
-### Tiro 1 — Diagnóstico e normalização
+### Tiro 1 - Diagnóstico e normalização
 - revisar ações atuais;
 - corrigir nomenclatura;
 - mapear efeitos colaterais;
 - confirmar revalidações.
 
-### Tiro 2 — Reativação
+### Tiro 2 - Reativação
 - criar `activateGrupoAction`, se adequada;
 - validar grupo;
 - atualizar status;
 - preservar contrato Sheets;
 - revalidar rotas.
 
-### Tiro 3 — Interface e feedback
+### Tiro 3 - Interface e feedback
 - exibir ação correta conforme o estado;
 - confirmação;
 - loading;
@@ -90,7 +90,7 @@ Divida em tiros pequenos:
 - erro;
 - acessibilidade.
 
-### Tiro 4 — Testes e regressão
+### Tiro 4 - Testes e regressão
 - testes unitários;
 - testes de Server Action;
 - testes manuais;

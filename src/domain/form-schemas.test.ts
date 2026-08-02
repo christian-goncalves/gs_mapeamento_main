@@ -13,18 +13,20 @@ describe("schemas de formulário", () => {
   it("valida todos os campos obrigatórios do grupo", () => {
     expect(
       grupoFormSchema.safeParse({
-        zoom_id: "123456789",
+        acesso_plataforma: "123456789",
+        plataforma: "zoom",
+        fuso_horario: "America/Sao_Paulo",
         grupo_nome: "Grupo",
         ativo: true,
-        responsavel_grupo_nome: "Patricia",
-        responsavel_grupo_email: "patricia@example.com",
         email_acesso_grupo: "grupo@example.com",
         ultima_reuniao_anterior: 12,
       }).success,
     ).toBe(true);
     expect(
       grupoFormSchema.safeParse({
-        zoom_id: "TESTE ID",
+        acesso_plataforma: "",
+        plataforma: "zoom",
+        fuso_horario: "America/Sao_Paulo",
         grupo_nome: "Grupo",
         ativo: true,
         responsavel_grupo_nome: "",

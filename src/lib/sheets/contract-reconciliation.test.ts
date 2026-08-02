@@ -165,6 +165,25 @@ describe("reconciliação do contrato Sheets", () => {
     ).resolves.toMatchObject({ validatedSheets: expect.arrayContaining(["atas"]) });
   });
 
+  it("ignora linhas vazias com FALSE herdado ao validar identificadores", async () => {
+    const emptyLegacyRow = Array.from(
+      { length: SHEET_HEADERS.atas.length },
+      (_, index) => index >= SHEET_HEADERS.atas.indexOf("formato_partilha") &&
+        index <= SHEET_HEADERS.atas.indexOf("formato_tradicoes")
+        ? false
+        : "",
+    );
+    const { client } = clientWith({
+      sheetValues: {
+        atas: [[...SHEET_HEADERS.atas], ataRow(), emptyLegacyRow],
+      },
+    });
+
+    await expect(reconcileSheetContract(client, "spreadsheet-test")).resolves.toMatchObject({
+      validatedSheets: expect.arrayContaining(["atas"]),
+    });
+  });
+
   it.each([
     ["ausente", { numero_sequencial_grupo: "" }, "numero_sequencial_grupo deve ser um inteiro positivo"],
     ["não numérico", { indice_personalizado_grupo: "abc" }, "indice_personalizado_grupo deve ser um inteiro positivo"],
@@ -506,6 +525,34 @@ describe("reconciliação do contrato Sheets", () => {
       sheet: "grupos",
       column: "ultima_reuniao_anterior",
     });
+  });
+
+  it("adiciona fuso, plataforma e acesso ao final de grupos legados", async () => {
+    const newColumns = ["fuso_horario", "plataforma", "acesso_plataforma"];
+    const legacyHeaders = SHEET_HEADERS.grupos.filter(
+      (header) => !newColumns.includes(header),
+    );
+    const { client, batchUpdate } = clientWith({
+      afterMigration: true,
+      invalidHeader: { grupos: legacyHeaders },
+    });
+
+    const result = await reconcileSheetContract(client, "spreadsheet-test");
+
+    expect(result.addedColumns).toEqual(
+      expect.arrayContaining(newColumns.map((column) => ({ sheet: "grupos", column }))),
+    );
+    const requests = batchUpdate.mock.calls[0][0].requestBody.requests;
+    expect(requests).toContainEqual(
+      expect.objectContaining({
+        insertDimension: expect.objectContaining({
+          range: expect.objectContaining({
+            startIndex: legacyHeaders.length,
+            endIndex: legacyHeaders.length + newColumns.length,
+          }),
+        }),
+      }),
+    );
   });
 
   it("adiciona funcao em servidores quando a coluna está ausente", async () => {

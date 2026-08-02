@@ -160,4 +160,38 @@ describe("criação de ata no Sheets", () => {
       }),
     );
   });
+
+  it("impõe a plataforma cadastrada no grupo sobre o payload", async () => {
+    mocks.batchGet.mockResolvedValue({
+      data: {
+        valueRanges: values({
+          grupos: [
+            [...SHEET_HEADERS.grupos],
+            row("grupos", {
+              grupo_id: groupId,
+              zoom_id: "123",
+              grupo_nome: "Grupo",
+              ordem: 1,
+              ativo: true,
+              link_formulario_ata: "token",
+              ultima_reuniao_anterior: 0,
+              fuso_horario: "America/Sao_Paulo",
+              plataforma: "Zello",
+              acesso_plataforma: "canal-zello",
+              ...audit,
+            }),
+          ],
+        }),
+      },
+    });
+
+    await createAtaInSheets({
+      ...submission,
+      ata: { ...submission.ata, plataforma: "whatsapp" },
+    });
+
+    expect(mocks.updateAtaNameSuggestionsFromSubmission).toHaveBeenCalledWith(
+      expect.objectContaining({ ata: expect.objectContaining({ plataforma: "zello" }) }),
+    );
+  });
 });

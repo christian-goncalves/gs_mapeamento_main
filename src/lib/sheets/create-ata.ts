@@ -68,6 +68,7 @@ export async function createAtaInSheets(submission: AtaSubmission) {
       rowsToObjects(
         SHEET_HEADERS[name],
         normalizeHeaderAliases(name, sheetValues[name]),
+        name === "grupos" ? { allowMissingTrailingHeaders: 3 } : undefined,
       ),
     ]),
   ) as Record<SheetName, ReturnType<typeof rowsToObjects>>;
@@ -80,6 +81,15 @@ export async function createAtaInSheets(submission: AtaSubmission) {
   )
     .filter((row) => row.valid)
     .map((row) => row.data);
+  const selectedGroup = groups.find(
+    (group) => group.grupo_id === submission.ata.grupo_id,
+  );
+  const normalizedSubmission: AtaSubmission = selectedGroup
+    ? {
+        ...submission,
+        ata: { ...submission.ata, plataforma: selectedGroup.plataforma },
+      }
+    : submission;
   const existingKeys: AtaBusinessKey[] = rows.atas.flatMap((row) => {
     const result = sheetAtaBusinessKeySchema.safeParse(row.value);
     return result.success ? [result.data] : [];
@@ -89,9 +99,9 @@ export async function createAtaInSheets(submission: AtaSubmission) {
     if (!result.success) throw new InvalidAtaIdentifiersError();
     return [result.data];
   });
-  assertCreationAllowed(submission, groups, existingKeys);
+  assertCreationAllowed(normalizedSubmission, groups, existingKeys);
   const identifiers = nextAtaCreationIdentifiers(
-    submission.ata.grupo_id,
+    normalizedSubmission.ata.grupo_id,
     existingIdentifiers,
   );
 
@@ -108,7 +118,7 @@ export async function createAtaInSheets(submission: AtaSubmission) {
   }
 
   const registro = materializeAtaSubmission(
-    submission,
+    normalizedSubmission,
     undefined,
     identifiers,
   );
@@ -127,7 +137,7 @@ export async function createAtaInSheets(submission: AtaSubmission) {
   );
   await executeAtomicBatch(sheets, spreadsheetId, requests);
   try {
-    await updateAtaNameSuggestionsFromSubmission(submission);
+    await updateAtaNameSuggestionsFromSubmission(normalizedSubmission);
   } catch (error) {
     console.error(
       "Falha ao atualizar sugestões de nomes da ata:",

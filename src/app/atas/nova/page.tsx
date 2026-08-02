@@ -41,6 +41,7 @@ export default async function NewAtaPage() {
           groups={groups.map((group) => ({
             id: group.grupo_id,
             name: group.grupo_nome,
+            plataforma: group.plataforma,
             horarios: group.horarios.map((horario) => ({
               dia_semana: horario.dia_semana,
               hora_inicio: horario.hora_inicio,

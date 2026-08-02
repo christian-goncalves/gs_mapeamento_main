@@ -15,6 +15,7 @@ import {
   sheetAtaBusinessKeySchema,
   sheetAtaToDomain,
   sheetGrupoSchema,
+  sheetGrupoToDomain,
   sheetGrupoHorarioSchema,
   sheetIngressoSchema,
   sheetIngressoToDomain,
@@ -38,6 +39,8 @@ const valid = {
     responsavel_grupo_nome: "Responsável", responsavel_grupo_email: "responsavel@example.com",
     email_acesso_grupo: "grupo@example.com", responsaveis_ata: "Equipe de ata",
     link_formulario_ata: "grupo", ultima_reuniao_anterior: "12", ...audit,
+    fuso_horario: "America/Sao_Paulo", plataforma: "Zoom",
+    acesso_plataforma: "001",
   },
   grupoHorario: {
     horario_id: "a0b4f0fa-37f4-4a69-8ebb-a1b40e538c2d", grupo_id: groupId,
@@ -150,6 +153,27 @@ describe("schemas das linhas do Sheets", () => {
     });
     expect(parsed.zoom_id).toBe("4430251323");
   });
+
+  it("aplica fallbacks aos novos campos de grupos legados", () => {
+    const parsed = sheetGrupoSchema.parse({
+      ...valid.grupo,
+      fuso_horario: "",
+      plataforma: "",
+      acesso_plataforma: "",
+    });
+    expect(sheetGrupoToDomain(parsed)).toMatchObject({
+      fuso_horario: "America/Sao_Paulo",
+      plataforma: "zoom",
+      acesso_plataforma: "001",
+    });
+  });
+
+  it.each(["Zoom", "Zello", "WhatsApp"])(
+    "aceita a plataforma controlada %s em atas",
+    (plataforma) => {
+      expect(sheetAtaSchema.safeParse({ ...valid.ata, plataforma }).success).toBe(true);
+    },
+  );
 
   it("converte data e horário serializados pelo Sheets", () => {
     const parsed = sheetAtaSchema.parse({

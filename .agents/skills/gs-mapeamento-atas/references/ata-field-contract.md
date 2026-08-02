@@ -17,7 +17,7 @@ primeira letra, sem diferenciar caixa ou acentos.
 
 | Campo | Controle |
 | --- | --- |
-| `atas.plataforma` | Lista com `Zoom` |
+| `atas.plataforma` | Lista com `Zoom`, `Zello` e `WhatsApp`; valor fixado pelo cadastro do grupo |
 | `atas.tipo_reuniao` | Lista com `Aberta` e `Fechada` |
 | `atas.formato_*` | Booleanos independentes |
 | `servidores.funcao` | Coordenador, Moderador, Secretario, Apoio, Anfitriao, Coanfitriao ou Outros na interface |

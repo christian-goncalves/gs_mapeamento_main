@@ -9,12 +9,18 @@ export type LocatedObject = {
 export function rowsToObjects(
   expectedHeaders: readonly string[],
   values: SheetCell[][],
+  options: { allowMissingTrailingHeaders?: number } = {},
 ): LocatedObject[] {
   const [headers = [], ...rows] = values;
-  if (
+  const missingTrailingHeaders = expectedHeaders.length - headers.length;
+  const compatibleTrailingMigration =
+    missingTrailingHeaders > 0 &&
+    missingTrailingHeaders <= (options.allowMissingTrailingHeaders ?? 0) &&
+    headers.every((header, index) => header === expectedHeaders[index]);
+  if (!compatibleTrailingMigration && (
     headers.length !== expectedHeaders.length ||
     headers.some((header, index) => header !== expectedHeaders[index])
-  ) {
+  )) {
     throw new Error(
       `Cabeçalho inválido. Esperado: ${expectedHeaders.join(", ")}. Recebido: ${headers.join(", ")}.`,
     );

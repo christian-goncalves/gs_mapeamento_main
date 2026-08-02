@@ -27,7 +27,18 @@ const defaultIdentity: Identity = {
 
 async function readSheet(name: SheetName) {
   const values = await readSheetValues(name);
-  return rowsToObjects(SHEET_HEADERS[name], values);
+  return groupAdminRowsToObjects(name, values);
+}
+
+export function groupAdminRowsToObjects(
+  name: SheetName,
+  values: SheetCell[][],
+) {
+  return rowsToObjects(
+    SHEET_HEADERS[name],
+    values,
+    name === "grupos" ? { allowMissingTrailingHeaders: 3 } : undefined,
+  );
 }
 
 async function readSheetValues(name: SheetName) {

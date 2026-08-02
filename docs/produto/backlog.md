@@ -11,7 +11,7 @@ tarefas no [Checklist executivo](../desenvolvimento/checklist-executivo.md).
 
 ## Horarios personalizados por grupo
 
-Status: pendente para planejamento pos-MVP.
+Status: implementado em 2 de agosto de 2026.
 
 Problema:
 
@@ -106,28 +106,30 @@ Problema:
   visitantes, ingressos e troca de ficha.
 - O usuario pode precisar guardar, compartilhar ou imprimir esse resumo como
   comprovante de registro.
-- Hoje a tela confirma o registro visualmente, mas nao oferece download em PDF.
+- A tela confirma o registro visualmente e oferece visualizacao, download,
+  impressao e envio autenticado do PDF por e-mail.
 
-Direcao inicial:
+Implementacao:
 
-- Adicionar uma acao `Baixar PDF` na tela de detalhe da ata.
+- A acao `Visualizar PDF` abre a previa nativa do navegador, que oferece
+  download e impressao.
+- A acao `Enviar por e-mail` confirma um destinatario editavel e envia o mesmo
+  PDF como anexo pelo Resend.
 - O PDF deve representar a ata confirmada, nao o rascunho do formulario.
 - O conteudo deve usar os mesmos dados relidos do Sheets que alimentam a tela
   somente leitura.
 - O arquivo deve ter nome previsivel, por exemplo:
   `ata-bom-dia-brasil-2026-06-24.pdf`.
 
-Questoes para planejamento:
+Decisoes:
 
-- Gerar o PDF no servidor ou usar impressao/download pelo navegador?
-- O PDF precisa ter identidade visual propria ou pode seguir o layout limpo da
-  tela atual?
-- Deve incluir data/hora de geracao do documento?
-- Deve incluir identificador tecnico `ata_id` para auditoria?
-- O botao deve aparecer apenas no detalhe da ata ou tambem logo apos a
-  confirmacao de envio?
+- O PDF e gerado no servidor em A4 paginado e segue a identidade visual do
+  detalhe da ata.
+- O documento inclui data/hora de geracao e `ata_id` para auditoria.
+- As acoes aparecem no detalhe autenticado da ata e respeitam o acesso ao
+  grupo.
 
-Critério de aceite futuro:
+Critério de aceite:
 
 - Depois de enviar uma ata, o usuario consegue baixar um PDF da ata confirmada.
 - O PDF contem os mesmos dados exibidos no detalhe somente leitura.

@@ -11,7 +11,7 @@ inicial foi organizado em Informações Gerais e Participação. O formulário e
 capturas foram preservados somente como
 [referência visual](../referencias/formulario-legado/jotform.html).
 
-## 21 de junho de 2026 — Modelo inicial
+## 21 de junho de 2026 - Modelo inicial
 
 - Documentação e DBML harmonizados.
 - Planilha estruturada com seis abas, cabeçalhos, filtros e validações.
@@ -19,7 +19,7 @@ capturas foram preservados somente como
 - IDs anteriores preservados como `zoom_id`.
 - Conta de serviço recebeu acesso de edição à planilha.
 
-## 21 de junho de 2026 — Segurança
+## 21 de junho de 2026 - Segurança
 
 - Valores mínimos migrados para `.env.local`.
 - JSONs de credenciais removidos.
@@ -27,7 +27,7 @@ capturas foram preservados somente como
 - Cliente OAuth do n8n descartado.
 - Rotação da chave da conta de serviço mantida como requisito pré-implantação.
 
-## 21 de junho de 2026 — Fundação da aplicação
+## 21 de junho de 2026 - Fundação da aplicação
 
 - Next.js App Router, React e TypeScript inicializados.
 - Schemas e regras agregadas iniciais criados.
@@ -39,7 +39,7 @@ capturas foram preservados somente como
   registros.
 - Testes iniciais, lint, TypeScript e build foram aprovados.
 
-## 21 de junho de 2026 — Revisão do domínio
+## 21 de junho de 2026 - Revisão do domínio
 
 Foram fechadas as decisões de imutabilidade após envio, chave de duplicidade,
 municípios brasileiros derivados do IBGE, enums adaptados ao Sheets, edição
@@ -49,14 +49,14 @@ A revisão identificou a necessidade de completar mapeamentos, integridade
 referencial, leitura agregada, escrita atômica e cobertura de testes antes do
 formulário definitivo.
 
-## 21 de junho de 2026 — Organização documental
+## 21 de junho de 2026 - Organização documental
 
 A documentação passou a ser organizada por responsabilidade: produto,
 arquitetura, desenvolvimento, projeto e referências. Nomes de arquivos foram
 padronizados em ASCII `kebab-case` e `docs/README.md` tornou-se o índice
 canônico.
 
-## 21 de junho de 2026 — Contratos executáveis
+## 21 de junho de 2026 - Contratos executáveis
 
 - Schemas de formulário, domínio e linhas do Sheets foram separados.
 - Conversões bidirecionais passaram a preservar códigos internos e rótulos em
@@ -73,7 +73,7 @@ canônico.
 - A suíte alcançou 46 testes aprovados; lint, TypeScript e build de produção
   também foram aprovados.
 
-## 21 de junho de 2026 — Leitura agregada
+## 21 de junho de 2026 - Leitura agregada
 
 - As seis abas passaram a ser lidas em um único `batchGet`, com validação de
   cabeçalhos e conversão explícita de datas e horários do Sheets.
@@ -89,7 +89,7 @@ canônico.
 - A suíte alcançou 53 testes aprovados; lint e TypeScript também foram
   aprovados antes do fechamento da fase.
 
-## 22 de junho de 2026 — Criação imutável
+## 22 de junho de 2026 - Criação imutável
 
 - O formulário autenticado passou a manter o rascunho somente no navegador e
   permite adicionar, reordenar e remover dependentes antes do envio.
@@ -107,7 +107,7 @@ canônico.
 - A escrita real não foi executada porque `GOOGLE_SHEETS_TEST_ID` não está
   configurado; a planilha oficial permaneceu inalterada.
 
-## 22 de junho de 2026 — Política de edição manual
+## 22 de junho de 2026 - Política de edição manual
 
 - Uma rotina administrativa server-only passou a validar estritamente a
   política, os IDs e os cabeçalhos das seis abas antes de qualquer mutação.
@@ -126,7 +126,7 @@ canônico.
 - A suíte alcançou 74 testes aprovados; lint, TypeScript e build Webpack de
   produção com limite de memória também foram aprovados.
 
-## 23 de junho de 2026 — Refatoracao ATA Full backend
+## 23 de junho de 2026 - Refatoracao ATA Full backend
 
 - Diagnostico do modelo de ATA registrado em
   `docs/projeto/diagnostico-modelo-ata.md`.
@@ -142,7 +142,7 @@ canônico.
 - A suite alcancou 83 testes aprovados; lint e build de producao foram
   aprovados antes do proximo tiro.
 
-## 23 de junho de 2026 — Frontend hidden do modelo ATA Full
+## 23 de junho de 2026 - Frontend hidden do modelo ATA Full
 
 - O formulario de criacao passou a enviar payload hidden aceito pela Server
   Action e normalizado no backend para o contrato full.
@@ -162,7 +162,7 @@ canônico.
 - A suite alcancou 87 testes aprovados; lint e build de producao foram
   aprovados no encerramento da fase.
 
-## 23 de junho de 2026 — Reconciliação Sheets ATA Full
+## 23 de junho de 2026 - Reconciliação Sheets ATA Full
 
 - DEV e PROD foram reconciliadas para o contrato ATA Full com sete abas.
 - As duas planilhas receberam a aba `ingressos`.
@@ -174,7 +174,7 @@ canônico.
 - A verificação read-only confirmou as abas `grupos`, `atas`, `servidores`,
   `participacao`, `visitantes`, `trocas_chaveiro` e `ingressos` em DEV e PROD.
 
-## 23 de junho de 2026 — Refatoração UX da ata
+## 23 de junho de 2026 - Refatoração UX da ata
 
 - O contrato de produto passou a separar Participação dos registros de
   localidade: Participação contém os totais, enquanto `Localidade - Cidades
@@ -195,7 +195,7 @@ canônico.
 - Após a migração, a DEV manteve diagnósticos em linhas antigas de `ingressos`
   sem cidade; esses registros históricos não participam dos indicadores.
 
-## 14 de julho de 2026 — Validacao de autenticacao por email
+## 14 de julho de 2026 - Validacao de autenticacao por email
 
 - As rodadas de testes manuais do fluxo de autenticacao por email foram
   consolidadas em
@@ -218,7 +218,7 @@ canônico.
   foi impedir reenvio de convite quando o responsavel continua pendente com o
   mesmo e-mail.
 
-## 31 de julho de 2026 — Aprovação do novo Resumo da ata
+## 31 de julho de 2026 - Aprovação do novo Resumo da ata
 
 - O resumo anterior ao envio da ata recebeu nova hierarquia visual, cartões de
   identificação, indicadores agregados e seções detalhadas responsivas.
@@ -232,3 +232,14 @@ canônico.
 - O layout foi aprovado pelo usuário como “ótimo” e “excelente”.
 - O contrato aprovado está documentado em
   [Refatoração do Resumo da ata](../refatoracao_resumo_da_ata/README.md).
+
+## 2 de agosto de 2026 - Identidade do grupo e acesso
+
+- O cadastro administrativo deixou de coletar nome e e-mail de responsável;
+  o e-mail de login do grupo passou a ser o único e-mail de acesso exibido.
+- Novos grupos deixaram de copiar `grupo_nome` para os metadados opcionais de
+  responsável, preservando valores históricos quando um grupo existente é
+  editado.
+- Na planilha DEV, os metadados de responsável de USL e BOM DIA BRASIL foram
+  limpos sem alterar nomes dos grupos, UUIDs, e-mails de login ou status dos
+  usuários.

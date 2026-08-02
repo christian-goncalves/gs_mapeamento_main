@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { Grupo, GrupoHorario } from "@/domain/entities";
+import { fusoHorarioMapping, plataformaMapping } from "@/domain/enums";
 import { isSecureAtaLinkToken } from "@/lib/ata-link-token";
 import { rotateAtaLinkAction, saveGrupoAction } from "./actions";
 import { CopyableLink } from "./copyable-link";
@@ -30,6 +31,9 @@ const emptyGroup: Grupo = {
   responsaveis_ata: "",
   link_formulario_ata: "",
   ultima_reuniao_anterior: 0,
+  fuso_horario: "America/Sao_Paulo",
+  plataforma: "zoom",
+  acesso_plataforma: "",
   created_at: new Date(0).toISOString(),
   updated_at: new Date(0).toISOString(),
 };
@@ -105,6 +109,7 @@ export function GroupEditor({
   const router = useRouter();
   const pathname = usePathname();
   const current = group ?? emptyGroup;
+  const [active, setActive] = useState(current.ativo);
   const hasSecureAtaLink = isSecureAtaLinkToken(current.link_formulario_ata);
   const publicPath = hasSecureAtaLink
     ? `/preencher/${current.link_formulario_ata}`
@@ -184,21 +189,25 @@ export function GroupEditor({
   function currentResponsavelPayload(formData: FormData) {
     return {
       grupo_nome: String(formData.get("grupo_nome") ?? "").trim(),
-      zoom_id: String(formData.get("zoom_id") ?? "").trim(),
+      acesso_plataforma: String(formData.get("acesso_plataforma") ?? "").trim(),
+      plataforma: String(formData.get("plataforma") ?? ""),
+      fuso_horario: String(formData.get("fuso_horario") ?? ""),
     };
   }
 
   function originalResponsavelPayload() {
     return {
       grupo_nome: current.grupo_nome.trim(),
-      zoom_id: current.zoom_id.trim(),
+      acesso_plataforma: current.acesso_plataforma.trim(),
+      plataforma: current.plataforma,
+      fuso_horario: current.fuso_horario,
     };
   }
 
   function hasResponsavelChanges(formData: FormData) {
     const next = currentResponsavelPayload(formData);
     const original = originalResponsavelPayload();
-    return next.grupo_nome !== original.grupo_nome || next.zoom_id !== original.zoom_id;
+    return JSON.stringify(next) !== JSON.stringify(original);
   }
 
   function startResponsavelEditing() {
@@ -337,15 +346,31 @@ export function GroupEditor({
                   />
                 </label>
                 <label>
-                  Zoom ID
+                  Identificador/link da plataforma
                   <input
-                    name="zoom_id"
+                    name="acesso_plataforma"
                     required
-                    pattern="(\d{8,12}|https?://.*\.?zoom\.us/.*)"
-                    title="Informe um ID numérico do Zoom ou uma URL válida do Zoom."
-                    defaultValue={current.zoom_id}
+                    defaultValue={current.acesso_plataforma}
                     readOnly={!responsavelEditing}
                   />
+                </label>
+                <label>
+                  Plataforma
+                  <select name="plataforma" defaultValue={current.plataforma} disabled={!responsavelEditing}>
+                    {plataformaMapping.codes.map((code) => (
+                      <option key={code} value={code}>{plataformaMapping.toSheet(code)}</option>
+                    ))}
+                  </select>
+                  {!responsavelEditing && <input type="hidden" name="plataforma" value={current.plataforma} />}
+                </label>
+                <label>
+                  Fuso horário
+                  <select name="fuso_horario" defaultValue={current.fuso_horario} disabled={!responsavelEditing}>
+                    {fusoHorarioMapping.codes.map((code) => (
+                      <option key={code} value={code}>{fusoHorarioMapping.toSheet(code)}</option>
+                    ))}
+                  </select>
+                  {!responsavelEditing && <input type="hidden" name="fuso_horario" value={current.fuso_horario} />}
                 </label>
                 <label>
                   E-mail de login do grupo
@@ -407,6 +432,7 @@ export function GroupEditor({
 
       <form action={action} className="creation-form">
         <input type="hidden" name="grupo_id" value={current.grupo_id} />
+        <input type="hidden" name="ativo" value={active ? "on" : ""} />
         {state?.error && (
           <TimedMessage
             key={`error-${state.error}`}
@@ -432,23 +458,39 @@ export function GroupEditor({
               <input name="grupo_nome" required defaultValue={current.grupo_nome} />
             </label>
             <label>
-              Zoom ID
+              Identificador/link da plataforma
               <input
-                name="zoom_id"
+                name="acesso_plataforma"
                 required
-                pattern="(\d{8,12}|https?://.*\.?zoom\.us/.*)"
-                title="Informe um ID numérico do Zoom ou uma URL válida do Zoom."
-                defaultValue={current.zoom_id}
+                defaultValue={current.acesso_plataforma}
               />
             </label>
+            <label>
+              Plataforma
+              <select name="plataforma" defaultValue={current.plataforma}>
+                {plataformaMapping.codes.map((code) => (
+                  <option key={code} value={code}>{plataformaMapping.toSheet(code)}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Fuso horário
+              <select name="fuso_horario" defaultValue={current.fuso_horario}>
+                {fusoHorarioMapping.codes.map((code) => (
+                  <option key={code} value={code}>{fusoHorarioMapping.toSheet(code)}</option>
+                ))}
+              </select>
+            </label>
             {canManageAccess && (
-              <label className="choice">
-                <input
-                  name="ativo"
-                  type="checkbox"
-                  defaultChecked={current.ativo}
-                />
+              <label>
                 Grupo ativo
+                <select
+                  value={active ? "ativo" : "inativo"}
+                  onChange={(event) => setActive(event.target.value === "ativo")}
+                >
+                  <option value="ativo">Ativo</option>
+                  <option value="inativo">Inativo</option>
+                </select>
               </label>
             )}
             <label>
@@ -461,18 +503,8 @@ export function GroupEditor({
                 defaultValue={current.ultima_reuniao_anterior}
               />
             </label>
-            <label>
-              E-mail do responsável do grupo
-              <input
-                name="responsavel_grupo_email"
-                type="email"
-                required={canManageAccess}
-                defaultValue={current.responsavel_grupo_email}
-                readOnly={!canManageAccess}
-              />
-            </label>
           </div>
-          {group && canManageAccess && (
+          {canManageAccess && (
             <div className="form-grid">
               <label>
                 E-mail de login do grupo
@@ -490,7 +522,7 @@ export function GroupEditor({
             <CopyableLink
               value={activationPath}
               displayValue={`Ativar acesso ${current.grupo_nome}`}
-              label="Link de ativação do responsável"
+              label="Link de ativação do acesso do grupo"
             />
           )}
         </section>

@@ -3,6 +3,7 @@ import {
   categoriaVisitanteMapping,
   formatoMapping,
   origemContatoMapping,
+  fusoHorarioMapping,
   plataformaMapping,
   tempoLimpoMapping,
   tipoReuniaoMapping,
@@ -60,6 +61,9 @@ export const grupoSchema = z.object({
   responsaveis_ata: optionalText,
   link_formulario_ata: optionalSlug,
   ultima_reuniao_anterior: z.number().int().min(0).default(0),
+  fuso_horario: z.enum(fusoHorarioMapping.codes),
+  plataforma: z.enum(plataformaMapping.codes),
+  acesso_plataforma: requiredText,
   ...auditFields,
 });
 

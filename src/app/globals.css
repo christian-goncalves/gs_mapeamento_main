@@ -401,6 +401,40 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .ata-pdf-action { display: grid; gap: .25rem; }
 .ata-pdf-action .field-error { max-width: 18rem; font-size: .75rem; }
 .review-pdf-button { border: 0; }
+.review-email-button { border: 0; }
+.ata-detail-review-shell .review-layout-header-actions .review-back-link,
+.ata-detail-review-shell .review-layout-header-actions .review-pdf-button,
+.ata-detail-review-shell .review-layout-header-actions .review-email-button,
+.ata-detail-review-shell .ata-index-form .icon-button { background: var(--brand); color: white; }
+.ata-detail-review-shell .review-layout-header-actions .review-back-link:hover,
+.ata-detail-review-shell .review-layout-header-actions .review-pdf-button:hover,
+.ata-detail-review-shell .review-layout-header-actions .review-email-button:hover,
+.ata-detail-review-shell .ata-index-form .icon-button:hover { background: color-mix(in srgb, var(--brand) 88%, black); }
+.ata-detail-review-shell .review-layout-header-actions .review-back-link:focus-visible,
+.ata-detail-review-shell .review-layout-header-actions .review-pdf-button:focus-visible,
+.ata-detail-review-shell .review-layout-header-actions .review-email-button:focus-visible,
+.ata-detail-review-shell .ata-index-form .icon-button:focus-visible { background: color-mix(in srgb, var(--brand) 92%, black); outline: 3px solid color-mix(in srgb, var(--brand) 38%, transparent); outline-offset: 2px; }
+.ata-email-modal { width: min(560px, 100%); }
+.ata-email-modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.ata-email-modal-header h2 { margin: 0; color: var(--brand); font-size: 1.35rem; }
+.ata-email-modal-header p { margin: .25rem 0 0; color: var(--muted); }
+.ata-email-summary { display: flex; align-items: center; gap: .75rem; margin-top: 1.25rem; border: 1px solid var(--line); border-radius: 9px; padding: .8rem; background: #f8fbf9; }
+.ata-email-summary > svg { flex: 0 0 auto; color: var(--brand); font-size: 1.5rem; }
+.ata-email-summary div { display: grid; min-width: 0; gap: .15rem; }
+.ata-email-summary strong { overflow-wrap: anywhere; }
+.ata-email-summary span { color: var(--muted); font-size: .85rem; }
+.ata-email-field { display: grid; gap: .4rem; margin-top: 1rem; color: var(--ink); font-weight: 700; }
+.ata-email-modal .form-error, .ata-email-modal .admin-status-feedback { margin-top: 1rem; }
+.ata-pdf-preview-shell { width: min(1280px, calc(100% - 2rem)); padding-block: 1rem; }
+.ata-pdf-preview-header { margin-bottom: .5rem; border: 1px solid var(--line); border-radius: 10px; padding: .5rem; background: var(--surface); }
+.ata-pdf-preview-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; width: 100%; }
+.ata-pdf-icon-button { display: inline-grid; place-items: center; width: 2.75rem; min-width: 2.75rem; height: 2.75rem; min-height: 2.75rem; padding: 0; border: 0; }
+.ata-pdf-preview-actions .ata-pdf-icon-button { width: 100%; min-width: 0; background: var(--brand); color: white; }
+.ata-pdf-preview-actions .ata-pdf-icon-button:hover { background: color-mix(in srgb, var(--brand) 88%, black); }
+.ata-pdf-preview-actions .ata-pdf-icon-button:focus-visible { background: color-mix(in srgb, var(--brand) 92%, black); outline: 3px solid color-mix(in srgb, var(--brand) 38%, transparent); outline-offset: 2px; }
+.ata-pdf-icon-button svg { width: 1rem; height: 1rem; }
+.ata-pdf-preview-frame { overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #3f3f3f; box-shadow: 0 12px 30px rgb(16 28 21 / 12%); }
+.ata-pdf-preview-frame iframe { display: block; width: 100%; height: calc(100dvh - 7rem); min-height: 650px; border: 0; }
 .responsavel-placeholder-card { padding: 0; overflow: hidden; }
 @media (min-width: 981px) {
   .review-section summary { cursor: default; pointer-events: none; }
@@ -417,6 +451,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 }
 @media (max-width: 980px) {
   .confirmation-modal { width: min(760px, 100%); }
+  .ata-pdf-preview-frame iframe { height: calc(100dvh - 7rem); min-height: 520px; }
   .review-sections { grid-template-columns: 1fr; }
   .review-section:nth-child(n + 5) { grid-column: auto; }
   .review-section summary { cursor: pointer; }
@@ -655,7 +690,8 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .review-layout-header-actions { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
   .review-layout-header-actions .review-back-link,
   .review-layout-header-actions .ata-pdf-action,
-  .review-layout-header-actions .review-pdf-button { width: 100%; }
+  .review-layout-header-actions .review-pdf-button,
+  .review-layout-header-actions .review-email-button { width: 100%; }
   .review-modal-header { gap: .75rem; }
   .review-modal-header-icon { width: 2.5rem; height: 2.5rem; font-size: 1.1rem; }
   .review-modal-header h1, .review-modal-header h2 { font-size: 1.25rem; }

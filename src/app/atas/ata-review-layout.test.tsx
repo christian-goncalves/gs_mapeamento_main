@@ -29,7 +29,7 @@ describe("layout compartilhado da ata", () => {
   it("renderiza o mesmo núcleo visual com indicadores complementares", () => {
     const html = renderToStaticMarkup(
       <AtaReviewLayout
-        title="Ata 19 — USL"
+        title="Ata 19 - USL"
         description="Visualização da ata."
         titleId="ata-title"
         headingLevel="h1"
@@ -37,7 +37,7 @@ describe("layout compartilhado da ata", () => {
       />,
     );
 
-    expect(html).toContain("Ata 19 — USL");
+    expect(html).toContain("Ata 19 - USL");
     expect(html).toContain("31/07/2026");
     expect(html).toContain("Membros internacionais");
     expect(html).toContain("Dados complementares da ata");

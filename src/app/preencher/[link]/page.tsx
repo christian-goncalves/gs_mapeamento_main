@@ -39,6 +39,7 @@ export default async function PublicAtaPage({
           {
             id: group.group.grupo_id,
             name: group.group.grupo_nome,
+            plataforma: group.group.plataforma,
             horarios: group.horarios.map((horario) => ({
               dia_semana: horario.dia_semana,
               hora_inicio: horario.hora_inicio,

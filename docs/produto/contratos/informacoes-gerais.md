@@ -16,15 +16,16 @@ por isso, ficam na aba `servidores`.
 | data_reuniao | data | Obrigatória |
 | hora_inicio | seleção de hora | Obrigatória, em intervalos de 30 minutos |
 | preenchido_por | texto | Nome da pessoa que preencheu a ata |
-| plataforma | seleção | Obrigatória e com valores controlados |
+| plataforma | seleção bloqueada | Obrigatória, herdada do grupo e controlada como `Zoom`, `Zello` ou `WhatsApp` |
 | tipo_reuniao | seleção única | `aberta` ou `fechada` |
 | formatos | seleção múltipla | Pelo menos um formato obrigatório |
 | servidores | lista repetível | Um nome por item |
 
 O usuário seleciona o grupo pelo nome. A aplicação persiste o `grupo_id` UUID;
-`zoom_id` pertence ao cadastro do grupo e não é identificador da ata. A coluna
-`ordem`, quando existir na planilha, é compatibilidade visual e não define a
-ordenação da aplicação.
+`zoom_id` é compatibilidade do cadastro legado e não identifica a ata. O grupo
+define `plataforma` e `acesso_plataforma`; cada nova ata persiste a plataforma
+fixa do grupo. A coluna `ordem`, quando existir na planilha, é compatibilidade
+visual e não define a ordenação da aplicação.
 
 ## Formatos de reunião
 

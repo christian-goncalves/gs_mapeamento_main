@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   categoriaVisitanteMapping,
+  fusoHorarioMapping,
   formatoMapping,
   origemContatoMapping,
   plataformaMapping,
@@ -20,19 +21,18 @@ const requiredEmail = requiredText.refine(
   (value) => z.email().safeParse(value).success,
   "E-mail inválido.",
 );
-const zoomId = requiredText.refine((value) => {
-  if (/^\d{8,12}$/.test(value)) return true;
-  const parsed = z.url().safeParse(value);
-  if (!parsed.success) return false;
-  return /(^|\.)zoom\.us$/i.test(new URL(value).hostname);
-}, "Informe um ID numérico do Zoom ou uma URL válida do Zoom.");
-
+const optionalEmail = optionalText.refine(
+  (value) => !value || z.email().safeParse(value).success,
+  "E-mail inválido.",
+);
 export const grupoFormSchema = z.object({
-  zoom_id: zoomId,
+  acesso_plataforma: requiredText,
+  plataforma: z.enum(plataformaMapping.codes),
+  fuso_horario: z.enum(fusoHorarioMapping.codes),
   grupo_nome: requiredText,
   ativo: z.boolean(),
-  responsavel_grupo_nome: requiredText,
-  responsavel_grupo_email: requiredEmail,
+  responsavel_grupo_nome: optionalText.default(""),
+  responsavel_grupo_email: optionalEmail.default(""),
   email_acesso_grupo: requiredEmail,
   ultima_reuniao_anterior: z.number().int().min(0),
 });

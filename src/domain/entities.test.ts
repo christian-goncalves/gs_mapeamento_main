@@ -30,6 +30,9 @@ const valid = {
     responsaveis_ata: "Equipe de ata",
     link_formulario_ata: "grupo",
     ultima_reuniao_anterior: 12,
+    fuso_horario: "America/Sao_Paulo",
+    plataforma: "zoom",
+    acesso_plataforma: "123456789",
     ...audit,
   },
   grupoHorario: {

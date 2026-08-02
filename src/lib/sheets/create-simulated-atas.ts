@@ -155,7 +155,11 @@ export async function readSimulationSheetSnapshot(
   const objects = Object.fromEntries(
     names.map((name) => [
       name,
-      rowsToObjects(SHEET_HEADERS[name], values[name]),
+      rowsToObjects(
+        SHEET_HEADERS[name],
+        values[name],
+        name === "grupos" ? { allowMissingTrailingHeaders: 3 } : undefined,
+      ),
     ]),
   ) as Record<SheetName, ReturnType<typeof rowsToObjects>>;
   const groups = requireValidRows(

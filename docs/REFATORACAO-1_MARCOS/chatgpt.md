@@ -185,7 +185,7 @@ Verifique:
 
 Não defina limites arbitrários sem justificativa.
 
-### 7. Localidade — cidades e UF
+### 7. Localidade - cidades e UF
 
 Analisar:
 
@@ -435,7 +435,7 @@ Organize em lotes pequenos e seguros.
 
 Sugestão inicial:
 
-#### Fase 1 — Ajustes visuais e textuais
+#### Fase 1 - Ajustes visuais e textuais
 
 * troca de títulos;
 * labels;
@@ -444,7 +444,7 @@ Sugestão inicial:
 * remoção apenas visual de elementos sem dependência;
 * ajustes de layout.
 
-#### Fase 2 — Campos simples e comportamento de formulário
+#### Fase 2 - Campos simples e comportamento de formulário
 
 * duração;
 * formato outros;
@@ -453,7 +453,7 @@ Sugestão inicial:
 * membros internacionais;
 * ajustes de visitantes sem migração complexa.
 
-#### Fase 3 — Alterações estruturais de dados
+#### Fase 3 - Alterações estruturais de dados
 
 * visitantes;
 * ingressos;
@@ -462,7 +462,7 @@ Sugestão inicial:
 * migrações;
 * compatibilidade com dados existentes.
 
-#### Fase 4 — Numeração e duplicidade
+#### Fase 4 - Numeração e duplicidade
 
 * número interno;
 * número histórico;
@@ -471,7 +471,7 @@ Sugestão inicial:
 * validações;
 * mensagens de erro.
 
-#### Fase 5 — Segurança e permissões
+#### Fase 5 - Segurança e permissões
 
 * regeneração de link;
 * revogação;
@@ -480,7 +480,7 @@ Sugestão inicial:
 * autorização;
 * auditoria.
 
-#### Fase 6 — Ciclo de vida da ata
+#### Fase 6 - Ciclo de vida da ata
 
 * visualizar;
 * editar;
@@ -489,14 +489,14 @@ Sugestão inicial:
 * registrar alterações;
 * definir estados.
 
-#### Fase 7 — Resumo, relatórios e PDF
+#### Fase 7 - Resumo, relatórios e PDF
 
 * atualização do resumo;
 * atualização dos relatórios;
 * geração de PDF;
 * compatibilidade com novos campos.
 
-#### Fase 8 — Testes e regressão
+#### Fase 8 - Testes e regressão
 
 * testes unitários;
 * testes de integração;

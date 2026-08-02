@@ -2,7 +2,9 @@ import type { sheets_v4 } from "@googleapis/sheets";
 
 import {
   categoriaVisitanteMapping,
+  fusoHorarioMapping,
   origemContatoMapping,
+  plataformaMapping,
   tempoLimpoMapping,
 } from "@/domain/enums";
 import { SHEET_HEADERS, type SheetName } from "./contract";
@@ -33,6 +35,8 @@ export type ContractReconciliationClient = {
       get: (request: {
         spreadsheetId: string;
         range: string;
+        valueRenderOption?: "UNFORMATTED_VALUE";
+        dateTimeRenderOption?: "SERIAL_NUMBER";
       }) => Promise<ValuesResponse>;
     };
     batchUpdate: (request: {
@@ -320,7 +324,7 @@ function atasValidationRequests(
   return [
     numberValidation(SHEET_HEADERS.atas.indexOf("numero_sequencial_grupo")),
     numberValidation(SHEET_HEADERS.atas.indexOf("indice_personalizado_grupo")),
-    listValidation(SHEET_HEADERS.atas.indexOf("plataforma"), ["Zoom"]),
+    listValidation(SHEET_HEADERS.atas.indexOf("plataforma"), ["Zoom", "Zello", "WhatsApp"]),
     listValidation(SHEET_HEADERS.atas.indexOf("tipo_reuniao"), ["Aberta", "Fechada"]),
   ];
 }
@@ -477,6 +481,8 @@ async function readSheetValues(
   const response = await client.spreadsheets.values.get({
     spreadsheetId,
     range: `${sheet}!A:Z`,
+    valueRenderOption: "UNFORMATTED_VALUE",
+    dateTimeRenderOption: "SERIAL_NUMBER",
   });
   return response.data.values ?? [];
 }
@@ -504,6 +510,54 @@ function gruposAccessColumnCleanupRequests(
         fields: "dataValidation",
       },
     },
+    {
+      repeatCell: {
+        range: {
+          sheetId,
+          startRowIndex: 1,
+          endRowIndex: rowCount,
+          startColumnIndex: SHEET_HEADERS.grupos.indexOf("acesso_plataforma"),
+          endColumnIndex: SHEET_HEADERS.grupos.indexOf("acesso_plataforma") + 1,
+        },
+        cell: {},
+        fields: "dataValidation",
+      },
+    },
+  ];
+}
+
+function gruposValidationRequests(
+  sheetId: number,
+  rowCount: number,
+): sheets_v4.Schema$Request[] {
+  const listValidation = (column: "fuso_horario" | "plataforma", values: string[]) => {
+    const startColumnIndex = SHEET_HEADERS.grupos.indexOf(column);
+    return {
+      repeatCell: {
+        range: {
+          sheetId,
+          startRowIndex: 1,
+          endRowIndex: rowCount,
+          startColumnIndex,
+          endColumnIndex: startColumnIndex + 1,
+        },
+        cell: {
+          dataValidation: {
+            condition: {
+              type: "ONE_OF_LIST" as const,
+              values: values.map((userEnteredValue) => ({ userEnteredValue })),
+            },
+            strict: true,
+            showCustomUi: true,
+          },
+        },
+        fields: "dataValidation",
+      },
+    };
+  };
+  return [
+    listValidation("fuso_horario", [...fusoHorarioMapping.codes]),
+    listValidation("plataforma", [...plataformaMapping.labels]),
   ];
 }
 
@@ -809,6 +863,7 @@ export async function reconcileSheetContract(
   requests.push(
     ...gruposAccessColumnCleanupRequests(gruposSheetId, gruposRowCount ?? 1000),
   );
+  requests.push(...gruposValidationRequests(gruposSheetId, gruposRowCount ?? 1000));
 
   const visitantesSheetId = byName.get("visitantes")?.properties?.sheetId;
   const visitantesRowCount =
