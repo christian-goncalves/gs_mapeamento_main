@@ -10,6 +10,7 @@ import {
 } from "./enums";
 import { horaInicioSchema } from "./schemas";
 import { isMunicipioOption } from "./municipios";
+import { isVacantMesaName, normalizeMesaName } from "./grupo-servidores-mesa";
 
 const requiredText = z.string().trim().min(1, "Campo obrigatório.");
 const optionalText = z.string().trim();
@@ -52,6 +53,34 @@ export const grupoHorarioFormSchema = z.object({
   link_reuniao: optionalText,
   ativo: z.boolean(),
 });
+
+export const grupoServidorMesaBaseFormSchema = z
+  .object({
+    grupo_id: z.string().uuid(),
+    encargo: requiredText,
+    nome: requiredText,
+    data_inicio: optionalText.refine(
+      (value) => !value || z.string().date().safeParse(value).success,
+      "Data de início inválida.",
+    ),
+    ativo: z.boolean(),
+    ordem: z.number().int().min(1),
+  })
+  .superRefine((item, context) => {
+    if (!isVacantMesaName(item.nome) && !item.data_inicio) {
+      context.addIssue({
+        code: "custom",
+        path: ["data_inicio"],
+        message: "Informe a data de início para encargos preenchidos.",
+      });
+    }
+  });
+
+export const grupoServidorMesaFormSchema = grupoServidorMesaBaseFormSchema
+  .transform((item) => ({
+    ...item,
+    nome: normalizeMesaName(item.nome),
+  }));
 
 export const ataFormSchema = z.object({
   grupo_id: z.string().uuid(),

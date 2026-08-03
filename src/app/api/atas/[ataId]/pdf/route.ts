@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import { buildAtaPresentation } from "@/app/atas/ata-presentation";
 import { canAccessGroup } from "@/lib/auth/access";
-import { requireAuthorizedSession } from "@/lib/auth/require-session";
+import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
 import { renderAtaPdf } from "@/lib/pdf/ata-pdf-document";
-import { readAggregatedAtas } from "@/lib/sheets/repository";
 
 export const dynamic = "force-dynamic";
 
@@ -11,9 +10,8 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ ataId: string }> },
 ) {
-  const { access } = await requireAuthorizedSession();
+  const { access, result } = await requireAuthorizedSessionWithAggregatedAtas();
   const { ataId } = await params;
-  const result = await readAggregatedAtas();
   const item = result.atas.find(
     (candidate) => candidate.registro.ata.ata_id === ataId,
   );

@@ -8,6 +8,7 @@ import {
   trocaChaveiroSchema,
   visitanteSchema,
   grupoHorarioSchema,
+  grupoServidorMesaSchema,
 } from "./schemas";
 
 const grupoId = "fccced1d-92a5-4d24-b5af-da65cbbe467f";
@@ -42,6 +43,16 @@ const valid = {
     hora_inicio: "20:30",
     link_reuniao: "https://example.com/reuniao",
     ativo: true,
+    ...audit,
+  },
+  grupoServidorMesa: {
+    grupo_servidor_mesa_id: "24c2b4e5-7ef0-4cfa-8c84-d9d626b3a8db",
+    grupo_id: grupoId,
+    encargo: "RSG",
+    nome: "vago",
+    data_inicio: "",
+    ativo: true,
+    ordem: 1,
     ...audit,
   },
   ata: {
@@ -107,6 +118,7 @@ describe("schemas de domínio", () => {
   it.each([
     ["grupos", grupoSchema, valid.grupo],
     ["grupo_horarios", grupoHorarioSchema, valid.grupoHorario],
+    ["grupo_servidores_mesa", grupoServidorMesaSchema, valid.grupoServidorMesa],
     ["atas", ataSchema, valid.ata],
     ["servidores", servidorSchema, valid.servidor],
     ["participacao", participacaoSchema, valid.participacao],
@@ -123,6 +135,11 @@ describe("schemas de domínio", () => {
       "grupo_horarios",
       grupoHorarioSchema,
       { ...valid.grupoHorario, dia_semana: "feriado" },
+    ],
+    [
+      "grupo_servidores_mesa",
+      grupoServidorMesaSchema,
+      { ...valid.grupoServidorMesa, nome: "Carlos", data_inicio: "" },
     ],
     ["atas", ataSchema, { ...valid.ata, formatos: [] }],
     ["servidores", servidorSchema, { ...valid.servidor, ordem: 0 }],

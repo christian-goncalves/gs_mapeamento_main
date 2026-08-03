@@ -1,15 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
-  requireAuthorizedSession: vi.fn(),
-  readAggregatedAtas: vi.fn(),
+  requireAuthorizedSessionWithAggregatedAtas: vi.fn(),
   canAccessGroup: vi.fn(),
   buildAtaPresentation: vi.fn(),
   renderAtaPdf: vi.fn(),
 }));
 
-vi.mock("@/lib/auth/require-session", () => ({ requireAuthorizedSession: mocks.requireAuthorizedSession }));
-vi.mock("@/lib/sheets/repository", () => ({ readAggregatedAtas: mocks.readAggregatedAtas }));
+vi.mock("@/lib/auth/require-session", () => ({
+  requireAuthorizedSessionWithAggregatedAtas:
+    mocks.requireAuthorizedSessionWithAggregatedAtas,
+}));
 vi.mock("@/lib/auth/access", () => ({ canAccessGroup: mocks.canAccessGroup }));
 vi.mock("@/app/atas/ata-presentation", () => ({ buildAtaPresentation: mocks.buildAtaPresentation }));
 vi.mock("@/lib/pdf/ata-pdf-document", () => ({ renderAtaPdf: mocks.renderAtaPdf }));
@@ -24,8 +25,10 @@ const item = {
 describe("GET /api/atas/:ataId/pdf", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.requireAuthorizedSession.mockResolvedValue({ access: { role: "administrador" } });
-    mocks.readAggregatedAtas.mockResolvedValue({ atas: [item] });
+    mocks.requireAuthorizedSessionWithAggregatedAtas.mockResolvedValue({
+      access: { role: "administrador" },
+      result: { atas: [item] },
+    });
     mocks.canAccessGroup.mockReturnValue(true);
     mocks.buildAtaPresentation.mockReturnValue({ filename: "ata-usl.pdf" });
     mocks.renderAtaPdf.mockResolvedValue(Buffer.from("pdf"));

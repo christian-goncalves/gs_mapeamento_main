@@ -38,7 +38,7 @@ import {
 
 type RecordSheetName = Exclude<
   SheetName,
-  "grupos" | "usuarios_grupo" | "grupo_horarios"
+  "grupos" | "usuarios_grupo" | "grupo_horarios" | "grupo_servidores_mesa"
 >;
 
 const RECORD_SHEETS: RecordSheetName[] = [

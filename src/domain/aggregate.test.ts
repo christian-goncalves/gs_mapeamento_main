@@ -39,6 +39,16 @@ const ata = {
   total_partilhas: 1,
   ...audit,
 };
+const mesa = {
+  grupo_servidor_mesa_id: "24c2b4e5-7ef0-4cfa-8c84-d9d626b3a8db",
+  grupo_id: grupoId,
+  encargo: "RSG",
+  nome: "vago",
+  data_inicio: "",
+  ativo: true,
+  ordem: 1,
+  ...audit,
+};
 
 function valid<T>(sheet: string, rowNumber: number, data: T) {
   return { valid: true as const, sheet, rowNumber, data };
@@ -62,6 +72,7 @@ function baseRows(): ParsedContractRows {
   return {
     grupos: [valid("grupos", 2, group)],
     grupo_horarios: [],
+    grupo_servidores_mesa: [valid("grupo_servidores_mesa", 2, mesa)],
     atas: [valid("atas", 2, ata)],
     servidores: [
       valid("servidores", 2, {
@@ -121,6 +132,7 @@ describe("leitura agregada", () => {
     const result = aggregateContractRows(baseRows());
     expect(result.diagnostics).toEqual([]);
     expect(result.atas).toHaveLength(1);
+    expect(result.grupo_servidores_mesa).toEqual([mesa]);
     expect(result.atas[0]).toMatchObject({
       grupo: { grupo_nome: "Grupo Histórico", ativo: false },
       registro: {
@@ -181,6 +193,25 @@ describe("leitura agregada", () => {
       field: "grupo_id",
       message: "grupo_id não referencia um grupo válido.",
     });
+  });
+
+  it("rejeita servidor da mesa com grupo inexistente", () => {
+    const rows = baseRows();
+    rows.grupo_servidores_mesa = [
+      valid("grupo_servidores_mesa", 4, {
+        ...mesa,
+        grupo_id: "2bed9d1b-7fea-4cf4-9497-f0ccbcead41c",
+      }),
+    ];
+    const result = aggregateContractRows(rows);
+    expect(result.grupo_servidores_mesa).toEqual([]);
+    expect(result.diagnostics).toContainEqual(
+      expect.objectContaining({
+        sheet: "grupo_servidores_mesa",
+        rowNumber: 4,
+        field: "grupo_id",
+      }),
+    );
   });
 
   it("rejeita dependente órfão sem invalidar a ata", () => {

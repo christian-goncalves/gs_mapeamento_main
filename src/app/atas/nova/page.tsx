@@ -1,21 +1,30 @@
 import { redirect } from "next/navigation";
-import { requireAuthorizedSession } from "@/lib/auth/require-session";
-import { listActiveGroupOptions } from "@/lib/sheets/repository";
+import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
+import { redirectIfResponsibleMesaServersIncomplete } from "@/lib/auth/require-mesa-servers";
 import { ResponsavelShell } from "@/app/responsavel/responsavel-shell";
 import { AtaForm } from "./ata-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function NewAtaPage() {
-  const { access } = await requireAuthorizedSession();
+  const { access, result } = await requireAuthorizedSessionWithAggregatedAtas();
   if (access.role === "administrador") redirect("/admin/atas");
   const [primaryGroup] = access.groups;
   if (!primaryGroup) redirect("/login");
+  await redirectIfResponsibleMesaServersIncomplete(access, result);
 
   const allowedGroupIds = new Set(access.groups.map((group) => group.grupo_id));
-  const groups = (await listActiveGroupOptions()).filter((group) =>
-    allowedGroupIds.has(group.grupo_id),
-  );
+  const groups = result.grupos
+    .filter((group) => group.ativo && allowedGroupIds.has(group.grupo_id))
+    .sort((first, second) =>
+      first.grupo_nome.localeCompare(second.grupo_nome, "pt-BR"),
+    )
+    .map((group) => ({
+      ...group,
+      horarios: result.grupo_horarios.filter(
+        (horario) => horario.grupo_id === group.grupo_id && horario.ativo,
+      ),
+    }));
   const now = new Date();
   const today = new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Sao_Paulo",

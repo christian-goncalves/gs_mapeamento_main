@@ -6,8 +6,11 @@ const mocks = vi.hoisted(() => ({
   requireAdminSession: vi.fn(),
   requireAuthorizedSession: vi.fn(),
   deleteGrupoHorarios: vi.fn(),
+  deactivateGrupoServidorMesa: vi.fn(),
   saveGrupo: vi.fn(),
   saveGrupoHorario: vi.fn(),
+  saveGrupoServidorMesa: vi.fn(),
+  saveGrupoServidoresMesa: vi.fn(),
   syncResponsibleGroupUser: vi.fn(),
   sendActivationEmail: vi.fn(),
   revalidatePath: vi.fn(),
@@ -25,9 +28,12 @@ vi.mock("@/lib/sheets/repository", () => ({
   readAggregatedAtas: mocks.readAggregatedAtas,
 }));
 vi.mock("@/lib/sheets/group-admin", () => ({
+  deactivateGrupoServidorMesa: mocks.deactivateGrupoServidorMesa,
   deleteGrupoHorarios: mocks.deleteGrupoHorarios,
   saveGrupo: mocks.saveGrupo,
   saveGrupoHorario: mocks.saveGrupoHorario,
+  saveGrupoServidorMesa: mocks.saveGrupoServidorMesa,
+  saveGrupoServidoresMesa: mocks.saveGrupoServidoresMesa,
 }));
 vi.mock("@/lib/sheets/group-users", () => ({
   syncResponsibleGroupUser: mocks.syncResponsibleGroupUser,
@@ -38,10 +44,13 @@ vi.mock("@/lib/email/activation-email", () => ({
 
 import {
   activateGrupoAction,
+  deactivateGrupoServidorMesaAction,
   deactivateGrupoAction,
   duplicateGrupoAction,
   rotateAtaLinkAction,
   saveGrupoAction,
+  saveGrupoServidorMesaAction,
+  saveGrupoServidoresMesaAction,
   saveHorariosGrupoAction,
 } from "./actions";
 
@@ -151,6 +160,7 @@ describe("Server Action de grupos", () => {
     mocks.readAggregatedAtas.mockResolvedValue({
       grupos: [groupOne, groupTwo],
       grupo_horarios: [groupTwoSchedule],
+      grupo_servidores_mesa: [],
       atas: [],
       servidores: [],
       participacao: [],
@@ -270,6 +280,170 @@ describe("Server Action de grupos", () => {
     );
   });
 
+  it("salva servidores da mesa com nomes vazios como vago", async () => {
+    const data = groupForm();
+    data.set(
+      "servidores_mesa",
+      JSON.stringify([
+        {
+          encargo: "RSG",
+          nome: "",
+          data_inicio: "",
+          ativo: true,
+          ordem: 1,
+        },
+        {
+          encargo: "RSG suplente",
+          nome: "   ",
+          data_inicio: "",
+          ativo: true,
+          ordem: 2,
+        },
+      ]),
+    );
+
+    await saveGrupoAction(null, data);
+
+    expect(mocks.saveGrupoServidoresMesa).toHaveBeenCalledWith(groupTwo.grupo_id, [
+      expect.objectContaining({
+        grupo_id: groupTwo.grupo_id,
+        encargo: "RSG",
+        nome: "vago",
+        data_inicio: "",
+      }),
+      expect.objectContaining({
+        grupo_id: groupTwo.grupo_id,
+        encargo: "RSG suplente",
+        nome: "vago",
+        data_inicio: "",
+      }),
+    ]);
+    expect(mocks.redirect).toHaveBeenCalledWith(
+      `/admin/grupos/${groupTwo.grupo_id}?status=saved-mesa-missing-names`,
+    );
+  });
+
+  it("salva servidores da mesa vago sem data de inicio", async () => {
+    const data = groupForm();
+    data.set(
+      "servidores_mesa",
+      JSON.stringify([
+        {
+          encargo: "Tesoureiro",
+          nome: "vago",
+          data_inicio: "",
+          ativo: true,
+          ordem: 1,
+        },
+      ]),
+    );
+
+    await saveGrupoAction(null, data);
+
+    expect(mocks.saveGrupoServidoresMesa).toHaveBeenCalledWith(groupTwo.grupo_id, [
+      expect.objectContaining({
+        grupo_id: groupTwo.grupo_id,
+        encargo: "Tesoureiro",
+        nome: "vago",
+        data_inicio: "",
+      }),
+    ]);
+    expect(mocks.redirect).toHaveBeenCalledWith(
+      `/admin/grupos/${groupTwo.grupo_id}?status=saved-mesa-missing-names`,
+    );
+  });
+
+  it("salva somente os servidores da mesa pela ação independente", async () => {
+    const data = groupIdForm();
+    data.set(
+      "servidores_mesa",
+      JSON.stringify([
+        {
+          encargo: "RSG",
+          nome: "Carlos",
+          data_inicio: "2026-08-03",
+          ativo: true,
+          ordem: 1,
+        },
+      ]),
+    );
+
+    await saveGrupoServidoresMesaAction(null, data);
+
+    expect(mocks.saveGrupo).not.toHaveBeenCalled();
+    expect(mocks.saveGrupoServidoresMesa).toHaveBeenCalledWith(
+      groupTwo.grupo_id,
+      [expect.objectContaining({ encargo: "RSG", nome: "Carlos" })],
+    );
+    expect(mocks.redirect).toHaveBeenCalledWith(
+      `/admin/grupos/${groupTwo.grupo_id}?status=saved`,
+    );
+  });
+
+  it("salva somente o servidor da mesa selecionado", async () => {
+    const data = groupIdForm();
+    data.set("grupo_servidor_mesa_id", "77777777-7777-4777-8777-777777777777");
+    data.set("encargo", "RSG");
+    data.set("nome", "Carlos");
+    data.set("data_inicio", "2026-08-03");
+    data.set("ordem", "1");
+
+    await saveGrupoServidorMesaAction(null, data);
+
+    expect(mocks.saveGrupoServidoresMesa).not.toHaveBeenCalled();
+    expect(mocks.saveGrupoServidorMesa).toHaveBeenCalledWith(
+      groupTwo.grupo_id,
+      expect.objectContaining({
+        grupo_servidor_mesa_id: "77777777-7777-4777-8777-777777777777",
+        encargo: "RSG",
+        nome: "Carlos",
+        data_inicio: "2026-08-03",
+      }),
+    );
+  });
+
+  it("salva servidor individual vago sem data de início", async () => {
+    const data = groupIdForm();
+    data.set("grupo_servidor_mesa_id", "77777777-7777-4777-8777-777777777777");
+    data.set("encargo", "RSG");
+    data.set("nome", "Vago");
+    data.set("data_inicio", "");
+    data.set("ordem", "1");
+
+    await saveGrupoServidorMesaAction(null, data);
+
+    expect(mocks.saveGrupoServidorMesa).toHaveBeenCalledWith(
+      groupTwo.grupo_id,
+      expect.objectContaining({ nome: "Vago", data_inicio: "" }),
+    );
+  });
+
+  it("recusa servidor individual preenchido sem data de início", async () => {
+    const data = groupIdForm();
+    data.set("encargo", "RSG");
+    data.set("nome", "Carlos");
+    data.set("data_inicio", "");
+    data.set("ordem", "1");
+
+    await expect(saveGrupoServidorMesaAction(null, data)).resolves.toEqual({
+      error: "Informe a data de início para encargos preenchidos.",
+    });
+    expect(mocks.saveGrupoServidorMesa).not.toHaveBeenCalled();
+  });
+
+  it("remove somente um encargo adicional", async () => {
+    const data = groupIdForm();
+    data.set("grupo_servidor_mesa_id", "77777777-7777-4777-8777-777777777777");
+
+    await deactivateGrupoServidorMesaAction(data);
+
+    expect(mocks.deactivateGrupoServidorMesa).toHaveBeenCalledWith(
+      groupTwo.grupo_id,
+      "77777777-7777-4777-8777-777777777777",
+    );
+    expect(mocks.saveGrupoServidoresMesa).not.toHaveBeenCalled();
+  });
+
   it("não usa o e-mail do responsável como fallback do login", async () => {
     const data = groupForm({ grupo_id: "" });
     data.delete("grupo_id");
@@ -307,6 +481,7 @@ describe("Server Action de grupos", () => {
     mocks.readAggregatedAtas.mockResolvedValueOnce({
       grupos: [groupOne, groupTwo, inactiveGroup],
       grupo_horarios: [groupTwoSchedule],
+      grupo_servidores_mesa: [],
       atas: [],
       servidores: [],
       participacao: [],
@@ -402,6 +577,7 @@ describe("Server Action de grupos", () => {
     mocks.readAggregatedAtas.mockResolvedValueOnce({
       grupos: [groupOne, groupTwo],
       grupo_horarios: [groupTwoSchedule, groupTwoSecondSchedule],
+      grupo_servidores_mesa: [],
       atas: [],
       servidores: [],
       participacao: [],

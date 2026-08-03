@@ -6,6 +6,7 @@ import type {
   Ata,
   Grupo,
   GrupoHorario,
+  GrupoServidorMesa,
   Ingresso,
   Participacao,
   Servidor,
@@ -27,6 +28,8 @@ import {
   sheetGrupoSchema,
   sheetGrupoHorarioSchema,
   sheetGrupoHorarioToDomain,
+  sheetGrupoServidorMesaSchema,
+  sheetGrupoServidorMesaToDomain,
   sheetGrupoToDomain,
   sheetIngressoSchema,
   sheetIngressoToDomain,
@@ -87,58 +90,86 @@ function isMissingSheetRangeError(error: unknown, name: SheetName) {
   );
 }
 
+function sheetsReadErrorDetails(error: unknown) {
+  const candidate = error as {
+    code?: unknown;
+    message?: unknown;
+    response?: { status?: unknown };
+  };
+  const status =
+    typeof candidate.response?.status === "number"
+      ? candidate.response.status
+      : typeof candidate.code === "number"
+        ? candidate.code
+        : undefined;
+  const message =
+    typeof candidate.message === "string" ? candidate.message : String(error);
+  const kind =
+    status === 401 || status === 403
+      ? "authentication"
+      : status === 429 || /quota|rate limit/i.test(message)
+        ? "quota"
+        : "api";
+  return { kind, status, message };
+}
+
 async function readContractSheets() {
   const names = Object.keys(SHEET_HEADERS) as SheetName[];
   const sheets = getSheetsClient();
+  const diagnostics: RowDiagnostic[] = [];
+  const values = names.reduce<Record<SheetName, LocatedObject[]>>(
+    (result, name) => {
+      result[name] = [];
+      return result;
+    },
+    {} as Record<SheetName, LocatedObject[]>,
+  );
+  let pendingNames = [...names];
 
-  try {
-    const response = await sheets.spreadsheets.values.batchGet({
-      spreadsheetId: getSpreadsheetId(),
-      ranges: names.map((name) => `${name}!A:Z`),
-      valueRenderOption: "UNFORMATTED_VALUE",
-      dateTimeRenderOption: "SERIAL_NUMBER",
-    });
-    return {
-      diagnostics: [],
-      values: Object.fromEntries(
-        names.map((name, index) => [
-          name,
-          rowsToObjects(
-            SHEET_HEADERS[name],
-            normalizeHeaderAliases(
-              name,
-              (response.data.valueRanges?.[index]?.values as
-                | SheetValue[][]
-                | undefined) ?? [],
-            ),
-            name === "grupos" ? { allowMissingTrailingHeaders: 3 } : undefined,
+  while (pendingNames.length > 0) {
+    try {
+      const response = await sheets.spreadsheets.values.batchGet({
+        spreadsheetId: getSpreadsheetId(),
+        ranges: pendingNames.map((name) => `${name}!A:Z`),
+        valueRenderOption: "UNFORMATTED_VALUE",
+        dateTimeRenderOption: "SERIAL_NUMBER",
+      });
+      pendingNames.forEach((name, index) => {
+        values[name] = rowsToObjects(
+          SHEET_HEADERS[name],
+          normalizeHeaderAliases(
+            name,
+            (response.data.valueRanges?.[index]?.values as
+              | SheetValue[][]
+              | undefined) ?? [],
           ),
-        ]),
-      ) as Record<SheetName, LocatedObject[]>,
-    };
-  } catch (error) {
-    if (
-      !names.some((name) => isMissingSheetRangeError(error, name))
-    ) {
-      throw error;
+          name === "grupos" ? { allowMissingTrailingHeaders: 3 } : undefined,
+        );
+      });
+      break;
+    } catch (error) {
+      const missingName = pendingNames.find((name) =>
+        isMissingSheetRangeError(error, name),
+      );
+      if (!missingName) {
+        console.error(
+          "[sheets.readContractSheets]",
+          JSON.stringify(sheetsReadErrorDetails(error)),
+        );
+        throw error;
+      }
+      diagnostics.push(missingSheetDiagnostic(missingName));
+      console.warn(
+        "[sheets.readContractSheets]",
+        JSON.stringify({ kind: "missing_sheet", sheet: missingName }),
+      );
+      pendingNames = pendingNames.filter((name) => name !== missingName);
     }
   }
 
-  const diagnostics: RowDiagnostic[] = [];
-  const entries = await Promise.all(
-    names.map(async (name) => {
-      try {
-        return [name, await readSheet(name)] as const;
-      } catch (error) {
-        if (!isMissingSheetRangeError(error, name)) throw error;
-        diagnostics.push(missingSheetDiagnostic(name));
-        return [name, []] as const;
-      }
-    }),
-  );
   return {
     diagnostics,
-    values: Object.fromEntries(entries) as Record<SheetName, LocatedObject[]>,
+    values,
   };
 }
 
@@ -157,6 +188,17 @@ export async function listGrupoHorarios(): Promise<ParsedRow<GrupoHorario>[]> {
     sheetGrupoHorarioSchema,
     await readSheet("grupo_horarios"),
     sheetGrupoHorarioToDomain,
+  );
+}
+
+export async function listGrupoServidoresMesa(): Promise<
+  ParsedRow<GrupoServidorMesa>[]
+> {
+  return parseRows(
+    "grupo_servidores_mesa",
+    sheetGrupoServidorMesaSchema,
+    await readSheet("grupo_servidores_mesa"),
+    sheetGrupoServidorMesaToDomain,
   );
 }
 
@@ -269,6 +311,12 @@ export async function readAggregatedAtas() {
     values.grupo_horarios,
     sheetGrupoHorarioToDomain,
   );
+  const grupo_servidores_mesa = parseRows(
+    "grupo_servidores_mesa",
+    sheetGrupoServidorMesaSchema,
+    values.grupo_servidores_mesa,
+    sheetGrupoServidorMesaToDomain,
+  );
   const atas = parseRows(
     "atas",
     sheetAtaSchema,
@@ -308,6 +356,7 @@ export async function readAggregatedAtas() {
   const aggregated = aggregateContractRows({
     grupos,
     grupo_horarios,
+    grupo_servidores_mesa,
     atas,
     servidores,
     participacao,

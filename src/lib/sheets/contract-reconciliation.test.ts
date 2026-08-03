@@ -146,6 +146,21 @@ describe("reconciliação do contrato Sheets", () => {
     ).toBe(false);
   });
 
+  it("planeja criação sem escrever no modo dry run", async () => {
+    const names = (Object.keys(SHEET_HEADERS) as SheetName[]).filter(
+      (name) => name !== "grupo_servidores_mesa",
+    );
+    const { client, batchUpdate } = clientWith({ names });
+
+    const result = await reconcileSheetContract(client, "spreadsheet-test", {
+      dryRun: true,
+    });
+
+    expect(result.createdSheets).toEqual(["grupo_servidores_mesa"]);
+    expect(result.requestCount).toBeGreaterThan(0);
+    expect(batchUpdate).not.toHaveBeenCalled();
+  });
+
   it("valida identificadores existentes em atas sem mutar quando estão corretos", async () => {
     const { client } = clientWith({
       sheetValues: {

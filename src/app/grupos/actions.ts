@@ -7,6 +7,10 @@ import {
   grupoFormSchema,
   grupoHorarioFormSchema,
 } from "@/domain/form-schemas";
+import {
+  DEFAULT_MESA_OFFICES,
+  isVacantMesaName,
+} from "@/domain/grupo-servidores-mesa";
 import { diaSemanaOrder, diaSemanaSchema, horaInicioSchema } from "@/domain/schemas";
 import type { Grupo } from "@/domain/entities";
 import { canAccessGroup } from "@/lib/auth/access";
@@ -18,9 +22,12 @@ import {
 import { isSecureAtaLinkToken } from "@/lib/ata-link-token";
 import { uniqueAtaLinkToken } from "@/lib/ata-link-token.server";
 import {
+  deactivateGrupoServidorMesa,
   deleteGrupoHorarios,
   saveGrupo,
   saveGrupoHorario,
+  saveGrupoServidorMesa,
+  saveGrupoServidoresMesa,
 } from "@/lib/sheets/group-admin";
 import { syncResponsibleGroupUser } from "@/lib/sheets/group-users";
 import { readAggregatedAtas } from "@/lib/sheets/repository";
@@ -69,8 +76,66 @@ const horariosPayloadSchema = z
   )
   .min(1, "Informe pelo menos um horário.");
 
+const servidorMesaPayloadSchema =
+  z
+    .object({
+      grupo_servidor_mesa_id: z.string().uuid().optional(),
+      encargo: z.string().trim().min(1, "Campo obrigatório."),
+      nome: z.string().trim(),
+      data_inicio: z.string().trim().refine(
+        (value) => !value || z.string().date().safeParse(value).success,
+        "Data de início inválida.",
+      ),
+      ativo: z.boolean(),
+      ordem: z.number().int().min(1),
+    })
+    .superRefine((item, context) => {
+      if (!isVacantMesaName(item.nome) && !item.data_inicio) {
+        context.addIssue({
+          code: "custom",
+          path: ["data_inicio"],
+          message: "Informe a data de início para encargos preenchidos.",
+        });
+      }
+    })
+    .transform((item) => ({
+      ...item,
+      nome: item.nome.trim().replace(/\s+/g, " ") || "vago",
+    }));
+
+const servidoresMesaPayloadSchema = z.array(servidorMesaPayloadSchema);
+
 function normalizeEmail(value: string) {
   return value.trim().toLocaleLowerCase("en-US");
+}
+
+function parseServidoresMesaPayload(formData: FormData, grupoId: string) {
+  const payload = text(formData, "servidores_mesa");
+  if (!payload) return null;
+  const parsed = servidoresMesaPayloadSchema.safeParse(JSON.parse(payload));
+  if (!parsed.success) {
+    return {
+      error:
+        parsed.error.issues[0]?.message ??
+        "Revise os servidores da mesa antes de salvar.",
+    };
+  }
+  return {
+    data: parsed.data.map((item) => ({
+      ...item,
+      grupo_id: grupoId,
+    })),
+  };
+}
+
+function hasMissingDefaultMesaNames(
+  servidores: readonly { encargo: string; nome: string }[],
+) {
+  return DEFAULT_MESA_OFFICES.some((encargo) =>
+    servidores.some(
+      (item) => item.encargo === encargo && isVacantMesaName(item.nome),
+    ),
+  );
 }
 
 class DuplicateGroupLoginEmailError extends Error {
@@ -144,6 +209,17 @@ export async function saveGrupoAction(
       error: parsedResult.error.issues[0]?.message ?? "Dados inválidos.",
     };
   }
+  let parsedServidoresMesa:
+    | ReturnType<typeof parseServidoresMesaPayload>
+    | null = null;
+  try {
+    parsedServidoresMesa = parseServidoresMesaPayload(formData, grupoId);
+  } catch {
+    return { error: "Revise os servidores da mesa antes de salvar." };
+  }
+  if (parsedServidoresMesa && "error" in parsedServidoresMesa) {
+    return { error: parsedServidoresMesa.error };
+  }
   const parsed = parsedResult.data;
   const ordem =
     existingGroup?.ordem ??
@@ -195,6 +271,12 @@ export async function saveGrupoAction(
     grupo_id: grupoId,
     ...groupToSave,
   });
+  if (parsedServidoresMesa?.data) {
+    await saveGrupoServidoresMesa(grupoId, parsedServidoresMesa.data);
+  }
+  const missingDefaultMesaNames = parsedServidoresMesa?.data
+    ? hasMissingDefaultMesaNames(parsedServidoresMesa.data)
+    : false;
   let activationInviteSent = false;
   if (isAdmin) {
     const user = await syncResponsibleGroupUser(savedGroup);
@@ -204,13 +286,108 @@ export async function saveGrupoAction(
     }
   }
   revalidateGroupAdminPaths(grupoId);
+  revalidatePath("/admin/relatorios");
+  revalidatePath("/responsavel/relatorios");
   const status =
     existingGroup && previousEmail !== nextEmail && activationInviteSent
       ? "activation-invite-sent"
       : existingGroup
-        ? "saved"
+        ? missingDefaultMesaNames
+          ? "saved-mesa-missing-names"
+          : "saved"
         : "created";
   redirect(`${groupDetailPath(grupoId, isAdmin)}?status=${status}`);
+}
+
+export async function saveGrupoServidoresMesaAction(
+  _state: SaveGrupoState,
+  formData: FormData,
+): Promise<SaveGrupoState> {
+  const grupoId = text(formData, "grupo_id");
+  const current = await requireAuthorizedSession();
+  if (!grupoId || !canAccessGroup(current.access, grupoId)) redirect("/");
+
+  let parsedServidoresMesa: ReturnType<typeof parseServidoresMesaPayload>;
+  try {
+    parsedServidoresMesa = parseServidoresMesaPayload(formData, grupoId);
+  } catch {
+    return { error: "Revise os servidores da mesa antes de salvar." };
+  }
+  if (!parsedServidoresMesa) {
+    return { error: "Revise os servidores da mesa antes de salvar." };
+  }
+  if ("error" in parsedServidoresMesa) {
+    return { error: parsedServidoresMesa.error };
+  }
+
+  await saveGrupoServidoresMesa(grupoId, parsedServidoresMesa.data);
+  revalidateGroupAdminPaths(grupoId);
+  revalidatePath("/admin/relatorios");
+  revalidatePath("/responsavel/relatorios");
+  const status = hasMissingDefaultMesaNames(parsedServidoresMesa.data)
+    ? "saved-mesa-missing-names"
+    : "saved";
+  redirect(
+    `${groupDetailPath(grupoId, current.access.role === "administrador")}?status=${status}`,
+  );
+}
+
+export async function saveGrupoServidorMesaAction(
+  _state: SaveGrupoState,
+  formData: FormData,
+): Promise<SaveGrupoState> {
+  const grupoId = text(formData, "grupo_id");
+  const current = await requireAuthorizedSession();
+  if (!grupoId || !canAccessGroup(current.access, grupoId)) redirect("/");
+
+  const parsed = servidorMesaPayloadSchema.safeParse({
+    grupo_servidor_mesa_id:
+      text(formData, "grupo_servidor_mesa_id") || undefined,
+    encargo: text(formData, "encargo"),
+    nome: text(formData, "nome"),
+    data_inicio: text(formData, "data_inicio"),
+    ativo: true,
+    ordem: int(formData, "ordem"),
+  });
+  if (!parsed.success) {
+    return {
+      error:
+        parsed.error.issues[0]?.message ??
+        "Revise o servidor da mesa antes de salvar.",
+    };
+  }
+
+  try {
+    await saveGrupoServidorMesa(grupoId, parsed.data);
+  } catch (error) {
+    return {
+      error:
+        error instanceof Error
+          ? error.message
+          : "Não foi possível salvar o servidor da mesa.",
+    };
+  }
+  revalidateGroupAdminPaths(grupoId);
+  revalidatePath("/admin/relatorios");
+  revalidatePath("/responsavel/relatorios");
+  redirect(
+    `${groupDetailPath(grupoId, current.access.role === "administrador")}?status=saved`,
+  );
+}
+
+export async function deactivateGrupoServidorMesaAction(formData: FormData) {
+  const grupoId = text(formData, "grupo_id");
+  const servidorId = text(formData, "grupo_servidor_mesa_id");
+  const current = await requireAuthorizedSession();
+  if (!grupoId || !canAccessGroup(current.access, grupoId)) redirect("/");
+
+  await deactivateGrupoServidorMesa(grupoId, servidorId);
+  revalidateGroupAdminPaths(grupoId);
+  revalidatePath("/admin/relatorios");
+  revalidatePath("/responsavel/relatorios");
+  redirect(
+    `${groupDetailPath(grupoId, current.access.role === "administrador")}?status=saved`,
+  );
 }
 
 export async function deactivateGrupoAction(formData: FormData) {

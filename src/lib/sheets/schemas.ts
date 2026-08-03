@@ -11,6 +11,7 @@ import type {
   Ata,
   Grupo,
   GrupoHorario,
+  GrupoServidorMesa,
   Ingresso,
   Participacao,
   Servidor,
@@ -19,6 +20,7 @@ import type {
   Visitante,
 } from "@/domain/schemas";
 import { isMunicipioOption } from "@/domain/municipios";
+import { isVacantMesaName } from "@/domain/grupo-servidores-mesa";
 
 const requiredText = z.string().trim().min(1, "Campo obrigatório.");
 const requiredSheetText = z.preprocess(
@@ -88,6 +90,19 @@ const sheetDate = z.preprocess((value) => {
   return value;
 }, z.string().date());
 
+const sheetOptionalDate = z.preprocess((value) => {
+  if (value === "" || value === false || value == null) return "";
+  if (typeof value === "number") {
+    const milliseconds = Math.round((value - 25569) * 86_400_000);
+    return new Date(milliseconds).toISOString().slice(0, 10);
+  }
+  if (typeof value === "string") {
+    const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value);
+    if (match) return `${match[3]}-${match[2]}-${match[1]}`;
+  }
+  return value;
+}, z.union([z.literal(""), z.string().date()]));
+
 const sheetTime = z.preprocess((value) => {
   if (typeof value === "number" && value >= 0 && value < 1) {
     const minutes = Math.round(value * 24 * 60);
@@ -153,6 +168,27 @@ export const sheetGrupoHorarioSchema = z.object({
   ativo: sheetBoolean,
   ...auditFields,
 });
+
+export const sheetGrupoServidorMesaSchema = z
+  .object({
+    grupo_servidor_mesa_id: uuid,
+    grupo_id: uuid,
+    encargo: requiredText,
+    nome: requiredText,
+    data_inicio: sheetOptionalDate,
+    ativo: sheetBoolean,
+    ordem: sheetInteger(1),
+    ...auditFields,
+  })
+  .superRefine((item, context) => {
+    if (!isVacantMesaName(item.nome) && !item.data_inicio) {
+      context.addIssue({
+        code: "custom",
+        path: ["data_inicio"],
+        message: "Informe a data de início para encargos preenchidos.",
+      });
+    }
+  });
 
 export const sheetUsuarioGrupoSchema = z.object({
   usuario_id: uuid,
@@ -297,6 +333,7 @@ export const sheetIngressoSchema = z.object({
 
 export type SheetGrupo = z.infer<typeof sheetGrupoSchema>;
 export type SheetGrupoHorario = z.infer<typeof sheetGrupoHorarioSchema>;
+export type SheetGrupoServidorMesa = z.infer<typeof sheetGrupoServidorMesaSchema>;
 export type SheetUsuarioGrupo = z.infer<typeof sheetUsuarioGrupoSchema>;
 export type SheetAta = z.infer<typeof sheetAtaSchema>;
 export type SheetServidor = z.infer<typeof sheetServidorSchema>;
@@ -326,6 +363,12 @@ export const sheetGrupoHorarioToDomain = (
 export const domainGrupoHorarioToSheet = (
   item: GrupoHorario,
 ): SheetGrupoHorario => item;
+export const sheetGrupoServidorMesaToDomain = (
+  row: SheetGrupoServidorMesa,
+): GrupoServidorMesa => row;
+export const domainGrupoServidorMesaToSheet = (
+  item: GrupoServidorMesa,
+): SheetGrupoServidorMesa => item;
 export const sheetUsuarioGrupoToDomain = (
   row: SheetUsuarioGrupo,
 ): UsuarioGrupo => row;

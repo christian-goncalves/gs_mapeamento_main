@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => ({
   revalidatePath: vi.fn(),
   requireAuthorizedSession: vi.fn(),
   getActiveGroupByAtaLink: vi.fn(),
+  readAggregatedAtas: vi.fn(),
 }));
 
 vi.mock("@/lib/sheets/create-ata", () => ({
@@ -17,6 +18,7 @@ vi.mock("@/lib/auth/require-session", () => ({
 }));
 vi.mock("@/lib/sheets/repository", () => ({
   getActiveGroupByAtaLink: mocks.getActiveGroupByAtaLink,
+  readAggregatedAtas: mocks.readAggregatedAtas,
 }));
 vi.mock("server-only", () => ({}));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
@@ -83,7 +85,9 @@ function hiddenFormData() {
 describe("Server Action de criação", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.requireAuthorizedSession.mockResolvedValue({ user: { email: "allowed@example.com" } });
+    mocks.requireAuthorizedSession.mockResolvedValue({
+      access: { role: "administrador", email: "allowed@example.com", groups: [] },
+    });
   });
 
   it("revalida autorização antes de qualquer envio", async () => {

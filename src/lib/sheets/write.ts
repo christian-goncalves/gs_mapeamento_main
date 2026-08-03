@@ -14,7 +14,7 @@ type SheetIds = Record<SheetName, number>;
 type SheetValue = string | number | boolean;
 type RecordSheetName = Exclude<
   SheetName,
-  "grupos" | "usuarios_grupo" | "grupo_horarios"
+  "grupos" | "usuarios_grupo" | "grupo_horarios" | "grupo_servidores_mesa"
 >;
 type NextRows = Record<RecordSheetName, number>;
 

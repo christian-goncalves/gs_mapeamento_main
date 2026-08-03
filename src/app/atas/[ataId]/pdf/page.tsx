@@ -3,8 +3,7 @@ import { notFound } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faDownload } from "@fortawesome/free-solid-svg-icons";
 import { canAccessGroup } from "@/lib/auth/access";
-import { requireAuthorizedSession } from "@/lib/auth/require-session";
-import { readAggregatedAtas } from "@/lib/sheets/repository";
+import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
 import { AtaPdfActions } from "../../ata-pdf-actions";
 import { buildAtaPresentation } from "../../ata-presentation";
 
@@ -15,9 +14,8 @@ export default async function AtaPdfPreviewPage({
 }: {
   params: Promise<{ ataId: string }>;
 }) {
-  const { access } = await requireAuthorizedSession();
+  const { access, result } = await requireAuthorizedSessionWithAggregatedAtas();
   const { ataId } = await params;
-  const result = await readAggregatedAtas();
   const item = result.atas.find(
     (candidate) => candidate.registro.ata.ata_id === ataId,
   );

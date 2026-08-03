@@ -7,8 +7,8 @@ import {
   faPlus,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
-import { requireAuthorizedSession } from "@/lib/auth/require-session";
-import { readAggregatedAtas } from "@/lib/sheets/repository";
+import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
+import { redirectIfResponsibleMesaServersIncomplete } from "@/lib/auth/require-mesa-servers";
 import { ResponsavelAtasTable, type ResponsavelAtaRow } from "./responsavel-atas-table";
 import { ResponsavelShell } from "../responsavel-shell";
 
@@ -32,12 +32,12 @@ function primaryServerName(servers: { nome: string; ordem: number }[]) {
 }
 
 export default async function ResponsavelAtasPage() {
-  const { access } = await requireAuthorizedSession();
+  const { access, result } = await requireAuthorizedSessionWithAggregatedAtas();
   if (access.role === "administrador") redirect("/admin/grupos");
   const [group] = access.groups;
   if (!group) redirect("/login");
 
-  const result = await readAggregatedAtas();
+  await redirectIfResponsibleMesaServersIncomplete(access, result);
   const groupAtas = result.atas.filter(
     (item) => item.grupo.grupo_id === group.grupo_id,
   );

@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { requireAdminSession } from "@/lib/auth/require-session";
-import { readAggregatedAtas } from "@/lib/sheets/repository";
+import { requireAdminSessionWithAggregatedAtas } from "@/lib/auth/require-session";
 import { AdminGroupsPanel } from "@/app/grupos/admin-groups-panel";
 import { AdminShell } from "@/app/grupos/admin-shell";
 
@@ -13,12 +12,11 @@ type AdminGruposPageProps = {
 };
 
 export default async function AdminGruposPage({ searchParams }: AdminGruposPageProps) {
-  await requireAdminSession();
+  const { result } = await requireAdminSessionWithAggregatedAtas();
   const params = await searchParams;
   const status = Array.isArray(params?.status)
     ? params.status[0]
     : params?.status;
-  const result = await readAggregatedAtas();
   const groups = [...result.grupos].sort(
     (first, second) => first.grupo_nome.localeCompare(second.grupo_nome, "pt-BR"),
   ).map((group) => ({

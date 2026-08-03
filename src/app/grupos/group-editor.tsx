@@ -9,15 +9,27 @@ import {
   faFileLines,
   faFloppyDisk,
   faPenToSquare,
+  faPlus,
   faRotateRight,
+  faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { Grupo, GrupoHorario } from "@/domain/entities";
 import { fusoHorarioMapping, plataformaMapping } from "@/domain/enums";
+import {
+  DEFAULT_MESA_OFFICES,
+  isVacantMesaName,
+} from "@/domain/grupo-servidores-mesa";
+import type { GrupoServidorMesa } from "@/domain/schemas";
 import { isSecureAtaLinkToken } from "@/lib/ata-link-token";
-import { rotateAtaLinkAction, saveGrupoAction } from "./actions";
+import {
+  rotateAtaLinkAction,
+  saveGrupoAction,
+  saveGrupoServidoresMesaAction,
+} from "./actions";
 import { CopyableLink } from "./copyable-link";
 import { GroupSchedulesEditor } from "./group-schedules-editor";
+import { MesaServersSummary } from "./mesa-servers-summary";
 
 const emptyGroup: Grupo = {
   grupo_id: "",
@@ -37,6 +49,339 @@ const emptyGroup: Grupo = {
   created_at: new Date(0).toISOString(),
   updated_at: new Date(0).toISOString(),
 };
+
+const MESA_MISSING_NAMES_NOTICE =
+  "Você não adicionou os nomes dos encargos de RSG, RSG Suplente, Secretário e Tesoureiro. Você poderá voltar a qualquer momento para completar essas informações.";
+
+type MesaServerDraft = {
+  clientId: string;
+  grupo_servidor_mesa_id?: string;
+  encargo: string;
+  nome: string;
+  data_inicio: string;
+  ativo: boolean;
+  ordem: number;
+  fixed: boolean;
+};
+
+function clientId() {
+  return crypto.randomUUID();
+}
+
+function mesaDraftsFrom(
+  servidores: readonly GrupoServidorMesa[],
+): MesaServerDraft[] {
+  const active = servidores.filter((item) => item.ativo);
+  const byOffice = new Map(active.map((item) => [item.encargo, item]));
+  const fixed = DEFAULT_MESA_OFFICES.map((encargo, index) => {
+    const existing = byOffice.get(encargo);
+    return {
+      clientId: existing?.grupo_servidor_mesa_id ?? `fixed-${encargo}`,
+      grupo_servidor_mesa_id: existing?.grupo_servidor_mesa_id,
+      encargo,
+      nome: existing?.nome || "vago",
+      data_inicio: existing?.data_inicio ?? "",
+      ativo: true,
+      ordem: index + 1,
+      fixed: true,
+    };
+  });
+  const extras = active
+    .filter(
+      (item) =>
+        !DEFAULT_MESA_OFFICES.some((defaultOffice) => defaultOffice === item.encargo),
+    )
+    .sort(
+      (first, second) =>
+        first.ordem - second.ordem ||
+        first.encargo.localeCompare(second.encargo, "pt-BR"),
+    )
+    .map((item, index) => ({
+      clientId: item.grupo_servidor_mesa_id,
+      grupo_servidor_mesa_id: item.grupo_servidor_mesa_id,
+      encargo: item.encargo,
+      nome: item.nome || "vago",
+      data_inicio: item.data_inicio,
+      ativo: true,
+      ordem: DEFAULT_MESA_OFFICES.length + index + 1,
+      fixed: false,
+    }));
+  return [...fixed, ...extras];
+}
+
+function mesaPayloadFromDrafts(drafts: readonly MesaServerDraft[]) {
+  return drafts
+    .map((item, index) => ({
+      grupo_servidor_mesa_id: item.grupo_servidor_mesa_id || undefined,
+      encargo: item.encargo.trim(),
+      nome: item.nome.trim() || "vago",
+      data_inicio: isVacantMesaName(item.nome) ? "" : item.data_inicio,
+      ativo: item.ativo,
+      ordem: index + 1,
+    }))
+    .filter((item) => item.encargo);
+}
+
+function mesaPayloadFromPersisted(servidores: readonly GrupoServidorMesa[]) {
+  return servidores
+    .filter((item) => item.ativo)
+    .sort(
+      (first, second) =>
+        first.ordem - second.ordem ||
+        first.encargo.localeCompare(second.encargo, "pt-BR"),
+    )
+    .map((item, index) => ({
+      grupo_servidor_mesa_id: item.grupo_servidor_mesa_id,
+      encargo: item.encargo.trim(),
+      nome: item.nome.trim() || "vago",
+      data_inicio: isVacantMesaName(item.nome) ? "" : item.data_inicio,
+      ativo: item.ativo,
+      ordem: index + 1,
+    }))
+    .filter((item) => item.encargo);
+}
+
+function hasMissingDefaultMesaNames(payloadText: string) {
+  try {
+    const payload = JSON.parse(payloadText) as Array<{ encargo?: string; nome?: string }>;
+    return DEFAULT_MESA_OFFICES.some((encargo) =>
+      payload.some(
+        (item) => item.encargo === encargo && isVacantMesaName(item.nome ?? ""),
+      ),
+    );
+  } catch {
+    return false;
+  }
+}
+
+function displayMesaDate(value: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  return match ? `${match[3]}/${match[2]}/${match[1]}` : "-";
+}
+
+function MesaServersEditor({
+  grupoId = "",
+  servidores,
+  disabled = false,
+  informativeNotice = "",
+  errorNotice = "",
+  summaryMode = false,
+  startDisabled = false,
+  onStartEditing,
+}: {
+  grupoId?: string;
+  servidores: GrupoServidorMesa[];
+  disabled?: boolean;
+  informativeNotice?: string;
+  errorNotice?: string;
+  summaryMode?: boolean;
+  startDisabled?: boolean;
+  onStartEditing?: () => void;
+}) {
+  const [drafts, setDrafts] = useState(() => mesaDraftsFrom(servidores));
+  const [editing, setEditing] = useState(!summaryMode);
+  const payload = mesaPayloadFromDrafts(drafts);
+
+  if (summaryMode) {
+    return (
+      <MesaServersSummary
+        grupoId={grupoId}
+        servidores={servidores}
+        disabled={startDisabled}
+        informativeNotice={informativeNotice}
+      />
+    );
+  }
+
+  function updateDraft(
+    clientId: string,
+    patch: Partial<Omit<MesaServerDraft, "clientId" | "fixed">>,
+  ) {
+    setDrafts((current) =>
+      current.map((item) =>
+        item.clientId === clientId ? { ...item, ...patch } : item,
+      ),
+    );
+  }
+
+  return (
+    <section className="responsavel-config-section mesa-servers-section">
+      {editing && (
+        <input type="hidden" name="servidores_mesa" value={JSON.stringify(payload)} />
+      )}
+      {errorNotice && <p className="form-error" role="alert">{errorNotice}</p>}
+      {informativeNotice && (
+        <p className="mesa-info-notice" role="status">{informativeNotice}</p>
+      )}
+      <div className="mesa-servers-header">
+        <div>
+          <h2>Servidores da Mesa</h2>
+        </div>
+        {editing && (
+          <button
+            type="button"
+            className="secondary mesa-add-button"
+            disabled={disabled}
+            onClick={() =>
+              setDrafts((current) => [
+                ...current,
+                {
+                  clientId: clientId(),
+                  encargo: "",
+                  nome: "vago",
+                  data_inicio: "",
+                  ativo: true,
+                  ordem: current.length + 1,
+                  fixed: false,
+                },
+              ])
+            }
+          >
+            <span className="button-content">
+              <FontAwesomeIcon icon={faPlus} />
+              Adicionar encargo
+            </span>
+          </button>
+        )}
+      </div>
+
+      {!editing ? (
+        <div className="schedule-editor">
+          <div className="table-wrap">
+            <table className="schedule-summary-table mesa-summary-table">
+              <thead>
+                <tr>
+                  <th>Encargo</th>
+                  <th>Servidor</th>
+                  <th>Data de início</th>
+                </tr>
+              </thead>
+              <tbody>
+                {drafts.map((item) => {
+                  const vacant = isVacantMesaName(item.nome);
+                  return (
+                    <tr key={item.clientId}>
+                      <th scope="row">{item.encargo}</th>
+                      <td className={vacant ? "mesa-vacant-value" : undefined}>
+                        {vacant ? "Vago" : item.nome}
+                      </td>
+                      <td className={!item.data_inicio ? "mesa-vacant-value" : undefined}>
+                        {displayMesaDate(item.data_inicio)}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div className="section-footer schedule-view-footer">
+            <button
+              className="group-wide-action"
+              type="button"
+              disabled={startDisabled}
+              onClick={() => {
+                setDrafts(mesaDraftsFrom(servidores));
+                setEditing(true);
+                onStartEditing?.();
+              }}
+            >
+              <span className="button-content">
+                <FontAwesomeIcon icon={faPenToSquare} />
+                Editar servidores da mesa
+              </span>
+            </button>
+          </div>
+        </div>
+      ) : (
+      <div className="mesa-servers-grid">
+        <div className="mesa-server-column-labels" aria-hidden="true">
+          <span>Encargo</span>
+          <span>Nome</span>
+          <span>Data de início</span>
+        </div>
+        {drafts.map((item, index) => {
+          const vacant = isVacantMesaName(item.nome);
+          const rowName = item.encargo || `encargo ${index + 1}`;
+          return (
+            <div
+              className={
+                item.fixed
+                  ? "mesa-server-row mesa-server-row-fixed"
+                  : "mesa-server-row"
+              }
+              key={item.clientId}
+            >
+              <div className="mesa-server-control">
+                <input
+                  required
+                  value={item.encargo}
+                  readOnly={item.fixed || disabled}
+                  aria-label={`Encargo da mesa ${index + 1}`}
+                  onChange={(event) =>
+                    updateDraft(item.clientId, { encargo: event.target.value })
+                  }
+                />
+              </div>
+              <div className="mesa-server-control">
+                <input
+                  value={item.nome}
+                  readOnly={disabled}
+                  className={vacant ? "mesa-vacant-input" : undefined}
+                  aria-label={`Nome do servidor de ${rowName}`}
+                  onFocus={(event) => {
+                    if (vacant) event.currentTarget.select();
+                  }}
+                  onClick={(event) => {
+                    if (vacant) event.currentTarget.select();
+                  }}
+                  onChange={(event) => {
+                    const nome = event.target.value;
+                    updateDraft(item.clientId, {
+                      nome,
+                      data_inicio: isVacantMesaName(nome) ? "" : item.data_inicio,
+                    });
+                  }}
+                />
+              </div>
+              <div className="mesa-server-control">
+                <input
+                  type="date"
+                  value={vacant ? "" : item.data_inicio}
+                  disabled={disabled || vacant}
+                  required={!vacant}
+                  className={vacant ? "mesa-vacant-date" : undefined}
+                  aria-label={`Data de início de ${rowName}`}
+                  onChange={(event) =>
+                    updateDraft(item.clientId, {
+                      data_inicio: event.target.value,
+                    })
+                  }
+                />
+              </div>
+              {!item.fixed && (
+                <button
+                  type="button"
+                  className="danger-icon-button mesa-remove-button"
+                  disabled={disabled}
+                  aria-label={`Remover encargo ${item.encargo || "extra"}`}
+                  title="Remover encargo"
+                  onClick={() =>
+                    setDrafts((current) =>
+                      current.filter((draft) => draft.clientId !== item.clientId),
+                    )
+                  }
+                >
+                  <FontAwesomeIcon icon={faTrashCan} />
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      )}
+    </section>
+  );
+}
 
 function TimedMessage({
   message,
@@ -86,6 +431,7 @@ function TimedMessage({
 export function GroupEditor({
   group,
   horarios,
+  servidoresMesa,
   canCreate,
   canManageAccess = canCreate,
   activationPath = "",
@@ -95,6 +441,7 @@ export function GroupEditor({
 }: {
   group?: Grupo;
   horarios: GrupoHorario[];
+  servidoresMesa?: GrupoServidorMesa[];
   canCreate: boolean;
   canManageAccess?: boolean;
   activationPath?: string;
@@ -103,8 +450,16 @@ export function GroupEditor({
   variant?: "default" | "responsavel";
 }) {
   const [state, action, pending] = useActionState(saveGrupoAction, null);
+  const [mesaState, mesaAction, mesaPending] = useActionState(
+    saveGrupoServidoresMesaAction,
+    null,
+  );
   const [responsavelEditing, setResponsavelEditing] = useState(false);
+  const [mesaEditing, setMesaEditing] = useState(false);
+  const [mesaEditorVersion, setMesaEditorVersion] = useState(0);
   const [responsavelFormMessage, setResponsavelFormMessage] = useState("");
+  const [mesaFormMessage, setMesaFormMessage] = useState("");
+  const [mesaInfoMessage, setMesaInfoMessage] = useState("");
   const responsavelFormRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -123,7 +478,7 @@ export function GroupEditor({
       ? "Alterações salvas. Um novo convite foi enviado para o e-mail de login do grupo."
       : status === "ata-link-rotated"
         ? "Link de preenchimento rotacionado. O link anterior foi invalidado."
-      : status === "saved"
+      : status === "saved" || status === "saved-mesa-missing-names"
         ? "Alterações salvas."
         : status === "created"
           ? "Grupo criado."
@@ -134,6 +489,10 @@ export function GroupEditor({
   const activeSchedulesCount = horarios.filter((horario) => horario.ativo).length;
   const formId =
     variant === "responsavel" ? "responsavel-configuracoes-form" : undefined;
+  const mesaInformativeNotice =
+    mesaInfoMessage || status === "saved-mesa-missing-names"
+      ? MESA_MISSING_NAMES_NOTICE
+      : "";
 
   function ataLinkControls() {
     if (!publicLink) {
@@ -148,7 +507,6 @@ export function GroupEditor({
               className="icon-button ata-link-rotate-button"
               formAction={rotateAtaLinkAction}
               formNoValidate
-              name="intent"
               value="rotate-ata-link"
               disabled={pending}
               aria-label="Rotacionar link de preenchimento"
@@ -172,7 +530,6 @@ export function GroupEditor({
               className="icon-button ata-link-rotate-button"
               formAction={rotateAtaLinkAction}
               formNoValidate
-              name="intent"
               value="rotate-ata-link"
               disabled={pending}
               aria-label="Rotacionar link de preenchimento"
@@ -204,21 +561,42 @@ export function GroupEditor({
     };
   }
 
-  function hasResponsavelChanges(formData: FormData) {
+  function hasGroupDataChanges(formData: FormData) {
     const next = currentResponsavelPayload(formData);
     const original = originalResponsavelPayload();
     return JSON.stringify(next) !== JSON.stringify(original);
   }
 
+  function hasMesaChanges(formData: FormData) {
+    const nextMesaPayload = String(formData.get("servidores_mesa") ?? "");
+    const originalMesaPayload = JSON.stringify(
+      mesaPayloadFromPersisted(servidoresMesa ?? []),
+    );
+    return nextMesaPayload !== originalMesaPayload;
+  }
+
   function startResponsavelEditing() {
     setResponsavelFormMessage("");
+    setMesaFormMessage("");
+    setMesaInfoMessage("");
     setResponsavelEditing(true);
+  }
+
+  function startMesaEditing() {
+    setResponsavelFormMessage("");
+    setMesaFormMessage("");
+    setMesaInfoMessage("");
+    setMesaEditing(true);
   }
 
   function cancelResponsavelEditing() {
     responsavelFormRef.current?.reset();
     setResponsavelFormMessage("");
+    setMesaFormMessage("");
+    setMesaInfoMessage("");
     setResponsavelEditing(false);
+    setMesaEditing(false);
+    setMesaEditorVersion((currentVersion) => currentVersion + 1);
   }
 
   function submitResponsavelForm(event: React.FormEvent<HTMLFormElement>) {
@@ -229,17 +607,33 @@ export function GroupEditor({
     ) {
       return;
     }
-    if (!responsavelEditing) {
+    const mesaSubmit =
+      submitter instanceof HTMLButtonElement && submitter.value === "save-mesa";
+    if ((mesaSubmit && !mesaEditing) || (!mesaSubmit && !responsavelEditing)) {
       event.preventDefault();
       return;
     }
     const formData = new FormData(event.currentTarget);
-    if (!hasResponsavelChanges(formData)) {
+    const hasChanges = mesaSubmit
+      ? hasMesaChanges(formData)
+      : hasGroupDataChanges(formData);
+    if (!hasChanges) {
       event.preventDefault();
-      setResponsavelFormMessage("Nenhuma alteração para salvar.");
+      if (mesaSubmit) {
+        setMesaFormMessage("Nenhuma alteração para salvar.");
+      } else {
+        setResponsavelFormMessage("Nenhuma alteração para salvar.");
+      }
       return;
     }
     setResponsavelFormMessage("");
+    setMesaFormMessage("");
+    const mesaPayload = String(formData.get("servidores_mesa") ?? "");
+    if (mesaSubmit && group && hasMissingDefaultMesaNames(mesaPayload)) {
+      setMesaInfoMessage(MESA_MISSING_NAMES_NOTICE);
+    } else if (mesaSubmit && group) {
+      setMesaInfoMessage("");
+    }
   }
 
   if (variant === "responsavel") {
@@ -253,35 +647,6 @@ export function GroupEditor({
               Gerencie os dados, acessos e horários do grupo.
             </p>
           </div>
-          {responsavelEditing ? (
-            <div className="responsavel-header-actions">
-              <button className="button-link" type="submit" form={formId} disabled={pending}>
-                <span className="button-content">
-                  <FontAwesomeIcon icon={faFloppyDisk} />
-                  Salvar alterações
-                </span>
-              </button>
-              <button
-                className="secondary"
-                type="button"
-                disabled={pending}
-                onClick={cancelResponsavelEditing}
-              >
-                Cancelar
-              </button>
-            </div>
-          ) : (
-            <button
-              className="button-link"
-              type="button"
-              onClick={startResponsavelEditing}
-            >
-              <span className="button-content">
-                <FontAwesomeIcon icon={faPenToSquare} />
-                Editar
-              </span>
-            </button>
-          )}
         </header>
 
         <section className="summary-cards" aria-label="Resumo das configurações do grupo">
@@ -305,35 +670,34 @@ export function GroupEditor({
           </dl>
         </section>
 
-        <section className="card responsavel-config-panel">
-          <form
-            id={formId}
-            ref={responsavelFormRef}
-            action={action}
-            className="creation-form"
-            onSubmit={submitResponsavelForm}
-          >
-            <input type="hidden" name="grupo_id" value={current.grupo_id} />
-            {state?.error && (
-              <TimedMessage
-                key={`error-${state.error}`}
-                message={state.error}
-                type="error"
-              />
-            )}
-            {!state?.error && successMessage && (
-              <TimedMessage
-                key={`success-${successMessage}`}
-                message={successMessage}
-                type="success"
-                onDismiss={dismissStatus}
-              />
-            )}
-            {responsavelFormMessage && (
-              <p className="form-error" role="status">{responsavelFormMessage}</p>
-            )}
-
+        <form
+          id={formId}
+          ref={responsavelFormRef}
+          action={action}
+          className="creation-form responsavel-config-form"
+          onSubmit={submitResponsavelForm}
+        >
+          <input type="hidden" name="grupo_id" value={current.grupo_id} />
+          {!state?.error && successMessage && (
+            <TimedMessage
+              key={`success-${successMessage}`}
+              message={successMessage}
+              type="success"
+              onDismiss={dismissStatus}
+            />
+          )}
+          <section className="card responsavel-config-panel">
             <section className="responsavel-config-section">
+              {state?.error && (
+                <TimedMessage
+                  key={`error-${state.error}`}
+                  message={state.error}
+                  type="error"
+                />
+              )}
+              {responsavelFormMessage && responsavelEditing && (
+                <p className="form-error" role="status">{responsavelFormMessage}</p>
+              )}
               <h2>Dados do grupo</h2>
               <div className="form-grid responsavel-config-grid">
                 <label>
@@ -385,8 +749,7 @@ export function GroupEditor({
                 {ataLinkControls()}
               </div>
             </section>
-
-            {responsavelEditing && (
+            {responsavelEditing ? (
               <div className="form-footer group-save-footer">
                 <button className="group-wide-action" type="submit" disabled={pending}>
                   <span className="button-content">
@@ -403,9 +766,84 @@ export function GroupEditor({
                   Cancelar
                 </button>
               </div>
+            ) : (
+              <div className="section-footer schedule-view-footer">
+                <button
+                  className="group-wide-action"
+                  type="button"
+                  disabled={mesaEditing}
+                  onClick={startResponsavelEditing}
+                >
+                  <span className="button-content">
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                    Editar dados do grupo
+                  </span>
+                </button>
+              </div>
             )}
-          </form>
-        </section>
+          </section>
+
+          {group && (
+            <section className="card responsavel-config-panel">
+              <MesaServersEditor
+                key={`${status ?? ""}:${mesaEditorVersion}:${JSON.stringify(mesaPayloadFromPersisted(servidoresMesa ?? []))}`}
+                grupoId={current.grupo_id}
+                servidores={servidoresMesa ?? []}
+                disabled={!mesaEditing || mesaPending}
+                informativeNotice={mesaInformativeNotice}
+                errorNotice={mesaState?.error ?? mesaFormMessage}
+                summaryMode
+                startDisabled={responsavelEditing || mesaPending}
+                onStartEditing={startMesaEditing}
+              />
+              {mesaEditing && (
+                <div className="form-footer group-save-footer">
+                  <button
+                    className="group-wide-action"
+                    type="submit"
+                    value="save-mesa"
+                    formAction={mesaAction}
+                    disabled={mesaPending}
+                  >
+                    <span className="button-content">
+                      <FontAwesomeIcon icon={faFloppyDisk} />
+                      Salvar alterações
+                    </span>
+                  </button>
+                  <button
+                    className="secondary"
+                    type="button"
+                    disabled={mesaPending}
+                    onClick={cancelResponsavelEditing}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              )}
+            </section>
+          )}
+
+          {!group && responsavelEditing && (
+            <section className="card responsavel-config-panel">
+              <div className="form-footer group-save-footer">
+                <button className="group-wide-action" type="submit" disabled={pending}>
+                  <span className="button-content">
+                    <FontAwesomeIcon icon={faFloppyDisk} />
+                    Salvar alterações
+                  </span>
+                </button>
+                <button
+                  className="secondary"
+                  type="button"
+                  disabled={pending}
+                  onClick={cancelResponsavelEditing}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </section>
+          )}
+        </form>
 
         {group && (
           <section className="card responsavel-config-panel responsavel-config-section responsavel-schedules-section">
@@ -526,6 +964,16 @@ export function GroupEditor({
             />
           )}
         </section>
+
+        {group && (
+          <section className="card form-section">
+            <MesaServersEditor
+              grupoId={current.grupo_id}
+              servidores={servidoresMesa ?? []}
+              summaryMode
+            />
+          </section>
+        )}
 
         <div className="form-footer group-save-footer">
           <button className="group-wide-action" type="submit" disabled={pending}>

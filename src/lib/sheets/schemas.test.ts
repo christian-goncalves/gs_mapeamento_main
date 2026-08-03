@@ -17,6 +17,7 @@ import {
   sheetGrupoSchema,
   sheetGrupoToDomain,
   sheetGrupoHorarioSchema,
+  sheetGrupoServidorMesaSchema,
   sheetIngressoSchema,
   sheetIngressoToDomain,
   sheetParticipacaoSchema,
@@ -46,6 +47,16 @@ const valid = {
     horario_id: "a0b4f0fa-37f4-4a69-8ebb-a1b40e538c2d", grupo_id: groupId,
     dia_semana: "segunda", hora_inicio: "20:30", link_reuniao: "https://example.com/reuniao",
     ativo: "TRUE", ...audit,
+  },
+  grupoServidorMesa: {
+    grupo_servidor_mesa_id: "24c2b4e5-7ef0-4cfa-8c84-d9d626b3a8db",
+    grupo_id: groupId,
+    encargo: "RSG",
+    nome: "vago",
+    data_inicio: "",
+    ativo: "TRUE",
+    ordem: "1",
+    ...audit,
   },
   ata: {
     ata_id: ataId, numero_sequencial_grupo: "1", indice_personalizado_grupo: "1",
@@ -81,6 +92,7 @@ describe("schemas das linhas do Sheets", () => {
   it.each([
     ["grupos", sheetGrupoSchema, valid.grupo],
     ["grupo_horarios", sheetGrupoHorarioSchema, valid.grupoHorario],
+    ["grupo_servidores_mesa", sheetGrupoServidorMesaSchema, valid.grupoServidorMesa],
     ["atas", sheetAtaSchema, valid.ata],
     ["servidores", sheetServidorSchema, valid.servidor],
     ["participacao", sheetParticipacaoSchema, valid.participacao],
@@ -94,6 +106,7 @@ describe("schemas das linhas do Sheets", () => {
   it.each([
     ["grupos", sheetGrupoSchema, { ...valid.grupo, ativo: "sim" }],
     ["grupo_horarios", sheetGrupoHorarioSchema, { ...valid.grupoHorario, dia_semana: "feriado" }],
+    ["grupo_servidores_mesa", sheetGrupoServidorMesaSchema, { ...valid.grupoServidorMesa, nome: "Carlos", data_inicio: "" }],
     ["atas", sheetAtaSchema, { ...valid.ata, plataforma: "Meet" }],
     ["servidores", sheetServidorSchema, { ...valid.servidor, nome: "" }],
     ["participacao", sheetParticipacaoSchema, { ...valid.participacao, estado: "" }],
@@ -185,6 +198,15 @@ describe("schemas das linhas do Sheets", () => {
       data_reuniao: "2026-06-21",
       hora_inicio: "10:30",
     });
+  });
+
+  it("converte a data de início serializada dos servidores da mesa", () => {
+    const parsed = sheetGrupoServidorMesaSchema.parse({
+      ...valid.grupoServidorMesa,
+      nome: "Carlos",
+      data_inicio: 46237,
+    });
+    expect(parsed.data_inicio).toBe("2026-08-03");
   });
 
   it("extrai chave de duplicidade mesmo com outra coluna inválida", () => {

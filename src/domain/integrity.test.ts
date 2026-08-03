@@ -52,6 +52,7 @@ describe("integridade entre linhas", () => {
     const rows = {
       grupos: [row("grupos", 2, group), row("grupos", 8, { ...group, ordem: 2 })],
       grupo_horarios: [],
+      grupo_servidores_mesa: [],
       atas: [],
       servidores: [],
       participacao: [],
@@ -78,6 +79,7 @@ describe("integridade entre linhas", () => {
         }),
       ],
       grupo_horarios: [],
+      grupo_servidores_mesa: [],
       atas: [], servidores: [], participacao: [], visitantes: [], ingressos: [], trocas_chaveiro: [],
     } satisfies ContractRows;
     expect(validateContractIntegrity(rows)).toEqual([]);
@@ -88,6 +90,7 @@ describe("integridade entre linhas", () => {
     const rows = {
       grupos: [],
       grupo_horarios: [],
+      grupo_servidores_mesa: [],
       atas: [
         row("atas", 2, ata),
         row("atas", 3, {
@@ -132,6 +135,7 @@ describe("integridade entre linhas", () => {
     const rows = {
       grupos: [], atas: [],
       grupo_horarios: [],
+      grupo_servidores_mesa: [],
       servidores: [
         row("servidores", 2, server),
         row("servidores", 3, {

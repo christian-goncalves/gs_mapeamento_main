@@ -9,6 +9,7 @@ import {
   tipoReuniaoMapping,
 } from "./enums";
 import { isMunicipioOption } from "./municipios";
+import { isVacantMesaName } from "./grupo-servidores-mesa";
 
 const requiredText = z.string().trim().min(1, "Campo obrigatório.");
 const optionalText = z.string().trim().default("");
@@ -76,6 +77,30 @@ export const grupoHorarioSchema = z.object({
   ativo: z.boolean(),
   ...auditFields,
 });
+
+export const grupoServidorMesaSchema = z
+  .object({
+    grupo_servidor_mesa_id: uuid,
+    grupo_id: uuid,
+    encargo: requiredText,
+    nome: requiredText,
+    data_inicio: optionalText.refine(
+      (value) => !value || z.string().date().safeParse(value).success,
+      "Data de início inválida.",
+    ),
+    ativo: z.boolean(),
+    ordem: z.number().int().min(1),
+    ...auditFields,
+  })
+  .superRefine((item, context) => {
+    if (!isVacantMesaName(item.nome) && !item.data_inicio) {
+      context.addIssue({
+        code: "custom",
+        path: ["data_inicio"],
+        message: "Informe a data de início para encargos preenchidos.",
+      });
+    }
+  });
 
 export const usuarioGrupoStatusSchema = z.enum([
   "pendente",
@@ -191,6 +216,7 @@ export const trocaChaveiroSchema = z.object({
 
 export type Grupo = z.infer<typeof grupoSchema>;
 export type GrupoHorario = z.infer<typeof grupoHorarioSchema>;
+export type GrupoServidorMesa = z.infer<typeof grupoServidorMesaSchema>;
 export type UsuarioGrupo = z.infer<typeof usuarioGrupoSchema>;
 export type Ata = z.infer<typeof ataSchema>;
 export type Servidor = z.infer<typeof servidorSchema>;

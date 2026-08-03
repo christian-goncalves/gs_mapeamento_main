@@ -1,5 +1,6 @@
 import "server-only";
 
+import type { AggregatedRead } from "@/domain/aggregate";
 import type { Grupo } from "@/domain/entities";
 import { readAggregatedAtas } from "@/lib/sheets/repository";
 import { listGroupUsers } from "@/lib/sheets/group-users";
@@ -20,10 +21,17 @@ function emailMatches(email: string, candidate: string) {
 export async function resolveAccessByEmail(
   email: string | null | undefined,
 ): Promise<AppAccess | null> {
+  const result = await readAggregatedAtas();
+  return resolveAccessByEmailFromAggregated(email, result);
+}
+
+export async function resolveAccessByEmailFromAggregated(
+  email: string | null | undefined,
+  result: AggregatedRead,
+): Promise<AppAccess | null> {
   const normalized = normalizeEmail(email);
   if (!normalized) return null;
 
-  const result = await readAggregatedAtas();
   if (isEmailAllowed(normalized)) {
     return {
       role: "administrador",

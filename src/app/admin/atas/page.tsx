@@ -6,8 +6,7 @@ import {
   faFileLines,
   faLayerGroup,
 } from "@fortawesome/free-solid-svg-icons";
-import { requireAdminSession } from "@/lib/auth/require-session";
-import { readAggregatedAtas } from "@/lib/sheets/repository";
+import { requireAdminSessionWithAggregatedAtas } from "@/lib/auth/require-session";
 import { AdminShell } from "@/app/grupos/admin-shell";
 import {
   buildMissingAtaRows,
@@ -19,8 +18,7 @@ import { AdminAtasTable } from "./admin-atas-table";
 export const dynamic = "force-dynamic";
 
 export default async function AdminAtasPage() {
-  await requireAdminSession();
-  const result = await readAggregatedAtas();
+  const { result } = await requireAdminSessionWithAggregatedAtas();
   const monthPeriod = currentMonthPeriod();
   const sentRows = buildSentAtaRows(result.atas);
   const missingRows = buildMissingAtaRows({

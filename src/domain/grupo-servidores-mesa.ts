@@ -1,0 +1,43 @@
+import type { GrupoServidorMesa } from "./schemas";
+
+export const DEFAULT_MESA_OFFICES = [
+  "RSG",
+  "RSG suplente",
+  "Secretário",
+  "Tesoureiro",
+] as const;
+
+export type DefaultMesaOffice = (typeof DEFAULT_MESA_OFFICES)[number];
+
+export function normalizeMesaName(value: string) {
+  const normalized = value.trim().replace(/\s+/g, " ");
+  return normalized || "vago";
+}
+
+export function isVacantMesaName(value: string) {
+  return normalizeMesaName(value).toLocaleLowerCase("pt-BR") === "vago";
+}
+
+export function activeMesaServersForGroup(
+  servidores: readonly GrupoServidorMesa[],
+  grupoId: string,
+) {
+  return servidores
+    .filter((item) => item.grupo_id === grupoId && item.ativo)
+    .sort(
+      (first, second) =>
+        first.ordem - second.ordem ||
+        first.encargo.localeCompare(second.encargo, "pt-BR"),
+    );
+}
+
+export function hasRequiredMesaServers(
+  servidores: readonly GrupoServidorMesa[],
+  grupoId: string,
+) {
+  const active = activeMesaServersForGroup(servidores, grupoId);
+  return DEFAULT_MESA_OFFICES.every((encargo) =>
+    active.some((item) => item.encargo === encargo && normalizeMesaName(item.nome)),
+  );
+}
+

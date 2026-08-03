@@ -118,6 +118,79 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .form-footer { display: flex; justify-content: flex-end; }
 .group-save-footer, .schedule-view-footer { justify-content: stretch; }
 .group-wide-action { width: 100%; }
+.mesa-servers-section { display: grid; gap: 1rem; }
+.mesa-servers-header { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+.mesa-servers-header h2, .mesa-servers-header p { margin: 0; }
+.mesa-add-button { flex: 0 0 auto; }
+.mesa-servers-grid { display: grid; gap: 1rem; }
+.mesa-server-column-labels { display: grid; grid-template-columns: minmax(8rem, .8fr) minmax(10rem, 1fr) minmax(9rem, .75fr); gap: 1rem; color: var(--muted); font-size: .9rem; font-weight: 700; }
+.mesa-server-row { display: grid; grid-template-columns: minmax(8rem, .8fr) minmax(10rem, 1fr) minmax(9rem, .75fr) 2.5rem; gap: 1rem; align-items: end; }
+.mesa-server-row-fixed { grid-template-columns: minmax(8rem, .8fr) minmax(10rem, 1fr) minmax(9rem, .75fr); }
+.mesa-server-control { min-width: 0; }
+.mesa-vacant-input, .mesa-vacant-value { color: color-mix(in srgb, var(--muted) 70%, white); font-style: italic; }
+.mesa-vacant-date:disabled { color: color-mix(in srgb, var(--muted) 70%, white); opacity: 1; -webkit-text-fill-color: color-mix(in srgb, var(--muted) 70%, white); }
+.mesa-vacant-date::-webkit-datetime-edit { color: color-mix(in srgb, var(--muted) 70%, white); }
+.mesa-remove-button { align-self: end; }
+.mesa-summary-table th:first-child { width: 32%; }
+.mesa-summary-table th:nth-child(2) { width: 43%; }
+.mesa-summary-table th:nth-child(3) { width: 25%; }
+.mesa-summary-table td:last-child { white-space: nowrap; }
+.mesa-summary-table-actions th:first-child { width: 36%; }
+.mesa-summary-table-actions th:nth-child(2) { width: auto; }
+.mesa-summary-table-actions th:nth-child(3) { width: 4.5rem; }
+.mesa-summary-table-actions .mesa-actions-heading,
+.mesa-summary-table-actions .mesa-actions-cell { text-align: center; }
+.mesa-summary-table-actions .mesa-actions-cell { padding-block: .45rem; }
+.mesa-server-action-menu form { margin: 0; }
+.mesa-server-action-date { display: grid; grid-template-columns: 1.25rem minmax(0, 1fr); align-items: center; gap: .55rem; border-bottom: 1px solid var(--line); padding: .55rem .65rem .7rem; color: var(--muted); }
+.mesa-server-action-date svg { width: .95rem; height: .95rem; color: var(--brand); }
+.mesa-server-action-date span { display: grid; gap: .1rem; }
+.mesa-server-action-date small { font-size: .7rem; }
+.mesa-server-action-date strong { color: var(--ink); font-size: .875rem; }
+.mesa-server-modal { width: min(520px, 100%); }
+.mesa-server-modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.mesa-server-modal-header h2 { margin: 0; color: var(--brand); font-size: 1.35rem; }
+.mesa-server-modal-header p { margin: .25rem 0 0; color: var(--muted); }
+.mesa-server-modal-header .icon-button { flex: 0 0 auto; }
+.mesa-server-modal-fields { display: grid; gap: 1rem; margin-top: 1.25rem; }
+.mesa-server-modal-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.mesa-server-modal-actions button { min-width: 0; }
+.monthly-dashboard-page { display: grid; }
+.monthly-dashboard-sheet { display: grid; gap: 1.25rem; width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 1.5rem; background: #fffefa; box-shadow: 0 16px 38px rgb(22 31 26 / 7%); }
+.monthly-dashboard-hero { display: grid; grid-template-columns: 5rem minmax(0, 1fr); gap: 1.25rem; align-items: center; }
+.monthly-dashboard-hero h1 { margin: 0; }
+.monthly-dashboard-hero h1 { color: #111827; font-size: clamp(2rem, 4vw, 2.9rem); line-height: 1.05; }
+.monthly-dashboard-hero-icon { display: grid; width: 5rem; height: 5rem; place-items: center; border-radius: 999px; background: #e6f3eb; color: #008a5b; font-size: 2.15rem; }
+.dashboard-filters { display: grid; grid-template-columns: minmax(12rem, 1.25fr) minmax(8rem, 1fr) minmax(8rem, 1fr) 5.5rem; gap: 1rem; align-items: end; border: 1px solid var(--line); border-radius: 10px; padding: 1rem; background: #fff; }
+.dashboard-filters-no-group { grid-template-columns: minmax(8rem, 1fr) minmax(8rem, 1fr) 5.5rem; }
+.dashboard-filters label { min-width: 0; }
+.dashboard-filters select { border-color: #98d2b2; min-height: 3rem; font-weight: 700; }
+.dashboard-pdf-button { width: 5.5rem; min-height: 3rem; padding-inline: .8rem; justify-self: end; background: #007a55; box-shadow: 0 8px 18px rgb(0 122 85 / 18%); font-weight: 700; }
+.dashboard-section { display: grid; gap: 1rem; border: 1px solid var(--line); border-radius: 10px; padding: 1rem; background: #fff; }
+.dashboard-section-title { display: flex; align-items: center; gap: .75rem; }
+.dashboard-section-title h2 { margin: 0; color: #111827; font-size: 1.35rem; line-height: 1.15; }
+.dashboard-section-title > span, .dashboard-section-title > div > span { display: grid; width: 2.35rem; height: 2.35rem; place-items: center; border-radius: 999px; background: #e6f3eb; color: #008a5b; }
+.dashboard-metrics-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; }
+.dashboard-metric-card { display: grid; min-height: 11rem; align-content: center; justify-items: center; gap: .55rem; border: 1px solid #e3e7e4; border-radius: 8px; padding: 1rem; text-align: center; background: #fff; }
+.dashboard-metric-icon { display: grid; width: 3.5rem; height: 3.5rem; place-items: center; border-radius: 999px; background: #e6f3eb; color: #008a5b; font-size: 1.65rem; }
+.dashboard-metric-card h3 { max-width: 10rem; margin: 0; color: #111827; font-size: .98rem; line-height: 1.2; font-weight: 500; }
+.dashboard-metric-card strong { color: #111827; font-size: 2rem; line-height: 1; }
+.dashboard-table-wrap { overflow-x: auto; }
+.dashboard-table, .dashboard-achievement-table { margin: 0; border: 1px solid #e3e7e4; border-radius: 8px; overflow: hidden; border-collapse: separate; border-spacing: 0; }
+.dashboard-table th, .dashboard-table td, .dashboard-achievement-table th, .dashboard-achievement-table td { border-right: 1px solid #e3e7e4; border-bottom: 1px solid #e3e7e4; padding: .85rem 1rem; text-align: center; color: #111827; }
+.dashboard-table th:first-child, .dashboard-table td:first-child { text-align: left; }
+.dashboard-table thead th { background: #eaf4ee; font-size: .95rem; color: #111827; }
+.dashboard-table tr:last-child > *, .dashboard-achievement-table tr:last-child > * { border-bottom: 0; }
+.dashboard-table tr > *:last-child, .dashboard-achievement-table tr > *:last-child { border-right: 0; }
+.dashboard-bottom-grid { display: grid; grid-template-columns: minmax(18rem, .75fr) minmax(24rem, 1fr); gap: 1.25rem; align-items: start; }
+.dashboard-achievement-table th { width: 65%; color: #111827; font-weight: 800; }
+.dashboard-achievement-table td { width: 35%; font-weight: 800; }
+.dashboard-achievement-table .achievement-dark { color: #fff; }
+.dashboard-achievement-table .achievement-color-row:not(.achievement-color-row-last) th { border-bottom: 0; }
+.achievement-total-row th, .achievement-total-row td { background: #edf7f1; color: #008a5b; font-size: 1.05rem; }
+.dashboard-mesa-table th, .dashboard-mesa-table td { height: 4rem; text-align: left; }
+.dashboard-footer { display: flex; align-items: center; justify-content: center; gap: .65rem; color: var(--muted); font-size: .95rem; }
+.dashboard-footer svg { color: #008a5b; }
 .schedule-list { display: grid; gap: .75rem; margin-top: 1rem; }
 .inline-form { display: grid; grid-template-columns: minmax(120px, .9fr) minmax(120px, .8fr) auto auto; align-items: end; gap: .75rem; margin-top: 1rem; }
 .schedule-form { margin-top: 0; padding-top: .75rem; border-top: 1px solid var(--line); }
@@ -332,8 +405,9 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-config-page { display: grid; gap: 1rem; }
 .responsavel-config-panel { display: grid; gap: 1.25rem; margin-top: .25rem; padding: 1.5rem; }
 .responsavel-config-section { display: grid; gap: 1rem; }
-.responsavel-config-section + .responsavel-config-section { border-top: 1px solid var(--line); padding-top: 1.25rem; }
 .responsavel-config-section h2 { margin: 0; color: #0d1424; font-size: 1.25rem; line-height: 1.2; }
+.mesa-info-notice { margin: 0; border-radius: 8px; padding: .9rem 1rem; font-weight: 800; line-height: 1.35; }
+.mesa-info-notice { border: 1px solid #ddb865; background: #fff8e5; color: #795300; }
 .responsavel-config-grid { gap: 1rem 1.5rem; }
 .responsavel-config-grid > label,
 .responsavel-config-grid > .copy-field,
@@ -466,6 +540,13 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .app-nav-item { min-height: 2.75rem; padding: .7rem .75rem; }
   .app-signout-form { width: 100%; }
   .app-main, .admin-main, .responsavel-main { padding: 2rem 1.25rem; }
+  .dashboard-metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .dashboard-bottom-grid { grid-template-columns: 1fr; }
+  .dashboard-filters, .dashboard-filters-no-group { grid-template-columns: repeat(2, minmax(0, 1fr)) 5.5rem; }
+  .dashboard-filters:not(.dashboard-filters-no-group) > label:first-child { grid-column: 1 / -1; }
+  .mesa-server-row,
+  .mesa-server-row-fixed { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .mesa-remove-button { align-self: center; }
 }
 @media (min-width: 721px) and (max-width: 980px) {
   .admin-atas-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -575,6 +656,21 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .schedule-review-list { grid-template-columns: 1fr; }
   .modal-actions { display: grid; }
   .app-main, .admin-main, .responsavel-main { padding: 1.25rem 1rem 2rem; }
+  .monthly-dashboard-sheet { gap: 1rem; padding: 1rem; }
+  .monthly-dashboard-hero { grid-template-columns: 3.5rem minmax(0, 1fr); gap: .85rem; }
+  .monthly-dashboard-hero-icon { width: 3.5rem; height: 3.5rem; font-size: 1.45rem; }
+  .monthly-dashboard-hero h1 { font-size: 1.75rem; }
+  .dashboard-filters, .dashboard-filters-no-group { grid-template-columns: repeat(2, minmax(0, 1fr)) 5.5rem; padding: .85rem; }
+  .dashboard-metrics-grid { grid-template-columns: 1fr; gap: .75rem; }
+  .dashboard-metric-card { min-height: 8rem; }
+  .dashboard-section { padding: .85rem; }
+  .dashboard-section-title h2 { font-size: 1.1rem; }
+  .dashboard-table th, .dashboard-table td, .dashboard-achievement-table th, .dashboard-achievement-table td { padding: .65rem .55rem; font-size: .85rem; }
+  .dashboard-bottom-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .mesa-servers-header { display: grid; }
+  .mesa-add-button { width: 100%; }
+  .mesa-server-row,
+  .mesa-server-row-fixed { grid-template-columns: 1fr; }
   .admin-page-header { display: grid; align-items: stretch; }
   .admin-page-header .button-link { width: 100%; text-align: center; }
   .summary-cards { grid-template-columns: 1fr; gap: .75rem; }
@@ -720,9 +816,68 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .confirmation-modal .modal-actions { bottom: -.85rem; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; margin: 1rem -.85rem -.85rem; padding: .75rem .85rem; }
   .confirmation-modal .modal-actions button { min-width: 0; padding-inline: .55rem; font-size: .85rem; }
 }
+@media screen and (max-width: 720px) {
+  .mesa-server-modal-backdrop { place-items: center; padding: .75rem; }
+  .mesa-server-modal { width: min(520px, 100%); height: auto; max-height: calc(100dvh - 1.5rem); }
+  .dashboard-filters,
+  .dashboard-filters-no-group { grid-template-columns: repeat(2, minmax(0, 1fr)) 5.5rem; gap: .65rem; }
+  .dashboard-filters:not(.dashboard-filters-no-group) > label:first-child { grid-column: 1 / -1; }
+  .dashboard-metrics-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .5rem; }
+  .dashboard-metric-card { grid-column: span 3; min-height: 7rem; padding: .65rem; }
+  .dashboard-metric-card:nth-child(n + 7) { grid-column: span 2; }
+  .dashboard-metric-icon { width: 1.75rem; height: 1.75rem; font-size: .825rem; }
+  .dashboard-metric-card h3 { font-size: .8rem; line-height: 1.25; }
+  .dashboard-metric-card strong { font-size: 1.5rem; }
+  .dashboard-achievements { gap: .7rem; padding: .595rem; }
+  .dashboard-achievements .dashboard-section-title { gap: .525rem; }
+  .dashboard-achievements .dashboard-section-title > span { width: 1.645rem; height: 1.645rem; }
+  .dashboard-achievements .dashboard-achievement-table th,
+  .dashboard-achievements .dashboard-achievement-table td { padding-block: .278rem; line-height: 1.15; }
+  .dashboard-achievements .achievement-total-row th,
+  .dashboard-achievements .achievement-total-row td { font-size: .9rem; }
+  .dashboard-mesa-table th,
+  .dashboard-mesa-table td { height: 2rem; padding-block: .25rem; vertical-align: middle; }
+  .mesa-summary-table-actions th:first-child { width: 38%; }
+  .mesa-summary-table-actions th:nth-child(3) { width: 3.75rem; }
+  .mesa-summary-table-actions th,
+  .mesa-summary-table-actions td { padding-inline: .55rem; }
+}
+@page { size: A4 portrait; margin: 10mm; }
+@media print {
+  body { background: white; }
+  .app-sidebar,
+  .dashboard-filters,
+  .app-menu-trigger { display: none !important; }
+  .app-layout, .admin-layout, .responsavel-layout { display: block; }
+  .app-main, .admin-main, .responsavel-main { width: 100%; padding: 0; }
+  .monthly-dashboard-page { display: block; }
+  .monthly-dashboard-sheet {
+    width: 100%;
+    min-height: auto;
+    border-radius: 0;
+    border-color: #d7ddd8;
+    padding: 0;
+    box-shadow: none;
+    background: white;
+    break-inside: avoid;
+  }
+  .monthly-dashboard-hero { grid-template-columns: 3.5rem minmax(0, 1fr); gap: .8rem; }
+  .monthly-dashboard-hero-icon { width: 3.5rem; height: 3.5rem; font-size: 1.35rem; }
+  .monthly-dashboard-hero h1 { font-size: 24pt; }
+  .dashboard-section { padding: 8pt; break-inside: avoid; }
+  .dashboard-metrics-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7pt; }
+  .dashboard-metric-card { min-height: 74pt; padding: 6pt; }
+  .dashboard-metric-icon { width: 28pt; height: 28pt; font-size: 13pt; }
+  .dashboard-metric-card h3 { font-size: 8pt; }
+  .dashboard-metric-card strong { font-size: 18pt; }
+  .dashboard-table th, .dashboard-table td, .dashboard-achievement-table th, .dashboard-achievement-table td { padding: 5pt; font-size: 8pt; }
+  .dashboard-bottom-grid { grid-template-columns: .8fr 1fr; gap: 8pt; }
+  .dashboard-footer { font-size: 8pt; }
+}
 @media (max-width: 360px) {
   .ata-review-layout .review-grid, .review-additional-information { grid-template-columns: 1fr; }
   .confirmation-modal .modal-actions { grid-template-columns: 1fr; }
+  .mesa-server-modal-actions { grid-template-columns: 1fr; }
   .responsavel-atas-card .responsavel-status-column .dt-column-title,
   .responsavel-atas-card .responsavel-actions-column .dt-column-title { font-size: 0; }
   .responsavel-atas-card .responsavel-status-column .dt-column-title::after { content: "St."; font-size: .8125rem; }

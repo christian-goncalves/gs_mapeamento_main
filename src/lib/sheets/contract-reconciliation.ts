@@ -53,9 +53,14 @@ export type ContractReconciliationResult = {
   requestCount: number;
 };
 
+export type ContractReconciliationOptions = {
+  dryRun?: boolean;
+};
+
 const autoCreatableSheets = new Set<SheetName>([
   "ingressos",
   "grupo_horarios",
+  "grupo_servidores_mesa",
   "usuarios_grupo",
 ]);
 const sheetNames = Object.keys(SHEET_HEADERS) as SheetName[];
@@ -702,6 +707,7 @@ async function readHeader(
 export async function reconcileSheetContract(
   client: ContractReconciliationClient,
   spreadsheetId: string,
+  options: ContractReconciliationOptions = {},
 ): Promise<ContractReconciliationResult> {
   const metadata = await readMetadata(client, spreadsheetId);
   const byName = new Map(
@@ -891,22 +897,24 @@ export async function reconcileSheetContract(
     ),
   );
 
-  if (requests.length > 0) {
+  if (requests.length > 0 && !options.dryRun) {
     await client.spreadsheets.batchUpdate({
       spreadsheetId,
       requestBody: { requests },
     });
   }
 
-  for (const name of [...createdSheets, ...addedColumns.map((item) => item.sheet), ...renamedSheets]) {
-    try {
-      const actual = await readHeader(client, spreadsheetId, name);
-      assertHeader(name, actual);
-    } catch (error) {
-      if (isMissingSheetRangeError(error, name)) {
-        throw new Error(`Aba ${name} não foi criada.`);
+  if (!options.dryRun) {
+    for (const name of [...createdSheets, ...addedColumns.map((item) => item.sheet), ...renamedSheets]) {
+      try {
+        const actual = await readHeader(client, spreadsheetId, name);
+        assertHeader(name, actual);
+      } catch (error) {
+        if (isMissingSheetRangeError(error, name)) {
+          throw new Error(`Aba ${name} não foi criada.`);
+        }
+        throw error;
       }
-      throw error;
     }
   }
 

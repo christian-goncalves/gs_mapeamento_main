@@ -13,6 +13,10 @@ export const SHEET_HEADERS = {
     "horario_id", "grupo_id", "dia_semana", "hora_inicio", "link_reuniao",
     "ativo", "created_at", "updated_at",
   ],
+  grupo_servidores_mesa: [
+    "grupo_servidor_mesa_id", "grupo_id", "encargo", "nome", "data_inicio",
+    "ativo", "ordem", "created_at", "updated_at",
+  ],
   atas: [
     "ata_id", "numero_sequencial_grupo", "indice_personalizado_grupo", "grupo_id", "data_reuniao", "hora_inicio", "duracao", "formato_outros", "preenchido_por", "plataforma", "tipo_reuniao",
     "formato_partilha", "formato_estudo", "formato_tematico", "formato_literatura",

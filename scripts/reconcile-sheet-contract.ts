@@ -10,6 +10,7 @@ function required(name: string) {
 }
 
 async function main() {
+  const dryRun = process.argv.includes("--dry-run");
   const auth = new JWT({
     email: required("GOOGLE_SERVICE_ACCOUNT_EMAIL"),
     key: required("GOOGLE_PRIVATE_KEY").replace(/\\n/g, "\n"),
@@ -19,14 +20,17 @@ async function main() {
   const result = await reconcileSheetContract(
     sheets,
     required("GOOGLE_SHEETS_ID"),
+    { dryRun },
   );
 
   console.log(
     JSON.stringify({
+      dryRun,
       createdSheets: result.createdSheets,
       addedColumns: result.addedColumns,
       validatedSheets: result.validatedSheets,
-      appliedRequestCount: result.requestCount,
+      plannedRequestCount: result.requestCount,
+      appliedRequestCount: dryRun ? 0 : result.requestCount,
     }),
   );
 }

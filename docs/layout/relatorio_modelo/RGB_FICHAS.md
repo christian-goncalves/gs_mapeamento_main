@@ -1,11 +1,11 @@
 | Ficha                | Cor identificada             | RGB representativo | HEX       |
 | -------------------- | ---------------------------- | -----------------: | --------- |
 | Ingresso / Bem-vindo | Branco                       |    `255, 255, 255` | `#FFFFFF` |
-| 30 dias              | Laranja-avermelhado          |      `215, 72, 33` | `#D74821` |
-| 60 dias              | Verde-esmeralda              |     `23, 169, 128` | `#17A980` |
-| 90 dias              | Vermelho bordô               |      `145, 62, 64` | `#913E40` |
-| 6 meses              | Azul intenso                 |      `24, 63, 180` | `#183FB4` |
-| 9 meses              | Amarelo-limão                |      `176, 180, 6` | `#B0B406` |
-| 1 ano                | Branco perolado / cinza-gelo |    `162, 181, 177` | `#A2B5B1` |
-| 18 meses             | Cinza-prata                  |    `121, 141, 142` | `#798D8E` |
-| Múltiplos anos       | Preto                        |          `0, 0, 0` | `#000000` |
+| 30 dias              | Laranja                      |    `250, 165, 20` | `#FAA514` |
+| 60 dias              | Verde-claro                  |   `119, 212, 108` | `#77D46C` |
+| 90 dias              | Vermelho                     |     `242, 68, 73` | `#F24449` |
+| 6 meses              | Azul-claro                   |    `95, 141, 221` | `#5F8DDD` |
+| 9 meses              | Amarelo-limão                |    `247, 248, 56` | `#F7F838` |
+| 1 ano                | Cinza-gelo                   |  `223, 222, 223` | `#DFDEDF` |
+| 18 meses             | Cinza-prata                  |  `161, 160, 160` | `#A1A0A0` |
+| Múltiplos anos       | Cinza-chumbo                 |     `39, 39, 39` | `#272727` |

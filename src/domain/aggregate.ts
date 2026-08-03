@@ -4,6 +4,7 @@ import type {
   Ata,
   Grupo,
   GrupoHorario,
+  GrupoServidorMesa,
   Ingresso,
   Participacao,
   Servidor,
@@ -18,6 +19,7 @@ type ValidRow<T> = Extract<ParsedRow<T>, { valid: true }>;
 export type ParsedContractRows = {
   grupos: ParsedRow<Grupo>[];
   grupo_horarios: ParsedRow<GrupoHorario>[];
+  grupo_servidores_mesa: ParsedRow<GrupoServidorMesa>[];
   atas: ParsedRow<Ata>[];
   servidores: ParsedRow<Servidor>[];
   participacao: ParsedRow<Participacao>[];
@@ -35,6 +37,7 @@ export type AggregatedAta = {
 export type AggregatedRead = {
   grupos: Grupo[];
   grupo_horarios: GrupoHorario[];
+  grupo_servidores_mesa: GrupoServidorMesa[];
   atas: AggregatedAta[];
   diagnostics: RowDiagnostic[];
 };
@@ -104,6 +107,7 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
   const diagnostics = [
     ...rowDiagnostics(rows.grupos),
     ...rowDiagnostics(rows.grupo_horarios ?? []),
+    ...rowDiagnostics(rows.grupo_servidores_mesa ?? []),
     ...rowDiagnostics(rows.atas),
     ...rowDiagnostics(rows.servidores),
     ...rowDiagnostics(rows.participacao),
@@ -114,6 +118,7 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
   const initiallyValid: ContractRows = {
     grupos: validRows(rows.grupos),
     grupo_horarios: validRows(rows.grupo_horarios ?? []),
+    grupo_servidores_mesa: validRows(rows.grupo_servidores_mesa ?? []),
     atas: validRows(rows.atas),
     servidores: validRows(rows.servidores),
     participacao: validRows(rows.participacao),
@@ -132,6 +137,20 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
   const grupoById = new Map(grupos.map((row) => [row.data.grupo_id, row]));
   const grupoHorarios = withoutDiagnosed(
     initiallyValid.grupo_horarios,
+    integrityDiagnostics,
+  ).filter((row) => {
+    if (grupoById.has(row.data.grupo_id)) return true;
+    diagnostics.push(
+      referenceDiagnostic(
+        row,
+        "grupo_id",
+        "grupo_id não referencia um grupo válido.",
+      ),
+    );
+    return false;
+  });
+  const grupoServidoresMesa = withoutDiagnosed(
+    initiallyValid.grupo_servidores_mesa,
     integrityDiagnostics,
   ).filter((row) => {
     if (grupoById.has(row.data.grupo_id)) return true;
@@ -251,6 +270,14 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
           first.grupo_id.localeCompare(second.grupo_id) ||
           weekDayOrder[first.dia_semana] - weekDayOrder[second.dia_semana] ||
           first.hora_inicio.localeCompare(second.hora_inicio),
+      ),
+    grupo_servidores_mesa: grupoServidoresMesa
+      .map((row) => row.data)
+      .sort(
+        (first, second) =>
+          first.grupo_id.localeCompare(second.grupo_id) ||
+          first.ordem - second.ordem ||
+          first.encargo.localeCompare(second.encargo, "pt-BR"),
       ),
     atas: aggregatedAtas.sort(
       (first, second) =>

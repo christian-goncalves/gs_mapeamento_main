@@ -6,8 +6,7 @@ import { canAccessGroup } from "@/lib/auth/access";
 import {
   buildAtaPresentation,
 } from "../ata-presentation";
-import { requireAuthorizedSession } from "@/lib/auth/require-session";
-import { readAggregatedAtas } from "@/lib/sheets/repository";
+import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
 import {
   AtaReviewLayout,
 } from "../ata-review-layout";
@@ -22,9 +21,8 @@ export default async function AtaDetailPage({
 }: {
   params: Promise<{ ataId: string }>;
 }) {
-  const { access } = await requireAuthorizedSession();
+  const { access, result } = await requireAuthorizedSessionWithAggregatedAtas();
   const { ataId } = await params;
-  const result = await readAggregatedAtas();
   const item = result.atas.find(
     (candidate) => candidate.registro.ata.ata_id === ataId,
   );

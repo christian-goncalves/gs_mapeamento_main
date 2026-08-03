@@ -1,15 +1,19 @@
 import "server-only";
 
 import { randomUUID } from "node:crypto";
-import type { Grupo, GrupoHorario } from "@/domain/entities";
+import type { Grupo, GrupoHorario, GrupoServidorMesa } from "@/domain/entities";
+import { DEFAULT_MESA_OFFICES } from "@/domain/grupo-servidores-mesa";
 import { getSheetsClient, getSpreadsheetId } from "./client";
 import { SHEET_HEADERS, type SheetName } from "./contract";
 import { parseRows, rowsToObjects, type ParsedRow, type SheetCell } from "./rows";
 import {
   domainGrupoHorarioToSheet,
+  domainGrupoServidorMesaToSheet,
   domainGrupoToSheet,
   sheetGrupoHorarioSchema,
   sheetGrupoHorarioToDomain,
+  sheetGrupoServidorMesaSchema,
+  sheetGrupoServidorMesaToDomain,
   sheetGrupoSchema,
   sheetGrupoToDomain,
 } from "./schemas";
@@ -28,6 +32,20 @@ const defaultIdentity: Identity = {
 async function readSheet(name: SheetName) {
   const values = await readSheetValues(name);
   return groupAdminRowsToObjects(name, values);
+}
+
+async function readOptionalSheet(name: SheetName) {
+  try {
+    return await readSheet(name);
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message.includes(`Unable to parse range: ${name}!`)
+    ) {
+      return [];
+    }
+    throw error;
+  }
 }
 
 export function groupAdminRowsToObjects(
@@ -124,9 +142,10 @@ export function findFirstWritableGroupRow(values: SheetCell[][]) {
 }
 
 export async function readGroupAdminRows() {
-  const [grupoRows, horarioRows] = await Promise.all([
+  const [grupoRows, horarioRows, servidorMesaRows] = await Promise.all([
     readSheet("grupos"),
     readSheet("grupo_horarios"),
+    readOptionalSheet("grupo_servidores_mesa"),
   ]);
   return {
     grupos: parseRows(
@@ -140,6 +159,12 @@ export async function readGroupAdminRows() {
       sheetGrupoHorarioSchema,
       horarioRows,
       sheetGrupoHorarioToDomain,
+    ),
+    grupo_servidores_mesa: parseRows(
+      "grupo_servidores_mesa",
+      sheetGrupoServidorMesaSchema,
+      servidorMesaRows,
+      sheetGrupoServidorMesaToDomain,
     ),
   };
 }
@@ -200,6 +225,176 @@ export async function saveGrupoHorario(
     await appendRow("grupo_horarios", values);
   }
   return horario;
+}
+
+export async function saveGrupoServidoresMesa(
+  grupoId: string,
+  inputs: (Omit<
+    GrupoServidorMesa,
+    "grupo_servidor_mesa_id" | "grupo_id" | "created_at" | "updated_at"
+  > &
+    Partial<
+      Pick<
+        GrupoServidorMesa,
+        "grupo_servidor_mesa_id" | "created_at" | "updated_at"
+      >
+    >)[],
+  identity: Identity = defaultIdentity,
+) {
+  const rows = await readGroupAdminRows();
+  const validRows = rows.grupo_servidores_mesa.filter(
+    (row): row is ValidRow<GrupoServidorMesa> => row.valid,
+  );
+  const existingForGroup = validRows.filter(
+    (row) => row.data.grupo_id === grupoId,
+  );
+  const timestamp = identity.now();
+  const nextIds = new Set(
+    inputs
+      .map((item) => item.grupo_servidor_mesa_id)
+      .filter((id): id is string => Boolean(id)),
+  );
+  const rowsToSave: GrupoServidorMesa[] = [
+    ...inputs.map((input) => {
+      const existing = input.grupo_servidor_mesa_id
+        ? validRows.find(
+            (row) =>
+              row.data.grupo_servidor_mesa_id ===
+              input.grupo_servidor_mesa_id,
+          )
+        : undefined;
+      return {
+        ...input,
+        grupo_servidor_mesa_id:
+          input.grupo_servidor_mesa_id ?? identity.uuid(),
+        grupo_id: grupoId,
+        created_at: input.created_at ?? existing?.data.created_at ?? timestamp,
+        updated_at: timestamp,
+      };
+    }),
+    ...existingForGroup
+      .filter(
+        (row) =>
+          row.data.ativo && !nextIds.has(row.data.grupo_servidor_mesa_id),
+      )
+      .map((row) => ({
+        ...row.data,
+        ativo: false,
+        updated_at: timestamp,
+      })),
+  ];
+
+  for (const servidor of rowsToSave) {
+    const existing = validRows.find(
+      (row) =>
+        row.data.grupo_servidor_mesa_id === servidor.grupo_servidor_mesa_id,
+    );
+    const values = rowValues(
+      "grupo_servidores_mesa",
+      domainGrupoServidorMesaToSheet(servidor),
+    );
+    if (existing) {
+      await updateRow("grupo_servidores_mesa", existing.rowNumber, values);
+    } else {
+      await appendRow("grupo_servidores_mesa", values);
+    }
+  }
+
+  return rowsToSave.filter((item) => item.ativo);
+}
+
+export async function saveGrupoServidorMesa(
+  grupoId: string,
+  input: Omit<
+    GrupoServidorMesa,
+    "grupo_servidor_mesa_id" | "grupo_id" | "created_at" | "updated_at"
+  > &
+    Partial<
+      Pick<
+        GrupoServidorMesa,
+        "grupo_servidor_mesa_id" | "created_at" | "updated_at"
+      >
+    >,
+  identity: Identity = defaultIdentity,
+) {
+  const rows = await readGroupAdminRows();
+  const validRows = rows.grupo_servidores_mesa.filter(
+    (row): row is ValidRow<GrupoServidorMesa> => row.valid,
+  );
+  const existing = input.grupo_servidor_mesa_id
+    ? validRows.find(
+        (row) =>
+          row.data.grupo_servidor_mesa_id === input.grupo_servidor_mesa_id,
+      )
+    : undefined;
+  if (input.grupo_servidor_mesa_id && !existing) {
+    throw new Error("Servidor da mesa não encontrado.");
+  }
+  if (existing && existing.data.grupo_id !== grupoId) {
+    throw new Error("Servidor da mesa não pertence ao grupo informado.");
+  }
+  if (
+    existing &&
+    DEFAULT_MESA_OFFICES.some(
+      (encargo) => encargo === existing.data.encargo,
+    ) &&
+    input.encargo !== existing.data.encargo
+  ) {
+    throw new Error("O encargo padrão não pode ser alterado.");
+  }
+
+  const timestamp = identity.now();
+  const servidor: GrupoServidorMesa = {
+    ...input,
+    grupo_servidor_mesa_id:
+      input.grupo_servidor_mesa_id ?? identity.uuid(),
+    grupo_id: grupoId,
+    created_at: input.created_at ?? existing?.data.created_at ?? timestamp,
+    updated_at: timestamp,
+  };
+  const values = rowValues(
+    "grupo_servidores_mesa",
+    domainGrupoServidorMesaToSheet(servidor),
+  );
+  if (existing) {
+    await updateRow("grupo_servidores_mesa", existing.rowNumber, values);
+  } else {
+    await appendRow("grupo_servidores_mesa", values);
+  }
+  return servidor;
+}
+
+export async function deactivateGrupoServidorMesa(
+  grupoId: string,
+  servidorId: string,
+  identity: Identity = defaultIdentity,
+) {
+  const rows = await readGroupAdminRows();
+  const existing = rows.grupo_servidores_mesa.find(
+    (row): row is ValidRow<GrupoServidorMesa> =>
+      row.valid && row.data.grupo_servidor_mesa_id === servidorId,
+  );
+  if (!existing || existing.data.grupo_id !== grupoId) {
+    throw new Error("Servidor da mesa não encontrado.");
+  }
+  if (DEFAULT_MESA_OFFICES.some((encargo) => encargo === existing.data.encargo)) {
+    throw new Error("Os encargos padrão não podem ser removidos.");
+  }
+
+  const servidor = {
+    ...existing.data,
+    ativo: false,
+    updated_at: identity.now(),
+  };
+  await updateRow(
+    "grupo_servidores_mesa",
+    existing.rowNumber,
+    rowValues(
+      "grupo_servidores_mesa",
+      domainGrupoServidorMesaToSheet(servidor),
+    ),
+  );
+  return servidor;
 }
 
 export async function deleteGrupoHorarios(horarioIds: string[]) {
