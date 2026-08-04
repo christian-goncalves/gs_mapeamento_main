@@ -2,9 +2,11 @@
 
 import type { ReactNode } from "react";
 import { useEffect, useId, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faLayerGroup, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
+import appIcon from "./icon.png";
 
 export function AppShell({
   children,
@@ -76,7 +78,14 @@ export function AppShell({
             title={homeLabel}
             onClick={() => setOpen(false)}
           >
-            <FontAwesomeIcon icon={faLayerGroup} />
+            <Image
+              className="app-brand-icon"
+              src={appIcon}
+              alt=""
+              width={32}
+              height={32}
+              priority
+            />
             <span>GS Mapeamento</span>
           </Link>
 
