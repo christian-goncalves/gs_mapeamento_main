@@ -281,8 +281,12 @@ export async function saveGrupoAction(
   if (isAdmin) {
     const user = await syncResponsibleGroupUser(savedGroup);
     if (user?.status === "pendente" && user.inviteCreated) {
-      await sendActivationEmail({ group: savedGroup, user });
-      activationInviteSent = true;
+      try {
+        await sendActivationEmail({ group: savedGroup, user });
+        activationInviteSent = true;
+      } catch (emailError) {
+        console.error("Falha ao enviar e-mail de ativação para o grupo:", savedGroup.grupo_nome, emailError);
+      }
     }
   }
   revalidateGroupAdminPaths(grupoId);

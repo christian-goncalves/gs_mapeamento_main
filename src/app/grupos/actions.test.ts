@@ -219,9 +219,25 @@ describe("Server Action de grupos", () => {
       groupForm({ email_acesso_grupo: "novo-login@example.com" }),
     );
 
+  });
+
+  it("continua salvamento do grupo com sucesso mesmo se envio de e-mail falhar", async () => {
+    mocks.syncResponsibleGroupUser.mockResolvedValue({
+      status: "pendente",
+      convite_token: "token-novo",
+      inviteCreated: true,
+    });
+    mocks.sendActivationEmail.mockRejectedValue(new Error("API de e-mail indisponível"));
+
+    await saveGrupoAction(
+      null,
+      groupForm({ email_acesso_grupo: "novo-login@example.com" }),
+    );
+
     expect(mocks.sendActivationEmail).toHaveBeenCalledOnce();
+    expect(mocks.saveGrupo).toHaveBeenCalledOnce();
     expect(mocks.redirect).toHaveBeenCalledWith(
-      `/admin/grupos/${groupTwo.grupo_id}?status=activation-invite-sent`,
+      `/admin/grupos/${groupTwo.grupo_id}?status=saved`,
     );
   });
 

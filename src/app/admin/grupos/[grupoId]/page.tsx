@@ -42,7 +42,7 @@ export default async function AdminGroupDetailPage({
       canManageAccess
       activationPath={
         pendingActivation
-          ? `/ativar-acesso/${pendingActivation.convite_token}`
+          ? `${publicOrigin.replace(/\/$/, "")}/ativar-acesso/${pendingActivation.convite_token}`
           : ""
       }
       status={status}
