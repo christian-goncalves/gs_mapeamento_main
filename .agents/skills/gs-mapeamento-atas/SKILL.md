@@ -7,7 +7,7 @@ description: Preserva os contratos do formulario de atas e da persistencia Googl
 
 ## Preparar a mudanca
 
-1. Ler `AGENTS.md`, `README.md` e o documento canonico relacionado em
+1. Ler `GEMINI.md`, `docs/desenvolvimento/diretrizes-agentes.md`, `README.md` e o documento canonico relacionado em
    `docs/README.md`.
 2. Revisar `git status` e o diff para preservar trabalho ja iniciado.
 3. Localizar as quatro camadas do campo: componente React, schema de formulario,

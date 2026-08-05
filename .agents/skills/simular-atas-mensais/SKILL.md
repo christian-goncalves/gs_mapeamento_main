@@ -8,7 +8,7 @@ description: Planeja, valida e persiste de forma atômica atas mensais simuladas
 ## Preparar
 
 1. Trabalhar na raiz do projeto GS Mapeamento.
-2. Ler `AGENTS.md`, `README.md`, `docs/README.md` e
+2. Ler `GEMINI.md`, `docs/desenvolvimento/diretrizes-agentes.md`, `README.md`, `docs/README.md` e
    `../gs-mapeamento-atas/SKILL.md`.
 3. Ler [references/execution-contract.md](references/execution-contract.md)
    antes de planejar ou persistir.
