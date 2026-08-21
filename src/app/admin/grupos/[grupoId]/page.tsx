@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import { requireAdminSessionWithAggregatedAtas } from "@/lib/auth/require-session";
 import { requestOrigin } from "@/lib/http/request-origin";
 import { ensureSecureAtaLinkToken } from "@/lib/sheets/ensure-ata-link-token";
-import { getPendingActivationForGroup } from "@/lib/sheets/group-users";
+import {
+  getPendingActivationForGroup,
+  isActivationInviteExpired,
+} from "@/lib/sheets/group-users";
 import { GroupEditor } from "@/app/grupos/group-editor";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +48,10 @@ export default async function AdminGroupDetailPage({
           ? `${publicOrigin.replace(/\/$/, "")}/ativar-acesso/${pendingActivation.convite_token}`
           : ""
       }
+      activationExpired={Boolean(
+        pendingActivation &&
+          isActivationInviteExpired(pendingActivation.convite_expira_em),
+      )}
       status={status}
       publicOrigin={publicOrigin}
     />

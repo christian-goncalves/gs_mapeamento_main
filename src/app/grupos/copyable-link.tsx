@@ -33,7 +33,7 @@ export function CopyableLink({
         <button
           type="button"
           className="icon-button"
-          aria-label="Copiar link de preenchimento"
+          aria-label={`Copiar ${label.toLocaleLowerCase("pt-BR")}`}
           title="Copiar link"
           onClick={copy}
         >

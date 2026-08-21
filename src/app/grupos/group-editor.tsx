@@ -23,6 +23,7 @@ import {
 import type { GrupoServidorMesa } from "@/domain/schemas";
 import { isSecureAtaLinkToken } from "@/lib/ata-link-token";
 import {
+  rotateActivationInviteAction,
   rotateAtaLinkAction,
   saveGrupoAction,
   saveGrupoServidoresMesaAction,
@@ -435,6 +436,7 @@ export function GroupEditor({
   canCreate,
   canManageAccess = canCreate,
   activationPath = "",
+  activationExpired = false,
   status,
   publicOrigin = "",
   variant = "default",
@@ -445,6 +447,7 @@ export function GroupEditor({
   canCreate: boolean;
   canManageAccess?: boolean;
   activationPath?: string;
+  activationExpired?: boolean;
   status?: string;
   publicOrigin?: string;
   variant?: "default" | "responsavel";
@@ -476,13 +479,19 @@ export function GroupEditor({
   const successMessage =
     status === "activation-invite-sent"
       ? "Alterações salvas. Um novo convite foi enviado para o e-mail de login do grupo."
-      : status === "ata-link-rotated"
-        ? "Link de preenchimento rotacionado. O link anterior foi invalidado."
-      : status === "saved" || status === "saved-mesa-missing-names"
-        ? "Alterações salvas."
-        : status === "created"
-          ? "Grupo criado."
-          : "";
+      : status === "activation-invite-rotated"
+        ? "Convite rotacionado. Um novo link foi enviado para o e-mail de login do grupo."
+        : status === "activation-invite-rotated-email-failed"
+          ? "Convite rotacionado, mas o e-mail não foi enviado. Copie o novo link manualmente."
+          : status === "activation-invite-unavailable"
+            ? "Não há convite pendente disponível para rotacionar."
+            : status === "ata-link-rotated"
+              ? "Link de preenchimento rotacionado. O link anterior foi invalidado."
+              : status === "saved" || status === "saved-mesa-missing-names"
+                ? "Alterações salvas."
+                : status === "created"
+                  ? "Grupo criado."
+                  : "";
   const dismissStatus = useCallback(() => {
     if (status) router.replace(pathname, { scroll: false });
   }, [pathname, router, status]);
@@ -957,11 +966,32 @@ export function GroupEditor({
           )}
           {group && ataLinkControls()}
           {activationPath && canManageAccess && (
-            <CopyableLink
-              value={activationPath}
-              displayValue={`Ativar acesso ${current.grupo_nome}`}
-              label="Link de ativação do acesso do grupo"
-            />
+            <>
+              <CopyableLink
+                value={activationPath}
+                displayValue={`Ativar acesso ${current.grupo_nome}`}
+                label="Link de ativação do acesso do grupo"
+                trailingAction={
+                  <button
+                    type="submit"
+                    className="icon-button ata-link-rotate-button"
+                    formAction={rotateActivationInviteAction}
+                    formNoValidate
+                    value="rotate-activation-invite"
+                    disabled={pending}
+                    aria-label="Rotacionar convite de ativação"
+                    title="Rotacionar convite"
+                  >
+                    <FontAwesomeIcon icon={faRotateRight} />
+                  </button>
+                }
+              />
+              {activationExpired && (
+                <p className="field-hint">
+                  Este convite expirou. Rotacione-o para gerar um novo link válido.
+                </p>
+              )}
+            </>
           )}
         </section>
 

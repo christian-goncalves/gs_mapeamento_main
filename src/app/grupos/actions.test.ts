@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => ({
   saveGrupoHorario: vi.fn(),
   saveGrupoServidorMesa: vi.fn(),
   saveGrupoServidoresMesa: vi.fn(),
+  rotatePendingActivationForGroup: vi.fn(),
   syncResponsibleGroupUser: vi.fn(),
   sendActivationEmail: vi.fn(),
   revalidatePath: vi.fn(),
@@ -36,6 +37,7 @@ vi.mock("@/lib/sheets/group-admin", () => ({
   saveGrupoServidoresMesa: mocks.saveGrupoServidoresMesa,
 }));
 vi.mock("@/lib/sheets/group-users", () => ({
+  rotatePendingActivationForGroup: mocks.rotatePendingActivationForGroup,
   syncResponsibleGroupUser: mocks.syncResponsibleGroupUser,
 }));
 vi.mock("@/lib/email/activation-email", () => ({
@@ -48,6 +50,7 @@ import {
   deactivateGrupoAction,
   duplicateGrupoAction,
   rotateAtaLinkAction,
+  rotateActivationInviteAction,
   saveGrupoAction,
   saveGrupoServidorMesaAction,
   saveGrupoServidoresMesaAction,
@@ -170,6 +173,7 @@ describe("Server Action de grupos", () => {
       invalidRows: [],
     });
     mocks.saveGrupo.mockImplementation(async (group: Grupo) => group);
+    mocks.sendActivationEmail.mockResolvedValue(undefined);
     mocks.syncResponsibleGroupUser.mockResolvedValue({
       status: "ativo",
       inviteCreated: false,
@@ -253,6 +257,62 @@ describe("Server Action de grupos", () => {
     expect(mocks.sendActivationEmail).not.toHaveBeenCalled();
     expect(mocks.redirect).toHaveBeenCalledWith(
       `/admin/grupos/${groupTwo.grupo_id}?status=saved`,
+    );
+  });
+
+  it("rotaciona o convite pendente e reenvia o e-mail", async () => {
+    const user = {
+      usuario_id: "66666666-6666-4666-8666-666666666666",
+      grupo_id: groupTwo.grupo_id,
+      email: groupTwo.email_acesso_grupo,
+      nome: groupTwo.responsavel_grupo_nome,
+      senha_hash: "",
+      status: "pendente" as const,
+      convite_token: "token-novo",
+      convite_expira_em: "2026-09-04T00:00:00.000Z",
+      ultimo_login: "",
+      created_at: "2026-08-05T00:00:00.000Z",
+      updated_at: "2026-08-21T00:00:00.000Z",
+    };
+    mocks.rotatePendingActivationForGroup.mockResolvedValue(user);
+    const data = groupIdForm(groupTwo.grupo_id);
+
+    await rotateActivationInviteAction(data);
+
+    expect(mocks.requireAdminSession).toHaveBeenCalledOnce();
+    expect(mocks.rotatePendingActivationForGroup).toHaveBeenCalledWith(
+      groupTwo.grupo_id,
+    );
+    expect(mocks.sendActivationEmail).toHaveBeenCalledWith({
+      group: groupTwo,
+      user,
+    });
+    expect(mocks.redirect).toHaveBeenCalledWith(
+      `/admin/grupos/${groupTwo.grupo_id}?status=activation-invite-rotated`,
+    );
+  });
+
+  it("preserva o novo convite quando o reenvio do e-mail falha", async () => {
+    const user = {
+      usuario_id: "66666666-6666-4666-8666-666666666666",
+      grupo_id: groupTwo.grupo_id,
+      email: groupTwo.email_acesso_grupo,
+      nome: "",
+      senha_hash: "",
+      status: "pendente" as const,
+      convite_token: "token-novo",
+      convite_expira_em: "2026-09-04T00:00:00.000Z",
+      ultimo_login: "",
+      created_at: "2026-08-05T00:00:00.000Z",
+      updated_at: "2026-08-21T00:00:00.000Z",
+    };
+    mocks.rotatePendingActivationForGroup.mockResolvedValue(user);
+    mocks.sendActivationEmail.mockRejectedValueOnce(new Error("Resend indisponível"));
+
+    await rotateActivationInviteAction(groupIdForm(groupTwo.grupo_id));
+
+    expect(mocks.redirect).toHaveBeenCalledWith(
+      `/admin/grupos/${groupTwo.grupo_id}?status=activation-invite-rotated-email-failed`,
     );
   });
 

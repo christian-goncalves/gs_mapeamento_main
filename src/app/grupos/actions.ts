@@ -29,7 +29,10 @@ import {
   saveGrupoServidorMesa,
   saveGrupoServidoresMesa,
 } from "@/lib/sheets/group-admin";
-import { syncResponsibleGroupUser } from "@/lib/sheets/group-users";
+import {
+  rotatePendingActivationForGroup,
+  syncResponsibleGroupUser,
+} from "@/lib/sheets/group-users";
 import { readAggregatedAtas } from "@/lib/sheets/repository";
 import { z } from "zod";
 
@@ -430,6 +433,42 @@ export async function rotateAtaLinkAction(formData: FormData) {
   revalidateGroupAdminPaths(grupoId);
   redirect(
     `${groupDetailPath(grupoId, current.access.role === "administrador")}?status=ata-link-rotated`,
+  );
+}
+
+export async function rotateActivationInviteAction(formData: FormData) {
+  const grupoId = text(formData, "grupo_id");
+  await requireAdminSession();
+
+  const result = await readAggregatedAtas();
+  const group = result.grupos.find((item) => item.grupo_id === grupoId);
+  if (!group) throw new Error("Grupo não encontrado.");
+
+  const user = await rotatePendingActivationForGroup(grupoId);
+  if (!user) {
+    revalidateGroupAdminPaths(grupoId);
+    redirect(`${adminGroupPath(grupoId)}?status=activation-invite-unavailable`);
+  }
+
+  let emailSent = false;
+  try {
+    await sendActivationEmail({ group, user });
+    emailSent = true;
+  } catch (emailError) {
+    console.error(
+      "Falha ao reenviar e-mail de ativação para o grupo:",
+      group.grupo_nome,
+      emailError,
+    );
+  }
+
+  revalidateGroupAdminPaths(grupoId);
+  redirect(
+    `${adminGroupPath(grupoId)}?status=${
+      emailSent
+        ? "activation-invite-rotated"
+        : "activation-invite-rotated-email-failed"
+    }`,
   );
 }
 

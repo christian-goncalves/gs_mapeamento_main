@@ -39,6 +39,10 @@ function passwordResetExpiration() {
   return date.toISOString();
 }
 
+export function isActivationInviteExpired(expiration: string) {
+  return !expiration || new Date(expiration).getTime() < Date.now();
+}
+
 async function readSheetValues() {
   const sheets = getSheetsClient();
   const response = await sheets.spreadsheets.values.get({
@@ -162,7 +166,7 @@ export async function getPendingActivationByToken(token: string) {
       item.data.status === "pendente" &&
       item.data.convite_token === token &&
       Boolean(item.data.convite_expira_em) &&
-      new Date(item.data.convite_expira_em).getTime() >= Date.now(),
+      !isActivationInviteExpired(item.data.convite_expira_em),
   );
   return row?.data ?? null;
 }
@@ -246,4 +250,22 @@ export async function getPendingActivationForGroup(grupoId: string) {
         row.data.convite_token,
     )?.data ?? null
   );
+}
+
+export async function rotatePendingActivationForGroup(grupoId: string) {
+  const users = await validGroupUsers();
+  const existing = users.find(
+    (row) =>
+      row.data.grupo_id === grupoId &&
+      row.data.status === "pendente" &&
+      Boolean(row.data.convite_token),
+  );
+  if (!existing) return null;
+
+  return saveUsuarioGrupo({
+    ...existing.data,
+    senha_hash: "",
+    convite_token: randomUUID(),
+    convite_expira_em: activationExpiration(),
+  });
 }
