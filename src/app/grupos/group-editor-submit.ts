@@ -7,6 +7,10 @@ import type { FormEvent } from "react";
 export function isSubmitFromAnotherForm(
   event: FormEvent<HTMLFormElement>,
 ): boolean {
+  if (event.target !== event.currentTarget) {
+    return true;
+  }
+
   const submitter = (event.nativeEvent as SubmitEvent).submitter as
     | (HTMLElement & { form?: HTMLFormElement })
     | null;
