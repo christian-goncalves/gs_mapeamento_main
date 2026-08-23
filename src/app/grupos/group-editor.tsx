@@ -29,6 +29,7 @@ import {
   saveGrupoServidoresMesaAction,
 } from "./actions";
 import { CopyableLink } from "./copyable-link";
+import { isSubmitFromAnotherForm } from "./group-editor-submit";
 import { GroupSchedulesEditor } from "./group-schedules-editor";
 import { MesaServersSummary } from "./mesa-servers-summary";
 
@@ -609,6 +610,9 @@ export function GroupEditor({
   }
 
   function submitResponsavelForm(event: React.FormEvent<HTMLFormElement>) {
+    if (isSubmitFromAnotherForm(event)) {
+      return;
+    }
     const submitter = (event.nativeEvent as SubmitEvent).submitter;
     if (
       submitter instanceof HTMLButtonElement &&
