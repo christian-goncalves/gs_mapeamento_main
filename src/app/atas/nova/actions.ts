@@ -13,13 +13,9 @@ import {
   hiddenAtaSubmissionSchema,
   normalizeHiddenAtaSubmission,
 } from "@/domain/hidden-submission";
-import { hasRequiredMesaServers } from "@/domain/grupo-servidores-mesa";
 import { requireAuthorizedSession } from "@/lib/auth/require-session";
 import { createAtaInSheets } from "@/lib/sheets/create-ata";
-import {
-  getActiveGroupByAtaLink,
-  readAggregatedAtas,
-} from "@/lib/sheets/repository";
+import { getActiveGroupByAtaLink } from "@/lib/sheets/repository";
 
 export type CreateAtaState = { error?: string };
 
@@ -81,26 +77,12 @@ export async function createAtaAction(
   _previousState: CreateAtaState,
   formData: FormData,
 ): Promise<CreateAtaState> {
-  const { access } = await requireAuthorizedSession();
+  await requireAuthorizedSession();
   if (formData.get("confirmed") !== "true") {
     return { error: "Confirme o resumo antes de enviar." };
   }
   const parsed = parseSubmissionPayload(formData.get("payload"));
   if (!parsed.ok) return { error: parsed.error };
-  if (access.role === "responsavel_grupo") {
-    const result = await readAggregatedAtas();
-    if (
-      !hasRequiredMesaServers(
-        result.grupo_servidores_mesa,
-        parsed.submission.ata.grupo_id,
-      )
-    ) {
-      return {
-        error:
-          "Preencha os Servidores da Mesa nas configurações do grupo antes de enviar atas.",
-      };
-    }
-  }
 
   const result = await persistSubmission(parsed.submission);
   if (typeof result !== "string") return result;

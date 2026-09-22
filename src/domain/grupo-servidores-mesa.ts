@@ -30,14 +30,3 @@ export function activeMesaServersForGroup(
         first.encargo.localeCompare(second.encargo, "pt-BR"),
     );
 }
-
-export function hasRequiredMesaServers(
-  servidores: readonly GrupoServidorMesa[],
-  grupoId: string,
-) {
-  const active = activeMesaServersForGroup(servidores, grupoId);
-  return DEFAULT_MESA_OFFICES.every((encargo) =>
-    active.some((item) => item.encargo === encargo && normalizeMesaName(item.nome)),
-  );
-}
-

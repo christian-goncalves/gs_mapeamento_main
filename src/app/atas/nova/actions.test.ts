@@ -141,6 +141,24 @@ describe("Server Action de criação", () => {
     );
   });
 
+  it("permite responsável enviar ata sem servidores da mesa cadastrados", async () => {
+    mocks.requireAuthorizedSession.mockResolvedValue({
+      access: {
+        role: "responsavel_grupo",
+        email: "responsavel@example.com",
+        groups: [{ grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f" }],
+      },
+    });
+    mocks.createAtaInSheets.mockResolvedValue(
+      "93ef9660-8c64-4b51-9bc5-09069ce629c1",
+    );
+
+    await createAtaAction({}, formData(true));
+
+    expect(mocks.readAggregatedAtas).not.toHaveBeenCalled();
+    expect(mocks.createAtaInSheets).toHaveBeenCalledOnce();
+  });
+
   it("retorna erro localizado quando a chave já existe", async () => {
     mocks.createAtaInSheets.mockRejectedValue(new DuplicateAtaError());
     await expect(createAtaAction({}, formData(true))).resolves.toEqual({

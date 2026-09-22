@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { redirectIfResponsibleMesaServersIncomplete } from "@/lib/auth/require-mesa-servers";
 import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
 import { MonthlyGroupDashboard } from "@/app/relatorios/monthly-group-dashboard";
 import {
@@ -60,7 +59,6 @@ export default async function ResponsavelRelatoriosPage({
   const [group] = access.groups;
   if (!group) redirect("/login");
 
-  await redirectIfResponsibleMesaServersIncomplete(access, result);
   const params = await searchParams;
 
   return (

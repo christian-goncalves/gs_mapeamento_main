@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
-import { redirectIfResponsibleMesaServersIncomplete } from "@/lib/auth/require-mesa-servers";
 import { ResponsavelShell } from "@/app/responsavel/responsavel-shell";
 import { AtaForm } from "./ata-form";
 
@@ -11,7 +10,6 @@ export default async function NewAtaPage() {
   if (access.role === "administrador") redirect("/admin/atas");
   const [primaryGroup] = access.groups;
   if (!primaryGroup) redirect("/login");
-  await redirectIfResponsibleMesaServersIncomplete(access, result);
 
   const allowedGroupIds = new Set(access.groups.map((group) => group.grupo_id));
   const groups = result.grupos

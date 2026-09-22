@@ -8,7 +8,6 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
-import { redirectIfResponsibleMesaServersIncomplete } from "@/lib/auth/require-mesa-servers";
 import { ResponsavelAtasTable, type ResponsavelAtaRow } from "./responsavel-atas-table";
 import { ResponsavelShell } from "../responsavel-shell";
 
@@ -37,7 +36,6 @@ export default async function ResponsavelAtasPage() {
   const [group] = access.groups;
   if (!group) redirect("/login");
 
-  await redirectIfResponsibleMesaServersIncomplete(access, result);
   const groupAtas = result.atas.filter(
     (item) => item.grupo.grupo_id === group.grupo_id,
   );
