@@ -1,4 +1,5 @@
 # Segredos e configuracao local
+chaves/
 .env*
 !.env.example
 google-api_drive-sheets-gmail-docs/
