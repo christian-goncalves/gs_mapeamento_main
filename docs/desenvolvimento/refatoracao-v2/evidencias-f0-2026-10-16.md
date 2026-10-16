@@ -19,6 +19,7 @@ F0 iniciada por instrução do usuário. Foram feitas leituras de código, docum
 ### Desenvolvimento local
 
 - `.env.local` contém `GOOGLE_SHEETS_ID`; `GOOGLE_SHEETS_DEV_ID` e `GOOGLE_SHEETS_TEST_ID` estão ausentes. O valor do ID não foi exibido.
+- O usuário indicou a planilha da URL compartilhada como referência do projeto em DEV/PROD. Uma comparação local, sem imprimir o ID, confirmou que essa URL corresponde ao `GOOGLE_SHEETS_ID` de `.env.local`.
 - Com escopo OAuth somente de leitura, os metadados da planilha selecionada por `GOOGLE_SHEETS_ID` retornaram o título `GS Mapeamento | DEV`. Foram consultados apenas metadados, cabeçalhos e dados necessários para contagens/validação; nenhum valor de negócio foi registrado aqui.
 - A aplicação foi iniciada em `http://127.0.0.1:3000`, usando `.env.local`. Uma requisição sem sessão a `/responsavel/atas` redirecionou para `/login` (HTTP 307). A aba local já aberta do usuário em `/responsavel/atas` carregou com HTTP 200; isso comprova acesso à rota de responsável, sem inspecionar ou registrar linhas da planilha.
 - A instância de desenvolvimento foi iniciada nesta execução e permanece ativa. A sessão administrativa autenticada foi posteriormente confirmada no Chrome, na rota `/admin/grupos`.
@@ -28,12 +29,12 @@ F0 iniciada por instrução do usuário. Foram feitas leituras de código, docum
 - Projeto `gs-mapeamento`, framework Next.js. O deploy atual consultado está `READY`, alvo `production`, commit `06d74da`.
 - O deploy mais recente com alvo `preview` também está `READY`, mas aponta para o commit `a27a9722c14b4f5af3d8f9c2eba9e15693e8c424` e branch `codex/public-safe-diagnostics-20261014`.
 - A listagem também contém deployments de produção anteriores `READY`, um no commit `ecaca0137f34c12c5a29a384de7405b5520609b9` e outro sem SHA de commit nos metadados. Eles não são o alvo de produção mais recente. Sua possibilidade de escrita e política de expiração/corte precisam ser tratadas no inventário de F1.
-- A listagem de variáveis foi feita com `decrypt=false`: `GOOGLE_SHEETS_ID` está configurada para `production`; não há configuração dessa variável para `preview`. Os valores não foram revelados. Portanto, a identidade/título da planilha usada pelo runtime de produção não foi confirmada por leitura direta; o preview não tem evidência de acesso ao Sheets.
+- A listagem de variáveis foi feita com `decrypt=false`: `GOOGLE_SHEETS_ID` está configurada para `production`; não há configuração dessa variável para `preview`. O valor não foi revelado nem comparado diretamente. O usuário confirmou que DEV e PROD usam a planilha da URL compartilhada; localmente o ID corresponde ao link. A Vercel não foi descriptografada para confirmar a igualdade de valor. O preview não tem evidência de acesso ao Sheets.
 - Proteção SSO está habilitada nas URLs de deployment, com a exceção de domínios customizados, conforme metadados do projeto. Isso não prova quais papéis da aplicação conseguem entrar.
 
 ### Pendência de acesso por papel
 
-Para fechar F00-T02 falta confirmar a identidade/título da planilha usada pelo runtime de produção e o escopo de grupo do responsável autenticado. A rota local de responsável respondeu 200, mas não foi preciso ler o nome do grupo nem as atas. O acesso administrativo em DEV foi confirmado separadamente no Chrome.
+O mapeamento de ambiente foi confirmado pelo usuário: DEV e PROD compartilham a planilha indicada, cujo ID corresponde ao `GOOGLE_SHEETS_ID` local. Assim, qualquer operação com escrita em DEV atinge a planilha compartilhada. Para fechar F00-T02, falta verificar se a sessão de responsável está vinculada ao(s) grupo(s) esperado(s). A rota local de responsável respondeu 200, mas não foi preciso ler o nome do grupo nem as atas. O acesso administrativo em DEV foi confirmado separadamente no Chrome.
 
 ## F00-T03 — Baseline isolado
 
@@ -158,9 +159,9 @@ Para reconstrução de uma operação indeterminada, procurar o `operacao_id` na
 1. Aceitar a representação física proposta ou ajustar campos/nomes e auditoria antes da F1.
 2. Aceitar Apps Script como gateway único de escrita, com fail-closed, operação idempotente e corte de escritores antigos/manuais; ou solicitar outra arquitetura.
 3. Aceitar 50 atas e 1,5 MiB como limites iniciais, sujeitos à medição sintética no F1.
-4. Confirmar responsável/conta operacional do Apps Script e política de edição manual no corte.
+4. Indicar a conta Google que será responsável por possuir e implantar o Apps Script operacional. **Confirmado:** `chrisapppg1@gmail.com`.
 5. Confirmar se `Página7` deve ser preservada sem uso, investigada separadamente ou incluída em outro escopo. Ela não foi alterada.
-6. Confirmar uma sessão de administrador e uma de responsável em DEV para fechar o acesso por papel. A instância local está disponível em `http://127.0.0.1:3000`.
+6. Conferir se o perfil de responsável está vinculado apenas ao(s) grupo(s) que deve atender. **Confirmado pelo usuário:** o perfil acessa somente o grupo associado pela autenticação. A sessão admin DEV também foi confirmada; a rota de responsável respondeu HTTP 200.
 
 ### Retorno do usuário — 16/10/2026
 
@@ -170,4 +171,10 @@ O usuário confirmou as decisões/recomendações apresentadas: representação 
 
 Após o usuário informar que a sessão estava autenticada no Chrome, foi inspecionada em modo somente leitura a aba `http://localhost:3000/admin/grupos`. A página exibiu a navegação administrativa, a listagem de grupos e seus controles administrativos, confirmando acesso autenticado à área admin do runtime local DEV. Nenhum controle foi acionado e nenhum dado foi alterado.
 
-Permanecem pendentes a identidade da planilha associada ao runtime PROD e o escopo de grupo da sessão de responsável em DEV. A indicação da conta/responsável operacional do Apps Script também continua pendente.
+O usuário confirmou que DEV e PROD usam a mesma planilha indicada, e o ID dela corresponde ao `GOOGLE_SHEETS_ID` local. A listagem Vercel confirmou a variável para `production`, mas seu valor não foi revelado; portanto, a coincidência da variável remota foi registrada com base na confirmação do usuário. Como os ambientes compartilham a planilha, qualquer escrita em DEV afetaria esse mesmo destino.
+
+### Confirmações finais do usuário — 16/10/2026
+
+- O perfil Responsável tem acesso somente ao grupo associado pela autenticação.
+- A conta `chrisapppg1@gmail.com` será responsável por possuir e implantar o Apps Script operacional. Nenhum script foi criado ou implantado nesta F0.
+- O usuário conferiu os pontos do CP-00. F1 continua sem autorização explícita e permanece parada.
