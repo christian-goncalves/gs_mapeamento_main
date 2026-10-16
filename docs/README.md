@@ -33,6 +33,7 @@ execução do MVP.
 | Marcos já concluídos | [Histórico](projeto/historico.md) |
 | Refatoração do painel administrativo | [Índice da refatoração](refatoracao-painel-administrativo/README.md) |
 | Layout aprovado do Resumo da ata | [Registro da refatoração](refatoracao_resumo_da_ata/README.md) |
+| Base confirmada de especificação e plano da refatoração V2 | [Pacote V2](desenvolvimento/refatoracao-v2/README.md) |
 
 ## Referências
 
