@@ -1,0 +1,155 @@
+- generic [ref=f3e1]:
+  - main [ref=f3e2]:
+    - complementary "Navegação do responsável" [ref=f3e3]:
+      - link "Página inicial do responsável" [ref=f3e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f3e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f3e7]:
+        - link "Dados cadastrais" [ref=f3e8] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - link "Histórico de atas" [ref=f3e12] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f3e16] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - button "Sair" [ref=f3e21] [cursor=pointer]
+    - region "Dashboard mensal do grupo" [ref=f3e27]:
+      - heading "Dashboard Mensal - USL" [level=1] [ref=f3e33]
+      - generic [ref=f3e34]:
+        - generic [ref=f3e35]:
+          - text: Mês
+          - combobox "Mês" [ref=f3e36]:
+            - option "Jan"
+            - option "Fev"
+            - option "Mar"
+            - option "Abr"
+            - option "Mai"
+            - option "Jun"
+            - option "Jul"
+            - option "Ago"
+            - option "Set"
+            - option "Out" [selected]
+            - option "Nov"
+            - option "Dez"
+        - generic [ref=f3e37]:
+          - text: Ano
+          - combobox "Ano" [ref=f3e38]:
+            - option "2026" [selected]
+        - button "PDF" [ref=f3e39] [cursor=pointer]
+      - generic [ref=f3e43]:
+        - heading "1. Consolidado" [level=2] [ref=f3e48]
+        - generic [ref=f3e49]:
+          - article [ref=f3e50]:
+            - heading "Total de reuniões" [level=3] [ref=f3e54]
+            - strong [ref=f3e55]: "115"
+          - article [ref=f3e56]:
+            - heading "Reuniões sem ATA / Sala fechada" [level=3] [ref=f3e60]
+            - strong [ref=f3e61]: "114"
+          - article [ref=f3e62]:
+            - heading "Total de presenças" [level=3] [ref=f3e66]
+            - strong [ref=f3e67]: "10"
+          - article [ref=f3e68]:
+            - heading "Média de presenças" [level=3] [ref=f3e72]
+            - strong [ref=f3e73]: "10"
+          - article [ref=f3e74]:
+            - heading "Visitantes" [level=3] [ref=f3e78]
+            - strong [ref=f3e79]: "1"
+          - article [ref=f3e80]:
+            - heading "Média de localidades" [level=3] [ref=f3e84]
+            - strong [ref=f3e85]: "1"
+          - article [ref=f3e86]:
+            - heading "Média de estados" [level=3] [ref=f3e90]
+            - strong [ref=f3e91]: "1"
+          - article [ref=f3e92]:
+            - heading "Total de países" [level=3] [ref=f3e96]
+            - strong [ref=f3e97]: "2"
+          - article [ref=f3e98]:
+            - heading "Ingressos" [level=3] [ref=f3e102]
+            - strong [ref=f3e103]: "1"
+      - generic [ref=f3e104]:
+        - heading "2. Resultados por horário" [level=2] [ref=f3e109]
+        - table [ref=f3e111]:
+          - rowgroup [ref=f3e112]:
+            - row [ref=f3e113]:
+              - columnheader "Horário" [ref=f3e114]
+              - columnheader "07:00" [ref=f3e115]
+              - columnheader "10:00" [ref=f3e116]
+              - columnheader "15:00" [ref=f3e117]
+              - columnheader "18:00" [ref=f3e118]
+              - columnheader "21:30" [ref=f3e119]
+              - columnheader "Total" [ref=f3e120]
+          - rowgroup [ref=f3e121]:
+            - row [ref=f3e122]:
+              - rowheader "Média part." [ref=f3e123]
+              - cell "0" [ref=f3e124]
+              - cell "10" [ref=f3e125]
+              - cell "0" [ref=f3e126]
+              - cell "0" [ref=f3e127]
+              - cell "0" [ref=f3e128]
+              - cell [ref=f3e129]:
+                - strong [ref=f3e130]: "10"
+            - row [ref=f3e131]:
+              - rowheader "Ingressos" [ref=f3e132]
+              - cell "0" [ref=f3e133]
+              - cell "1" [ref=f3e134]
+              - cell "0" [ref=f3e135]
+              - cell "0" [ref=f3e136]
+              - cell "0" [ref=f3e137]
+              - cell [ref=f3e138]:
+                - strong [ref=f3e139]: "1"
+      - generic [ref=f3e140]:
+        - generic [ref=f3e141]:
+          - heading "3. Conquistas de tempo" [level=2] [ref=f3e146]
+          - table [ref=f3e147]:
+            - rowgroup [ref=f3e148]:
+              - row [ref=f3e149]:
+                - rowheader "Ingresso" [ref=f3e150]
+                - cell "1" [ref=f3e151]
+              - row [ref=f3e152]:
+                - rowheader "30 dias" [ref=f3e153]
+                - cell "0" [ref=f3e154]
+              - row [ref=f3e155]:
+                - rowheader "60 dias" [ref=f3e156]
+                - cell "0" [ref=f3e157]
+              - row [ref=f3e158]:
+                - rowheader "90 dias" [ref=f3e159]
+                - cell "1" [ref=f3e160]
+              - row [ref=f3e161]:
+                - rowheader "6 meses" [ref=f3e162]
+                - cell "0" [ref=f3e163]
+              - row [ref=f3e164]:
+                - rowheader "9 meses" [ref=f3e165]
+                - cell "0" [ref=f3e166]
+              - row [ref=f3e167]:
+                - rowheader "1 ano" [ref=f3e168]
+                - cell "0" [ref=f3e169]
+              - row [ref=f3e170]:
+                - rowheader "18 meses" [ref=f3e171]
+                - cell "0" [ref=f3e172]
+              - row [ref=f3e173]:
+                - rowheader "Múltiplos anos" [ref=f3e174]
+                - cell "0" [ref=f3e175]
+              - row [ref=f3e176]:
+                - rowheader "Subtotal" [ref=f3e177]
+                - cell "1" [ref=f3e178]
+              - row [ref=f3e179]:
+                - rowheader "Total" [ref=f3e180]
+                - cell "2" [ref=f3e181]
+        - generic [ref=f3e182]:
+          - heading "4. Servidores da Mesa" [level=2] [ref=f3e187]
+          - table [ref=f3e189]:
+            - rowgroup [ref=f3e190]:
+              - row [ref=f3e191]:
+                - columnheader "Encargo" [ref=f3e192]
+                - columnheader "Nome" [ref=f3e193]
+                - columnheader "Desde" [ref=f3e194]
+            - rowgroup [ref=f3e195]:
+              - row [ref=f3e196]:
+                - rowheader "RSG" [ref=f3e197]
+                - cell "f" [ref=f3e198]
+                - cell "17/10/2026" [ref=f3e199]
+              - row [ref=f3e200]:
+                - rowheader "RSG suplente" [ref=f3e201]
+                - cell "ffff" [ref=f3e202]
+                - cell "17/10/2026" [ref=f3e203]
+      - generic [ref=f3e204]: Dados consolidados do grupo USL referentes a Out/2026.
+  - button "Open Next.js Dev Tools" [ref=f3e213] [cursor=pointer]

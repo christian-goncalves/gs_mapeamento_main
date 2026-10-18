@@ -67,19 +67,23 @@ export function primaryServerName(servers: { nome: string; ordem: number }[]) {
 }
 
 export function buildSentAtaRows(atas: AggregatedAta[]): AdminAtaRow[] {
-  return atas.map((item) => {
-    const { ata } = item.registro;
-    return {
-      ataId: ata.ata_id,
-      indicePersonalizadoGrupo: ata.indice_personalizado_grupo,
-      data: ata.data_reuniao,
-      horario: ata.hora_inicio,
-      grupoId: item.grupo.grupo_id,
-      grupo: item.grupo.grupo_nome,
-      preenchidoPor: ata.preenchido_por || primaryServerName(item.registro.servidores),
-      status: "Enviada",
-    };
-  });
+  return atas
+    .filter((item) => item.registro.ata.status_registro === "ativa")
+    .map((item) => {
+      const { ata } = item.registro;
+      return {
+        ataId: ata.ata_id,
+        indicePersonalizadoGrupo: ata.indice_personalizado_grupo,
+        data: ata.data_reuniao,
+        horario: ata.hora_inicio,
+        grupoId: item.grupo.grupo_id,
+        grupo: item.grupo.grupo_nome,
+        preenchidoPor: ata.preenchido_por || primaryServerName(item.registro.servidores),
+        status: ata.status_aprovacao === "pendente_revisao"
+          ? "Pendente de revisão"
+          : "Enviada",
+      };
+    });
 }
 
 export function buildMissingAtaRows({

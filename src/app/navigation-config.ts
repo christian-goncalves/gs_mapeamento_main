@@ -33,8 +33,13 @@ export function responsavelNavigationItems(
 ): readonly NavigationItem<ResponsavelSection>[] {
   return [
     {
+      section: "configuracoes",
+      label: "Dados cadastrais",
+      href: settingsHref,
+    },
+    {
       section: "responsavel",
-      label: "Responsável",
+      label: "Histórico de atas",
       href: "/responsavel/atas",
     },
     {
@@ -42,6 +47,5 @@ export function responsavelNavigationItems(
       label: "Relatórios",
       href: "/responsavel/relatorios",
     },
-    { section: "configuracoes", label: "Configurações", href: settingsHref },
   ];
 }

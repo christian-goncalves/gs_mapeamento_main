@@ -141,6 +141,7 @@ export const sheetGrupoSchema = z.object({
   grupo_nome: requiredText,
   ordem: sheetInteger(1),
   ativo: sheetBoolean,
+  revisao_atas_ativa: sheetBoolean.optional().default(false),
   responsavel_grupo_nome: optionalText,
   responsavel_grupo_email: optionalEmail,
   email_acesso_grupo: optionalEmail,
@@ -225,8 +226,19 @@ export const sheetAtaSchema = z
     formato_literatura: sheetBoolean,
     formato_passos: sheetBoolean,
     formato_tradicoes: sheetBoolean,
+    formato_comemorativa: sheetBoolean.optional().default(false),
+    formato_servico: sheetBoolean.optional().default(false),
     total_membros_presentes: sheetInteger(1),
     total_partilhas: sheetInteger(1),
+    status_registro: z.enum(["ativa", "substituida", "excluida"]).optional().default("ativa"),
+    status_aprovacao: z.enum(["aprovada", "pendente_revisao"]).optional().default("aprovada"),
+    revisao_de_ata_id: optionalText,
+    motivo_alteracao: optionalText,
+    alterado_por: optionalText,
+    alterado_em: optionalTimestamp,
+    excluida_em: optionalTimestamp,
+    aprovado_por: optionalText,
+    aprovado_em: optionalTimestamp,
     ...auditFields,
   })
   .refine(
@@ -237,6 +249,8 @@ export const sheetAtaSchema = z
       ata.formato_literatura ||
       ata.formato_passos ||
       ata.formato_tradicoes ||
+      ata.formato_comemorativa ||
+      ata.formato_servico ||
       Boolean(ata.formato_outros),
     { path: ["formatos"], message: "Selecione pelo menos um formato." },
   );
@@ -326,6 +340,7 @@ export const sheetTrocaChaveiroSchema = z.object({
 export const sheetIngressoSchema = z.object({
   ingresso_id: uuid,
   ata_id: uuid,
+  visitante_id: uuid.optional(),
   nome: requiredText,
   cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
   ...auditFields,
@@ -354,6 +369,7 @@ export const sheetGrupoToDomain = (row: SheetGrupo): Grupo => ({
 });
 export const domainGrupoToSheet = (item: Grupo): SheetGrupo => ({
   ...item,
+  revisao_atas_ativa: item.revisao_atas_ativa ?? false,
   fuso_horario: item.fuso_horario,
   plataforma: plataformaMapping.toSheet(item.plataforma),
 });
@@ -384,6 +400,8 @@ export function sheetAtaToDomain(row: SheetAta): Ata {
   if (row.formato_literatura) formatos.push("literatura");
   if (row.formato_passos) formatos.push("passos");
   if (row.formato_tradicoes) formatos.push("tradicoes");
+  if (row.formato_comemorativa) formatos.push("comemorativa");
+  if (row.formato_servico) formatos.push("servico");
   if (row.formato_outros) formatos.push("outros");
   return {
     ata_id: row.ata_id,
@@ -400,6 +418,10 @@ export function sheetAtaToDomain(row: SheetAta): Ata {
     formatos,
     total_membros_presentes: row.total_membros_presentes,
     total_partilhas: row.total_partilhas,
+    status_registro: row.status_registro ?? "ativa",
+    status_aprovacao: row.status_aprovacao ?? "aprovada",
+    aprovado_por: row.aprovado_por ?? "",
+    aprovado_em: row.aprovado_em ?? "",
     created_at: row.created_at,
     updated_at: row.updated_at,
   };
@@ -425,8 +447,19 @@ export function domainAtaToSheet(item: Ata): SheetAta {
     formato_literatura: formatos.has("literatura"),
     formato_passos: formatos.has("passos"),
     formato_tradicoes: formatos.has("tradicoes"),
+    formato_comemorativa: formatos.has("comemorativa"),
+    formato_servico: formatos.has("servico"),
     total_membros_presentes: item.total_membros_presentes,
     total_partilhas: item.total_partilhas,
+    status_registro: item.status_registro ?? "ativa",
+    status_aprovacao: item.status_aprovacao ?? "aprovada",
+    revisao_de_ata_id: "",
+    motivo_alteracao: "",
+    alterado_por: "",
+    alterado_em: "",
+    excluida_em: "",
+    aprovado_por: item.aprovado_por ?? "",
+    aprovado_em: item.aprovado_em ?? "",
     created_at: item.created_at,
     updated_at: item.updated_at,
   };

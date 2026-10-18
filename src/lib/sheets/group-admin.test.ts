@@ -9,8 +9,8 @@ import {
 
 const mocks = vi.hoisted(() => ({
   get: vi.fn(),
-  update: vi.fn(),
-  append: vi.fn(),
+  metadata: vi.fn(),
+  directWrite: vi.fn(),
 }));
 
 vi.mock("server-only", () => ({}));
@@ -20,12 +20,15 @@ vi.mock("./client", () => ({
     spreadsheets: {
       values: {
         get: mocks.get,
-        update: mocks.update,
-        append: mocks.append,
       },
+      get: mocks.metadata,
     },
   }),
 }));
+vi.mock("./write", async () => {
+  const actual = await vi.importActual<typeof import("./write")>("./write");
+  return { ...actual, executeSheetsBatch: mocks.directWrite };
+});
 
 const groupId = "11111111-1111-4111-8111-111111111111";
 const serverId = "22222222-2222-4222-8222-222222222222";
@@ -61,6 +64,9 @@ function mockAdminSheets(encargo = "RSG") {
 describe("administração de grupos no Sheets", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.metadata.mockResolvedValue({
+      data: { sheets: [{ properties: { title: "grupo_servidores_mesa", sheetId: 13 } }] },
+    });
   });
 
   it("aceita grupos legados sem as três novas colunas finais", () => {
@@ -128,37 +134,39 @@ describe("administração de grupos no Sheets", () => {
         now: () => "2026-08-03T18:00:00.000Z",
         uuid: () => "33333333-3333-4333-8333-333333333333",
       },
+      { kind: "authenticated", email: "admin@example.com" },
     );
 
-    expect(mocks.update).toHaveBeenCalledTimes(1);
-    expect(mocks.update).toHaveBeenCalledWith(
-      expect.objectContaining({
-        range: "grupo_servidores_mesa!A2:I2",
-        requestBody: {
-          values: [[
-            serverId,
-            groupId,
-            "RSG",
-            "Carla",
-            "2026-08-04",
-            true,
-            1,
-            createdAt,
-            "2026-08-03T18:00:00.000Z",
-          ]],
-        },
-      }),
-    );
-    expect(mocks.append).not.toHaveBeenCalled();
+    expect(mocks.directWrite).toHaveBeenCalledTimes(1);
+    const requests = mocks.directWrite.mock.calls[0][0];
+    expect(requests).toEqual([expect.objectContaining({ updateCells: expect.objectContaining({
+        range: expect.objectContaining({ sheetId: 13, startRowIndex: 1, endRowIndex: 2 }),
+      }) })]);
+    const savedValues = requests[0]
+      .updateCells.rows[0].values.map((cell: { userEnteredValue: Record<string, unknown> }) =>
+        Object.values(cell.userEnteredValue)[0],
+      );
+    expect(savedValues).toEqual([
+      serverId,
+      groupId,
+      "RSG",
+      "Carla",
+      "2026-08-04",
+      true,
+      1,
+      createdAt,
+      "2026-08-03T18:00:00.000Z",
+    ]);
+    expect(mocks.get).not.toHaveBeenCalledWith(expect.objectContaining({ update: expect.anything() }));
   });
 
-  it("impede remover um encargo padrão", async () => {
+  it("permite remover um encargo cadastrado", async () => {
     mockAdminSheets();
 
     await expect(
-      deactivateGrupoServidorMesa(groupId, serverId),
-    ).rejects.toThrow("Os encargos padrão não podem ser removidos.");
-    expect(mocks.update).not.toHaveBeenCalled();
+      deactivateGrupoServidorMesa(groupId, serverId, undefined, { kind: "authenticated", email: "admin@example.com" }),
+    ).resolves.toMatchObject({ ativo: false });
+    expect(mocks.directWrite).toHaveBeenCalledOnce();
   });
 
   it("desativa somente o encargo adicional informado", async () => {
@@ -171,27 +179,24 @@ describe("administração de grupos no Sheets", () => {
         now: () => "2026-08-03T19:00:00.000Z",
         uuid: () => "33333333-3333-4333-8333-333333333333",
       },
+      { kind: "authenticated", email: "admin@example.com" },
     );
 
-    expect(mocks.update).toHaveBeenCalledTimes(1);
-    expect(mocks.update).toHaveBeenCalledWith(
-      expect.objectContaining({
-        range: "grupo_servidores_mesa!A2:I2",
-        requestBody: {
-          values: [[
-            serverId,
-            groupId,
-            "Coordenador",
-            "Carlos",
-            "2026-08-03",
-            false,
-            1,
-            createdAt,
-            "2026-08-03T19:00:00.000Z",
-          ]],
-        },
-      }),
-    );
-    expect(mocks.append).not.toHaveBeenCalled();
+    expect(mocks.directWrite).toHaveBeenCalledTimes(1);
+    const savedValues = mocks.directWrite.mock.calls[0][0][0]
+      .updateCells.rows[0].values.map((cell: { userEnteredValue: Record<string, unknown> }) =>
+        Object.values(cell.userEnteredValue)[0],
+      );
+    expect(savedValues).toEqual([
+      serverId,
+      groupId,
+      "Coordenador",
+      "Carlos",
+      "2026-08-03",
+      false,
+      1,
+      createdAt,
+      "2026-08-03T19:00:00.000Z",
+    ]);
   });
 });

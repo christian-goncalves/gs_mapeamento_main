@@ -106,6 +106,8 @@ export const formatoMapping = createEnumMapping({
   literatura: "Literatura",
   passos: "Passos",
   tradicoes: "Tradições",
+  comemorativa: "Comemorativa",
+  servico: "Serviço",
   outros: "Outros",
 } as const);
 

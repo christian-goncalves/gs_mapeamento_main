@@ -1,0 +1,132 @@
+- generic [active] [ref=e1]:
+  - iframe [aria-hidden] [ref=e2]
+  - generic [ref=e3]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - link "Google Apps Script" [ref=e1958] [cursor=pointer]:
+          - /url: /home
+          - generic [ref=e12]: Apps Script
+        - generic [ref=e13]:
+          - button "Renomear" [ref=e1959] [cursor=pointer]: GS Mapeamento | Gateway F1
+          - generic [ref=e24]:
+            - button [ref=e1960] [cursor=pointer]:
+              - generic [ref=e32]:
+                - text: Implantar
+                - generic [aria-hidden] [ref=e33]: 
+            - button "Compartilhar este projeto com outros" [ref=e1961] [cursor=pointer]:
+              - generic [aria-hidden] [ref=e38]: person_add
+            - button "Suporte" [ref=e1998] [cursor=pointer]:
+              - generic [aria-hidden] [ref=e2001]: help_outline
+        - generic [ref=e45]:
+          - button "Google Apps" [ref=e1963] [cursor=pointer]
+          - 'button "Conta do Google: Christian Gonçalves (chrisapppg1@gmail.com)" [ref=e1964] [cursor=pointer]'
+    - generic [ref=e2003]:
+      - navigation "Páginas do projeto do Apps Script" [ref=e2005]:
+        - link "Visão geral" [ref=e2006] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e2008]: info_outline
+        - link "Editor" [ref=e2010] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e2012]: code
+        - link "Histórico do projeto" [ref=e2014] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e2016]: history
+        - link "Acionadores" [ref=e2018] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e2020]: alarm
+        - link "Execuções" [ref=e2022] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e2024]: playlist_play
+        - link "Configurações do projeto" [ref=e2026] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e2028]: settings
+      - generic [ref=e2031]:
+        - generic [ref=e2032]:
+          - heading "Execuções" [level=1] [ref=e2034]
+          - generic [ref=e2035]:
+            - generic [ref=e2036]: Mostrando 3 execuções nos últimos sete dias
+            - generic [ref=e2037]:
+              - text: "|"
+              - generic [ref=e2038]: "Mostrar em tempo real:"
+              - switch "Mostrar execuções em tempo real." [checked] [ref=e2039] [cursor=pointer]
+        - generic "Tabela de execução. Use as teclas de seta para acessar o conteúdo da tabela ou \"Tab\" para adicionar ou modificar filtros na tabela." [ref=e2050]:
+          - list [ref=e2052]:
+            - listitem [ref=e2053]:
+              - generic [aria-hidden] [ref=e2054]:
+                - generic [aria-hidden] [ref=e2055]: 
+                - text: Adicionar um filtro
+              - generic [ref=e2057]:
+                - textbox [disabled] [aria-hidden] [ref=e2058]
+                - combobox "Filtro de execução" [ref=e2059]
+          - generic [ref=e2060]:
+            - grid [ref=e2062]:
+              - rowgroup [ref=e2063]:
+                - row "Implantação Função Tipo Hora de início Duração Status" [ref=e2064]:
+                  - columnheader "Implantação" [ref=e2065] [cursor=pointer]
+                  - columnheader "Função" [ref=e2068] [cursor=pointer]
+                  - columnheader "Tipo" [ref=e2071] [cursor=pointer]
+                  - columnheader "Hora de início" [ref=e2074] [cursor=pointer]
+                  - columnheader "Duração" [ref=e2077] [cursor=pointer]
+                  - columnheader "Status" [ref=e2080] [cursor=pointer]
+              - rowgroup [ref=e2083]:
+                - row [ref=e2084] [cursor=pointer]:
+                  - gridcell "Versão 2" [ref=e2085]
+                  - gridcell "doPost" [ref=e2086]
+                  - gridcell "App da Web" [ref=e2087]
+                  - gridcell "16 de out. de 2026, 19:22:09" [ref=e2088]
+                  - gridcell "2.173 s" [ref=e2089]
+                  - gridcell "Concluído Mais opções Abrir" [ref=e2090]:
+                    - generic [ref=e2092]:
+                      - generic [ref=e2093]: Concluído
+                      - generic [ref=e2094]:
+                        - button "Mais opções" [ref=e2097]:
+                          - generic [aria-hidden] [ref=e2100]: 
+                        - button "Abrir" [ref=e2101]:
+                          - generic [aria-hidden] [ref=e2104]: 
+                - row [ref=e2105] [cursor=pointer]:
+                  - gridcell "Versão 2" [ref=e2106]
+                  - gridcell "doGet" [ref=e2107]
+                  - gridcell "App da Web" [ref=e2108]
+                  - gridcell "16 de out. de 2026, 19:17:31" [ref=e2109]
+                  - gridcell "0.501 s" [ref=e2110]
+                  - gridcell "Falha Mais opções Abrir" [ref=e2111]:
+                    - generic [ref=e2113]:
+                      - generic [ref=e2114]: Falha
+                      - generic [ref=e2115]:
+                        - button "Mais opções" [ref=e2118]:
+                          - generic [aria-hidden] [ref=e2121]: 
+                        - button "Abrir" [ref=e2122]:
+                          - generic [aria-hidden] [ref=e2125]: 
+                - row [ref=e2126] [cursor=pointer]:
+                  - gridcell "Teste" [ref=e2127]
+                  - gridcell "doGet" [ref=e2128]
+                  - gridcell "App da Web" [ref=e2129]
+                  - gridcell "16 de out. de 2026, 19:16:29" [ref=e2130]
+                  - gridcell "0.425 s" [ref=e2131]
+                  - gridcell "Falha Mais opções Abrir" [ref=e2132]:
+                    - generic [ref=e2134]:
+                      - generic [ref=e2135]: Falha
+                      - generic [ref=e2136]:
+                        - button "Mais opções" [ref=e2139]:
+                          - generic [aria-hidden] [ref=e2142]: 
+                        - button "Abrir" [ref=e2143]:
+                          - generic [aria-hidden] [ref=e2146]: 
+            - navigation "Paginação" [ref=e2147]:
+              - generic [ref=e2148]:
+                - generic [ref=e2149]: "Linhas por página:"
+                - listbox "Número de linhas por página" [ref=e2150] [cursor=pointer]:
+                  - option "50" [selected] [ref=e2151]
+                  - option "100"
+                  - option "200"
+              - generic [ref=e2153]:
+                - button "Ir para a primeira página" [disabled] [ref=e2154]:
+                  - generic [aria-hidden] [ref=e2157]: 
+                - status [ref=e2158]: Página 1 de 1
+                - button "Ir para a página anterior" [disabled] [ref=e2159]:
+                  - generic [aria-hidden] [ref=e2162]: 
+                - button "Ir para a próxima página" [disabled] [ref=e2163]:
+                  - generic [aria-hidden] [ref=e2166]: 
+  - generic: Implantação do projeto concluída
+  - generic [ref=e770]: GS Mapeamento | Gateway F1 - Execuções do projeto - Apps Script
+  - generic [ref=e576]:
+    - alert
+    - alert
+    - complementary
+    - complementary
+  - dialog [aria-hidden] [ref=e577]:
+    - iframe [ref=e579]:
+      - region [ref=f5e3]: Acesso atualizado.

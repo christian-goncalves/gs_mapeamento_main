@@ -35,6 +35,8 @@ data/ata-name-suggestions.json
 !.agents/skills/gs-mapeamento-atas/**
 !.agents/skills/simular-atas-mensais/
 !.agents/skills/simular-atas-mensais/**
+!.agents/skills/executar-fase-refatoracao-v2/
+!.agents/skills/executar-fase-refatoracao-v2/**
 .codex/
 .git-store/
 .git-empty-backup-*/

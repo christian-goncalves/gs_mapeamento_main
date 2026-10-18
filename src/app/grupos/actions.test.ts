@@ -202,6 +202,8 @@ describe("Server Action de grupos", () => {
         email_acesso_grupo: groupTwo.email_acesso_grupo,
         link_formulario_ata: expect.stringMatching(ataLinkTokenPattern),
       }),
+      undefined,
+      { kind: "authenticated", email: "admin@example.com" },
     );
     expect(mocks.saveGrupo.mock.calls[0]?.[0].link_formulario_ata).not.toBe(
       groupTwo.link_formulario_ata,
@@ -280,9 +282,7 @@ describe("Server Action de grupos", () => {
     await rotateActivationInviteAction(data);
 
     expect(mocks.requireAdminSession).toHaveBeenCalledOnce();
-    expect(mocks.rotatePendingActivationForGroup).toHaveBeenCalledWith(
-      groupTwo.grupo_id,
-    );
+    expect(mocks.rotatePendingActivationForGroup).toHaveBeenCalledWith(groupTwo.grupo_id, "admin@example.com");
     expect(mocks.sendActivationEmail).toHaveBeenCalledWith({
       group: groupTwo,
       user,
@@ -335,7 +335,7 @@ describe("Server Action de grupos", () => {
         email_acesso_grupo: "novo@example.com",
       }),
     );
-    expect(mocks.syncResponsibleGroupUser).toHaveBeenCalledWith(savedGroup);
+    expect(mocks.syncResponsibleGroupUser).toHaveBeenCalledWith(savedGroup, "admin@example.com");
     expect(savedGroup.link_formulario_ata).toMatch(ataLinkTokenPattern);
     expect(savedGroup.link_formulario_ata).not.toBe("grupo-novo");
     expect(mocks.redirect).toHaveBeenCalledWith(
@@ -353,6 +353,8 @@ describe("Server Action de grupos", () => {
         responsavel_grupo_email: groupTwo.responsavel_grupo_email,
         email_acesso_grupo: groupTwo.email_acesso_grupo,
       }),
+      undefined,
+      { kind: "authenticated", email: "admin@example.com" },
     );
   });
 
@@ -393,9 +395,9 @@ describe("Server Action de grupos", () => {
         nome: "vago",
         data_inicio: "",
       }),
-    ]);
+    ], undefined, { kind: "authenticated", email: "admin@example.com" });
     expect(mocks.redirect).toHaveBeenCalledWith(
-      `/admin/grupos/${groupTwo.grupo_id}?status=saved-mesa-missing-names`,
+      `/admin/grupos/${groupTwo.grupo_id}?status=saved`,
     );
   });
 
@@ -423,9 +425,9 @@ describe("Server Action de grupos", () => {
         nome: "vago",
         data_inicio: "",
       }),
-    ]);
+    ], undefined, { kind: "authenticated", email: "admin@example.com" });
     expect(mocks.redirect).toHaveBeenCalledWith(
-      `/admin/grupos/${groupTwo.grupo_id}?status=saved-mesa-missing-names`,
+      `/admin/grupos/${groupTwo.grupo_id}?status=saved`,
     );
   });
 
@@ -450,6 +452,8 @@ describe("Server Action de grupos", () => {
     expect(mocks.saveGrupoServidoresMesa).toHaveBeenCalledWith(
       groupTwo.grupo_id,
       [expect.objectContaining({ encargo: "RSG", nome: "Carlos" })],
+      undefined,
+      { kind: "authenticated", email: "admin@example.com" },
     );
     expect(mocks.redirect).toHaveBeenCalledWith(
       `/admin/grupos/${groupTwo.grupo_id}?status=saved`,
@@ -475,6 +479,8 @@ describe("Server Action de grupos", () => {
         nome: "Carlos",
         data_inicio: "2026-08-03",
       }),
+      undefined,
+      { kind: "authenticated", email: "admin@example.com" },
     );
   });
 
@@ -491,6 +497,8 @@ describe("Server Action de grupos", () => {
     expect(mocks.saveGrupoServidorMesa).toHaveBeenCalledWith(
       groupTwo.grupo_id,
       expect.objectContaining({ nome: "Vago", data_inicio: "" }),
+      undefined,
+      { kind: "authenticated", email: "admin@example.com" },
     );
   });
 
@@ -516,6 +524,8 @@ describe("Server Action de grupos", () => {
     expect(mocks.deactivateGrupoServidorMesa).toHaveBeenCalledWith(
       groupTwo.grupo_id,
       "77777777-7777-4777-8777-777777777777",
+      undefined,
+      { kind: "authenticated", email: "admin@example.com" },
     );
     expect(mocks.saveGrupoServidoresMesa).not.toHaveBeenCalled();
   });
@@ -540,12 +550,16 @@ describe("Server Action de grupos", () => {
         grupo_id: groupTwo.grupo_id,
         ativo: false,
       }),
+      undefined,
+      { kind: "authenticated", email: "admin@example.com" },
     );
     expect(mocks.saveGrupoHorario).toHaveBeenCalledWith(
       expect.objectContaining({
         horario_id: groupTwoSchedule.horario_id,
         ativo: false,
       }),
+      undefined,
+      { kind: "authenticated", email: "admin@example.com" },
     );
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/admin/grupos");
     expect(mocks.revalidatePath).toHaveBeenCalledWith(`/admin/grupos/${groupTwo.grupo_id}`);
@@ -574,6 +588,8 @@ describe("Server Action de grupos", () => {
         grupo_id: inactiveGroup.grupo_id,
         ativo: true,
       }),
+      undefined,
+      { kind: "authenticated", email: "admin@example.com" },
     );
     expect(mocks.saveGrupoHorario).not.toHaveBeenCalled();
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/admin/grupos");
@@ -624,6 +640,8 @@ describe("Server Action de grupos", () => {
         hora_inicio: groupTwoSchedule.hora_inicio,
         ativo: true,
       }),
+      undefined,
+      { kind: "authenticated", email: "admin@example.com" },
     );
     expect(mocks.redirect).toHaveBeenCalledWith(
       `/admin/grupos/${duplicatedGroup.grupo_id}?status=created`,
@@ -674,7 +692,7 @@ describe("Server Action de grupos", () => {
 
     expect(mocks.deleteGrupoHorarios).toHaveBeenCalledWith([
       groupTwoSchedule.horario_id,
-    ]);
+    ], groupTwo.grupo_id, { kind: "authenticated", email: "admin@example.com" });
     expect(mocks.saveGrupoHorario).not.toHaveBeenCalledWith(
       expect.objectContaining({
         horario_id: groupTwoSchedule.horario_id,

@@ -5,8 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useActionState, useCallback, useEffect, useRef, useState } from "react";
 import {
   faArrowLeft,
-  faClock,
-  faFileLines,
+  faCircleInfo,
   faFloppyDisk,
   faPenToSquare,
   faPlus,
@@ -15,9 +14,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { Grupo, GrupoHorario } from "@/domain/entities";
-import { fusoHorarioMapping, plataformaMapping } from "@/domain/enums";
+import { plataformaMapping } from "@/domain/enums";
 import {
-  DEFAULT_MESA_OFFICES,
+  KNOWN_MESA_OFFICES,
   isVacantMesaName,
 } from "@/domain/grupo-servidores-mesa";
 import type { GrupoServidorMesa } from "@/domain/schemas";
@@ -39,6 +38,7 @@ const emptyGroup: Grupo = {
   grupo_nome: "",
   ordem: 1,
   ativo: true,
+  revisao_atas_ativa: false,
   responsavel_grupo_nome: "",
   responsavel_grupo_email: "",
   email_acesso_grupo: "",
@@ -52,18 +52,94 @@ const emptyGroup: Grupo = {
   updated_at: new Date(0).toISOString(),
 };
 
-const MESA_MISSING_NAMES_NOTICE =
-  "Você não adicionou os nomes dos encargos de RSG, RSG Suplente, Secretário e Tesoureiro. Você poderá voltar a qualquer momento para completar essas informações.";
+function ScheduleSectionHeading() {
+  return (
+    <div className="schedule-section-heading">
+      <h2>Horários de Reunião</h2>
+      <details
+        className="schedule-time-help"
+        onMouseEnter={(event) => { event.currentTarget.open = true; }}
+        onMouseLeave={(event) => {
+          if (!event.currentTarget.contains(document.activeElement)) {
+            event.currentTarget.open = false;
+          }
+        }}
+        onFocus={(event) => { event.currentTarget.open = true; }}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) {
+            event.currentTarget.open = false;
+          }
+        }}
+      >
+        <summary aria-label="Informações sobre o horário da agenda">
+          <FontAwesomeIcon icon={faCircleInfo} aria-hidden="true" />
+        </summary>
+        <p>Os horários desta agenda são informados no horário de Brasília (UTC−03:00).</p>
+      </details>
+    </div>
+  );
+}
+
+function ReviewSettingField({
+  enabled,
+  disabled = false,
+}: {
+  enabled: boolean;
+  disabled?: boolean;
+}) {
+  return (
+    <label className="review-setting-field">
+      <span className="field-label-with-help">
+        <span>Revisão de Atas</span>
+        <details
+          className="schedule-time-help review-setting-help"
+          onMouseEnter={(event) => { event.currentTarget.open = true; }}
+          onMouseLeave={(event) => {
+            if (!event.currentTarget.contains(document.activeElement)) {
+              event.currentTarget.open = false;
+            }
+          }}
+          onFocus={(event) => { event.currentTarget.open = true; }}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) {
+              event.currentTarget.open = false;
+            }
+          }}
+        >
+          <summary aria-label="Informações sobre a revisão de atas">
+            <FontAwesomeIcon icon={faCircleInfo} aria-hidden="true" />
+          </summary>
+          <p>
+            Quando ativada, novas atas ficam pendentes e só entram nos relatórios depois de
+            aprovadas pelo responsável ou administrador. Desativada (padrão), são aprovadas
+            automaticamente. Alterar esta opção não muda atas já enviadas.
+          </p>
+        </details>
+      </span>
+      <select
+        name="revisao_atas_ativa"
+        defaultValue={enabled ? "on" : ""}
+        disabled={disabled}
+      >
+        <option value="on">Aprovação ativada</option>
+        <option value="">Aprovação desativada (padrão)</option>
+      </select>
+      {disabled && (
+        <input type="hidden" name="revisao_atas_ativa" value={enabled ? "on" : ""} />
+      )}
+    </label>
+  );
+}
 
 type MesaServerDraft = {
   clientId: string;
   grupo_servidor_mesa_id?: string;
   encargo: string;
+  encargoOutro: boolean;
   nome: string;
   data_inicio: string;
   ativo: boolean;
   ordem: number;
-  fixed: boolean;
 };
 
 function clientId() {
@@ -73,42 +149,23 @@ function clientId() {
 function mesaDraftsFrom(
   servidores: readonly GrupoServidorMesa[],
 ): MesaServerDraft[] {
-  const active = servidores.filter((item) => item.ativo);
-  const byOffice = new Map(active.map((item) => [item.encargo, item]));
-  const fixed = DEFAULT_MESA_OFFICES.map((encargo, index) => {
-    const existing = byOffice.get(encargo);
-    return {
-      clientId: existing?.grupo_servidor_mesa_id ?? `fixed-${encargo}`,
-      grupo_servidor_mesa_id: existing?.grupo_servidor_mesa_id,
-      encargo,
-      nome: existing?.nome || "vago",
-      data_inicio: existing?.data_inicio ?? "",
-      ativo: true,
-      ordem: index + 1,
-      fixed: true,
-    };
-  });
-  const extras = active
-    .filter(
-      (item) =>
-        !DEFAULT_MESA_OFFICES.some((defaultOffice) => defaultOffice === item.encargo),
-    )
+  return servidores
+    .filter((item) => item.ativo)
     .sort(
       (first, second) =>
         first.ordem - second.ordem ||
         first.encargo.localeCompare(second.encargo, "pt-BR"),
     )
-    .map((item, index) => ({
+    .map((item) => ({
       clientId: item.grupo_servidor_mesa_id,
       grupo_servidor_mesa_id: item.grupo_servidor_mesa_id,
       encargo: item.encargo,
+      encargoOutro: !KNOWN_MESA_OFFICES.some((office) => office === item.encargo),
       nome: item.nome || "vago",
       data_inicio: item.data_inicio,
       ativo: true,
-      ordem: DEFAULT_MESA_OFFICES.length + index + 1,
-      fixed: false,
+      ordem: item.ordem,
     }));
-  return [...fixed, ...extras];
 }
 
 function mesaPayloadFromDrafts(drafts: readonly MesaServerDraft[]) {
@@ -141,19 +198,6 @@ function mesaPayloadFromPersisted(servidores: readonly GrupoServidorMesa[]) {
       ordem: index + 1,
     }))
     .filter((item) => item.encargo);
-}
-
-function hasMissingDefaultMesaNames(payloadText: string) {
-  try {
-    const payload = JSON.parse(payloadText) as Array<{ encargo?: string; nome?: string }>;
-    return DEFAULT_MESA_OFFICES.some((encargo) =>
-      payload.some(
-        (item) => item.encargo === encargo && isVacantMesaName(item.nome ?? ""),
-      ),
-    );
-  } catch {
-    return false;
-  }
 }
 
 function displayMesaDate(value: string) {
@@ -197,7 +241,7 @@ function MesaServersEditor({
 
   function updateDraft(
     clientId: string,
-    patch: Partial<Omit<MesaServerDraft, "clientId" | "fixed">>,
+    patch: Partial<Omit<MesaServerDraft, "clientId">>,
   ) {
     setDrafts((current) =>
       current.map((item) =>
@@ -230,18 +274,18 @@ function MesaServersEditor({
                 {
                   clientId: clientId(),
                   encargo: "",
+                  encargoOutro: false,
                   nome: "vago",
                   data_inicio: "",
                   ativo: true,
-                  ordem: current.length + 1,
-                  fixed: false,
+                  ordem: Math.max(0, ...current.map((item) => item.ordem)) + 1,
                 },
               ])
             }
           >
             <span className="button-content">
               <FontAwesomeIcon icon={faPlus} />
-              Adicionar encargo
+              Adicionar servidores
             </span>
           </button>
         )}
@@ -255,7 +299,7 @@ function MesaServersEditor({
                 <tr>
                   <th>Encargo</th>
                   <th>Servidor</th>
-                  <th>Data de início</th>
+                  <th>Desde</th>
                 </tr>
               </thead>
               <tbody>
@@ -295,72 +339,92 @@ function MesaServersEditor({
           </div>
         </div>
       ) : (
-      <div className="mesa-servers-grid">
-        <div className="mesa-server-column-labels" aria-hidden="true">
-          <span>Encargo</span>
-          <span>Nome</span>
-          <span>Data de início</span>
-        </div>
-        {drafts.map((item, index) => {
-          const vacant = isVacantMesaName(item.nome);
-          const rowName = item.encargo || `encargo ${index + 1}`;
-          return (
-            <div
-              className={
-                item.fixed
-                  ? "mesa-server-row mesa-server-row-fixed"
-                  : "mesa-server-row"
-              }
-              key={item.clientId}
-            >
-              <div className="mesa-server-control">
-                <input
-                  required
-                  value={item.encargo}
-                  readOnly={item.fixed || disabled}
-                  aria-label={`Encargo da mesa ${index + 1}`}
-                  onChange={(event) =>
-                    updateDraft(item.clientId, { encargo: event.target.value })
-                  }
-                />
-              </div>
-              <div className="mesa-server-control">
-                <input
-                  value={item.nome}
-                  readOnly={disabled}
-                  className={vacant ? "mesa-vacant-input" : undefined}
-                  aria-label={`Nome do servidor de ${rowName}`}
-                  onFocus={(event) => {
-                    if (vacant) event.currentTarget.select();
-                  }}
-                  onClick={(event) => {
-                    if (vacant) event.currentTarget.select();
-                  }}
-                  onChange={(event) => {
-                    const nome = event.target.value;
-                    updateDraft(item.clientId, {
-                      nome,
-                      data_inicio: isVacantMesaName(nome) ? "" : item.data_inicio,
-                    });
-                  }}
-                />
-              </div>
-              <div className="mesa-server-control">
-                <input
-                  type="date"
-                  value={vacant ? "" : item.data_inicio}
-                  disabled={disabled || vacant}
-                  required={!vacant}
-                  className={vacant ? "mesa-vacant-date" : undefined}
-                  aria-label={`Data de início de ${rowName}`}
-                  onChange={(event) =>
-                    updateDraft(item.clientId, {
-                      data_inicio: event.target.value,
-                    })
-                  }
-                />
-              </div>
-              {!item.fixed && (
+        <div className="mesa-servers-grid">
+          <div className="mesa-server-column-labels" aria-hidden="true">
+            <span>Encargo</span>
+            <span>Nome</span>
+            <span>Desde</span>
+          </div>
+          {drafts.map((item, index) => {
+            const vacant = isVacantMesaName(item.nome);
+            const rowName = item.encargo || `encargo ${index + 1}`;
+            return (
+              <div
+                className="mesa-server-row"
+                key={item.clientId}
+              >
+                <div className="mesa-server-control">
+                  <select
+                    required
+                    value={
+                      !item.encargoOutro
+                        ? item.encargo
+                        : "outro"
+                    }
+                    disabled={disabled}
+                    aria-label={`Encargo da mesa ${index + 1}`}
+                    onChange={(event) => {
+                      const choice = event.target.value;
+                      updateDraft(item.clientId, {
+                        encargoOutro: choice === "outro",
+                        encargo: choice === "outro"
+                          ? item.encargoOutro ? item.encargo : ""
+                          : choice,
+                      });
+                    }}
+                  >
+                    <option value="" disabled>Selecione um encargo</option>
+                    {KNOWN_MESA_OFFICES.map((office) => (
+                      <option key={office} value={office}>{office}</option>
+                    ))}
+                    <option value="outro">Outro</option>
+                  </select>
+                  {item.encargoOutro && (
+                    <input
+                      required
+                      value={item.encargo}
+                      readOnly={disabled}
+                      aria-label={`Nome do encargo ${index + 1}`}
+                      onChange={(event) => updateDraft(item.clientId, { encargo: event.target.value })}
+                    />
+                  )}
+                </div>
+                <div className="mesa-server-control">
+                  <input
+                    value={item.nome}
+                    readOnly={disabled}
+                    className={vacant ? "mesa-vacant-input" : undefined}
+                    aria-label={`Nome do servidor de ${rowName}`}
+                    onFocus={(event) => {
+                      if (vacant) event.currentTarget.select();
+                    }}
+                    onClick={(event) => {
+                      if (vacant) event.currentTarget.select();
+                    }}
+                    onChange={(event) => {
+                      const nome = event.target.value;
+                      updateDraft(item.clientId, {
+                        nome,
+                        data_inicio: isVacantMesaName(nome) ? "" : item.data_inicio,
+                      });
+                    }}
+                  />
+                </div>
+                <div className="mesa-server-control">
+                  <input
+                    type="date"
+                    value={vacant ? "" : item.data_inicio}
+                    disabled={disabled || vacant}
+                    required={!vacant}
+                    className={vacant ? "mesa-vacant-date" : undefined}
+                    aria-label={`Desde de ${rowName}`}
+                    onChange={(event) =>
+                      updateDraft(item.clientId, {
+                        data_inicio: event.target.value,
+                      })
+                    }
+                  />
+                </div>
                 <button
                   type="button"
                   className="danger-icon-button mesa-remove-button"
@@ -375,11 +439,10 @@ function MesaServersEditor({
                 >
                   <FontAwesomeIcon icon={faTrashCan} />
                 </button>
-              )}
-            </div>
-          );
-        })}
-      </div>
+              </div>
+            );
+          })}
+        </div>
       )}
     </section>
   );
@@ -463,7 +526,6 @@ export function GroupEditor({
   const [mesaEditorVersion, setMesaEditorVersion] = useState(0);
   const [responsavelFormMessage, setResponsavelFormMessage] = useState("");
   const [mesaFormMessage, setMesaFormMessage] = useState("");
-  const [mesaInfoMessage, setMesaInfoMessage] = useState("");
   const responsavelFormRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
   const pathname = usePathname();
@@ -496,14 +558,8 @@ export function GroupEditor({
   const dismissStatus = useCallback(() => {
     if (status) router.replace(pathname, { scroll: false });
   }, [pathname, router, status]);
-  const activeSchedulesCount = horarios.filter((horario) => horario.ativo).length;
   const formId =
     variant === "responsavel" ? "responsavel-configuracoes-form" : undefined;
-  const mesaInformativeNotice =
-    mesaInfoMessage || status === "saved-mesa-missing-names"
-      ? MESA_MISSING_NAMES_NOTICE
-      : "";
-
   function ataLinkControls() {
     if (!publicLink) {
       return (
@@ -533,7 +589,7 @@ export function GroupEditor({
         <CopyableLink
           value={publicLink}
           displayValue={publicLink}
-          label="Link para preenchimento da ata"
+          label="Link da ata"
           trailingAction={
             <button
               type="submit"
@@ -555,7 +611,7 @@ export function GroupEditor({
 
   function currentResponsavelPayload(formData: FormData) {
     return {
-      grupo_nome: String(formData.get("grupo_nome") ?? "").trim(),
+      revisao_atas_ativa: String(formData.get("revisao_atas_ativa") ?? "") === "on",
       acesso_plataforma: String(formData.get("acesso_plataforma") ?? "").trim(),
       plataforma: String(formData.get("plataforma") ?? ""),
       fuso_horario: String(formData.get("fuso_horario") ?? ""),
@@ -564,7 +620,7 @@ export function GroupEditor({
 
   function originalResponsavelPayload() {
     return {
-      grupo_nome: current.grupo_nome.trim(),
+      revisao_atas_ativa: current.revisao_atas_ativa === true,
       acesso_plataforma: current.acesso_plataforma.trim(),
       plataforma: current.plataforma,
       fuso_horario: current.fuso_horario,
@@ -588,14 +644,12 @@ export function GroupEditor({
   function startResponsavelEditing() {
     setResponsavelFormMessage("");
     setMesaFormMessage("");
-    setMesaInfoMessage("");
     setResponsavelEditing(true);
   }
 
   function startMesaEditing() {
     setResponsavelFormMessage("");
     setMesaFormMessage("");
-    setMesaInfoMessage("");
     setMesaEditing(true);
   }
 
@@ -603,7 +657,6 @@ export function GroupEditor({
     responsavelFormRef.current?.reset();
     setResponsavelFormMessage("");
     setMesaFormMessage("");
-    setMesaInfoMessage("");
     setResponsavelEditing(false);
     setMesaEditing(false);
     setMesaEditorVersion((currentVersion) => currentVersion + 1);
@@ -641,12 +694,6 @@ export function GroupEditor({
     }
     setResponsavelFormMessage("");
     setMesaFormMessage("");
-    const mesaPayload = String(formData.get("servidores_mesa") ?? "");
-    if (mesaSubmit && group && hasMissingDefaultMesaNames(mesaPayload)) {
-      setMesaInfoMessage(MESA_MISSING_NAMES_NOTICE);
-    } else if (mesaSubmit && group) {
-      setMesaInfoMessage("");
-    }
   }
 
   if (variant === "responsavel") {
@@ -654,34 +701,13 @@ export function GroupEditor({
       <div className="responsavel-config-page">
         <header className="responsavel-page-header">
           <div>
-            <p className="eyebrow">Responsável</p>
+            <p className="eyebrow">Configurações</p>
             <h1>GRUPO {current.grupo_nome.toLocaleUpperCase("pt-BR")}</h1>
             <p className="responsavel-page-description">
               Gerencie os dados, acessos e horários do grupo.
             </p>
           </div>
         </header>
-
-        <section className="summary-cards" aria-label="Resumo das configurações do grupo">
-          <dl className="summary-card">
-            <span className="summary-icon summary-icon-active" aria-hidden="true">
-              <FontAwesomeIcon icon={faClock} />
-            </span>
-            <div>
-              <dt>Horários ativos</dt>
-              <dd>{activeSchedulesCount}</dd>
-            </div>
-          </dl>
-          <dl className="summary-card">
-            <span className="summary-icon" aria-hidden="true">
-              <FontAwesomeIcon icon={faFileLines} />
-            </span>
-            <div>
-              <dt>Última reunião antes do sistema</dt>
-              <dd>{current.ultima_reuniao_anterior}</dd>
-            </div>
-          </dl>
-        </section>
 
         <form
           id={formId}
@@ -691,6 +717,7 @@ export function GroupEditor({
           onSubmit={submitResponsavelForm}
         >
           <input type="hidden" name="grupo_id" value={current.grupo_id} />
+          <input type="hidden" name="grupo_nome" value={current.grupo_nome} />
           {!state?.error && successMessage && (
             <TimedMessage
               key={`success-${successMessage}`}
@@ -713,17 +740,12 @@ export function GroupEditor({
               )}
               <h2>Dados do grupo</h2>
               <div className="form-grid responsavel-config-grid">
+                <ReviewSettingField
+                  enabled={current.revisao_atas_ativa === true}
+                  disabled={!responsavelEditing}
+                />
                 <label>
-                  Nome
-                  <input
-                    name="grupo_nome"
-                    required
-                    defaultValue={current.grupo_nome}
-                    readOnly={!responsavelEditing}
-                  />
-                </label>
-                <label>
-                  Identificador/link da plataforma
+                  Plataforma
                   <input
                     name="acesso_plataforma"
                     required
@@ -740,17 +762,9 @@ export function GroupEditor({
                   </select>
                   {!responsavelEditing && <input type="hidden" name="plataforma" value={current.plataforma} />}
                 </label>
+                <input type="hidden" name="fuso_horario" value={current.fuso_horario} />
                 <label>
-                  Fuso horário
-                  <select name="fuso_horario" defaultValue={current.fuso_horario} disabled={!responsavelEditing}>
-                    {fusoHorarioMapping.codes.map((code) => (
-                      <option key={code} value={code}>{fusoHorarioMapping.toSheet(code)}</option>
-                    ))}
-                  </select>
-                  {!responsavelEditing && <input type="hidden" name="fuso_horario" value={current.fuso_horario} />}
-                </label>
-                <label>
-                  E-mail de login do grupo
+                  E-mail
                   <input
                     name="email_acesso_grupo"
                     type="email"
@@ -760,6 +774,15 @@ export function GroupEditor({
                   />
                 </label>
                 {ataLinkControls()}
+                <label>
+                  Última reunião antes do sistema
+                  <input
+                    type="number"
+                    value={current.ultima_reuniao_anterior}
+                    readOnly
+                    aria-readonly="true"
+                  />
+                </label>
               </div>
             </section>
             {responsavelEditing ? (
@@ -803,7 +826,6 @@ export function GroupEditor({
                 grupoId={current.grupo_id}
                 servidores={servidoresMesa ?? []}
                 disabled={!mesaEditing || mesaPending}
-                informativeNotice={mesaInformativeNotice}
                 errorNotice={mesaState?.error ?? mesaFormMessage}
                 summaryMode
                 startDisabled={responsavelEditing || mesaPending}
@@ -860,7 +882,7 @@ export function GroupEditor({
 
         {group && (
           <section className="card responsavel-config-panel responsavel-config-section responsavel-schedules-section">
-            <h2>Horários do grupo</h2>
+            <ScheduleSectionHeading />
             <GroupSchedulesEditor grupoId={group.grupo_id} horarios={horarios} />
           </section>
         )}
@@ -908,8 +930,9 @@ export function GroupEditor({
               Nome
               <input name="grupo_nome" required defaultValue={current.grupo_nome} />
             </label>
+            <ReviewSettingField enabled={current.revisao_atas_ativa === true} />
             <label>
-              Identificador/link da plataforma
+              Plataforma
               <input
                 name="acesso_plataforma"
                 required
@@ -924,14 +947,7 @@ export function GroupEditor({
                 ))}
               </select>
             </label>
-            <label>
-              Fuso horário
-              <select name="fuso_horario" defaultValue={current.fuso_horario}>
-                {fusoHorarioMapping.codes.map((code) => (
-                  <option key={code} value={code}>{fusoHorarioMapping.toSheet(code)}</option>
-                ))}
-              </select>
-            </label>
+            <input type="hidden" name="fuso_horario" value={current.fuso_horario} />
             {canManageAccess && (
               <label>
                 Grupo ativo
@@ -958,7 +974,7 @@ export function GroupEditor({
           {canManageAccess && (
             <div className="form-grid">
               <label>
-                E-mail de login do grupo
+                E-mail
                 <input
                   name="email_acesso_grupo"
                   type="email"
@@ -1021,7 +1037,7 @@ export function GroupEditor({
 
       {group && (
         <section className="card form-section">
-          <h2>Horários do grupo</h2>
+          <ScheduleSectionHeading />
           <GroupSchedulesEditor grupoId={group.grupo_id} horarios={horarios} />
         </section>
       )}

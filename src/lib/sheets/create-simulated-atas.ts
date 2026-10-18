@@ -20,7 +20,8 @@ import {
 } from "@/domain/submission";
 import type { Grupo, GrupoHorario } from "@/domain/schemas";
 import { SHEET_HEADERS, type SheetName } from "./contract";
-import { parseRows, rowsToObjects, type SheetCell } from "./rows";
+import { rowsToCompatibleObjects, sheetReadRange } from "./contract-v2";
+import { parseRows, type SheetCell } from "./rows";
 import {
   sheetAtaBusinessKeySchema,
   sheetAtaIdentifiersSchema,
@@ -132,7 +133,7 @@ export async function readSimulationSheetSnapshot(
   const [valuesResponse, metadataResponse] = await Promise.all([
     client.spreadsheets.values.batchGet({
       spreadsheetId,
-      ranges: names.map((name) => `${name}!A:Z`),
+      ranges: names.map(sheetReadRange),
       valueRenderOption: "UNFORMATTED_VALUE",
       dateTimeRenderOption: "SERIAL_NUMBER",
     }),
@@ -155,13 +156,13 @@ export async function readSimulationSheetSnapshot(
   const objects = Object.fromEntries(
     names.map((name) => [
       name,
-      rowsToObjects(
-        SHEET_HEADERS[name],
+      rowsToCompatibleObjects(
+        name,
         values[name],
         name === "grupos" ? { allowMissingTrailingHeaders: 3 } : undefined,
       ),
     ]),
-  ) as Record<SheetName, ReturnType<typeof rowsToObjects>>;
+  ) as Record<SheetName, ReturnType<typeof rowsToCompatibleObjects>>;
   const groups = requireValidRows(
     "grupos",
     parseRows("grupos", sheetGrupoSchema, objects.grupos, sheetGrupoToDomain),

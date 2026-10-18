@@ -14,5 +14,5 @@ export async function ensureSecureAtaLinkToken(
   return saveGrupo({
     ...group,
     link_formulario_ata: uniqueAtaLinkToken(groups, group.grupo_id),
-  });
+  }, undefined, { kind: "operational_link_repair" });
 }

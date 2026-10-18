@@ -1,0 +1,207 @@
+- generic [ref=e1]:
+  - iframe [aria-hidden] [ref=e2]
+  - generic [ref=e3]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - link "Google Apps Script" [ref=e580] [cursor=pointer]:
+          - /url: /home
+          - generic [ref=e12]: Apps Script
+        - generic [ref=e13]:
+          - generic [ref=e16]:
+            - button "Renomear" [ref=e581] [cursor=pointer]: GS Mapeamento | Gateway F1
+            - generic [aria-hidden] [ref=e21]: cloud_done
+          - generic [ref=e24]:
+            - button [active] [ref=e582] [cursor=pointer]:
+              - generic [ref=e32]:
+                - text: Implantar
+                - generic [aria-hidden] [ref=e33]: 
+            - button "Compartilhar este projeto com outros" [ref=e583] [cursor=pointer]:
+              - generic [aria-hidden] [ref=e38]: person_add
+            - button "Suporte" [ref=e584] [cursor=pointer]:
+              - generic [aria-hidden] [ref=e43]: help_outline
+        - generic [ref=e45]:
+          - button "Google Apps" [ref=e585] [cursor=pointer]
+          - 'button "Conta do Google: Christian Gonçalves (chrisapppg1@gmail.com)" [ref=e586] [cursor=pointer]'
+    - generic [ref=e59]:
+      - navigation "Páginas do projeto do Apps Script" [ref=e587]:
+        - link "Visão geral" [ref=e588] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e64]: info_outline
+        - link "Editor" [ref=e589] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e68]: code
+        - link "Histórico do projeto" [ref=e590] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e72]: history
+        - link "Acionadores" [ref=e591] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e76]: alarm
+        - link "Execuções" [ref=e592] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e80]: playlist_play
+        - link "Configurações do projeto" [ref=e593] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e84]: settings
+      - generic [ref=e86]:
+        - heading "Editor" [level=1] [ref=e594]
+        - generic [ref=e88]:
+          - generic [ref=e90]:
+            - generic [ref=e91]:
+              - heading "Arquivos" [level=2] [ref=e595]
+              - generic [ref=e94]:
+                - button "Classificar os arquivos por ordem alfabética" [disabled] [ref=e596]:
+                  - generic [aria-hidden] [ref=e99]: sort_by_alpha
+                - button "Adicionar um arquivo" [ref=e597] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=e104]: add
+            - listbox "Arquivos do projeto" [ref=e598]:
+              - option "Código.gs" [ref=e599] [cursor=pointer]:
+                - button [ref=e601]:
+                  - button "Menu de operações de arquivos para Código.gs." [ref=e602]:
+                    - generic [aria-hidden] [ref=e113]: 
+            - generic [ref=e114]:
+              - heading "Bibliotecas" [level=2] [ref=e603]
+              - button "Adicionar uma biblioteca" [ref=e604] [cursor=pointer]:
+                - generic [aria-hidden] [ref=e121]: add
+            - generic [ref=e122]:
+              - heading "Serviços" [level=2] [ref=e605]
+              - button "Adicionar um serviço" [ref=e606] [cursor=pointer]:
+                - generic [aria-hidden] [ref=e129]: add
+            - listbox "Dependências do serviço" [ref=e607]:
+              - option "Sheets Menu de operações para Sheets." [ref=e608] [cursor=pointer]:
+                - generic "Sheets" [ref=e609]
+                - button [ref=e610]:
+                  - button "Menu de operações para Sheets." [ref=e611]:
+                    - generic [aria-hidden] [ref=e138]: 
+          - separator "Redimensionar painéis" [ref=e612]
+          - generic [ref=e145]:
+            - region [ref=e146]:
+              - generic [ref=e147]:
+                - generic [ref=e148]:
+                  - generic [ref=e151]:
+                    - button "Desfazer edição de código" [disabled]:
+                      - generic [aria-hidden]: undo
+                  - generic [ref=e154]:
+                    - button "Refazer edição de código" [disabled]:
+                      - generic [aria-hidden]: redo
+                - generic [ref=e158]:
+                  - button "Salvar projeto no Drive" [disabled]
+                - generic [ref=e159]:
+                  - button "Executar a função selecionada" [ref=e613]:
+                    - generic [aria-hidden] [ref=e166]: play_arrow
+                    - generic [ref=e167]: Executar
+                  - button "Depurar a função selecionada" [ref=e614]:
+                    - generic [ref=e177]: Depuração
+                  - listbox "Selecione a função para executar" [ref=e615] [cursor=pointer]:
+                    - option "doPost" [selected] [ref=e616]
+                - button "Abrir o painel de registros de execução" [ref=e617]:
+                  - generic [ref=e189]: Registro de execução
+            - generic [ref=e191]:
+              - main [ref=e195]:
+                - generic [ref=e196]: .
+                - generic [ref=e198]:
+                  - iframe [ref=e199]
+                  - code [ref=e201]:
+                    - generic [ref=e202]:
+                      - generic [aria-hidden] [ref=e205]:
+                        - generic [ref=e206]:
+                          - generic [ref=e208] [cursor=pointer]: 
+                          - generic [ref=e209]: "1"
+                        - generic [ref=e210]: "2"
+                        - generic [ref=e212]: "3"
+                        - generic [ref=e214]: "4"
+                        - generic [ref=e216]: "5"
+                        - generic [ref=e218]: "6"
+                        - generic [ref=e220]: "7"
+                        - generic [ref=e222]: "8"
+                        - generic [ref=e224]: "9"
+                        - generic [ref=e226]: "10"
+                        - generic [ref=e228]: "11"
+                        - generic [ref=e230]: "12"
+                        - generic [ref=e232]: "13"
+                        - generic [ref=e234]:
+                          - generic [ref=e235] [cursor=pointer]: 
+                          - generic [ref=e236]: "14"
+                        - generic [ref=e237]: "15"
+                        - generic [ref=e239]: "16"
+                        - generic [ref=e241]: "17"
+                        - generic [ref=e243]: "18"
+                        - generic [ref=e245]: "19"
+                        - generic [ref=e247]: "20"
+                        - generic [ref=e249]: "21"
+                        - generic [ref=e251]: "22"
+                        - generic [ref=e253]: "23"
+                        - generic [ref=e255]: "24"
+                        - generic [ref=e257]: "25"
+                        - generic [ref=e259]: "26"
+                        - generic [ref=e261]: "27"
+                        - generic [ref=e263]:
+                          - generic [ref=e264] [cursor=pointer]: 
+                          - generic [ref=e265]: "28"
+                        - generic [ref=e266]: "29"
+                        - generic [ref=e268]: "30"
+                        - generic [ref=e270]: "31"
+                        - generic [ref=e272]: "32"
+                        - generic [ref=e274]: "33"
+                        - generic [ref=e276]: "34"
+                        - generic [ref=e278]: "35"
+                        - generic [ref=e280]: "36"
+                        - generic [ref=e282]: "37"
+                        - generic [ref=e284]: "38"
+                        - generic [ref=e286]: "39"
+                        - generic [ref=e288]: "40"
+                        - generic [ref=e290]: "41"
+                        - generic [ref=e292]: "42"
+                        - generic [ref=e294]: "43"
+                        - generic [ref=e296]:
+                          - generic [ref=e297] [cursor=pointer]: 
+                          - generic [ref=e298]: "44"
+                      - generic [aria-hidden] [ref=e377]:
+                        - generic [ref=e378]: const OPERATION_HEADERS = [
+                        - generic [ref=e380]: "\"operacao_id\","
+                        - generic [ref=e382]: "\"hash_solicitacao\","
+                        - generic [ref=e384]: "\"tipo\","
+                        - generic [ref=e386]: "\"ator\","
+                        - generic [ref=e388]: "\"estado\","
+                        - generic [ref=e390]: "\"criada_em\","
+                        - generic [ref=e392]: "\"concluida_em\","
+                        - generic [ref=e394]: "\"resultado_ref\","
+                        - generic [ref=e396]: "];"
+                        - generic [ref=e398]: const MAX_ATAS_PER_OPERATION = 50;
+                        - generic [ref=e400]: const MAX_OPERATION_PAYLOAD_BYTES = 1572864;
+                        - generic [ref=e402]: const MAX_CLOCK_SKEW_MS = 300000;
+                        - generic [ref=e404]: const CONTRACT_SHEETS = new Set([
+                        - generic [ref=e406]: "\"grupos\","
+                        - generic [ref=e408]: "\"usuarios_grupo\","
+                        - generic [ref=e410]: "\"grupo_horarios\","
+                        - generic [ref=e412]: "\"grupo_servidores_mesa\","
+                        - generic [ref=e414]: "\"atas\","
+                        - generic [ref=e416]: "\"servidores\","
+                        - generic [ref=e418]: "\"participacao\","
+                        - generic [ref=e420]: "\"visitantes\","
+                        - generic [ref=e422]: "\"ingressos\","
+                        - generic [ref=e424]: "\"trocas_chaveiro\","
+                        - generic [ref=e426]: "\"grupo_plataformas\","
+                        - generic [ref=e428]: "\"operacoes\","
+                        - generic [ref=e430]: "]);"
+                        - generic [ref=e432]: "const SHEET_COLUMN_LIMITS = {"
+                        - generic [ref=e434]: "grupos: 16,"
+                        - generic [ref=e436]: "usuarios_grupo: 11,"
+                        - generic [ref=e438]: "grupo_horarios: 11,"
+                        - generic [ref=e440]: "grupo_servidores_mesa: 9,"
+                        - generic [ref=e442]: "atas: 30,"
+                        - generic [ref=e444]: "servidores: 7,"
+                        - generic [ref=e446]: "participacao: 8,"
+                        - generic [ref=e448]: "visitantes: 8,"
+                        - generic [ref=e450]: "ingressos: 7,"
+                        - generic [ref=e452]: "trocas_chaveiro: 5,"
+                        - generic [ref=e454]: "grupo_plataformas: 8,"
+                        - generic [ref=e456]: "};"
+                        - generic [ref=e459]: // Apps Script invokes this global web-app entry point by name.
+                        - generic [ref=e461]: // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        - generic [ref=e463]: "function doPost(event) {"
+                      - textbox "Editor content;Press Alt+F1 for Accessibility Options." [ref=e620]: const OPERATION_HEADERS = [ "operacao_id", "hash_solicitacao", "tipo", "ator", "estado", "criada_em", "concluida_em", "resultado_ref", ];
+              - tooltip [aria-hidden] [ref=e467]: Fechar registro de execução
+  - generic: URL do app da Web copiado
+  - generic [ref=e576]:
+    - alert
+    - alert
+    - complementary
+    - complementary
+  - dialog [aria-hidden] [ref=e577]:
+    - iframe [ref=e579]:
+      - region [ref=f5e3]: Acesso atualizado.
+  - generic: Implantar este projeto

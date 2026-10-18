@@ -1,0 +1,254 @@
+- generic [active] [ref=f3e1]:
+  - link "Skip to content":
+    - /url: "#geist-skip-nav"
+  - main [ref=f3e3]:
+    - generic [ref=f3e4]:
+      - generic [ref=f3e5]:
+        - generic [ref=f3e6]:
+          - generic [ref=f3e7]:
+            - generic [ref=f3e10]:
+              - link "christian-goncalves' projects Hobby" [ref=f3e11] [cursor=pointer]:
+                - /url: /christian-goncalves-projects
+                - generic [ref=f3e14]:
+                  - generic [ref=f3e15]: christian-goncalves' projects
+                  - generic [ref=f3e16]: Hobby
+              - button [ref=f3e18] [cursor=pointer]
+            - button "Find F" [ref=f3e23]:
+              - generic [ref=f3e25]:
+                - generic [ref=f3e29]: Find
+                - generic [ref=f3e30]: F
+          - navigation [ref=f3e34]:
+            - generic [ref=f3e38]:
+              - link "Overview" [ref=f3e39] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento
+              - link "Deployments" [ref=f3e44] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/deployments
+              - link "Logs" [ref=f3e50] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/logs
+              - link "Analytics" [ref=f3e59] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/analytics
+              - link "Speed Insights" [ref=f3e65] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/speed-insights
+              - link "Observability" [ref=f3e71] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/observability
+              - link "Firewall" [ref=f3e80] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/firewall
+              - link "CDN" [ref=f3e89] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/cdn
+              - separator [ref=f3e98]
+              - link "Environment Variables" [ref=f3e99] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/settings/environment-variables
+              - link "Domains" [ref=f3e105] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/settings/domains
+              - link "Connect" [ref=f3e111] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/connect
+              - link "Integrations" [ref=f3e120] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/settings/integrations
+              - link "Storage" [ref=f3e126] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/stores
+              - link "Flags" [ref=f3e132] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/flags
+              - link "Agent" [ref=f3e141] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/agent
+              - link "AI Gateway" [ref=f3e150] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/ai-gateway
+              - link "Sandboxes" [ref=f3e159] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/sandboxes
+              - link "Workflows" [ref=f3e168] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/workflows
+              - link "Images" [ref=f3e174] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/images
+              - link "Daemons" [ref=f3e180] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/daemons
+              - separator [ref=f3e189]
+              - link "Usage" [ref=f3e190] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/usage
+              - link "Support" [ref=f3e196] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/support
+              - link "Settings" [ref=f3e202] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/settings
+          - generic [ref=f3e213]:
+            - button "Avatar for christian-goncalves christian-goncalves" [ref=f3e214] [cursor=pointer]:
+              - img "Avatar for christian-goncalves" [ref=f3e215]:
+                - img "Avatar for christian-goncalves" [ref=f3e216]
+              - generic [ref=f3e217]: christian-goncalves
+            - button "8 unseen notifications" [ref=f3e517] [cursor=pointer]
+        - button [ref=f3e227] [cursor=pointer]
+      - generic [ref=f3e231]:
+        - generic [ref=f3e232]:
+          - generic [ref=f3e235]:
+            - link "gs-mapeamento" [ref=f3e236] [cursor=pointer]:
+              - /url: /christian-goncalves-projects/gs-mapeamento
+            - button [ref=f3e240] [cursor=pointer]
+            - link "Back to team view" [ref=f3e246] [cursor=pointer]:
+              - /url: /christian-goncalves-projects/~/deployments
+          - navigation "Breadcrumb" [ref=f3e250]:
+            - generic [ref=f3e251]:
+              - link "Deployments" [ref=f3e253] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/deployments
+              - generic [ref=f3e258]:
+                - generic [ref=f3e259]: FMrvcjz9C
+                - button "Copy ID" [ref=f3e263] [cursor=pointer]
+          - button "Vercel Agent is available on Pro" [ref=f3e273] [cursor=pointer]:
+            - generic [ref=f3e286]: Agent
+        - generic [ref=f3e288]:
+          - generic [ref=f3e290]:
+            - link "Deployment" [ref=f3e291] [cursor=pointer]:
+              - /url: /christian-goncalves-projects/gs-mapeamento/FMrvcjz9CV2zkq9FSGR5pXh3bqLU
+            - link "Logs" [ref=f3e292] [cursor=pointer]:
+              - /url: /christian-goncalves-projects/gs-mapeamento/FMrvcjz9CV2zkq9FSGR5pXh3bqLU/logs
+            - link "Resources" [ref=f3e293] [cursor=pointer]:
+              - /url: /christian-goncalves-projects/gs-mapeamento/FMrvcjz9CV2zkq9FSGR5pXh3bqLU/resources
+            - link "Source" [ref=f3e294] [cursor=pointer]:
+              - /url: /christian-goncalves-projects/gs-mapeamento/FMrvcjz9CV2zkq9FSGR5pXh3bqLU/source
+            - link "Open Graph" [ref=f3e295] [cursor=pointer]:
+              - /url: /christian-goncalves-projects/gs-mapeamento/FMrvcjz9CV2zkq9FSGR5pXh3bqLU/og
+          - generic [ref=f3e296]:
+            - generic [ref=f3e298]:
+              - generic [ref=f3e299]:
+                - heading "Deployment Details" [level=3] [ref=f3e301]
+                - generic [ref=f3e302]:
+                  - generic [ref=f3e303]:
+                    - button "Share" [ref=f3e304] [cursor=pointer]
+                    - link "Logs" [ref=f3e309] [cursor=pointer]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/logs?deploymentIds=dpl_FMrvcjz9CV2zkq9FSGR5pXh3bqLU
+                    - generic [ref=f3e314]:
+                      - link "Visit" [ref=f3e315] [cursor=pointer]:
+                        - /url: https://gs-mapeamento-ig7be8cyl-christian-goncalves-projects.vercel.app
+                      - button "Visit with" [ref=f3e317] [cursor=pointer]
+                  - button "Deployment Actions" [ref=f3e322] [cursor=pointer]
+              - generic [ref=f3e327]:
+                - link "Visit Deployment" [ref=f3e331] [cursor=pointer]:
+                  - /url: https://gs-mapeamento-ig7be8cyl-christian-goncalves-projects.vercel.app
+                - generic [ref=f3e333]:
+                  - generic [ref=f3e334]:
+                    - generic [ref=f3e335]:
+                      - generic [ref=f3e336]: Created
+                      - generic [ref=f3e337]:
+                        - img "github/christian-goncalves" [ref=f3e342] [cursor=pointer]:
+                          - img "github/christian-goncalves" [ref=f3e343]
+                        - generic [ref=f3e344]: christian-goncalves
+                        - generic [ref=f3e345] [cursor=pointer]: 3d ago
+                    - generic [ref=f3e347]:
+                      - generic [ref=f3e348]: Status
+                      - generic "This deployment is ready." [ref=f3e349]:
+                        - generic [ref=f3e350]: Ready
+                        - link "Stale" [ref=f3e597] [cursor=pointer]:
+                          - /url: /christian-goncalves-projects/gs-mapeamento/deployments?filterBranch=main
+                    - generic [ref=f3e356]:
+                      - generic [ref=f3e357]: Duration
+                      - generic "14 de out. de 2026, 20:44:33 BRT" [ref=f3e358]:
+                        - generic [ref=f3e359]: 33s
+                        - generic [ref=f3e364] [cursor=pointer]: 3d ago
+                    - generic [ref=f3e366]:
+                      - generic [ref=f3e367]: Environment
+                      - generic [ref=f3e368]:
+                        - link "Production" [ref=f3e371] [cursor=pointer]:
+                          - /url: /christian-goncalves-projects/gs-mapeamento/settings/environments/production
+                        - generic [ref=f3e372]: Current
+                  - generic [ref=f3e375]:
+                    - generic [ref=f3e376]: Domains
+                    - generic [ref=f3e377]:
+                      - generic [ref=f3e378]:
+                        - link "gs-mapeamento.vercel.app" [ref=f3e381] [cursor=pointer]:
+                          - /url: https://gs-mapeamento.vercel.app
+                        - generic [ref=f3e384] [cursor=pointer]: "+1"
+                      - link "gs-mapeamento-git-main-christian-goncalves-projects.vercel.app" [ref=f3e391] [cursor=pointer]:
+                        - /url: https://gs-mapeamento-git-main-christian-goncalves-projects.vercel.app
+                      - link "gs-mapeamento-ig7be8cyl-christian-goncalves-projects.vercel.app" [ref=f3e398] [cursor=pointer]:
+                        - /url: https://gs-mapeamento-ig7be8cyl-christian-goncalves-projects.vercel.app
+                  - generic [ref=f3e401]:
+                    - generic [ref=f3e402]: Source
+                    - link "main" [ref=f3e406] [cursor=pointer]:
+                      - /url: https://github.com/christian-goncalves/gs_mapeamento_main/tree/main
+                    - 'link "06d74da Merge pull request #1 from christian-goncalves/codex/public-safe-diagnostics-20261014" [ref=f3e411] [cursor=pointer]':
+                      - /url: https://github.com/christian-goncalves/gs_mapeamento_main/commit/06d74dafd6625769607d575211a69ea203bcf73e
+                      - generic [ref=f3e412]: 06d74da
+                      - 'generic "Merge pull request #1 from christian-goncalves/codex/public-safe-diagnostics-20261014" [ref=f3e416]'
+              - button "Deployment Settings 3 Recommendations" [ref=f3e525] [cursor=pointer]:
+                - generic [ref=f3e424]:
+                  - generic [ref=f3e425]: Deployment Settings
+                  - generic [ref=f3e426]: 3 Recommendations
+            - generic [ref=f3e432]:
+              - generic [ref=f3e433]:
+                - heading "Build Logs 3 33s" [level=2] [ref=f3e435]:
+                  - generic [ref=f3e436] [cursor=pointer]:
+                    - generic [ref=f3e439]: Build Logs
+                    - button "3" [ref=f3e444]
+                    - generic [ref=f3e450]: 33s
+                - heading "Deployment Summary Resources" [level=2] [ref=f3e455]:
+                  - generic [ref=f3e456] [cursor=pointer]:
+                    - generic [ref=f3e459]: Deployment Summary
+                    - link "Resources" [ref=f3e462]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/FMrvcjz9CV2zkq9FSGR5pXh3bqLU/resources
+                - heading "Deployment Checks" [level=2] [ref=f3e471]
+                - heading "Assigning Custom Domains" [level=2] [ref=f3e481]
+              - generic [ref=f3e490]:
+                - link [ref=f3e491] [cursor=pointer]:
+                  - /url: /christian-goncalves-projects/gs-mapeamento/logs
+                  - generic [ref=f3e492]:
+                    - paragraph [ref=f3e494]: Runtime Logs
+                    - paragraph [ref=f3e495]: View and debug runtime logs & errors
+                - link [ref=f3e496] [cursor=pointer]:
+                  - /url: /christian-goncalves-projects/gs-mapeamento/observability/serverless-functions
+                  - generic [ref=f3e497]:
+                    - paragraph [ref=f3e499]: Observability
+                    - paragraph [ref=f3e500]: Monitor app health & performance
+                - link "Speed Insights Not Enabled Performance metrics from real users" [ref=f3e501] [cursor=pointer]:
+                  - /url: /christian-goncalves-projects/gs-mapeamento/speed-insights
+                  - generic [ref=f3e502]:
+                    - generic [ref=f3e503]:
+                      - paragraph [ref=f3e504]: Speed Insights
+                      - generic [ref=f3e505]: Not Enabled
+                    - paragraph [ref=f3e507]: Performance metrics from real users
+                - link "Web Analytics Not Enabled Analyze visitors & traffic in real-time" [ref=f3e508] [cursor=pointer]:
+                  - /url: /christian-goncalves-projects/gs-mapeamento/analytics
+                  - generic [ref=f3e509]:
+                    - generic [ref=f3e510]:
+                      - paragraph [ref=f3e511]: Web Analytics
+                      - generic [ref=f3e512]: Not Enabled
+                    - paragraph [ref=f3e514]: Analyze visitors & traffic in real-time
+  - alert [ref=f3e515]
+  - dialog [ref=f3e540]:
+    - generic [ref=f3e542]:
+      - banner [ref=f3e543]:
+        - heading "Redeploy" [level=3] [ref=f3e544]
+      - generic [ref=f3e545]:
+        - paragraph [ref=f3e546]: Create a new deployment with the same source code as your current one but with the latest Project Settings.
+        - generic [ref=f3e548]:
+          - generic [ref=f3e549]: Choose Environment
+          - generic [ref=f3e551]:
+            - combobox "Environments" [ref=f3e552] [cursor=pointer]:
+              - option "Production" [selected]
+              - option "Preview"
+              - option "Your project has no custom environments" [disabled]
+            - generic: Production
+        - radiogroup [ref=f3e553]:
+          - generic [ref=f3e555] [cursor=pointer]:
+            - 'radio "gs-mapeamento-ig7be8cyl-christian-goncalves-projects.vercel.app Current main Merge pull request #1 from christian-goncalves/codex/public-safe-diagnostics-20261014 2 days ago" [checked] [ref=f3e557]'
+            - generic [ref=f3e560]:
+              - generic [ref=f3e561]: gs-mapeamento-ig7be8cyl-christian-goncalves-projects.vercel.app
+              - generic [ref=f3e562]: Current
+              - generic [ref=f3e564]: main
+              - generic [ref=f3e567]: "Merge pull request #1 from christian-goncalves/codex/public-safe-diagnostics-20261014"
+              - generic [ref=f3e571]: 2 days ago
+        - generic [ref=f3e574]:
+          - paragraph [ref=f3e575]: "Assigned domains:"
+          - link "gs-mapeamento.vercel.app" [ref=f3e581] [cursor=pointer]:
+            - /url: https://gs-mapeamento.vercel.app
+        - generic [ref=f3e582]:
+          - generic [ref=f3e583] [cursor=pointer]:
+            - checkbox "Use existing Build Cache." [ref=f3e585]
+            - generic [ref=f3e588]: Use existing Build Cache.
+          - link "Learn about Build Cache" [ref=f3e589] [cursor=pointer]:
+            - /url: /docs/deployments/troubleshoot-a-build#understanding-build-cache
+    - contentinfo [ref=f3e592]:
+      - button "Cancel" [ref=f3e593] [cursor=pointer]
+      - button "Redeploy" [disabled] [ref=f3e595]:
+        - status [ref=f3e599]:
+          - generic [ref=f3e608]: Loading...
+  - status [ref=f3e609]:
+    - generic [ref=f3e611]:
+      - generic [ref=f3e612]: "success:"
+      - generic [ref=f3e613]: Deployment created
+      - button "Dismiss toast" [ref=f3e615] [cursor=pointer]

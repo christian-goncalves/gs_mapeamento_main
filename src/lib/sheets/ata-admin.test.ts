@@ -2,8 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { SHEET_HEADERS } from "./contract";
 
 const mocks = vi.hoisted(() => ({
-  get: vi.fn(),
-  update: vi.fn(),
+  valuesGet: vi.fn(),
+  spreadsheetGet: vi.fn(),
+  batchUpdate: vi.fn(),
 }));
 
 vi.mock("server-only", () => ({}));
@@ -11,10 +12,9 @@ vi.mock("./client", () => ({
   getSpreadsheetId: () => "spreadsheet-test",
   getSheetsClient: () => ({
     spreadsheets: {
-      values: {
-        get: mocks.get,
-        update: mocks.update,
-      },
+      values: { get: mocks.valuesGet },
+      get: mocks.spreadsheetGet,
+      batchUpdate: mocks.batchUpdate,
     },
   }),
 }));
@@ -35,8 +35,7 @@ function row(data: Record<string, string | number | boolean>) {
 describe("edição administrativa de ata no Sheets", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.update.mockResolvedValue({});
-    mocks.get.mockResolvedValue({
+    mocks.valuesGet.mockResolvedValue({
       data: {
         values: [
           [...SHEET_HEADERS.atas],
@@ -64,19 +63,24 @@ describe("edição administrativa de ata no Sheets", () => {
         ],
       },
     });
+    mocks.spreadsheetGet.mockResolvedValue({
+      data: { sheets: [{ properties: { title: "atas", sheetId: 99 } }] },
+    });
   });
 
   it("preserva ata_id e numero_sequencial_grupo ao editar índice", async () => {
-    await updateAtaCustomGroupIndex(ataId, 9, {
-      now: () => "2026-07-20T12:00:00.000Z",
-    });
-
-    const updatedRow = mocks.update.mock.calls[0][0].requestBody.values[0];
-    expect(updatedRow[SHEET_HEADERS.atas.indexOf("ata_id")]).toBe(ataId);
-    expect(updatedRow[SHEET_HEADERS.atas.indexOf("numero_sequencial_grupo")]).toBe(4);
-    expect(updatedRow[SHEET_HEADERS.atas.indexOf("indice_personalizado_grupo")]).toBe(9);
-    expect(updatedRow[SHEET_HEADERS.atas.indexOf("updated_at")]).toBe(
-      "2026-07-20T12:00:00.000Z",
+    await updateAtaCustomGroupIndex(
+      ataId,
+      9,
+      { now: () => "2026-07-20T12:00:00.000Z" },
     );
+    expect(mocks.batchUpdate).toHaveBeenCalledOnce();
+    const request = mocks.batchUpdate.mock.calls[0][0];
+    const row = request.requestBody.requests[0].updateCells.rows[0].values;
+    expect(row[SHEET_HEADERS.atas.indexOf("ata_id")].userEnteredValue.stringValue).toBe(ataId);
+    expect(row[SHEET_HEADERS.atas.indexOf("numero_sequencial_grupo")].userEnteredValue.numberValue).toBe(4);
+    expect(row[SHEET_HEADERS.atas.indexOf("indice_personalizado_grupo")].userEnteredValue.numberValue).toBe(9);
+    expect(row[SHEET_HEADERS.atas.indexOf("updated_at")].userEnteredValue.stringValue).toBe("2026-07-20T12:00:00.000Z");
+    expect(request.spreadsheetId).toBe("spreadsheet-test");
   });
 });

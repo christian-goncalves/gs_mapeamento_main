@@ -63,7 +63,7 @@ const valid = {
     grupo_id: groupId, data_reuniao: "2026-06-21", hora_inicio: "10:30",
     duracao: "1:30", formato_outros: "", preenchido_por: "Patricia", plataforma: "Zoom", tipo_reuniao: "Aberta", formato_partilha: "TRUE",
     formato_estudo: "FALSE", formato_tematico: "FALSE", formato_literatura: "FALSE",
-    formato_passos: "FALSE", formato_tradicoes: "FALSE", total_membros_presentes: "3",
+    formato_passos: "FALSE", formato_tradicoes: "FALSE", formato_comemorativa: "TRUE", formato_servico: "TRUE", total_membros_presentes: "3",
     total_partilhas: "2", ...audit,
   },
   servidor: {
@@ -139,6 +139,7 @@ describe("schemas das linhas do Sheets", () => {
   it("converte ata do Sheets e volta sem perda", () => {
     const sheet = sheetAtaSchema.parse(valid.ata);
     expect(domainAtaToSheet(sheetAtaToDomain(sheet))).toEqual(sheet);
+    expect(sheetAtaToDomain(sheet).formatos).toEqual(expect.arrayContaining(["comemorativa", "servico"]));
   });
 
   it("trata colunas textuais opcionais de grupos com FALSE herdado como texto vazio", () => {

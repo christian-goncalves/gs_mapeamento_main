@@ -15,9 +15,9 @@ import type {
 } from "@/domain/entities";
 import { getSheetsClient, getSpreadsheetId } from "./client";
 import { SHEET_HEADERS, type SheetName } from "./contract";
+import { rowsToVersionedObjects, sheetReadRange } from "./contract-v2";
 import {
   parseRows,
-  rowsToObjects,
   type LocatedObject,
   type ParsedRow,
   type RowDiagnostic,
@@ -62,16 +62,12 @@ async function readSheet(name: SheetName) {
   const sheets = getSheetsClient();
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: getSpreadsheetId(),
-    range: `${name}!A:Z`,
+    range: sheetReadRange(name),
     valueRenderOption: "UNFORMATTED_VALUE",
     dateTimeRenderOption: "SERIAL_NUMBER",
   });
   const values = (response.data.values as SheetValue[][] | undefined) ?? [];
-  return rowsToObjects(
-    SHEET_HEADERS[name],
-    normalizeHeaderAliases(name, values),
-    name === "grupos" ? { allowMissingTrailingHeaders: 3 } : undefined,
-  );
+  return rowsToVersionedObjects(name, normalizeHeaderAliases(name, values));
 }
 
 function missingSheetDiagnostic(name: SheetName): RowDiagnostic {
@@ -130,20 +126,19 @@ async function readContractSheets() {
     try {
       const response = await sheets.spreadsheets.values.batchGet({
         spreadsheetId: getSpreadsheetId(),
-        ranges: pendingNames.map((name) => `${name}!A:Z`),
+        ranges: pendingNames.map(sheetReadRange),
         valueRenderOption: "UNFORMATTED_VALUE",
         dateTimeRenderOption: "SERIAL_NUMBER",
       });
       pendingNames.forEach((name, index) => {
-        values[name] = rowsToObjects(
-          SHEET_HEADERS[name],
+        values[name] = rowsToVersionedObjects(
+          name,
           normalizeHeaderAliases(
             name,
             (response.data.valueRanges?.[index]?.values as
               | SheetValue[][]
               | undefined) ?? [],
           ),
-          name === "grupos" ? { allowMissingTrailingHeaders: 3 } : undefined,
         );
       });
       break;

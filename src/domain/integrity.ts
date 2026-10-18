@@ -49,7 +49,21 @@ function duplicateDiagnostics<T>(
 }
 
 export function validateContractIntegrity(rows: ContractRows) {
+  const visitorsById = new Map(rows.visitantes.map((row) => [row.data.visitante_id, row.data]));
+  const linkedIngresoDiagnostics = rows.ingressos.flatMap((row) => {
+    const visitorId = row.data.visitante_id;
+    if (!visitorId) return [];
+    const visitor = visitorsById.get(visitorId);
+    if (visitor && visitor.ata_id === row.data.ata_id) return [];
+    return [{
+      sheet: row.sheet,
+      rowNumber: row.rowNumber,
+      field: "visitante_id",
+      message: "visitante_id não referencia um visitante da mesma ata.",
+    }];
+  });
   return [
+    ...linkedIngresoDiagnostics,
     ...duplicateDiagnostics(
       rows.grupos,
       "grupo_id",
@@ -133,12 +147,6 @@ export function validateContractIntegrity(rows: ContractRows) {
       "hora_inicio",
       (item) => `${item.grupo_id}|${item.dia_semana}|${item.hora_inicio}`,
       "Horário ativo duplicado para o mesmo grupo, dia e hora.",
-    ),
-    ...duplicateDiagnostics(
-      (rows.grupo_servidores_mesa ?? []).filter((row) => row.data.ativo),
-      "ordem",
-      (item) => `${item.grupo_id}|${item.ordem}`,
-      "A ordem deve ser única por grupo.",
     ),
     ...duplicateDiagnostics(
       rows.servidores,

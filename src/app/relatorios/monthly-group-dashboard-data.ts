@@ -1,7 +1,6 @@
 import type { AggregatedAta, AggregatedRead } from "@/domain/aggregate";
 import type { Grupo, GrupoHorario, GrupoServidorMesa } from "@/domain/entities";
 import {
-  DEFAULT_MESA_OFFICES,
   activeMesaServersForGroup,
   isVacantMesaName,
 } from "@/domain/grupo-servidores-mesa";
@@ -114,6 +113,7 @@ function monthAtas(atas: readonly AggregatedAta[], filters: MonthlyDashboardFilt
   const monthKey = `${filters.year}-${String(filters.month).padStart(2, "0")}`;
   return atas.filter(
     (item) =>
+      item.registro.ata.status_registro === "ativa" &&
       item.grupo.grupo_id === filters.grupoId &&
       item.registro.ata.data_reuniao.startsWith(monthKey),
   );
@@ -159,14 +159,6 @@ function achievements(atas: readonly AggregatedAta[], ingressos: number) {
 
 function mesaRows(servidores: readonly GrupoServidorMesa[], grupoId: string) {
   const active = activeMesaServersForGroup(servidores, grupoId);
-  if (active.length === 0) {
-    return DEFAULT_MESA_OFFICES.map((encargo) => ({
-      encargo,
-      nome: "",
-      data_inicio: "",
-      vacant: false,
-    }));
-  }
   return active.map((item) => ({
     encargo: item.encargo,
     nome: item.nome,
@@ -188,9 +180,12 @@ export function buildMonthlyDashboardData(
     filters.grupoId,
   );
   const expected = expectedMeetings(group, schedules, start, end);
-  const sentAtas = monthAtas(result.atas, filters);
+  const receivedAtas = monthAtas(result.atas, filters);
+  const sentAtas = receivedAtas.filter(
+    (item) => item.registro.ata.status_aprovacao === "aprovada",
+  );
   const sentKeys = new Set(
-    sentAtas.map((item) =>
+    receivedAtas.map((item) =>
       meetingKey(
         item.grupo.grupo_id,
         item.registro.ata.data_reuniao,
@@ -268,6 +263,7 @@ export function dashboardYears(result: AggregatedRead) {
   const currentYear = new Date().getFullYear();
   const years = new Set<number>([currentYear]);
   for (const ata of result.atas) {
+    if (ata.registro.ata.status_registro !== "ativa" || ata.registro.ata.status_aprovacao !== "aprovada") continue;
     years.add(Number(ata.registro.ata.data_reuniao.slice(0, 4)));
   }
   return [...years].filter(Number.isFinite).sort((first, second) => second - first);

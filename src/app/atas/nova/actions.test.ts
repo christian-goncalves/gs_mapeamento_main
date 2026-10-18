@@ -16,6 +16,10 @@ vi.mock("@/lib/sheets/create-ata", () => ({
 vi.mock("@/lib/auth/require-session", () => ({
   requireAuthorizedSession: mocks.requireAuthorizedSession,
 }));
+vi.mock("@/lib/auth/access", () => ({
+  canAccessGroup: (access: { role: string; groups: { grupo_id: string }[] }, grupoId: string) =>
+    access.role === "administrador" || access.groups.some((group) => group.grupo_id === grupoId),
+}));
 vi.mock("@/lib/sheets/repository", () => ({
   getActiveGroupByAtaLink: mocks.getActiveGroupByAtaLink,
   readAggregatedAtas: mocks.readAggregatedAtas,
@@ -105,10 +109,15 @@ describe("Server Action de criação", () => {
 
   it("redireciona somente depois da confirmação do adaptador", async () => {
     mocks.createAtaInSheets.mockResolvedValue(
-      "93ef9660-8c64-4b51-9bc5-09069ce629c1",
+      { ataId: "93ef9660-8c64-4b51-9bc5-09069ce629c1", statusAprovacao: "aprovada" },
     );
     await createAtaAction({}, formData(true));
     expect(mocks.createAtaInSheets).toHaveBeenCalledOnce();
+    expect(mocks.createAtaInSheets).toHaveBeenCalledWith(
+      expect.any(Object),
+      "allowed@example.com",
+      undefined,
+    );
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/");
     expect(mocks.redirect).toHaveBeenCalledWith(
       "/atas/93ef9660-8c64-4b51-9bc5-09069ce629c1",
@@ -117,7 +126,7 @@ describe("Server Action de criação", () => {
 
   it("normaliza payload hidden antes de chamar o adaptador", async () => {
     mocks.createAtaInSheets.mockResolvedValue(
-      "93ef9660-8c64-4b51-9bc5-09069ce629c1",
+      { ataId: "93ef9660-8c64-4b51-9bc5-09069ce629c1", statusAprovacao: "aprovada" },
     );
     await createAtaAction({}, hiddenFormData());
     expect(mocks.createAtaInSheets).toHaveBeenCalledWith(
@@ -138,6 +147,8 @@ describe("Server Action de criação", () => {
         ],
         ingressos: [expect.objectContaining({ nome: "Anonimo", cidade: "Brusque - SC" })],
       }),
+      "allowed@example.com",
+      undefined,
     );
   });
 
@@ -150,13 +161,28 @@ describe("Server Action de criação", () => {
       },
     });
     mocks.createAtaInSheets.mockResolvedValue(
-      "93ef9660-8c64-4b51-9bc5-09069ce629c1",
+      { ataId: "93ef9660-8c64-4b51-9bc5-09069ce629c1", statusAprovacao: "aprovada" },
     );
 
     await createAtaAction({}, formData(true));
 
     expect(mocks.readAggregatedAtas).not.toHaveBeenCalled();
     expect(mocks.createAtaInSheets).toHaveBeenCalledOnce();
+  });
+
+  it("bloqueia responsável autenticado que tenta enviar para outro grupo", async () => {
+    mocks.requireAuthorizedSession.mockResolvedValue({
+      access: {
+        role: "responsavel_grupo",
+        email: "responsavel@example.com",
+        groups: [{ grupo_id: "2bed9d1b-7fea-4cf4-9497-f0ccbcead41c" }],
+      },
+    });
+
+    await expect(createAtaAction({}, formData(true))).resolves.toEqual({
+      error: "Você não tem permissão para enviar uma ata para este grupo.",
+    });
+    expect(mocks.createAtaInSheets).not.toHaveBeenCalled();
   });
 
   it("retorna erro localizado quando a chave já existe", async () => {

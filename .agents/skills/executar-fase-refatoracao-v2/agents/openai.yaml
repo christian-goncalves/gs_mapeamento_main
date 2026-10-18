@@ -1,0 +1,4 @@
+interface:
+  display_name: "Executar fase V2"
+  short_description: "Executa uma fase, requisito por requisito"
+  default_prompt: "Use $executar-fase-refatoracao-v2 para executar ou continuar uma fase da refatoração V2, consolidando o andamento no checklist."

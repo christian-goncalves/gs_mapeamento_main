@@ -7,7 +7,9 @@ import {
 import type { Ata } from "@/domain/entities";
 import { getSheetsClient, getSpreadsheetId } from "./client";
 import { SHEET_HEADERS } from "./contract";
-import { parseRows, rowsToObjects, type ParsedRow, type SheetCell } from "./rows";
+import { parseRows, type ParsedRow, type SheetCell } from "./rows";
+import { rowsToCompatibleObjects, sheetReadRange } from "./contract-v2";
+import { buildCellUpdateRequest, executeAtomicBatch } from "./write";
 import { domainAtaToSheet, sheetAtaSchema, sheetAtaToDomain } from "./schemas";
 
 type ValidRow<T> = Extract<ParsedRow<T>, { valid: true }>;
@@ -19,41 +21,40 @@ const defaultIdentity: Identity = {
   now: () => new Date().toISOString(),
 };
 
-function columnName(index: number) {
-  let name = "";
-  let current = index + 1;
-  while (current > 0) {
-    const remainder = (current - 1) % 26;
-    name = String.fromCharCode(65 + remainder) + name;
-    current = Math.floor((current - 1) / 26);
-  }
-  return name;
-}
-
 async function readAtaValues() {
   const sheets = getSheetsClient();
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: getSpreadsheetId(),
-    range: "atas!A:Z",
+    range: sheetReadRange("atas"),
     valueRenderOption: "UNFORMATTED_VALUE",
     dateTimeRenderOption: "SERIAL_NUMBER",
   });
   return (response.data.values as SheetCell[][] | undefined) ?? [];
 }
 
-async function updateAtaRow(rowNumber: number, values: SheetCell[]) {
+async function updateAtaRow(
+  rowNumber: number,
+  values: SheetCell[],
+) {
   const sheets = getSheetsClient();
-  const lastColumn = columnName(values.length - 1);
-  await sheets.spreadsheets.values.update({
+  const metadata = await sheets.spreadsheets.get({
     spreadsheetId: getSpreadsheetId(),
-    range: `atas!A${rowNumber}:${lastColumn}${rowNumber}`,
-    valueInputOption: "USER_ENTERED",
-    requestBody: { values: [values] },
+    fields: "sheets(properties(sheetId,title))",
   });
+  const sheetId = metadata.data.sheets?.find(
+    (sheet) => sheet.properties?.title === "atas",
+  )?.properties?.sheetId;
+  if (typeof sheetId !== "number") throw new Error("ID da aba atas não encontrado.");
+  await executeAtomicBatch(
+    sheets,
+    getSpreadsheetId(),
+    [buildCellUpdateRequest(sheetId, rowNumber, values)],
+  );
 }
 
 async function readAtaRows() {
-  const rows = rowsToObjects(SHEET_HEADERS.atas, await readAtaValues());
+  const values = await readAtaValues();
+  const rows = rowsToCompatibleObjects("atas", values);
   return parseRows("atas", sheetAtaSchema, rows, sheetAtaToDomain);
 }
 

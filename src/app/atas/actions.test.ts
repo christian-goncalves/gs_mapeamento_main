@@ -73,6 +73,7 @@ describe("updateAtaIndexAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.requireAuthorizedSession.mockResolvedValue({
+      session: { user: { email: "admin@example.com" } },
       access: { role: "administrador", email: "admin@example.com", groups: [] },
     });
     mocks.readAggregatedAtas.mockResolvedValue({
@@ -94,6 +95,7 @@ describe("updateAtaIndexAction", () => {
 
   it("permite responsável editar ata do próprio grupo", async () => {
     mocks.requireAuthorizedSession.mockResolvedValue({
+      session: { user: { email: "resp@example.com" } },
       access: {
         role: "responsavel_grupo",
         email: "resp@example.com",

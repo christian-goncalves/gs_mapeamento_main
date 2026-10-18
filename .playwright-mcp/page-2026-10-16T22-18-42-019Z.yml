@@ -1,0 +1,159 @@
+- generic [active] [ref=e1]:
+  - iframe [aria-hidden] [ref=e2]
+  - generic [ref=e3]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - link "Google Apps Script" [ref=e580] [cursor=pointer]:
+          - /url: /home
+          - generic [ref=e12]: Apps Script
+        - generic [ref=e13]:
+          - button "Renomear" [ref=e581] [cursor=pointer]: GS Mapeamento | Gateway F1
+          - generic [ref=e24]:
+            - button [ref=e582] [cursor=pointer]:
+              - generic [ref=e32]:
+                - text: Implantar
+                - generic [aria-hidden] [ref=e33]: 
+            - button "Compartilhar este projeto com outros" [ref=e583] [cursor=pointer]:
+              - generic [aria-hidden] [ref=e38]: person_add
+            - button "Suporte" [ref=e772] [cursor=pointer]:
+              - generic [aria-hidden] [ref=e775]: help_outline
+        - generic [ref=e45]:
+          - button "Google Apps" [ref=e585] [cursor=pointer]
+          - 'button "Conta do Google: Christian Gonçalves (chrisapppg1@gmail.com)" [ref=e586] [cursor=pointer]'
+    - generic [ref=e779]:
+      - navigation [ref=e781]:
+        - link [ref=e782] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e784]: info_outline
+          - generic [ref=e785]: Visão geral
+        - link [ref=e786] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e788]: code
+          - generic [ref=e789]: Editor
+        - link [ref=e790] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e792]: history
+          - generic [ref=e793]: Histórico do projeto
+        - link [ref=e794] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e796]: alarm
+          - generic [ref=e797]: Acionadores
+        - link [ref=e798] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e800]: playlist_play
+          - generic [ref=e801]: Execuções
+        - link [ref=e802] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e804]: settings
+          - generic [ref=e805]: Configurações do projeto
+      - generic [ref=e808]:
+        - generic [ref=e810]:
+          - heading [level=2] [ref=e812]: Arquivos
+          - listbox [ref=e814]:
+            - option [ref=e815] [cursor=pointer]:
+              - generic [ref=e816]: appsscript.json
+            - option [ref=e817] [cursor=pointer]:
+              - generic [ref=e818]: Código.gs
+        - separator [ref=e819]
+        - generic [ref=e822]:
+          - heading [level=2] [ref=e825]: Versão atual
+          - main [ref=e827]:
+            - generic [ref=e828]: .
+            - generic [ref=e829]:
+              - iframe [ref=e830]
+              - code [ref=e832]:
+                - generic [ref=e833]:
+                  - generic [aria-hidden] [ref=e835]:
+                    - generic [ref=e836]: "1"
+                    - generic [ref=e839]: "2"
+                    - generic [ref=e841]: "3"
+                    - generic [ref=e843]: "4"
+                    - generic [ref=e845]: "5"
+                    - generic [ref=e847]: "6"
+                    - generic [ref=e849]: "7"
+                    - generic [ref=e851]: "8"
+                    - generic [ref=e853]: "9"
+                    - generic [ref=e855]: "10"
+                    - generic [ref=e857]: "11"
+                    - generic [ref=e859]: "12"
+                    - generic [ref=e861]: "13"
+                    - generic [ref=e863]: "14"
+                    - generic [ref=e865]: "15"
+                    - generic [ref=e867]: "16"
+                    - generic [ref=e869]: "17"
+                    - generic [ref=e871]: "18"
+                    - generic [ref=e873]: "19"
+                    - generic [ref=e875]: "20"
+                    - generic [ref=e877]: "21"
+                    - generic [ref=e879]: "22"
+                    - generic [ref=e881]: "23"
+                    - generic [ref=e883]: "24"
+                    - generic [ref=e885]: "25"
+                    - generic [ref=e887]: "26"
+                    - generic [ref=e889]: "27"
+                    - generic [ref=e891]: "28"
+                    - generic [ref=e893]: "29"
+                    - generic [ref=e895]: "30"
+                    - generic [ref=e897]: "31"
+                    - generic [ref=e899]: "32"
+                    - generic [ref=e901]: "33"
+                    - generic [ref=e903]: "34"
+                    - generic [ref=e905]: "35"
+                    - generic [ref=e907]: "36"
+                    - generic [ref=e909]: "37"
+                    - generic [ref=e911]: "38"
+                    - generic [ref=e913]: "39"
+                    - generic [ref=e915]: "40"
+                    - generic [ref=e917]: "41"
+                    - generic [ref=e919]: "42"
+                    - generic [ref=e921]: "43"
+                    - generic [ref=e923]: "44"
+                  - generic [aria-hidden] [ref=e1003]:
+                    - generic [ref=e1004]: const OPERATION_HEADERS = [
+                    - generic [ref=e1006]: "\"operacao_id\","
+                    - generic [ref=e1008]: "\"hash_solicitacao\","
+                    - generic [ref=e1010]: "\"tipo\","
+                    - generic [ref=e1012]: "\"ator\","
+                    - generic [ref=e1014]: "\"estado\","
+                    - generic [ref=e1016]: "\"criada_em\","
+                    - generic [ref=e1018]: "\"concluida_em\","
+                    - generic [ref=e1020]: "\"resultado_ref\","
+                    - generic [ref=e1022]: "];"
+                    - generic [ref=e1024]: const MAX_ATAS_PER_OPERATION = 50;
+                    - generic [ref=e1026]: const MAX_OPERATION_PAYLOAD_BYTES = 1572864;
+                    - generic [ref=e1028]: const MAX_CLOCK_SKEW_MS = 300000;
+                    - generic [ref=e1030]: const CONTRACT_SHEETS = new Set([
+                    - generic [ref=e1032]: "\"grupos\","
+                    - generic [ref=e1034]: "\"usuarios_grupo\","
+                    - generic [ref=e1036]: "\"grupo_horarios\","
+                    - generic [ref=e1038]: "\"grupo_servidores_mesa\","
+                    - generic [ref=e1040]: "\"atas\","
+                    - generic [ref=e1042]: "\"servidores\","
+                    - generic [ref=e1044]: "\"participacao\","
+                    - generic [ref=e1046]: "\"visitantes\","
+                    - generic [ref=e1048]: "\"ingressos\","
+                    - generic [ref=e1050]: "\"trocas_chaveiro\","
+                    - generic [ref=e1052]: "\"grupo_plataformas\","
+                    - generic [ref=e1054]: "\"operacoes\","
+                    - generic [ref=e1056]: "]);"
+                    - generic [ref=e1058]: "const SHEET_COLUMN_LIMITS = {"
+                    - generic [ref=e1060]: "grupos: 16,"
+                    - generic [ref=e1062]: "usuarios_grupo: 11,"
+                    - generic [ref=e1064]: "grupo_horarios: 11,"
+                    - generic [ref=e1066]: "grupo_servidores_mesa: 9,"
+                    - generic [ref=e1068]: "atas: 30,"
+                    - generic [ref=e1070]: "servidores: 7,"
+                    - generic [ref=e1072]: "participacao: 8,"
+                    - generic [ref=e1074]: "visitantes: 8,"
+                    - generic [ref=e1076]: "ingressos: 7,"
+                    - generic [ref=e1078]: "trocas_chaveiro: 5,"
+                    - generic [ref=e1080]: "grupo_plataformas: 8,"
+                    - generic [ref=e1082]: "};"
+                    - generic [ref=e1085]: // Apps Script invokes this global web-app entry point by name.
+                    - generic [ref=e1087]: // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    - generic [ref=e1089]: "function doPost(event) {"
+                  - textbox [ref=e1094]: const OPERATION_HEADERS = [ "operacao_id", "hash_solicitacao", "tipo", "ator", "estado", "criada_em", "concluida_em", "resultado_ref", ];
+  - generic: URL do app da Web copiado
+  - generic [ref=e770]: Carregando...
+  - generic [ref=e576]:
+    - alert
+    - alert
+    - complementary
+    - complementary
+  - dialog [aria-hidden] [ref=e577]:
+    - iframe [ref=e579]:
+      - region [ref=f5e3]: Acesso atualizado.

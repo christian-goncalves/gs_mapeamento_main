@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import type { AtaCompleta } from "@/domain/rules";
+
+const mocks = vi.hoisted(() => ({ batchUpdate: vi.fn() }));
+
+vi.mock("server-only", () => ({}));
+
 import {
   buildAtomicWriteRequests,
   executeAtomicBatch,
@@ -24,7 +29,7 @@ const registro: AtaCompleta = {
     preenchido_por: "Patricia",
     plataforma: "zoom",
     tipo_reuniao: "aberta",
-    formatos: ["partilha"],
+    formatos: ["partilha", "comemorativa", "servico"],
     total_membros_presentes: 1,
     total_partilhas: 1,
     ...audit,
@@ -65,6 +70,7 @@ const registro: AtaCompleta = {
     {
       ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d",
       ata_id: ataId,
+      visitante_id: "a86f8bc3-e943-48e8-8853-cabbb41ab071",
       nome: "Anonimo",
       cidade: "São Paulo - SP",
       ...audit,
@@ -128,6 +134,9 @@ describe("lote atômico do Sheets", () => {
     expect(
       requests[4].updateCells?.rows?.[0]?.values?.[2]?.userEnteredValue,
     ).toEqual({ stringValue: "Anonimo" });
+    expect(requests[0].updateCells?.rows?.[0]?.values?.[30]?.userEnteredValue).toEqual({ boolValue: true });
+    expect(requests[0].updateCells?.rows?.[0]?.values?.[31]?.userEnteredValue).toEqual({ boolValue: true });
+    expect(requests[4].updateCells?.rows?.[0]?.values?.[6]?.userEnteredValue).toEqual({ stringValue: "a86f8bc3-e943-48e8-8853-cabbb41ab071" });
     expect(
       requests[4].updateCells?.rows?.[0]?.values?.[3]?.userEnteredValue,
     ).toEqual({ stringValue: "São Paulo - SP" });
@@ -146,40 +155,17 @@ describe("lote atômico do Sheets", () => {
     expect(firstEmptyDataRowNumber([["ata_id"], ["a"], [undefined, false]])).toBe(3);
   });
 
-  it("faz uma única chamada e só resolve após confirmação da API", async () => {
-    let confirm: (() => void) | undefined;
-    const batchUpdate = vi.fn(
-      () =>
-        new Promise<void>((resolve) => {
-          confirm = resolve;
-        }),
+  it("envia todas as alterações em um batchUpdate direto ao Sheets", async () => {
+    const requests = buildAtomicWriteRequests(registro, sheetIds, nextRows);
+    await executeAtomicBatch(
+      { spreadsheets: { batchUpdate: mocks.batchUpdate } },
+      "spreadsheet-test",
+      requests,
     );
-    const pending = executeAtomicBatch(
-      { spreadsheets: { batchUpdate } },
-      "test-sheet",
-      buildAtomicWriteRequests(registro, sheetIds, nextRows),
-    );
-    expect(batchUpdate).toHaveBeenCalledTimes(1);
-    let settled = false;
-    pending.then(() => {
-      settled = true;
+    expect(mocks.batchUpdate).toHaveBeenCalledOnce();
+    expect(mocks.batchUpdate).toHaveBeenCalledWith({
+      spreadsheetId: "spreadsheet-test",
+      requestBody: { requests },
     });
-    await Promise.resolve();
-    expect(settled).toBe(false);
-    confirm?.();
-    await pending;
-    expect(settled).toBe(true);
-  });
-
-  it("propaga falha do lote sem executar escritas separadas", async () => {
-    const batchUpdate = vi.fn().mockRejectedValue(new Error("Falha simulada"));
-    await expect(
-      executeAtomicBatch(
-        { spreadsheets: { batchUpdate } },
-        "test-sheet",
-        buildAtomicWriteRequests(registro, sheetIds, nextRows),
-      ),
-    ).rejects.toThrow("Falha simulada");
-    expect(batchUpdate).toHaveBeenCalledTimes(1);
   });
 });

@@ -14,6 +14,7 @@ import {
   currentMonthPeriod,
 } from "./admin-atas-data";
 import { AdminAtasTable } from "./admin-atas-table";
+import { AtaApprovalPanel } from "@/app/atas/ata-approval-panel";
 
 export const dynamic = "force-dynamic";
 
@@ -29,10 +30,21 @@ export default async function AdminAtasPage() {
     end: monthPeriod.end,
   });
   const rows = [...sentRows, ...missingRows];
-  const monthAtasCount = sentRows.filter((row) => row.data.startsWith(monthPeriod.key)).length;
+  const approvedRows = sentRows.filter((row) => row.status === "Enviada");
+  const monthAtasCount = approvedRows.filter((row) => row.data.startsWith(monthPeriod.key)).length;
   const pendingReviewCount = sentRows.filter(
     (row) => row.status === "Pendente de revisão",
   ).length;
+  const approvalRows = result.atas
+    .filter((item) => item.registro.ata.status_registro === "ativa" && item.registro.ata.status_aprovacao === "pendente_revisao")
+    .map(({ grupo, registro }) => ({
+      ataId: registro.ata.ata_id,
+      updatedAt: registro.ata.updated_at,
+      index: registro.ata.indice_personalizado_grupo,
+      date: registro.ata.data_reuniao,
+      time: registro.ata.hora_inicio,
+      group: grupo.grupo_nome,
+    }));
 
   return (
     <AdminShell activeSection="atas">
@@ -50,7 +62,7 @@ export default async function AdminAtasPage() {
           </span>
           <div>
             <dt>Total de atas</dt>
-            <dd>{sentRows.length}</dd>
+            <dd>{approvedRows.length}</dd>
           </div>
         </dl>
         <dl className="summary-card">
@@ -90,6 +102,8 @@ export default async function AdminAtasPage() {
           </div>
         </dl>
       </section>
+
+      <AtaApprovalPanel rows={approvalRows} />
 
       <AdminAtasTable
         rows={rows}

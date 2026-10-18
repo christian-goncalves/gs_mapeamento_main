@@ -56,6 +56,7 @@ export const grupoSchema = z.object({
   grupo_nome: requiredText,
   ordem: z.number().int().min(1),
   ativo: z.boolean(),
+  revisao_atas_ativa: z.boolean().optional(),
   responsavel_grupo_nome: optionalText,
   responsavel_grupo_email: optionalEmail,
   email_acesso_grupo: optionalEmail,
@@ -133,12 +134,16 @@ export const ataSchema = z.object({
   hora_inicio: horaInicioSchema,
   duracao: optionalDuration,
   formato_outros: optionalText,
-  preenchido_por: requiredText,
+  preenchido_por: optionalText,
   plataforma: z.enum(plataformaMapping.codes),
   tipo_reuniao: z.enum(tipoReuniaoMapping.codes),
   formatos: z.array(z.enum(formatoMapping.codes)).min(1),
   total_membros_presentes: z.number().int().min(1),
   total_partilhas: z.number().int().min(1),
+  status_registro: z.enum(["ativa", "substituida", "excluida"]).optional(),
+  status_aprovacao: z.enum(["aprovada", "pendente_revisao"]).optional(),
+  aprovado_por: optionalText.optional(),
+  aprovado_em: optionalText.optional(),
   ...auditFields,
 });
 
@@ -201,6 +206,7 @@ export const visitanteSchema = z.object({
 export const ingressoSchema = z.object({
   ingresso_id: uuid,
   ata_id: uuid,
+  visitante_id: uuid.optional(),
   nome: requiredText,
   cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
   ...auditFields,

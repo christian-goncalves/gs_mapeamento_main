@@ -52,9 +52,9 @@ describe("repositório Sheets", () => {
     const warning = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     mocks.batchGet.mockImplementation(
       ({ ranges }: { ranges: string[] }) => {
-        if (ranges.includes("ingressos!A:Z")) {
+        if (ranges.some((range) => range.startsWith("ingressos!"))) {
           return Promise.reject(
-            new Error("Unable to parse range: ingressos!A:Z"),
+            new Error(`Unable to parse range: ${ranges.find((range) => range.startsWith("ingressos!"))}`),
           );
         }
         return Promise.resolve({
@@ -73,9 +73,11 @@ describe("repositório Sheets", () => {
       message: "Aba ausente no Sheets. Reconciliar o contrato antes de usar este dado.",
     });
     expect(mocks.batchGet).toHaveBeenCalledTimes(2);
-    expect(mocks.batchGet.mock.calls[1][0].ranges).not.toContain(
-      "ingressos!A:Z",
-    );
+    expect(
+      mocks.batchGet.mock.calls[1][0].ranges.some((range: string) =>
+        range.startsWith("ingressos!"),
+      ),
+    ).toBe(false);
     expect(mocks.get).not.toHaveBeenCalled();
     expect(warning).toHaveBeenCalledWith(
       "[sheets.readContractSheets]",

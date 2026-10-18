@@ -7,10 +7,7 @@ import {
   grupoFormSchema,
   grupoHorarioFormSchema,
 } from "@/domain/form-schemas";
-import {
-  DEFAULT_MESA_OFFICES,
-  isVacantMesaName,
-} from "@/domain/grupo-servidores-mesa";
+import { isVacantMesaName } from "@/domain/grupo-servidores-mesa";
 import { diaSemanaOrder, diaSemanaSchema, horaInicioSchema } from "@/domain/schemas";
 import type { Grupo } from "@/domain/entities";
 import { canAccessGroup } from "@/lib/auth/access";
@@ -22,6 +19,7 @@ import {
 import { isSecureAtaLinkToken } from "@/lib/ata-link-token";
 import { uniqueAtaLinkToken } from "@/lib/ata-link-token.server";
 import {
+  GroupReviewColumnMissingError,
   deactivateGrupoServidorMesa,
   deleteGrupoHorarios,
   saveGrupo,
@@ -131,16 +129,6 @@ function parseServidoresMesaPayload(formData: FormData, grupoId: string) {
   };
 }
 
-function hasMissingDefaultMesaNames(
-  servidores: readonly { encargo: string; nome: string }[],
-) {
-  return DEFAULT_MESA_OFFICES.some((encargo) =>
-    servidores.some(
-      (item) => item.encargo === encargo && isVacantMesaName(item.nome),
-    ),
-  );
-}
-
 class DuplicateGroupLoginEmailError extends Error {
   constructor() {
     super("O e-mail de login já está vinculado a outro grupo. Por favor escolha outro e-mail.");
@@ -198,6 +186,7 @@ export async function saveGrupoAction(
     fuso_horario: text(formData, "fuso_horario"),
     grupo_nome: text(formData, "grupo_nome"),
     ativo: bool(formData, "ativo"),
+    revisao_atas_ativa: bool(formData, "revisao_atas_ativa"),
     responsavel_grupo_nome: responsavelGrupoNome,
     responsavel_grupo_email: responsavelGrupoEmail,
     email_acesso_grupo:
@@ -243,9 +232,10 @@ export async function saveGrupoAction(
       }
     : {
         zoom_id: existingGroup?.zoom_id ?? parsed.acesso_plataforma,
-        grupo_nome: parsed.grupo_nome,
+        grupo_nome: existingGroup?.grupo_nome ?? parsed.grupo_nome,
         ordem,
         ativo: existingGroup?.ativo ?? true,
+        revisao_atas_ativa: parsed.revisao_atas_ativa,
         responsavel_grupo_nome: existingGroup?.responsavel_grupo_nome ?? "",
         responsavel_grupo_email: existingGroup?.responsavel_grupo_email ?? "",
         email_acesso_grupo: existingGroup?.email_acesso_grupo ?? "",
@@ -270,19 +260,24 @@ export async function saveGrupoAction(
   }
   const previousEmail = normalizeEmail(existingGroup?.email_acesso_grupo ?? "");
   const nextEmail = normalizeEmail(groupToSave.email_acesso_grupo);
-  const savedGroup = await saveGrupo({
-    grupo_id: grupoId,
-    ...groupToSave,
-  });
-  if (parsedServidoresMesa?.data) {
-    await saveGrupoServidoresMesa(grupoId, parsedServidoresMesa.data);
+  let savedGroup: Grupo;
+  try {
+    savedGroup = await saveGrupo({
+      grupo_id: grupoId,
+      ...groupToSave,
+    }, undefined, { kind: "authenticated", email: current.access.email });
+  } catch (error) {
+    if (error instanceof GroupReviewColumnMissingError) {
+      return { error: error.message };
+    }
+    throw error;
   }
-  const missingDefaultMesaNames = parsedServidoresMesa?.data
-    ? hasMissingDefaultMesaNames(parsedServidoresMesa.data)
-    : false;
+  if (parsedServidoresMesa?.data) {
+    await saveGrupoServidoresMesa(grupoId, parsedServidoresMesa.data, undefined, { kind: "authenticated", email: current.access.email });
+  }
   let activationInviteSent = false;
   if (isAdmin) {
-    const user = await syncResponsibleGroupUser(savedGroup);
+    const user = await syncResponsibleGroupUser(savedGroup, current.access.email);
     if (user?.status === "pendente" && user.inviteCreated) {
       try {
         await sendActivationEmail({ group: savedGroup, user });
@@ -299,9 +294,7 @@ export async function saveGrupoAction(
     existingGroup && previousEmail !== nextEmail && activationInviteSent
       ? "activation-invite-sent"
       : existingGroup
-        ? missingDefaultMesaNames
-          ? "saved-mesa-missing-names"
-          : "saved"
+        ? "saved"
         : "created";
   redirect(`${groupDetailPath(grupoId, isAdmin)}?status=${status}`);
 }
@@ -327,15 +320,12 @@ export async function saveGrupoServidoresMesaAction(
     return { error: parsedServidoresMesa.error };
   }
 
-  await saveGrupoServidoresMesa(grupoId, parsedServidoresMesa.data);
+  await saveGrupoServidoresMesa(grupoId, parsedServidoresMesa.data, undefined, { kind: "authenticated", email: current.access.email });
   revalidateGroupAdminPaths(grupoId);
   revalidatePath("/admin/relatorios");
   revalidatePath("/responsavel/relatorios");
-  const status = hasMissingDefaultMesaNames(parsedServidoresMesa.data)
-    ? "saved-mesa-missing-names"
-    : "saved";
   redirect(
-    `${groupDetailPath(grupoId, current.access.role === "administrador")}?status=${status}`,
+    `${groupDetailPath(grupoId, current.access.role === "administrador")}?status=saved`,
   );
 }
 
@@ -365,7 +355,7 @@ export async function saveGrupoServidorMesaAction(
   }
 
   try {
-    await saveGrupoServidorMesa(grupoId, parsed.data);
+    await saveGrupoServidorMesa(grupoId, parsed.data, undefined, { kind: "authenticated", email: current.access.email });
   } catch (error) {
     return {
       error:
@@ -388,7 +378,7 @@ export async function deactivateGrupoServidorMesaAction(formData: FormData) {
   const current = await requireAuthorizedSession();
   if (!grupoId || !canAccessGroup(current.access, grupoId)) redirect("/");
 
-  await deactivateGrupoServidorMesa(grupoId, servidorId);
+  await deactivateGrupoServidorMesa(grupoId, servidorId, undefined, { kind: "authenticated", email: current.access.email });
   revalidateGroupAdminPaths(grupoId);
   revalidatePath("/admin/relatorios");
   revalidatePath("/responsavel/relatorios");
@@ -399,17 +389,17 @@ export async function deactivateGrupoServidorMesaAction(formData: FormData) {
 
 export async function deactivateGrupoAction(formData: FormData) {
   const grupoId = text(formData, "grupo_id");
-  await requireAdminSession();
+  const current = await requireAdminSession();
 
   const result = await readAggregatedAtas();
   const group = result.grupos.find((item) => item.grupo_id === grupoId);
   if (!group) throw new Error("Grupo não encontrado.");
 
-  await saveGrupo({ ...group, ativo: false });
+  await saveGrupo({ ...group, ativo: false }, undefined, { kind: "authenticated", email: current.access.email });
   for (const horario of result.grupo_horarios.filter(
     (item) => item.grupo_id === grupoId && item.ativo,
   )) {
-    await saveGrupoHorario({ ...horario, ativo: false });
+    await saveGrupoHorario({ ...horario, ativo: false }, undefined, { kind: "authenticated", email: current.access.email });
   }
 
   revalidateGroupAdminPaths(grupoId);
@@ -428,7 +418,7 @@ export async function rotateAtaLinkAction(formData: FormData) {
   await saveGrupo({
     ...group,
     link_formulario_ata: uniqueAtaLinkToken(result.grupos, grupoId),
-  });
+  }, undefined, { kind: "authenticated", email: current.access.email });
 
   revalidateGroupAdminPaths(grupoId);
   redirect(
@@ -438,13 +428,13 @@ export async function rotateAtaLinkAction(formData: FormData) {
 
 export async function rotateActivationInviteAction(formData: FormData) {
   const grupoId = text(formData, "grupo_id");
-  await requireAdminSession();
+  const current = await requireAdminSession();
 
   const result = await readAggregatedAtas();
   const group = result.grupos.find((item) => item.grupo_id === grupoId);
   if (!group) throw new Error("Grupo não encontrado.");
 
-  const user = await rotatePendingActivationForGroup(grupoId);
+  const user = await rotatePendingActivationForGroup(grupoId, current.access.email);
   if (!user) {
     revalidateGroupAdminPaths(grupoId);
     redirect(`${adminGroupPath(grupoId)}?status=activation-invite-unavailable`);
@@ -478,7 +468,7 @@ export async function deleteGrupoAction(formData: FormData) {
 
 export async function activateGrupoAction(formData: FormData) {
   const grupoId = text(formData, "grupo_id");
-  await requireAdminSession();
+  const current = await requireAdminSession();
 
   const result = await readAggregatedAtas();
   const group = result.grupos.find((item) => item.grupo_id === grupoId);
@@ -489,7 +479,7 @@ export async function activateGrupoAction(formData: FormData) {
     return redirect(`${ADMIN_GROUPS_PATH}?status=already-active`);
   }
 
-  await saveGrupo({ ...group, ativo: true });
+  await saveGrupo({ ...group, ativo: true }, undefined, { kind: "authenticated", email: current.access.email });
 
   revalidateGroupAdminPaths(grupoId);
   redirect(`${ADMIN_GROUPS_PATH}?status=activated`);
@@ -497,7 +487,7 @@ export async function activateGrupoAction(formData: FormData) {
 
 export async function duplicateGrupoAction(formData: FormData) {
   const grupoId = text(formData, "grupo_id");
-  await requireAdminSession();
+  const current = await requireAdminSession();
 
   const result = await readAggregatedAtas();
   const source = result.grupos.find((item) => item.grupo_id === grupoId);
@@ -520,7 +510,7 @@ export async function duplicateGrupoAction(formData: FormData) {
     fuso_horario: source.fuso_horario,
     plataforma: source.plataforma,
     acesso_plataforma: source.acesso_plataforma,
-  });
+  }, undefined, { kind: "authenticated", email: current.access.email });
 
   for (const horario of result.grupo_horarios.filter(
     (item) => item.grupo_id === grupoId && item.ativo,
@@ -531,7 +521,7 @@ export async function duplicateGrupoAction(formData: FormData) {
       hora_inicio: horario.hora_inicio,
       link_reuniao: horario.link_reuniao,
       ativo: true,
-    });
+    }, undefined, { kind: "authenticated", email: current.access.email });
   }
 
   revalidateGroupAdminPaths(savedGroup.grupo_id);
@@ -564,7 +554,7 @@ export async function saveHorarioAction(formData: FormData) {
   await saveGrupoHorario({
     horario_id: horarioId || undefined,
     ...parsed,
-  });
+  }, undefined, { kind: "authenticated", email: current.access.email });
   revalidateGroupAdminPaths(grupoId);
   redirect(groupDetailPath(grupoId, current.access.role === "administrador"));
 }
@@ -604,7 +594,7 @@ export async function saveHorariosGrupoAction(formData: FormData) {
       return !desiredKeys.has(key);
     })
     .map((horario) => horario.horario_id);
-  await deleteGrupoHorarios(horarioIdsToDelete);
+  await deleteGrupoHorarios(horarioIdsToDelete, grupoId, { kind: "authenticated", email: current.access.email });
 
   for (const horario of existing) {
     const key = `${horario.dia_semana}:${horario.hora_inicio}`;
@@ -625,7 +615,7 @@ export async function saveHorariosGrupoAction(formData: FormData) {
       link_reuniao: existingHorario?.link_reuniao ?? "",
       ativo: true,
       created_at: existingHorario?.created_at,
-    });
+    }, undefined, { kind: "authenticated", email: current.access.email });
   }
 
   revalidateGroupAdminPaths(grupoId);
@@ -644,7 +634,7 @@ export async function toggleHorarioAction(formData: FormData) {
     (item) => item.horario_id === horarioId && item.grupo_id === grupoId,
   );
   if (!horario) throw new Error("Horário não encontrado.");
-  await saveGrupoHorario({ ...horario, ativo: active });
+  await saveGrupoHorario({ ...horario, ativo: active }, undefined, { kind: "authenticated", email: current.access.email });
   revalidateGroupAdminPaths(grupoId);
   redirect(groupDetailPath(grupoId, current.access.role === "administrador"));
 }

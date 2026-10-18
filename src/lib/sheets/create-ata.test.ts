@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { InvalidAtaIdentifiersError } from "@/domain/ata-identifiers";
 import type { AtaSubmission } from "@/domain/form-schemas";
 import { SHEET_HEADERS, type SheetName } from "./contract";
+import { compatibleHeaders } from "./contract-v2";
 
 const mocks = vi.hoisted(() => ({
   batchGet: vi.fn(),
@@ -59,7 +60,7 @@ function row(sheet: SheetName, data: Record<string, string | number | boolean>) 
 
 function values(overrides: Partial<Record<SheetName, unknown[][]>> = {}) {
   return (Object.keys(SHEET_HEADERS) as SheetName[]).map((name) => ({
-    values: overrides[name] ?? [[...SHEET_HEADERS[name]]],
+    values: overrides[name] ?? [[...(name === "atas" ? compatibleHeaders(name) : SHEET_HEADERS[name])]],
   }));
 }
 
@@ -69,11 +70,14 @@ describe("criação de ata no Sheets", () => {
     mocks.get.mockResolvedValue({
       data: {
         sheets: (Object.keys(SHEET_HEADERS) as SheetName[]).map((name, index) => ({
-          properties: { title: name, sheetId: index + 1 },
+          properties: {
+            title: name,
+            sheetId: index + 1,
+            gridProperties: { rowCount: 1000, columnCount: compatibleHeaders(name).length },
+          },
         })),
       },
     });
-    mocks.batchUpdate.mockResolvedValue({});
     mocks.updateAtaNameSuggestionsFromSubmission.mockResolvedValue({});
   });
 
@@ -114,7 +118,7 @@ describe("criação de ata no Sheets", () => {
       },
     });
 
-    await expect(createAtaInSheets(submission)).rejects.toThrow(
+    await expect(createAtaInSheets(submission, "responsavel@example.com")).rejects.toThrow(
       InvalidAtaIdentifiersError,
     );
     expect(mocks.batchUpdate).not.toHaveBeenCalled();
@@ -150,9 +154,11 @@ describe("criação de ata no Sheets", () => {
     await createAtaInSheets({
       ...submission,
       servidores: [{ nome: "Hércules", funcao: "Coordenador" }],
-    });
+    }, "  RESPONSAVEL@example.com  ");
 
     expect(mocks.batchUpdate).toHaveBeenCalledOnce();
+    expect(mocks.batchUpdate.mock.calls[0][0].spreadsheetId).toBe("spreadsheet-test");
+    expect(mocks.batchUpdate.mock.calls[0][0].requestBody.requests).toHaveLength(2);
     expect(mocks.updateAtaNameSuggestionsFromSubmission).toHaveBeenCalledWith(
       expect.objectContaining({
         ata: expect.objectContaining({ preenchido_por: "Coordenador" }),
@@ -188,10 +194,44 @@ describe("criação de ata no Sheets", () => {
     await createAtaInSheets({
       ...submission,
       ata: { ...submission.ata, plataforma: "whatsapp" },
-    });
+    }, undefined, "public-link-token");
 
     expect(mocks.updateAtaNameSuggestionsFromSubmission).toHaveBeenCalledWith(
       expect.objectContaining({ ata: expect.objectContaining({ plataforma: "zello" }) }),
     );
+  });
+
+  it("lê a configuração do grupo e grava o novo envio como pendente", async () => {
+    const groupHeaders = [...compatibleHeaders("grupos")];
+    const groupData: Record<string, string | number | boolean> = {
+      grupo_id: groupId,
+      zoom_id: "123",
+      grupo_nome: "Grupo",
+      ordem: 1,
+      ativo: true,
+      link_formulario_ata: "token",
+      ultima_reuniao_anterior: 0,
+      ...audit,
+    };
+    mocks.batchGet.mockResolvedValue({
+      data: {
+        valueRanges: values({
+          grupos: [
+            groupHeaders,
+            groupHeaders.map((header) => header === "revisao_atas_ativa" ? true : groupData[header] ?? ""),
+          ],
+        }),
+      },
+    });
+
+    const result = await createAtaInSheets(submission, "responsavel@example.com");
+    const requests = mocks.batchUpdate.mock.calls[0][0].requestBody.requests;
+    const ataValues = requests[0].updateCells.rows[0].values;
+
+    expect(result.statusAprovacao).toBe("pendente_revisao");
+    expect(ataValues[compatibleHeaders("atas").indexOf("status_aprovacao")].userEnteredValue)
+      .toEqual({ stringValue: "pendente_revisao" });
+    expect(ataValues[compatibleHeaders("atas").indexOf("aprovado_por")].userEnteredValue)
+      .toEqual({ stringValue: "" });
   });
 });

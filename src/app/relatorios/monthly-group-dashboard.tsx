@@ -209,19 +209,25 @@ export function MonthlyGroupDashboard({
                   <tr>
                     <th>Encargo</th>
                     <th>Nome</th>
-                    <th>Início</th>
+                    <th>Desde</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {data.mesa.map((row) => (
-                    <tr key={row.encargo}>
-                      <th>{row.encargo}</th>
-                      <td className={row.vacant ? "mesa-vacant-value" : undefined}>
-                        {row.nome || "-"}
-                      </td>
-                      <td>{formatDate(row.data_inicio) || "-"}</td>
+                  {data.mesa.length > 0 ? (
+                    data.mesa.map((row) => (
+                      <tr key={row.encargo}>
+                        <th>{row.encargo}</th>
+                        <td className={row.vacant ? "mesa-vacant-value" : undefined}>
+                          {row.vacant ? "Vago" : row.nome || "-"}
+                        </td>
+                        <td>{formatDate(row.data_inicio) || "-"}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={3}>Nenhum encargo cadastrado.</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>

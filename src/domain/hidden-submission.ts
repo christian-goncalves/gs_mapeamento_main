@@ -30,7 +30,8 @@ export const hiddenVisitanteSchema = z.object({
 });
 
 export const hiddenIngressoSchema = optionalPersonNameSchema.extend({
-  cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
+  cidade: requiredText.refine(isMunicipioOption, "Município inexistente.").optional(),
+  visitante_indice: z.number().int().min(0).optional(),
 });
 
 export const hiddenTrocaChaveiroSchema = z.object({
@@ -109,8 +110,9 @@ export function normalizeHiddenAtaSubmission(
       como_chegou_a_na: item.como_chegou_a_na,
     })),
     ingressos: submission.ingressos.map((item) => ({
-      nome: personName(item),
-      cidade: item.cidade,
+      ...(item.visitante_indice !== undefined
+        ? { visitante_indice: item.visitante_indice }
+        : { nome: personName(item), cidade: item.cidade ?? "" }),
     })),
     trocas_chaveiro: submission.trocas_chaveiro,
   };

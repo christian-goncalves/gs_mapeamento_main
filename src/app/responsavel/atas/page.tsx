@@ -1,30 +1,13 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCalendarDays,
-  faFileLines,
-  faPlus,
-  faUsers,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
 import { ResponsavelAtasTable, type ResponsavelAtaRow } from "./responsavel-atas-table";
 import { ResponsavelShell } from "../responsavel-shell";
+import { AtaApprovalPanel } from "@/app/atas/ata-approval-panel";
 
 export const dynamic = "force-dynamic";
-
-function currentMonthKey() {
-  const now = new Date();
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Sao_Paulo",
-    year: "numeric",
-    month: "2-digit",
-  }).format(now);
-}
-
-function normalizeName(value: string) {
-  return value.trim().replace(/\s+/g, " ").toLocaleLowerCase("pt-BR");
-}
 
 function primaryServerName(servers: { nome: string; ordem: number }[]) {
   return [...servers].sort((first, second) => first.ordem - second.ordem)[0]?.nome ?? "";
@@ -37,15 +20,7 @@ export default async function ResponsavelAtasPage() {
   if (!group) redirect("/login");
 
   const groupAtas = result.atas.filter(
-    (item) => item.grupo.grupo_id === group.grupo_id,
-  );
-  const monthKey = currentMonthKey();
-  const uniqueServers = new Set(
-    groupAtas.flatMap((item) =>
-      item.registro.servidores
-        .map((server) => normalizeName(server.nome))
-        .filter(Boolean),
-    ),
+    (item) => item.grupo.grupo_id === group.grupo_id && item.registro.ata.status_registro === "ativa",
   );
   const rows: ResponsavelAtaRow[] = groupAtas.map((item) => {
     const { ata } = item.registro;
@@ -55,9 +30,19 @@ export default async function ResponsavelAtasPage() {
       data: ata.data_reuniao,
       horario: ata.hora_inicio,
       servidor: primaryServerName(item.registro.servidores),
-      status: "Enviada",
+      status: ata.status_aprovacao === "pendente_revisao" ? "Pendente de revisão" : "Enviada",
     };
   });
+  const approvalRows = groupAtas
+    .filter((item) => item.registro.ata.status_aprovacao === "pendente_revisao")
+    .map(({ registro }) => ({
+      ataId: registro.ata.ata_id,
+      updatedAt: registro.ata.updated_at,
+      index: registro.ata.indice_personalizado_grupo,
+      date: registro.ata.data_reuniao,
+      time: registro.ata.hora_inicio,
+      group: group.grupo_nome,
+    }));
 
   return (
     <ResponsavelShell activeSection="responsavel" settingsHref={`/grupos/${group.grupo_id}`}>
@@ -74,35 +59,7 @@ export default async function ResponsavelAtasPage() {
         </Link>
       </header>
 
-      <section className="summary-cards" aria-label="Resumo das atas do grupo">
-        <dl className="summary-card">
-          <span className="summary-icon summary-icon-active" aria-hidden="true">
-            <FontAwesomeIcon icon={faFileLines} />
-          </span>
-          <div>
-            <dt>Atas</dt>
-            <dd>{groupAtas.length}</dd>
-          </div>
-        </dl>
-        <dl className="summary-card">
-          <span className="summary-icon" aria-hidden="true">
-            <FontAwesomeIcon icon={faCalendarDays} />
-          </span>
-          <div>
-            <dt>Este mês</dt>
-            <dd>{groupAtas.filter((item) => item.registro.ata.data_reuniao.startsWith(monthKey)).length}</dd>
-          </div>
-        </dl>
-        <dl className="summary-card">
-          <span className="summary-icon" aria-hidden="true">
-            <FontAwesomeIcon icon={faUsers} />
-          </span>
-          <div>
-            <dt>Servidores</dt>
-            <dd>{uniqueServers.size}</dd>
-          </div>
-        </dl>
-      </section>
+      <AtaApprovalPanel rows={approvalRows} />
 
       <ResponsavelAtasTable rows={rows} />
     </ResponsavelShell>

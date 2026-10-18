@@ -1,6 +1,8 @@
 import type { sheets_v4 } from "@googleapis/sheets";
 import type { AtaCompleta } from "@/domain/rules";
-import { SHEET_HEADERS, type SheetName } from "./contract";
+import { getSheetsClient, getSpreadsheetId } from "./client";
+import type { SheetName } from "./contract";
+import { ataStatuses, compatibleHeaders } from "./contract-v2";
 import {
   domainAtaToSheet,
   domainIngressoToSheet,
@@ -32,14 +34,39 @@ function rowData(
   sheet: SheetName,
   row: Record<string, SheetValue>,
 ): sheets_v4.Schema$RowData {
+  const headers = compatibleHeaders(sheet);
+  const versionedRow = sheet === "atas" ? { ...ataStatuses(row), ...row } : row;
   return {
-    values: SHEET_HEADERS[sheet].map((header) => {
+    values: headers.map((header) => {
       const value =
         sheet === "atas" && header === "data_reuniao"
-          ? dateSerial(String(row[header]))
-          : row[header];
+          ? dateSerial(String(versionedRow[header]))
+          : versionedRow[header] ?? "";
       return { userEnteredValue: extendedValue(value) };
     }),
+  };
+}
+
+export function buildCellUpdateRequest(
+  sheetId: number,
+  rowNumber: number,
+  values: SheetValue[],
+): sheets_v4.Schema$Request {
+  if (!Number.isInteger(sheetId) || rowNumber < 2 || values.length === 0) {
+    throw new Error("Destino de atualização inválido.");
+  }
+  return {
+    updateCells: {
+      range: {
+        sheetId,
+        startRowIndex: rowNumber - 1,
+        endRowIndex: rowNumber,
+        startColumnIndex: 0,
+        endColumnIndex: values.length,
+      },
+      rows: [{ values: values.map((value) => ({ userEnteredValue: extendedValue(value) })) }],
+      fields: "userEnteredValue",
+    },
   };
 }
 
@@ -97,7 +124,7 @@ export function buildMonthlyAtomicWriteRequests(
           startRowIndex: nextRows[sheet] - 1,
           endRowIndex: nextRows[sheet] - 1 + items.length,
           startColumnIndex: 0,
-          endColumnIndex: SHEET_HEADERS[sheet].length,
+          endColumnIndex: compatibleHeaders(sheet).length,
         },
         rows: items.map((item) =>
           rowData(sheet, item as Record<string, SheetValue>),
@@ -126,4 +153,10 @@ export async function executeAtomicBatch(
     spreadsheetId,
     requestBody: { requests },
   });
+}
+
+export async function executeSheetsBatch(
+  requests: sheets_v4.Schema$Request[],
+) {
+  return executeAtomicBatch(getSheetsClient(), getSpreadsheetId(), requests);
 }

@@ -51,14 +51,15 @@ export function buildAtaPresentation(item: AggregatedAta): AtaPresentation {
       time: tempoLimpoMapping.toSheet(entry.tempo_limpo),
     })),
   );
+  const displayIndex = String(ata.indice_personalizado_grupo).padStart(2, "0");
 
   return {
     ataId: ata.ata_id,
-    title: `Ata ${ata.indice_personalizado_grupo} - ${grupo.grupo_nome}`,
+    title: `Ata de reunião nº ${displayIndex} - ${grupo.grupo_nome}`,
     filename: `ata-${safeFilename(grupo.grupo_nome)}-${ata.data_reuniao}-${ata.indice_personalizado_grupo}.pdf`,
     groupEmail: grupo.email_acesso_grupo,
     groupActive: grupo.ativo,
-    groupReference: String(ata.indice_personalizado_grupo),
+    groupReference: displayIndex,
     sequential: ata.numero_sequencial_grupo,
     reviewData: {
       group: grupo.grupo_nome,
@@ -98,9 +99,14 @@ export function buildAtaPresentation(item: AggregatedAta): AtaPresentation {
       })),
       admissions: registro.ingressos.map((entry, index) => {
         const location = cidadeEstado(entry.cidade);
+        const visitorIndex = entry.visitante_id
+          ? registro.visitantes.findIndex((visitor) => visitor.visitante_id === entry.visitante_id)
+          : -1;
         return {
           id: entry.ingresso_id,
-          label: `Ingresso ${index + 1}`,
+          label: visitorIndex >= 0
+            ? `Ingresso do Visitante ${visitorIndex + 1}`
+            : `Ingresso ${index + 1}`,
           city: location.cidade,
           state: location.estado,
         };
@@ -111,9 +117,9 @@ export function buildAtaPresentation(item: AggregatedAta): AtaPresentation {
         time: entry.time,
       })),
       supplementalMetrics: {
+        cities: indicadores.total_localidades,
         states: indicadores.total_estados,
-        countries: indicadores.total_paises,
-        membersWithoutLocation: indicadores.membros_sem_localidade,
+        otherCountries: new Set(membrosInternacionais.map((entry) => entry.pais.trim().toLocaleLowerCase("pt-BR"))).size,
       },
     },
   };

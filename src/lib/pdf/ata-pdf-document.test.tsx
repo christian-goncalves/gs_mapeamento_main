@@ -9,7 +9,7 @@ import { renderAtaPdf } from "./ata-pdf-document";
 function presentation(locationCount = 2): AtaPresentation {
   return {
     ataId: "024d893a-98cc-4df6-82b1-0cd09fd1d90c",
-    title: "Ata 1 - USL",
+    title: "Ata de reunião nº 01 - USL",
     filename: "ata-usl-2026-07-01-1.pdf",
     groupEmail: "usl@example.com",
     groupActive: true,
@@ -22,7 +22,7 @@ function presentation(locationCount = 2): AtaPresentation {
       servers: [{ id: "s1", name: "Gustavo", role: "Secretário" }],
       locations: Array.from({ length: locationCount }, (_, index) => ({ id: `l${index}`, name: `Localidade ${index} - SC`, count: 2 })),
       internationalMembers: [], visitors: [], admissions: [], achievements: [],
-      supplementalMetrics: { states: 1, countries: 1, membersWithoutLocation: 2 },
+      supplementalMetrics: { cities: 2, states: 1, otherCountries: 0 },
     },
   };
 }

@@ -13,21 +13,13 @@ import {
 import { AtaPdfDownloadButton } from "@/app/atas/ata-pdf-download-button";
 import type { ConfigColumns } from "datatables.net";
 
-type ResponsavelAtaTab = "enviadas" | "por-servidor" | "todas";
-
 export type ResponsavelAtaRow = {
   ataId: string;
   indicePersonalizadoGrupo: number;
   data: string;
   horario: string;
   servidor: string;
-  status: "Enviada";
-};
-
-const tabLabels: Record<ResponsavelAtaTab, string> = {
-  enviadas: "Atas enviadas",
-  "por-servidor": "Por servidor",
-  todas: "Todas",
+  status: "Enviada" | "Pendente de revisão";
 };
 
 const statusLegend = [
@@ -37,7 +29,7 @@ const statusLegend = [
 ] as const;
 
 type ResponsavelAtaDataTableRow = [
-  string,
+  number,
   string,
   string,
   string,
@@ -195,26 +187,9 @@ function ResponsavelAtaActions({ ata }: { ata: ResponsavelAtaRow }) {
   );
 }
 
-function sortRows(rows: ResponsavelAtaRow[], tab: ResponsavelAtaTab) {
-  if (tab === "por-servidor") {
-    return [...rows].sort(
-      (first, second) =>
-        first.servidor.localeCompare(second.servidor, "pt-BR") ||
-        second.data.localeCompare(first.data) ||
-        second.horario.localeCompare(first.horario),
-    );
-  }
-
-  return [...rows].sort(
-    (first, second) =>
-      second.data.localeCompare(first.data) ||
-      second.horario.localeCompare(first.horario),
-  );
-}
-
 function toDataTableRows(rows: ResponsavelAtaRow[]): ResponsavelAtaDataTableRow[] {
   return rows.map((row) => [
-    `#${row.indicePersonalizadoGrupo}`,
+    row.indicePersonalizadoGrupo,
     row.data,
     row.horario,
     row.servidor || "Sem servidor",
@@ -253,17 +228,11 @@ const columns: ConfigColumns[] = [
 export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
   const [DataTableComponent, setDataTableComponent] =
     useState<DataTableComponent | null>(null);
-  const [activeTab, setActiveTab] = useState<ResponsavelAtaTab>("enviadas");
-  const tabs = ["enviadas", "por-servidor", "todas"] as const;
 
   const tableRows = useMemo(
-    () => toDataTableRows(sortRows(rows, activeTab)),
-    [activeTab, rows],
+    () => toDataTableRows(rows),
+    [rows],
   );
-
-  function updateTab(tab: ResponsavelAtaTab) {
-    setActiveTab(tab);
-  }
 
   useEffect(() => {
     let mounted = true;
@@ -285,21 +254,6 @@ export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
 
   return (
     <section className="card responsavel-atas-card">
-      <div className="status-tabs" role="tablist" aria-label="Filtrar atas">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            role="tab"
-            aria-selected={activeTab === tab}
-            className={activeTab === tab ? "status-tab status-tab-active" : "status-tab"}
-            onClick={() => updateTab(tab)}
-          >
-            {tabLabels[tab]}
-          </button>
-        ))}
-      </div>
-
       <div className="responsavel-status-legend" aria-label="Legenda dos status">
         <span className="responsavel-status-legend-title">Status:</span>
         {statusLegend.map((status) => (
@@ -316,15 +270,14 @@ export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
       <div className="responsavel-table-wrap">
         {DataTableComponent ? (
           <DataTableComponent
-            key={activeTab}
             className="responsavel-atas-table"
             columns={columns}
             data={tableRows}
             options={{
               autoWidth: false,
               ordering: true,
-              order: activeTab === "por-servidor" ? [[3, "asc"], [1, "desc"]] : [[1, "desc"]],
-              orderFixed: { post: [[2, "asc"]] },
+              order: [[0, "desc"]],
+              orderFixed: { post: [[2, "desc"]] },
               pageLength: 10,
               lengthMenu: [10, 25, 50],
               language: {
@@ -347,6 +300,7 @@ export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
               },
             }}
             slots={{
+              0: (data: number) => (data >= 1 && data <= 9 ? `0${data}` : `${data}`),
               1: (data: string, row: ResponsavelAtaDataTableRow) => (
                 <>
                   <span className="responsavel-date-desktop">{formatDate(data)}</span>
@@ -363,7 +317,7 @@ export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
               ),
               4: (data: ResponsavelAtaRow["status"]) => (
                 <span
-                  className="responsavel-status-dot responsavel-status-dot-sent"
+                  className={`responsavel-status-dot ${data === "Pendente de revisão" ? "responsavel-status-dot-review" : "responsavel-status-dot-sent"}`}
                   role="img"
                   aria-label={`Status: ${data}`}
                   title={data}

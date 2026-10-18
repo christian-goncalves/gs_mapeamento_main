@@ -123,14 +123,16 @@ const styles = StyleSheet.create({
   },
   metrics: {
     flexDirection: "row",
+    flexWrap: "wrap",
     marginTop: 8,
     borderWidth: 1,
     borderColor: colors.line,
     borderRadius: 7,
     backgroundColor: colors.white,
   },
-  metric: { flexGrow: 1, flexBasis: 0, alignItems: "center", paddingVertical: 8, paddingHorizontal: 2 },
+  metric: { width: "33.33%", alignItems: "center", paddingVertical: 8, paddingHorizontal: 2 },
   metricBorder: { borderLeftWidth: 1, borderLeftColor: colors.line },
+  metricBorderTop: { borderTopWidth: 1, borderTopColor: colors.line },
   metricLabel: { minHeight: 16, color: colors.muted, fontSize: 6.2, textAlign: "center" },
   metricValue: { marginTop: 2, color: colors.brand, fontSize: 12, fontWeight: 700 },
   supplemental: { flexDirection: "row", marginTop: 6, marginHorizontal: -3 },
@@ -219,11 +221,14 @@ export function AtaPdfDocument({ presentation, generatedAt }: { presentation: At
   ];
   const metrics = [
     ["Servidores", data.servers.length],
-    ["Localidades", data.locations.length],
-    ["Internacionais", data.internationalMembers.length],
+    ["Membros", data.membersPresent],
+    ["Partilhas", data.shares],
     ["Visitantes", data.visitors.length],
     ["Ingressos", data.admissions.length],
     ["Conquistas", data.achievements.length],
+    ["Cidades", data.supplementalMetrics?.cities ?? data.locations.length],
+    ["Estados", data.supplementalMetrics?.states ?? 0],
+    ["Outros países", data.supplementalMetrics?.otherCountries ?? data.internationalMembers.length],
   ] as const;
   const formattedGeneratedAt = new Intl.DateTimeFormat("pt-BR", {
     dateStyle: "short",
@@ -241,7 +246,6 @@ export function AtaPdfDocument({ presentation, generatedAt }: { presentation: At
         <View style={styles.hero} wrap={false}>
           <View>
             <Text style={styles.heroTitle}>{presentation.title}</Text>
-            <Text style={styles.heroMeta}>ID: {presentation.ataId}</Text>
             <Text style={styles.heroMeta}>Gerado em: {formattedGeneratedAt}</Text>
           </View>
           <Text style={styles.heroBadge}>ATA CONFIRMADA</Text>
@@ -259,12 +263,10 @@ export function AtaPdfDocument({ presentation, generatedAt }: { presentation: At
         </View>
 
         <View style={styles.section} wrap={false}>
-          <View style={styles.sectionHeader}><Text style={styles.sectionTitle}>Identificação da ata</Text></View>
+          <View style={styles.sectionHeader}><Text style={styles.sectionTitle}>Índice personalizado do grupo</Text></View>
           <View style={styles.identification}>
             {[
-              ["Referência do grupo", presentation.groupReference],
-              ["Sequencial automático", String(presentation.sequential)],
-              ["ID interno", presentation.ataId],
+              ["Número da ata", presentation.groupReference],
             ].map(([label, value]) => (
               <View key={label} style={styles.identificationItem}>
                 <Text style={styles.label}>{label}</Text><Text style={styles.value}>{value}</Text>
@@ -275,25 +277,11 @@ export function AtaPdfDocument({ presentation, generatedAt }: { presentation: At
 
         <View style={styles.metrics} wrap={false}>
           {metrics.map(([label, value], index) => (
-            <View key={label} style={[styles.metric, ...(index ? [styles.metricBorder] : [])]}>
+            <View key={label} style={[styles.metric, ...(index % 3 ? [styles.metricBorder] : []), ...(index >= 3 ? [styles.metricBorderTop] : [])]}>
               <Text style={styles.metricLabel}>{label}</Text><Text style={styles.metricValue}>{value}</Text>
             </View>
           ))}
         </View>
-
-        {data.supplementalMetrics && (
-          <View style={styles.supplemental} wrap={false}>
-            {[
-              ["Estados", data.supplementalMetrics.states],
-              ["Países", data.supplementalMetrics.countries],
-              ["Membros sem localidade", data.supplementalMetrics.membersWithoutLocation],
-            ].map(([label, value]) => (
-              <View key={label} style={styles.supplementalItem}><View style={styles.supplementalInner}>
-                <Text style={styles.label}>{label}</Text><Text style={styles.metricValue}>{value}</Text>
-              </View></View>
-            ))}
-          </View>
-        )}
 
         {chunks(data.servers, 10).map((items, chunkIndex) => (
           <Section key={`servers-${chunkIndex}`} title="Servidores" count={data.servers.length}>
@@ -308,9 +296,9 @@ export function AtaPdfDocument({ presentation, generatedAt }: { presentation: At
 
         {chunks(data.locations, 10).map((items, chunkIndex) => (
           <Section key={`locations-${chunkIndex}`} title="Localidades" count={data.locations.length}>
-            {items.length ? items.map((item) => (
+            {items.length ? items.map((item, index) => (
               <View key={item.id} style={styles.row} wrap={false}>
-                <Text style={styles.rowText}>{item.name}</Text><Text style={styles.badge}>{item.count}</Text>
+                <Text style={styles.rowText}>{chunkIndex * 10 + index + 1}. {item.name}</Text><Text style={styles.badge}>{item.count}</Text>
               </View>
             )) : <Empty>Nenhuma localidade registrada.</Empty>}
           </Section>
@@ -318,9 +306,9 @@ export function AtaPdfDocument({ presentation, generatedAt }: { presentation: At
 
         {chunks(data.internationalMembers, 10).map((items, chunkIndex) => (
           <Section key={`international-${chunkIndex}`} title="Membros internacionais" count={data.internationalMembers.length}>
-            {items.length ? items.map((item) => (
+            {items.length ? items.map((item, index) => (
               <View key={item.id} style={styles.row} wrap={false}>
-                <Text style={styles.rowText}>{item.country}</Text><Text style={styles.badge}>{item.count}</Text>
+                <Text style={styles.rowText}>{chunkIndex * 10 + index + 1}. {item.country}</Text><Text style={styles.badge}>{item.count}</Text>
               </View>
             )) : <Empty>Nenhum membro internacional registrado.</Empty>}
           </Section>
@@ -348,7 +336,7 @@ export function AtaPdfDocument({ presentation, generatedAt }: { presentation: At
         ))}
 
         <View style={styles.footer} fixed>
-          <Text>{presentation.ataId}</Text>
+          <Text>{presentation.title}</Text>
           <Text render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`} />
         </View>
       </Page>

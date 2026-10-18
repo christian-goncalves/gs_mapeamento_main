@@ -5,7 +5,7 @@ import {
   validateContractIntegrity,
   type ContractRows,
 } from "./integrity";
-import type { Ata, Grupo, Servidor } from "./schemas";
+import type { Ata, Grupo, Servidor, Visitante, Ingresso } from "./schemas";
 
 const audit = {
   created_at: "2026-06-21T12:00:00.000Z",
@@ -66,6 +66,38 @@ describe("integridade entre linhas", () => {
       field: "grupo_id",
       message: "grupo_id duplicado.",
     });
+  });
+
+  it("valida somente vínculos explícitos entre ingresso e visitante da mesma ata", () => {
+    const visitor = {
+      visitante_id: "a86f8bc3-e943-48e8-8853-cabbb41ab071",
+      ata_id: ata.ata_id,
+      nome: "visitante_1",
+      cidade: "Itajaí - SC",
+      descricao: "provavel_adicto",
+      como_chegou_a_na: "internet",
+      ...audit,
+    } satisfies Visitante;
+    const ticket = {
+      ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d",
+      ata_id: ata.ata_id,
+      visitante_id: "a86f8bc3-e943-48e8-8853-cabbb41ab070",
+      nome: "visitante_1",
+      cidade: visitor.cidade,
+      ...audit,
+    } satisfies Ingresso;
+    const rows = {
+      grupos: [], grupo_horarios: [], grupo_servidores_mesa: [], atas: [],
+      servidores: [], participacao: [], visitantes: [row("visitantes", 2, visitor)],
+      ingressos: [row("ingressos", 2, ticket)], trocas_chaveiro: [],
+    } satisfies ContractRows;
+    expect(validateContractIntegrity(rows)).toContainEqual({
+      sheet: "ingressos",
+      rowNumber: 2,
+      field: "visitante_id",
+      message: "visitante_id não referencia um visitante da mesma ata.",
+    });
+    expect(validateContractIntegrity({ ...rows, ingressos: [row("ingressos", 2, { ...ticket, visitante_id: undefined })] })).toEqual([]);
   });
 
   it("permite ordem de grupo duplicada porque a ordenação é alfabética", () => {

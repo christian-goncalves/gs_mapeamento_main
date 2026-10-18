@@ -33,9 +33,9 @@ export default async function NewAtaPage() {
 
   return (
     <ResponsavelShell activeSection="responsavel" settingsHref={`/grupos/${primaryGroup.grupo_id}`}>
-      <header>
+      <header className="ata-new-page-header">
         <p className="eyebrow">Nova ata</p>
-        <h1>{groups.length === 1 ? groups[0].grupo_nome : "Selecione o grupo"}</h1>
+        <h1>{groups.length === 1 ? `Grupo ${groups[0].grupo_nome}` : "Selecione o grupo"}</h1>
         <p className="muted">
           Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
         </p>

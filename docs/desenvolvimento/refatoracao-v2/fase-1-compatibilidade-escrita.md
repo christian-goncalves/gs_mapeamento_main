@@ -2,24 +2,26 @@
 
 ## Estado e autorização
 
-Detalhamento preparado como entrega F00-T07. F1 ainda não começou; depende da conferência e do aceite do CP-00. A arquitetura recomendada nesta proposta é o gateway Apps Script único descrito nas [evidências F0](evidencias-f0-2026-10-16.md). Nenhum serviço será provisionado por este documento.
+F1 autorizada pelo usuário em 16/10/2026, após conferência do CP-00. Execução iniciada com inventário e trabalho local. O usuário autorizou usar a planilha compartilhada por DEV/PROD como alvo da validação F1. Antes de qualquer escrita, devem ser concluídos e registrados backup/export, confirmação do alvo e procedimento de recuperação; escrita de teste limitada ao escopo F1. A arquitetura escolhida é o gateway Apps Script único descrito nas [evidências F0](evidencias-f0-2026-10-16.md). Esta autorização não inclui publicação do Apps Script nem ativação de funcionalidades.
+
+Em 16/10/2026, após a gravação no-op confirmada, o usuário decidiu que as pendências operacionais do CP-01 não devem bloquear o desenvolvimento local da F2. CP-01 permanece gate para novas gravações reais em Sheets, migração, cutover, publicação e ativação. A autorização para escrever na planilha compartilhada cobriu somente a validação F1 já registrada; não autoriza gravações de negócio da F2. O andamento está no [checklist](checklist-execucao.md) e nas [evidências F1](evidencias-f1-2026-10-16.md).
 
 ## Objetivo e limites
 
-Preparar leitores, serializadores e escritores para uma transição compatível entre o contrato atual e o contrato V2, preservando o comportamento e os dados existentes. Implantar a coordenação compartilhada escolhida, garantir repetição segura e demonstrar retorno operacional em ambiente DEV isolado.
+Preparar localmente leitores, serializadores e escritores para uma transição compatível entre o contrato atual e o contrato V2, preservando o comportamento e os dados existentes. O teste no-op já comprovou o caminho mínimo do Gateway; isolamento, retorno operacional e coordenação ampla continuam como gate antes de novas gravações reais e cutover, sem bloquear implementação local de fases seguintes.
 
-F1 não habilita revisão, aprovação, edição versionada, exclusão lógica, nova interface, mudança de indicador ou migração de dados. Nenhuma funcionalidade incompleta fica acessível ao usuário. Produção e sua planilha permanecem fora dos testes.
+F1 não habilita revisão, aprovação, edição versionada, exclusão lógica, nova interface, mudança de indicador ou migração de dados. Nenhuma funcionalidade incompleta fica acessível ao usuário. Excepcionalmente, o usuário autorizou testar F1 na planilha compartilhada por DEV/PROD; ela não é um ambiente isolado e qualquer escrita afeta o mesmo arquivo usado por ambos. A autorização não inclui publicação do gateway ou ativação de funcionalidades.
 
 ## Pré-condições
 
 1. CP-00 aceito, com schema físico e arquitetura de coordenação registrados.
 2. Conta responsável pelo gateway e modo de autenticação aprovados; quotas e monitoramento verificados.
 3. Cutover aprovado: writers antigos, scripts administrativos e edição manual mapeados, suspensos ou explicitamente delimitados.
-4. Planilha exclusiva de teste identificada; `GOOGLE_SHEETS_TEST_ID` está ausente no checkout observado em 16/10/2026. A planilha DEV atual contém dados e não é fixture de escrita. Não escrever nela sem delimitação e autorização específicas.
-5. Backup/export e procedimento de recuperação aprovados para o teste de compatibilidade.
-6. Nenhum uso do valor local `GOOGLE_SHEETS_ID` como prova de DEV/PROD; cada alvo é confirmado por título/metadados no momento da operação.
+4. **Exceção autorizada pelo usuário em 16/10/2026:** a planilha compartilhada de DEV/PROD pode ser usada para validação F1. Confirmar título/metadados no momento da operação e manter a escrita dentro dos cenários autorizados desta fase.
+5. Backup/export e procedimento de recuperação concluídos e registrados antes da primeira escrita.
+6. Nenhum uso do valor local `GOOGLE_SHEETS_ID` como prova suficiente do alvo; confirmar título/metadados no momento da operação.
 
-Se alguma pré-condição falhar, continuar apenas testes puros/localmente seguros e parar o trabalho dependente de Sheets.
+As pré-condições de ambiente, backup, alvo e coordenação aplicam-se a novas operações reais em Sheets. Enquanto estiverem pendentes, pode-se continuar desenvolvimento local, testes sintéticos e revisão de código. A autorização para o teste F1 na planilha compartilhada não autoriza gravações de negócio da F2, migração, publicação ou ativação.
 
 ## Tarefas
 
@@ -32,7 +34,7 @@ Se alguma pré-condição falhar, continuar apenas testes puros/localmente segur
 | F10-T05 | Fechar repetição, timeout, revalidação, lock, queda do processo e recuperação. Estados desconhecidos são consultados pelo ID; não gerar outra operação automaticamente. | Gateway, ledger, erros de domínio e logs redigidos | Cenários de fault injection e reconciliação; evidência de que tentativas duplicadas não duplicam linha nem sequência e falhas fecham. |
 | F10-T06 | Medir payload serializado em operações unitárias e de lote. Aplicar inicialmente 50 atas e 1,5 MiB, um único `batchUpdate`; ajustar somente com evidência e decisão registrada. | Serializador do gateway e fluxo de seleção | Testes no limite, logo abaixo e acima; pedido acima do teto rejeitado antes de gravar; lote nunca fracionado. |
 | F10-T07 | Validar compatibilidade com snapshot isolado e planilha exclusiva de teste; provar releitura, atualização, backup e retorno sem escrever em produção. | Testes unitários/integrados, roteiro manual e checklist | Resultados por cenário, identificação de ambiente/título, commit, revisão do export e totais sem dados pessoais. |
-| F10-T08 | Preparar pacote para CP-01, consolidando evidência, falhas anteriores, limitações e autorizações necessárias para migração/ativação. | Checklist e documentação V2 | CP-01 apresentado ao usuário. F2 não começa automaticamente. |
+| F10-T08 | Registrar o gate operacional CP-01 e as pendências para futuras gravações reais, migração/cutover e ativação. | Checklist e documentação V2 | CP-01 permanece aberto para operações reais; desenvolvimento local da F2 pode avançar. |
 
 ## Cenários mínimos de verificação
 
@@ -74,7 +76,7 @@ Se alguma pré-condição falhar, continuar apenas testes puros/localmente segur
 
 ## Checkpoint CP-01
 
-Aceite somente quando compatibilidade anterior e nova for demonstrada, todos os writers no corte estiverem cobertos, operações desconhecidas forem recuperáveis sem repetição cega, teste isolado confirmar escrita/leitura, e o retorno para versão compatível com os dados estiver comprovado. A aprovação do CP-01 não autoriza migração ou disponibilidade em produção; essas mudanças exigem procedimento e autorização próprios.
+CP-01 não é pré-requisito para desenvolvimento local da F2. Antes de qualquer nova gravação real, migração ou cutover, exige-se comprovar compatibilidade do contrato relevante, autorização/guard e leitura posterior da operação específica, além de identificar o alvo e seu retorno seguro. A coordenação de todos os writers e a restauração isolada permanecem necessárias antes de habilitar o fluxo compartilhado de forma ampla. CP-01 não autoriza por si só migração, publicação ou ativação; essas ações exigem procedimento e autorização próprios.
 
 ## Retorno da F1
 

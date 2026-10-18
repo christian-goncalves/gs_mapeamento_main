@@ -9,7 +9,10 @@ export type LocatedObject = {
 export function rowsToObjects(
   expectedHeaders: readonly string[],
   values: SheetCell[][],
-  options: { allowMissingTrailingHeaders?: number } = {},
+  options: {
+    allowMissingTrailingHeaders?: number;
+    allowExtraTrailingHeaders?: readonly string[];
+  } = {},
 ): LocatedObject[] {
   const [headers = [], ...rows] = values;
   const missingTrailingHeaders = expectedHeaders.length - headers.length;
@@ -17,7 +20,17 @@ export function rowsToObjects(
     missingTrailingHeaders > 0 &&
     missingTrailingHeaders <= (options.allowMissingTrailingHeaders ?? 0) &&
     headers.every((header, index) => header === expectedHeaders[index]);
-  if (!compatibleTrailingMigration && (
+  const knownTrailingHeaders = options.allowExtraTrailingHeaders ?? [];
+  const compatibleKnownExtensions =
+    headers.length > expectedHeaders.length &&
+    expectedHeaders.every((header, index) => header === headers[index]) &&
+    headers
+      .slice(expectedHeaders.length)
+      .every(
+        (header) =>
+          typeof header === "string" && knownTrailingHeaders.includes(header),
+      );
+  if (!compatibleTrailingMigration && !compatibleKnownExtensions && (
     headers.length !== expectedHeaders.length ||
     headers.some((header, index) => header !== expectedHeaders[index])
   )) {

@@ -19,7 +19,6 @@ export function AtaIndexForm({
     updateAtaIndexAction,
     null,
   );
-
   return (
     <form action={action} className="ata-index-form">
       <input type="hidden" name="ata_id" value={ataId} />

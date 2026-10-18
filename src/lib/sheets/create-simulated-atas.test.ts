@@ -221,15 +221,20 @@ describe("preparação e atomicidade mensal", () => {
       prepared,
     );
     expect(batchUpdate).toHaveBeenCalledOnce();
-    const failure = vi.fn().mockRejectedValue({ response: { status: 400 } });
+    expect(batchUpdate).toHaveBeenCalledWith({
+      spreadsheetId: "dev",
+      requestBody: { requests: prepared.requests },
+    });
+    const failure = new Error("gateway recusado");
+    batchUpdate.mockRejectedValueOnce(failure);
     await expect(
       executePreparedSimulationCommit(
-        { spreadsheets: { batchUpdate: failure } },
+        { spreadsheets: { batchUpdate } },
         "dev",
         prepared,
       ),
-    ).rejects.toEqual({ response: { status: 400 } });
-    expect(failure).toHaveBeenCalledOnce();
+    ).rejects.toBe(failure);
+    expect(batchUpdate).toHaveBeenCalledTimes(2);
   });
 
   it("reconcilia UUIDs e chaves sem repetir a escrita", () => {

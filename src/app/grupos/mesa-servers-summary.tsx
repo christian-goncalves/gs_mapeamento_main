@@ -4,7 +4,6 @@ import { useActionState, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCalendarDays,
   faEllipsisVertical,
   faFloppyDisk,
   faPenToSquare,
@@ -13,7 +12,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import {
-  DEFAULT_MESA_OFFICES,
+  KNOWN_MESA_OFFICES,
   isVacantMesaName,
 } from "@/domain/grupo-servidores-mesa";
 import type { GrupoServidorMesa } from "@/domain/schemas";
@@ -29,44 +28,24 @@ type MesaServerItem = {
   nome: string;
   data_inicio: string;
   ordem: number;
-  fixed: boolean;
 };
 
 function mesaServerItems(servidores: readonly GrupoServidorMesa[]) {
-  const active = servidores.filter((item) => item.ativo);
-  const byOffice = new Map(active.map((item) => [item.encargo, item]));
-  const fixed: MesaServerItem[] = DEFAULT_MESA_OFFICES.map((encargo, index) => {
-    const existing = byOffice.get(encargo);
-    return {
-      clientId: existing?.grupo_servidor_mesa_id ?? `fixed-${encargo}`,
-      grupo_servidor_mesa_id: existing?.grupo_servidor_mesa_id,
-      encargo,
-      nome: existing?.nome || "vago",
-      data_inicio: existing?.data_inicio ?? "",
-      ordem: index + 1,
-      fixed: true,
-    };
-  });
-  const extras = active
-    .filter(
-      (item) =>
-        !DEFAULT_MESA_OFFICES.some((encargo) => encargo === item.encargo),
-    )
+  return servidores
+    .filter((item) => item.ativo)
     .sort(
       (first, second) =>
         first.ordem - second.ordem ||
         first.encargo.localeCompare(second.encargo, "pt-BR"),
     )
-    .map<MesaServerItem>((item, index) => ({
+    .map<MesaServerItem>((item) => ({
       clientId: item.grupo_servidor_mesa_id,
       grupo_servidor_mesa_id: item.grupo_servidor_mesa_id,
       encargo: item.encargo,
       nome: item.nome || "vago",
       data_inicio: item.data_inicio,
-      ordem: DEFAULT_MESA_OFFICES.length + index + 1,
-      fixed: false,
+      ordem: item.ordem,
     }));
-  return [...fixed, ...extras];
 }
 
 function displayDate(value: string) {
@@ -88,7 +67,17 @@ function MesaServerModal({
     null,
   );
   const [name, setName] = useState(item.nome);
+  const initialKnownOffice = KNOWN_MESA_OFFICES.some(
+    (office) => office === item.encargo,
+  );
+  const [officeChoice, setOfficeChoice] = useState(
+    initialKnownOffice ? item.encargo : item.encargo ? "outro" : "",
+  );
+  const [customOffice, setCustomOffice] = useState(
+    initialKnownOffice ? "" : item.encargo,
+  );
   const vacant = isVacantMesaName(name);
+  const encargo = officeChoice === "outro" ? customOffice.trim() : officeChoice;
 
   useEffect(() => {
     function closeOnEscape(event: KeyboardEvent) {
@@ -116,9 +105,8 @@ function MesaServerModal({
         <header className="mesa-server-modal-header">
           <div>
             <h2 id="mesa-server-modal-title">
-              {item.grupo_servidor_mesa_id ? "Editar servidor" : "Adicionar encargo"}
+              {item.grupo_servidor_mesa_id ? "Editar encargo" : "Adicionar servidores"}
             </h2>
-            <p>Atualize somente este encargo da mesa.</p>
           </div>
           <button
             type="button"
@@ -139,16 +127,37 @@ function MesaServerModal({
           value={item.grupo_servidor_mesa_id ?? ""}
         />
         <input type="hidden" name="ordem" value={item.ordem} />
+        <input type="hidden" name="encargo" value={encargo} />
         <div className="mesa-server-modal-fields">
           <label>
             Encargo
-            <input
-              name="encargo"
+            <select
+              name="encargo_tipo"
               required
-              defaultValue={item.encargo}
-              readOnly={item.fixed}
-            />
+              value={officeChoice}
+              onChange={(event) => {
+                const choice = event.target.value;
+                setOfficeChoice(choice);
+                if (choice !== "outro") setCustomOffice("");
+              }}
+            >
+              <option value="" disabled>Selecione um encargo</option>
+              {KNOWN_MESA_OFFICES.map((office) => (
+                <option key={office} value={office}>{office}</option>
+              ))}
+              <option value="outro">Outro</option>
+            </select>
           </label>
+          {officeChoice === "outro" && (
+            <label>
+              Nome do encargo
+              <input
+                value={customOffice}
+                required
+                onChange={(event) => setCustomOffice(event.target.value)}
+              />
+            </label>
+          )}
           <label>
             Nome do servidor
             <input
@@ -165,7 +174,7 @@ function MesaServerModal({
             />
           </label>
           <label>
-            Data de início
+            Desde
             <input
               type="date"
               name="data_inicio"
@@ -287,13 +296,6 @@ function MesaServerActions({
               aria-label={`Ações de ${item.encargo}`}
               style={{ top: position.top, left: position.left }}
             >
-              <div className="mesa-server-action-date" role="none">
-                <FontAwesomeIcon icon={faCalendarDays} />
-                <span>
-                  <small>Data de início</small>
-                  <strong>{displayDate(item.data_inicio)}</strong>
-                </span>
-              </div>
               <button
                 type="button"
                 className="responsavel-action-menu-item"
@@ -304,9 +306,9 @@ function MesaServerActions({
                 }}
               >
                 <FontAwesomeIcon icon={faPenToSquare} />
-                <span>Editar servidor</span>
+                <span>Editar encargo</span>
               </button>
-              {!item.fixed && item.grupo_servidor_mesa_id && (
+              {item.grupo_servidor_mesa_id && (
                 <form
                   action={deactivateGrupoServidorMesaAction}
                   onSubmit={(event) => {
@@ -364,11 +366,13 @@ export function MesaServersSummary({
         </div>
       </div>
       <div className="table-wrap">
+        {items.length > 0 ? (
         <table className="schedule-summary-table mesa-summary-table mesa-summary-table-actions">
           <thead>
             <tr>
               <th>Encargo</th>
               <th>Servidor</th>
+              <th>Desde</th>
               <th className="mesa-actions-heading">Ações</th>
             </tr>
           </thead>
@@ -379,7 +383,10 @@ export function MesaServersSummary({
                 <tr key={item.clientId}>
                   <th scope="row">{item.encargo}</th>
                   <td className={vacant ? "mesa-vacant-value" : undefined}>
-                    {vacant ? "Vago" : item.nome}
+                    {vacant ? "(vago)" : item.nome}
+                  </td>
+                  <td className={!item.data_inicio ? "mesa-vacant-value" : undefined}>
+                    {item.data_inicio ? displayDate(item.data_inicio) : "—"}
                   </td>
                   <td className="mesa-actions-cell">
                     <MesaServerActions
@@ -394,6 +401,9 @@ export function MesaServersSummary({
             })}
           </tbody>
         </table>
+        ) : (
+          <p className="empty-state">Nenhum encargo cadastrado para este grupo.</p>
+        )}
       </div>
       <div className="section-footer schedule-view-footer">
         <button
@@ -406,14 +416,13 @@ export function MesaServersSummary({
               encargo: "",
               nome: "vago",
               data_inicio: "",
-              ordem: items.length + 1,
-              fixed: false,
+              ordem: Math.max(0, ...items.map((item) => item.ordem)) + 1,
             })
           }
         >
           <span className="button-content">
             <FontAwesomeIcon icon={faPlus} />
-            Adicionar encargo
+            Adicionar servidores
           </span>
         </button>
       </div>

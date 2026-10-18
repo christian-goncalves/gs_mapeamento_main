@@ -34,6 +34,7 @@ type VisitorDraft = Omit<
 > & {
   descricao: VisitorSubmission["descricao"] | "";
   como_chegou_a_na: VisitorSubmission["como_chegou_a_na"] | "";
+  has_ingresso: boolean;
 };
 type Draft = Omit<
   HiddenAtaSubmission,
@@ -43,7 +44,6 @@ type Draft = Omit<
   participacao: (HiddenAtaSubmission["participacao"][number] & ClientRow)[];
   membros_internacionais: (HiddenAtaSubmission["membros_internacionais"][number] & ClientRow)[];
   visitantes: (VisitorDraft & ClientRow)[];
-  ingressos: (HiddenAtaSubmission["ingressos"][number] & ClientRow)[];
   trocas_chaveiro: (HiddenAtaSubmission["trocas_chaveiro"][number] & ClientRow)[];
 };
 
@@ -59,7 +59,6 @@ const tipoReuniaoOptions: Draft["ata"]["tipo_reuniao"][] = [
 const servidorFuncaoOptions = servidorFuncoes;
 
 type AtaNameSuggestions = {
-  preenchido_por: string[];
   servidores: string[];
 };
 
@@ -164,7 +163,9 @@ function submissionFromDraft(draft: Draft) {
         como_chegou_a_na,
       }),
     ),
-    ingressos: draft.ingressos.map(({ cidade }) => ({ cidade })),
+    ingressos: draft.visitantes.flatMap((visitor, visitante_indice) =>
+      visitor.has_ingresso ? [{ visitante_indice }] : [],
+    ),
     trocas_chaveiro: draft.trocas_chaveiro.map(({ tempo_limpo, quantidade }) => ({
       tempo_limpo,
       quantidade,
@@ -197,7 +198,6 @@ export function AtaForm({
   const [reviewing, setReviewing] = useState(false);
   const [clientError, setClientError] = useState<string>();
   const [nameSuggestions, setNameSuggestions] = useState<AtaNameSuggestions>({
-    preenchido_por: [],
     servidores: [],
   });
   const [paises, setPaises] = useState<Pais[]>([]);
@@ -226,7 +226,6 @@ export function AtaForm({
     participacao: [],
     membros_internacionais: [],
     visitantes: [],
-    ingressos: [],
     trocas_chaveiro: [],
   });
   const submission = submissionFromDraft(draft);
@@ -274,11 +273,12 @@ export function AtaForm({
         ? origemContatoMapping.toSheet(item.como_chegou_a_na)
         : "Não informada",
     })),
-    admissions: draft.ingressos.map((item, index) => {
+    admissions: draft.visitantes.flatMap((item) => {
+      if (!item.has_ingresso) return [];
       const location = cidadeEstado(item.cidade);
       return {
-        id: item.clientId,
-        label: `Ingresso ${index + 1}`,
+        id: `${item.clientId}-ingresso`,
+        label: `Ingresso ${draft.visitantes.filter((visitor) => visitor.has_ingresso).findIndex((visitor) => visitor.clientId === item.clientId) + 1}`,
         city: location.cidade,
         state: location.estado,
       };
@@ -288,6 +288,11 @@ export function AtaForm({
       label: `Conquista ${index + 1}`,
       time: item.tempo,
     })),
+    supplementalMetrics: {
+      cities: new Set(draft.participacao.map((item) => item.localidade.trim().toLocaleLowerCase("pt-BR")).filter(Boolean)).size,
+      states: new Set(draft.participacao.map((item) => cidadeEstado(item.localidade).estado).filter((state) => state !== "-")).size,
+      otherCountries: new Set(draft.membros_internacionais.map((item) => item.pais.trim().toLocaleLowerCase("pt-BR")).filter((country) => country && country !== "brasil")).size,
+    },
   };
   const horarioOptions = Array.from(
     new Set(
@@ -329,12 +334,11 @@ export function AtaForm({
           suggestions?: Partial<AtaNameSuggestions>;
         };
         setNameSuggestions({
-          preenchido_por: data.suggestions?.preenchido_por ?? [],
           servidores: data.suggestions?.servidores ?? [],
         });
       } catch (error) {
         if (!(error instanceof DOMException && error.name === "AbortError")) {
-          setNameSuggestions({ preenchido_por: [], servidores: [] });
+          setNameSuggestions({ servidores: [] });
         }
       }
     }
@@ -343,22 +347,11 @@ export function AtaForm({
   }, [draft.ata.grupo_id]);
 
   function removeVisitante(clientIdToRemove: string) {
-    const remainingVisitors = draft.visitantes.filter(
-      (item) => item.clientId !== clientIdToRemove,
-    );
-    const removingLastVisitor = remainingVisitors.length === 0;
-    if (removingLastVisitor && draft.ingressos.length > 0) {
-      const confirmed = window.confirm(
-        "Ao remover o último visitante, os ingressos informados também serão removidos. Deseja continuar?",
-      );
-      if (!confirmed) return;
-    }
     setDraft((current) => ({
       ...current,
       visitantes: current.visitantes.filter(
         (item) => item.clientId !== clientIdToRemove,
       ),
-      ingressos: removingLastVisitor ? [] : current.ingressos,
     }));
   }
 
@@ -425,7 +418,7 @@ export function AtaForm({
             </label>
           )}
           <label className="ata-date-field">
-            Data da reunião
+            Data
             <input
               className="ata-date-input"
               type="date"
@@ -438,7 +431,7 @@ export function AtaForm({
             />
           </label>
           <label>
-            Hora de início
+            Horário
             <select
               required
               value={draft.ata.hora_inicio}
@@ -450,20 +443,7 @@ export function AtaForm({
               {horarioOptions.map((time) => <option key={time}>{time}</option>)}
             </select>
           </label>
-          <label>
-            Preenchido por
-            <TextAutocomplete
-              required
-              value={draft.ata.preenchido_por}
-              placeholder="Preenchido por..."
-              suggestions={nameSuggestions.preenchido_por}
-              onChange={(event) => setDraft((current) => ({
-                ...current,
-                ata: { ...current.ata, preenchido_por: event },
-              }))}
-            />
-          </label>
-          <label>
+          <label className="ata-platform-field">
             Plataforma
             <select value={draft.ata.plataforma} disabled>
               {plataformaMapping.codes.map((code) => (
@@ -533,36 +513,6 @@ export function AtaForm({
 
       <section className="card form-section">
         <div className="section-heading">
-          <h2>Participação</h2>
-        </div>
-        <div className="form-grid ata-participation-grid">
-          <NumberStepper
-            id="total-membros-presentes"
-            label="Membros presentes"
-            value={draft.ata.total_membros_presentes}
-            min={1}
-            max={100}
-            onChange={(value) => setDraft((current) => ({
-              ...current,
-              ata: { ...current.ata, total_membros_presentes: value },
-            }))}
-          />
-          <NumberStepper
-            id="total-partilhas"
-            label="Total de partilhas"
-            value={draft.ata.total_partilhas}
-            min={1}
-            max={30}
-            onChange={(value) => setDraft((current) => ({
-              ...current,
-              ata: { ...current.ata, total_partilhas: value },
-            }))}
-          />
-        </div>
-      </section>
-
-      <section className="card form-section">
-        <div className="section-heading">
           <h2>Servidores</h2>
         </div>
         {draft.servidores.map((item, index) => (
@@ -597,7 +547,37 @@ export function AtaForm({
 
       <section className="card form-section">
         <div className="section-heading">
-          <h2>Localidade</h2>
+          <h2>Participação</h2>
+        </div>
+        <div className="form-grid ata-participation-grid">
+          <NumberStepper
+            id="total-membros-presentes"
+            label="Membros presentes"
+            value={draft.ata.total_membros_presentes}
+            min={1}
+            max={100}
+            onChange={(value) => setDraft((current) => ({
+              ...current,
+              ata: { ...current.ata, total_membros_presentes: value },
+            }))}
+          />
+          <NumberStepper
+            id="total-partilhas"
+            label="Total de partilhas"
+            value={draft.ata.total_partilhas}
+            min={1}
+            max={30}
+            onChange={(value) => setDraft((current) => ({
+              ...current,
+              ata: { ...current.ata, total_partilhas: value },
+            }))}
+          />
+        </div>
+      </section>
+
+      <section className="card form-section">
+        <div className="section-heading">
+          <h2>Localidades nacionais</h2>
         </div>
         {draft.participacao.map((item, index) => (
           <div className="repeat-row repeat-row--city repeat-row--locality repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId}>
@@ -622,10 +602,9 @@ export function AtaForm({
         </div>
       </section>
 
-
       <section className="card form-section">
         <div className="section-heading">
-          <h2>Membros internacionais</h2>
+          <h2>Localidades internacionais</h2>
         </div>
         {draft.membros_internacionais.map((item, index) => (
           <div className="repeat-row repeat-row--international repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId}>
@@ -658,10 +637,11 @@ export function AtaForm({
           <div className="repeat-row repeat-row--visitor repeat-row--unseparated" key={item.clientId}>
             <div className="visitor-primary-row">
               <label htmlFor={`city-${item.clientId}`}>{index === 0 && <span>Cidade</span>}<MunicipioAutocomplete ariaLabel={index === 0 ? undefined : "Cidade do visitante"} id={`city-${item.clientId}`} placeholder="Cidade..." value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
+              <label>{index === 0 && <span>Descrição</span>}<select required aria-label={index === 0 ? undefined : "Descrição do visitante"} value={item.descricao} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, descricao: event.target.value as typeof entry.descricao, has_ingresso: event.target.value === "provavel_adicto" && entry.has_ingresso } : entry) }))}><option value="" disabled>Escolha...</option>{categoriaVisitanteMapping.codes.map((code) => <option key={code} value={code}>{categoriaVisitanteMapping.toSheet(code)}</option>)}</select></label>
             </div>
             <div className="visitor-secondary-row">
-              <label>{index === 0 && <span>Descrição</span>}<select required aria-label={index === 0 ? undefined : "Descrição do visitante"} value={item.descricao} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, descricao: event.target.value as typeof entry.descricao } : entry) }))}><option value="" disabled>Escolha...</option>{categoriaVisitanteMapping.codes.map((code) => <option key={code} value={code}>{categoriaVisitanteMapping.toSheet(code)}</option>)}</select></label>
               <label>{index === 0 && <span>Como chegou a NA?</span>}<select required aria-label={index === 0 ? undefined : "Como o visitante chegou a NA"} value={item.como_chegou_a_na} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, como_chegou_a_na: event.target.value as typeof entry.como_chegou_a_na } : entry) }))}><option value="" disabled>Escolha...</option>{origemContatoMapping.codes.map((code) => <option key={code} value={code}>{origemContatoMapping.toSheet(code)}</option>)}</select></label>
+              {item.descricao === "provavel_adicto" && <label className="choice"><input type="checkbox" checked={item.has_ingresso} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, has_ingresso: event.target.checked } : entry) }))} />Ingresso</label>}
               <button type="button" className="danger-icon-button" aria-label="Remover visitante" title="Remover visitante" onClick={() => removeVisitante(item.clientId)}><FontAwesomeIcon icon={faTrashCan} /></button>
             </div>
           </div>
@@ -669,40 +649,14 @@ export function AtaForm({
         <div className="section-footer">
           <button type="button" className="secondary" onClick={() => setDraft((current) => ({
             ...current,
-            visitantes: [...current.visitantes, { clientId: clientId(), cidade: "", descricao: "", como_chegou_a_na: "" }],
+            visitantes: [...current.visitantes, { clientId: clientId(), cidade: "", descricao: "", como_chegou_a_na: "", has_ingresso: false }],
           }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
         </div>
       </section>
 
       <section className="card form-section">
         <div className="section-heading">
-          <h2>Ingressos</h2>
-        </div>
-        {draft.visitantes.length === 0 ? (
-          <p className="field-hint" role="status">
-            Para registrar um ingresso, registre primeiro pelo menos um visitante.
-          </p>
-        ) : (
-          <>
-            {draft.ingressos.map((item, index) => (
-              <div className="repeat-row repeat-row--single repeat-row--unseparated" key={item.clientId}>
-                <label htmlFor={`ingresso-city-${item.clientId}`}>{index === 0 && <span>Cidade</span>}<MunicipioAutocomplete ariaLabel={index === 0 ? undefined : "Cidade do ingresso"} id={`ingresso-city-${item.clientId}`} placeholder="Cidade..." value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
-                <button type="button" className="danger-icon-button" aria-label="Remover ingresso" title="Remover ingresso" onClick={() => setDraft((current) => ({ ...current, ingressos: current.ingressos.filter((entry) => entry.clientId !== item.clientId) }))}><FontAwesomeIcon icon={faTrashCan} /></button>
-              </div>
-            ))}
-            <div className="section-footer">
-              <button type="button" className="secondary" onClick={() => setDraft((current) => ({
-                ...current,
-                ingressos: [...current.ingressos, { clientId: clientId(), cidade: "" }],
-              }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
-            </div>
-          </>
-        )}
-      </section>
-
-      <section className="card form-section">
-        <div className="section-heading">
-          <h2>Conquistas de tempo</h2>
+          <h2>Conquista</h2>
         </div>
         {draft.trocas_chaveiro.map((item, index) => (
           <div className="repeat-row repeat-row--double repeat-row--clean-time repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId}>
@@ -726,6 +680,18 @@ export function AtaForm({
         </div>
       </section>
 
+      <section className="card form-section" aria-labelledby="ata-summary-heading">
+        <div className="section-heading"><h2 id="ata-summary-heading">Resumo</h2></div>
+        <dl className="review-metrics" aria-label="Resumo calculado da ata">
+          <div><dt>Servidores</dt><dd>{draft.servidores.length}</dd></div>
+          <div><dt>Membros</dt><dd>{draft.ata.total_membros_presentes}</dd></div>
+          <div><dt>Partilhas</dt><dd>{draft.ata.total_partilhas}</dd></div>
+          <div><dt>Visitantes</dt><dd>{draft.visitantes.length}</dd></div><div><dt>Ingressos</dt><dd>{draft.visitantes.filter((item) => item.has_ingresso).length}</dd></div>
+          <div><dt>Conquistas</dt><dd>{draft.trocas_chaveiro.reduce((total, item) => total + item.quantidade, 0)}</dd></div><div><dt>Cidades</dt><dd>{new Set(draft.participacao.map((item) => item.localidade.trim().toLocaleLowerCase("pt-BR")).filter(Boolean)).size}</dd></div>
+          <div><dt>Estados</dt><dd>{new Set(draft.participacao.map((item) => cidadeEstado(item.localidade).estado).filter((state) => state !== "-")).size}</dd></div><div><dt>Outros países</dt><dd>{new Set(draft.membros_internacionais.map((item) => item.pais.trim().toLocaleLowerCase("pt-BR")).filter((country) => country && country !== "brasil")).size}</dd></div>
+        </dl>
+      </section>
+
       {(clientError || (!reviewing && actionState.error)) && (
         <p className="form-error" role="alert">{clientError ?? actionState.error}</p>
       )}
@@ -738,15 +704,15 @@ export function AtaForm({
           <section className="confirmation-modal" role="dialog" aria-modal="true" aria-labelledby="confirmation-title">
             <AtaReviewLayout
               title="Resumo da ata"
-              description="Confira os dados antes de enviar. Após a confirmação, a ata ficará registrada como somente leitura."
               titleId="confirmation-title"
               data={reviewLayoutData}
+              showFilledBy={false}
               footer={(
                 <>
                   {actionState.error && <p className="form-error" role="alert">{actionState.error}</p>}
                   <div className="modal-actions">
-                    <button type="button" className="secondary" disabled={pending} autoFocus onClick={() => setReviewing(false)}><span className="button-content"><FontAwesomeIcon icon={faPenToSquare} />Voltar e corrigir</span></button>
-                    <button type="submit" disabled={pending}><span className="button-content"><FontAwesomeIcon icon={faPaperPlane} />{pending ? "Enviando..." : "Confirmar e enviar"}</span></button>
+                    <button type="button" className="secondary" disabled={pending} autoFocus onClick={() => setReviewing(false)}><span className="button-content"><FontAwesomeIcon icon={faPenToSquare} />Corrigir</span></button>
+                    <button type="submit" disabled={pending}><span className="button-content"><FontAwesomeIcon icon={faPaperPlane} />{pending ? "Enviando..." : "Aprovar"}</span></button>
                   </div>
                 </>
               )}

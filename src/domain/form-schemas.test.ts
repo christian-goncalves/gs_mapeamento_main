@@ -114,6 +114,7 @@ describe("schemas de formulário", () => {
   });
 
   it("valida ingresso e troca de chaveiro full", () => {
+    expect(ingressoFormSchema.safeParse({ visitante_indice: 0 }).success).toBe(true);
     expect(ingressoFormSchema.safeParse({ nome: "Anonimo", cidade: "Itajaí - SC" }).success).toBe(true);
     expect(ingressoFormSchema.safeParse({ nome: "Anonimo", cidade: "" }).success).toBe(false);
     expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "dias_30", quantidade: 1 }).success).toBe(true);

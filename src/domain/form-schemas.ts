@@ -32,6 +32,7 @@ export const grupoFormSchema = z.object({
   fuso_horario: z.enum(fusoHorarioMapping.codes),
   grupo_nome: requiredText,
   ativo: z.boolean(),
+  revisao_atas_ativa: z.boolean().default(false),
   responsavel_grupo_nome: optionalText.default(""),
   responsavel_grupo_email: optionalEmail.default(""),
   email_acesso_grupo: requiredEmail,
@@ -88,7 +89,7 @@ export const ataFormSchema = z.object({
   hora_inicio: horaInicioSchema,
   duracao: optionalDuration,
   formato_outros: optionalText,
-  preenchido_por: requiredText,
+  preenchido_por: optionalText.default(""),
   plataforma: z.enum(plataformaMapping.codes),
   tipo_reuniao: z.enum(tipoReuniaoMapping.codes),
   formatos: z.array(z.enum(formatoMapping.codes)).min(1),
@@ -143,8 +144,15 @@ export const visitanteFormSchema = z.object({
 });
 
 export const ingressoFormSchema = z.object({
-  nome: requiredText,
-  cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
+  nome: z.string().trim().optional(),
+  cidade: z.string().trim().optional(),
+  visitante_indice: z.number().int().min(0).optional(),
+}).superRefine((ingresso, context) => {
+  if (ingresso.visitante_indice !== undefined) return;
+  if (!ingresso.nome) context.addIssue({ code: "custom", path: ["nome"], message: "Campo obrigatório." });
+  if (!ingresso.cidade || !isMunicipioOption(ingresso.cidade)) {
+    context.addIssue({ code: "custom", path: ["cidade"], message: "Município inexistente." });
+  }
 });
 
 export const trocaChaveiroFormSchema = z.object({
@@ -180,6 +188,18 @@ export const ataSubmissionSchema = z
         message:
           "Para registrar um ingresso, registre primeiro pelo menos um visitante.",
       });
+    }
+    const linkedVisitors = new Set<number>();
+    for (const [index, ingresso] of submission.ingressos.entries()) {
+      if (ingresso.visitante_indice === undefined) continue;
+      const visitor = submission.visitantes[ingresso.visitante_indice];
+      if (!visitor || visitor.descricao !== "provavel_adicto") {
+        context.addIssue({ code: "custom", path: ["ingressos", index], message: "Ingresso deve estar vinculado a um visitante provável adicto." });
+      }
+      if (linkedVisitors.has(ingresso.visitante_indice)) {
+        context.addIssue({ code: "custom", path: ["ingressos", index], message: "Visitante já possui ingresso." });
+      }
+      linkedVisitors.add(ingresso.visitante_indice);
     }
   });
 

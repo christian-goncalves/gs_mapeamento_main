@@ -24,6 +24,13 @@ export function materializeAtaSubmission(
   const timestamp = identity.now();
   const ataId = identity.uuid();
   const audit = { created_at: timestamp, updated_at: timestamp };
+  const visitantes = submission.visitantes.map((item, index) => ({
+    visitante_id: identity.uuid(),
+    ata_id: ataId,
+    nome: "visitante_" + (index + 1),
+    ...item,
+    ...audit,
+  }));
   return ataCompletaSchema.parse({
     ata: {
       ata_id: ataId,
@@ -45,19 +52,24 @@ export function materializeAtaSubmission(
       ...item,
       ...audit,
     })),
-    visitantes: submission.visitantes.map((item, index) => ({
-      visitante_id: identity.uuid(),
-      ata_id: ataId,
-      nome: "visitante_" + (index + 1),
-      ...item,
-      ...audit,
-    })),
-    ingressos: submission.ingressos.map((item) => ({
-      ingresso_id: identity.uuid(),
-      ata_id: ataId,
-      ...item,
-      ...audit,
-    })),
+    visitantes,
+    ingressos: submission.ingressos.map((item) => {
+      const visitante = item.visitante_indice === undefined
+        ? undefined
+        : visitantes[item.visitante_indice];
+      return {
+        ingresso_id: identity.uuid(),
+        ata_id: ataId,
+        ...(visitante
+          ? {
+              visitante_id: visitante.visitante_id,
+              nome: visitante.nome,
+              cidade: visitante.cidade,
+            }
+          : { nome: item.nome?.trim() || "Anonimo", cidade: item.cidade ?? "" }),
+        ...audit,
+      };
+    }),
     trocas_chaveiro: submission.trocas_chaveiro.map((item) => ({
       troca_chaveiro_id: identity.uuid(),
       ata_id: ataId,

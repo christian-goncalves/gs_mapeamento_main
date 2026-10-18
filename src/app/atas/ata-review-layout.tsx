@@ -45,9 +45,9 @@ export type AtaReviewLayoutData = {
   admissions: { id: string; label: string; city: string; state: string }[];
   achievements: { id: string; label: string; time: string }[];
   supplementalMetrics?: {
+    cities: number;
     states: number;
-    countries: number;
-    membersWithoutLocation: number;
+    otherCountries: number;
   };
 };
 
@@ -113,6 +113,7 @@ export function AtaReviewLayout({
   titleId,
   headingLevel = "h2",
   data,
+  showFilledBy = true,
   headerAction,
   headerBadge,
   identification,
@@ -124,6 +125,7 @@ export function AtaReviewLayout({
   titleId: string;
   headingLevel?: "h1" | "h2";
   data: AtaReviewLayoutData;
+  showFilledBy?: boolean;
   headerAction?: ReactNode;
   headerBadge?: ReactNode;
   identification?: AtaReviewIdentification;
@@ -162,7 +164,7 @@ export function AtaReviewLayout({
       </header>
 
       <dl className="review-grid">
-        <div className="review-info-card">
+        <div className="review-info-card review-info-card--group">
           <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faUsers} /></span>
           <div><dt>Grupo</dt><dd>{data.group}</dd></div>
         </div>
@@ -170,17 +172,19 @@ export function AtaReviewLayout({
           <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faCalendarDays} /></span>
           <div><dt>Data e hora</dt><dd>{formatReviewDate(data.date)} às {data.time}</dd></div>
         </div>
+        {showFilledBy && data.filledBy && data.filledBy !== "Não informado" && (
+          <div className="review-info-card">
+            <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faUser} /></span>
+            <div><dt>Preenchido por</dt><dd>{data.filledBy}</dd></div>
+          </div>
+        )}
         <div className="review-info-card">
-          <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faUser} /></span>
-          <div><dt>Preenchido por</dt><dd>{data.filledBy}</dd></div>
+          <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faFolder} /></span>
+          <div><dt>Tipo</dt><dd>{data.meetingType}</dd></div>
         </div>
         <div className="review-info-card">
           <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faDesktop} /></span>
           <div><dt>Plataforma</dt><dd>{data.platform}</dd></div>
-        </div>
-        <div className="review-info-card">
-          <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faFolder} /></span>
-          <div><dt>Tipo</dt><dd>{data.meetingType}</dd></div>
         </div>
         <div className="review-info-card">
           <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faTableCellsLarge} /></span>
@@ -208,12 +212,10 @@ export function AtaReviewLayout({
         <section className="review-identification" aria-labelledby="review-identification-title">
           <div className="review-identification-heading">
             <span className="review-section-icon" aria-hidden="true"><FontAwesomeIcon icon={faHashtag} /></span>
-            <h2 id="review-identification-title">Identificação da ata</h2>
+            <h2 id="review-identification-title">Índice personalizado do grupo</h2>
           </div>
           <dl className="review-identification-grid">
-            <div><dt>Referência do grupo</dt><dd>{identification.groupReference}</dd></div>
-            <div><dt>Sequencial automático</dt><dd>{identification.sequential}</dd></div>
-            <div><dt>ID interno</dt><dd>{identification.internalId}</dd></div>
+            <div><dt>Número da ata</dt><dd>{identification.groupReference}</dd></div>
           </dl>
           {identification.editor}
         </section>
@@ -221,20 +223,15 @@ export function AtaReviewLayout({
 
       <dl className="review-metrics" aria-label="Totais da ata">
         <div><FontAwesomeIcon icon={faUsers} aria-hidden="true" /><dt>Servidores</dt><dd>{data.servers.length}</dd></div>
-        <div><FontAwesomeIcon icon={faLocationDot} aria-hidden="true" /><dt>Localidades</dt><dd>{data.locations.length}</dd></div>
-        <div><FontAwesomeIcon icon={faGlobe} aria-hidden="true" /><dt>Membros internacionais</dt><dd>{data.internationalMembers.length}</dd></div>
+        <div><FontAwesomeIcon icon={faUsers} aria-hidden="true" /><dt>Membros</dt><dd>{data.membersPresent}</dd></div>
+        <div><FontAwesomeIcon icon={faComments} aria-hidden="true" /><dt>Partilhas</dt><dd>{data.shares}</dd></div>
+        <div><FontAwesomeIcon icon={faLocationDot} aria-hidden="true" /><dt>Cidades</dt><dd>{data.supplementalMetrics?.cities ?? data.locations.length}</dd></div>
+        <div><FontAwesomeIcon icon={faLocationDot} aria-hidden="true" /><dt>Estados</dt><dd>{data.supplementalMetrics?.states ?? 0}</dd></div>
+        <div><FontAwesomeIcon icon={faGlobe} aria-hidden="true" /><dt>Países</dt><dd>{data.supplementalMetrics?.otherCountries ?? data.internationalMembers.length}</dd></div>
         <div><FontAwesomeIcon icon={faUsers} aria-hidden="true" /><dt>Visitantes</dt><dd>{data.visitors.length}</dd></div>
         <div><FontAwesomeIcon icon={faTicket} aria-hidden="true" /><dt>Ingressos</dt><dd>{data.admissions.length}</dd></div>
         <div><FontAwesomeIcon icon={faClock} aria-hidden="true" /><dt>Conquistas de tempo</dt><dd>{data.achievements.length}</dd></div>
       </dl>
-
-      {data.supplementalMetrics && (
-        <dl className="review-supplemental-metrics" aria-label="Dados complementares da ata">
-          <div><dt>Estados</dt><dd>{data.supplementalMetrics.states}</dd></div>
-          <div><dt>Países</dt><dd>{data.supplementalMetrics.countries}</dd></div>
-          <div><dt>Membros sem localidade</dt><dd>{data.supplementalMetrics.membersWithoutLocation}</dd></div>
-        </dl>
-      )}
 
       <div className="review-sections">
         <ReviewSection icon={faUsers} title="Servidores" count={data.servers.length} desktop={desktop}>
@@ -253,10 +250,10 @@ export function AtaReviewLayout({
         <ReviewSection icon={faLocationDot} title="Localidades" count={data.locations.length} desktop={desktop}>
           {data.locations.length ? (
             <ul className="review-item-list">
-              {data.locations.map((item) => (
+              {data.locations.map((item, index) => (
                 <li key={item.id}>
                   <span className="review-item-main">
-                    <span>{item.name}</span>
+                    <span>{index + 1}. {item.name}</span>
                     {item.detail && <small>{item.detail}</small>}
                   </span>
                   <span className="review-item-count">{item.count}</span>
@@ -269,8 +266,8 @@ export function AtaReviewLayout({
         <ReviewSection icon={faGlobe} title="Membros internacionais" count={data.internationalMembers.length} desktop={desktop}>
           {data.internationalMembers.length ? (
             <ul className="review-item-list">
-              {data.internationalMembers.map((item) => (
-                <li key={item.id}><span>{item.country}</span><span className="review-item-count">{item.count}</span></li>
+              {data.internationalMembers.map((item, index) => (
+                <li key={item.id}><span>{index + 1}. {item.country}</span><span className="review-item-count">{item.count}</span></li>
               ))}
             </ul>
           ) : <ReviewEmptyState icon={faGlobe}>Nenhum membro internacional registrado.</ReviewEmptyState>}

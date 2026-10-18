@@ -2,10 +2,11 @@ import "server-only";
 
 import { randomUUID } from "node:crypto";
 import type { Grupo, GrupoHorario, GrupoServidorMesa } from "@/domain/entities";
-import { DEFAULT_MESA_OFFICES } from "@/domain/grupo-servidores-mesa";
 import { getSheetsClient, getSpreadsheetId } from "./client";
 import { SHEET_HEADERS, type SheetName } from "./contract";
-import { parseRows, rowsToObjects, type ParsedRow, type SheetCell } from "./rows";
+import { rowsToCompatibleObjects, sheetReadRange } from "./contract-v2";
+import { executeSheetsBatch, buildCellUpdateRequest } from "./write";
+import { parseRows, type ParsedRow, type SheetCell } from "./rows";
 import {
   domainGrupoHorarioToSheet,
   domainGrupoServidorMesaToSheet,
@@ -19,10 +20,25 @@ import {
 } from "./schemas";
 
 type ValidRow<T> = Extract<ParsedRow<T>, { valid: true }>;
+type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 type Identity = {
   now: () => string;
   uuid: () => string;
 };
+
+export class GroupReviewColumnMissingError extends Error {
+  constructor() {
+    super(
+      'Não foi possível ativar a Revisão de Atas: falta a coluna "revisao_atas_ativa" no cabeçalho da planilha.',
+    );
+    this.name = "GroupReviewColumnMissingError";
+  }
+}
+
+function requireAuthorization(value: JsonValue | undefined) {
+  if (!value) throw new Error("Autorização explícita da gravação de grupo ausente.");
+  return value;
+}
 
 const defaultIdentity: Identity = {
   now: () => new Date().toISOString(),
@@ -52,8 +68,8 @@ export function groupAdminRowsToObjects(
   name: SheetName,
   values: SheetCell[][],
 ) {
-  return rowsToObjects(
-    SHEET_HEADERS[name],
+  return rowsToCompatibleObjects(
+    name,
     values,
     name === "grupos" ? { allowMissingTrailingHeaders: 3 } : undefined,
   );
@@ -63,7 +79,7 @@ async function readSheetValues(name: SheetName) {
   const sheets = getSheetsClient();
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: getSpreadsheetId(),
-    range: `${name}!A:Z`,
+    range: sheetReadRange(name),
     valueRenderOption: "UNFORMATTED_VALUE",
     dateTimeRenderOption: "SERIAL_NUMBER",
   });
@@ -73,33 +89,9 @@ async function readSheetValues(name: SheetName) {
 function rowValues<T extends Record<string, SheetCell>>(
   sheet: SheetName,
   row: T,
+  headers: readonly string[] = SHEET_HEADERS[sheet],
 ) {
-  return SHEET_HEADERS[sheet].map((header) => row[header] ?? "");
-}
-
-async function updateRow(
-  sheet: SheetName,
-  rowNumber: number,
-  values: SheetCell[],
-) {
-  const sheets = getSheetsClient();
-  await sheets.spreadsheets.values.update({
-    spreadsheetId: getSpreadsheetId(),
-    range: `${sheet}!A${rowNumber}:${String.fromCharCode(64 + values.length)}${rowNumber}`,
-    valueInputOption: "USER_ENTERED",
-    requestBody: { values: [values] },
-  });
-}
-
-async function appendRow(sheet: SheetName, values: SheetCell[]) {
-  const sheets = getSheetsClient();
-  await sheets.spreadsheets.values.append({
-    spreadsheetId: getSpreadsheetId(),
-    range: `${sheet}!A:Z`,
-    valueInputOption: "USER_ENTERED",
-    insertDataOption: "INSERT_ROWS",
-    requestBody: { values: [values] },
-  });
+  return headers.map((header) => row[header] ?? "");
 }
 
 async function sheetIdByName(name: SheetName) {
@@ -115,6 +107,43 @@ async function sheetIdByName(name: SheetName) {
     throw new Error(`Aba não encontrada: ${name}.`);
   }
   return sheetId;
+}
+
+async function commitGroupRows(input: {
+  writes?: { sheet: SheetName; rowNumber: number; values: SheetCell[] }[];
+  deletes?: { sheet: SheetName; rowNumber: number }[];
+}) {
+  const writes = input.writes ?? [];
+  const deletes = input.deletes ?? [];
+  if (writes.length === 0 && deletes.length === 0) return;
+  const names = [...new Set([...writes.map((item) => item.sheet), ...deletes.map((item) => item.sheet)])];
+  const ids = Object.fromEntries(await Promise.all(names.map(async (name) => [name, await sheetIdByName(name)]))) as Partial<Record<SheetName, number>>;
+  const requests = [
+    ...writes.map(({ sheet, rowNumber, values }) => {
+      const sheetId = ids[sheet];
+      if (sheetId == null) throw new Error(`Aba não encontrada: ${sheet}.`);
+      return buildCellUpdateRequest(
+        sheetId,
+        rowNumber,
+        values.map((value) => (value == null ? "" : value)),
+      );
+    }),
+    ...deletes.map(({ sheet, rowNumber }) => {
+      const sheetId = ids[sheet];
+      if (sheetId == null) throw new Error(`Aba não encontrada: ${sheet}.`);
+      return {
+        deleteDimension: {
+          range: {
+            sheetId,
+            dimension: "ROWS",
+            startIndex: rowNumber - 1,
+            endIndex: rowNumber,
+          },
+        },
+      };
+    }),
+  ];
+  await executeSheetsBatch(requests);
 }
 
 function isBlankSheetCell(value: SheetCell | undefined) {
@@ -172,9 +201,16 @@ export async function readGroupAdminRows() {
 export async function saveGrupo(
   input: Omit<Grupo, "created_at" | "updated_at"> & Partial<Pick<Grupo, "created_at" | "updated_at">>,
   identity: Identity = defaultIdentity,
+  authorization?: JsonValue,
 ) {
-  const rows = await readGroupAdminRows();
-  const validGroups = rows.grupos.filter(
+  requireAuthorization(authorization);
+  const snapshot = await readSheetValues("grupos");
+  const validGroups = parseRows(
+    "grupos",
+    sheetGrupoSchema,
+    groupAdminRowsToObjects("grupos", snapshot),
+    sheetGrupoToDomain,
+  ).filter(
     (row): row is ValidRow<Grupo> => row.valid,
   );
   const existing = validGroups.find(
@@ -186,13 +222,24 @@ export async function saveGrupo(
     created_at: input.created_at ?? existing?.data.created_at ?? timestamp,
     updated_at: timestamp,
   };
-  const values = rowValues("grupos", domainGrupoToSheet(grupo));
-  if (existing) {
-    await updateRow("grupos", existing.rowNumber, values);
-  } else {
-    const rawRows = await readSheetValues("grupos");
-    await updateRow("grupos", findFirstWritableGroupRow(rawRows), values);
+  if (
+    grupo.revisao_atas_ativa &&
+    !(snapshot[0] ?? []).includes("revisao_atas_ativa")
+  ) {
+    throw new GroupReviewColumnMissingError();
   }
+  const values = rowValues(
+    "grupos",
+    domainGrupoToSheet(grupo),
+    snapshot[0]?.map(String) ?? SHEET_HEADERS.grupos,
+  );
+  await commitGroupRows({
+    writes: [{
+      sheet: "grupos",
+      rowNumber: existing?.rowNumber ?? findFirstWritableGroupRow(snapshot),
+      values,
+    }],
+  });
   return grupo;
 }
 
@@ -200,9 +247,16 @@ export async function saveGrupoHorario(
   input: Omit<GrupoHorario, "horario_id" | "created_at" | "updated_at"> &
     Partial<Pick<GrupoHorario, "horario_id" | "created_at" | "updated_at">>,
   identity: Identity = defaultIdentity,
+  authorization?: JsonValue,
 ) {
-  const rows = await readGroupAdminRows();
-  const validHorarios = rows.grupo_horarios.filter(
+  requireAuthorization(authorization);
+  const snapshot = await readSheetValues("grupo_horarios");
+  const validHorarios = parseRows(
+    "grupo_horarios",
+    sheetGrupoHorarioSchema,
+    groupAdminRowsToObjects("grupo_horarios", snapshot),
+    sheetGrupoHorarioToDomain,
+  ).filter(
     (row): row is ValidRow<GrupoHorario> => row.valid,
   );
   const existing = input.horario_id
@@ -219,11 +273,13 @@ export async function saveGrupoHorario(
     "grupo_horarios",
     domainGrupoHorarioToSheet(horario),
   );
-  if (existing) {
-    await updateRow("grupo_horarios", existing.rowNumber, values);
-  } else {
-    await appendRow("grupo_horarios", values);
-  }
+  await commitGroupRows({
+    writes: [{
+      sheet: "grupo_horarios",
+      rowNumber: existing?.rowNumber ?? snapshot.length + 1,
+      values,
+    }],
+  });
   return horario;
 }
 
@@ -240,9 +296,16 @@ export async function saveGrupoServidoresMesa(
       >
     >)[],
   identity: Identity = defaultIdentity,
+  authorization?: JsonValue,
 ) {
-  const rows = await readGroupAdminRows();
-  const validRows = rows.grupo_servidores_mesa.filter(
+  requireAuthorization(authorization);
+  const snapshot = await readSheetValues("grupo_servidores_mesa");
+  const validRows = parseRows(
+    "grupo_servidores_mesa",
+    sheetGrupoServidorMesaSchema,
+    groupAdminRowsToObjects("grupo_servidores_mesa", snapshot),
+    sheetGrupoServidorMesaToDomain,
+  ).filter(
     (row): row is ValidRow<GrupoServidorMesa> => row.valid,
   );
   const existingForGroup = validRows.filter(
@@ -284,7 +347,7 @@ export async function saveGrupoServidoresMesa(
       })),
   ];
 
-  for (const servidor of rowsToSave) {
+  const writes = rowsToSave.map((servidor) => {
     const existing = validRows.find(
       (row) =>
         row.data.grupo_servidor_mesa_id === servidor.grupo_servidor_mesa_id,
@@ -293,12 +356,17 @@ export async function saveGrupoServidoresMesa(
       "grupo_servidores_mesa",
       domainGrupoServidorMesaToSheet(servidor),
     );
-    if (existing) {
-      await updateRow("grupo_servidores_mesa", existing.rowNumber, values);
-    } else {
-      await appendRow("grupo_servidores_mesa", values);
-    }
-  }
+    return {
+      sheet: "grupo_servidores_mesa" as const,
+      rowNumber: existing?.rowNumber ?? snapshot.length + 1 + rowsToSave
+        .slice(0, rowsToSave.indexOf(servidor))
+        .filter((item) => !validRows.some((row) => row.data.grupo_servidor_mesa_id === item.grupo_servidor_mesa_id)).length,
+      values,
+    };
+  });
+  await commitGroupRows({
+    writes,
+  });
 
   return rowsToSave.filter((item) => item.ativo);
 }
@@ -316,9 +384,16 @@ export async function saveGrupoServidorMesa(
       >
     >,
   identity: Identity = defaultIdentity,
+  authorization?: JsonValue,
 ) {
-  const rows = await readGroupAdminRows();
-  const validRows = rows.grupo_servidores_mesa.filter(
+  requireAuthorization(authorization);
+  const snapshot = await readSheetValues("grupo_servidores_mesa");
+  const validRows = parseRows(
+    "grupo_servidores_mesa",
+    sheetGrupoServidorMesaSchema,
+    groupAdminRowsToObjects("grupo_servidores_mesa", snapshot),
+    sheetGrupoServidorMesaToDomain,
+  ).filter(
     (row): row is ValidRow<GrupoServidorMesa> => row.valid,
   );
   const existing = input.grupo_servidor_mesa_id
@@ -333,22 +408,25 @@ export async function saveGrupoServidorMesa(
   if (existing && existing.data.grupo_id !== grupoId) {
     throw new Error("Servidor da mesa não pertence ao grupo informado.");
   }
-  if (
-    existing &&
-    DEFAULT_MESA_OFFICES.some(
-      (encargo) => encargo === existing.data.encargo,
-    ) &&
-    input.encargo !== existing.data.encargo
-  ) {
-    throw new Error("O encargo padrão não pode ser alterado.");
-  }
-
+  const activeOrders = validRows
+    .filter(
+      (row) =>
+        row.data.grupo_id === grupoId &&
+        row.data.ativo &&
+        row.data.grupo_servidor_mesa_id !== existing?.data.grupo_servidor_mesa_id,
+    )
+    .map((row) => row.data.ordem);
+  const ordem =
+    !existing && activeOrders.includes(input.ordem)
+      ? Math.max(0, ...activeOrders) + 1
+      : input.ordem;
   const timestamp = identity.now();
   const servidor: GrupoServidorMesa = {
     ...input,
     grupo_servidor_mesa_id:
       input.grupo_servidor_mesa_id ?? identity.uuid(),
     grupo_id: grupoId,
+    ordem,
     created_at: input.created_at ?? existing?.data.created_at ?? timestamp,
     updated_at: timestamp,
   };
@@ -356,11 +434,9 @@ export async function saveGrupoServidorMesa(
     "grupo_servidores_mesa",
     domainGrupoServidorMesaToSheet(servidor),
   );
-  if (existing) {
-    await updateRow("grupo_servidores_mesa", existing.rowNumber, values);
-  } else {
-    await appendRow("grupo_servidores_mesa", values);
-  }
+  await commitGroupRows({
+    writes: [{ sheet: "grupo_servidores_mesa", rowNumber: existing?.rowNumber ?? snapshot.length + 1, values }],
+  });
   return servidor;
 }
 
@@ -368,41 +444,53 @@ export async function deactivateGrupoServidorMesa(
   grupoId: string,
   servidorId: string,
   identity: Identity = defaultIdentity,
+  authorization?: JsonValue,
 ) {
-  const rows = await readGroupAdminRows();
-  const existing = rows.grupo_servidores_mesa.find(
+  requireAuthorization(authorization);
+  const snapshot = await readSheetValues("grupo_servidores_mesa");
+  const existing = parseRows(
+    "grupo_servidores_mesa",
+    sheetGrupoServidorMesaSchema,
+    groupAdminRowsToObjects("grupo_servidores_mesa", snapshot),
+    sheetGrupoServidorMesaToDomain,
+  ).find(
     (row): row is ValidRow<GrupoServidorMesa> =>
       row.valid && row.data.grupo_servidor_mesa_id === servidorId,
   );
   if (!existing || existing.data.grupo_id !== grupoId) {
     throw new Error("Servidor da mesa não encontrado.");
   }
-  if (DEFAULT_MESA_OFFICES.some((encargo) => encargo === existing.data.encargo)) {
-    throw new Error("Os encargos padrão não podem ser removidos.");
-  }
-
   const servidor = {
     ...existing.data,
     ativo: false,
     updated_at: identity.now(),
   };
-  await updateRow(
+  const values = rowValues(
     "grupo_servidores_mesa",
-    existing.rowNumber,
-    rowValues(
-      "grupo_servidores_mesa",
-      domainGrupoServidorMesaToSheet(servidor),
-    ),
+    domainGrupoServidorMesaToSheet(servidor),
   );
+  await commitGroupRows({
+    writes: [{ sheet: "grupo_servidores_mesa", rowNumber: existing.rowNumber, values }],
+  });
   return servidor;
 }
 
-export async function deleteGrupoHorarios(horarioIds: string[]) {
+export async function deleteGrupoHorarios(
+  horarioIds: string[],
+  grupoId: string,
+  authorization: JsonValue,
+) {
+  requireAuthorization(authorization);
   const ids = new Set(horarioIds.filter(Boolean));
   if (ids.size === 0) return;
 
-  const rows = await readGroupAdminRows();
-  const rowNumbers = rows.grupo_horarios
+  const snapshot = await readSheetValues("grupo_horarios");
+  const rowNumbers = parseRows(
+    "grupo_horarios",
+    sheetGrupoHorarioSchema,
+    groupAdminRowsToObjects("grupo_horarios", snapshot),
+    sheetGrupoHorarioToDomain,
+  )
     .filter(
       (row): row is ValidRow<GrupoHorario> =>
         row.valid && ids.has(row.data.horario_id),
@@ -411,21 +499,7 @@ export async function deleteGrupoHorarios(horarioIds: string[]) {
     .sort((first, second) => second - first);
   if (rowNumbers.length === 0) return;
 
-  const sheetId = await sheetIdByName("grupo_horarios");
-  const sheets = getSheetsClient();
-  await sheets.spreadsheets.batchUpdate({
-    spreadsheetId: getSpreadsheetId(),
-    requestBody: {
-      requests: rowNumbers.map((rowNumber) => ({
-        deleteDimension: {
-          range: {
-            sheetId,
-            dimension: "ROWS",
-            startIndex: rowNumber - 1,
-            endIndex: rowNumber,
-          },
-        },
-      })),
-    },
+  await commitGroupRows({
+    deletes: rowNumbers.map((rowNumber) => ({ sheet: "grupo_horarios" as const, rowNumber })),
   });
 }

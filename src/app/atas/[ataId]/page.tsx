@@ -42,7 +42,12 @@ export default async function AtaDetailPage({
         titleId="ata-detail-title"
         headingLevel="h1"
         data={presentation.reviewData}
-        headerBadge={!grupo.ativo ? <span className="badge">Grupo inativo</span> : undefined}
+        headerBadge={(
+          <>
+            {!grupo.ativo && <span className="badge">Grupo inativo</span>}
+            {ata.status_aprovacao === "pendente_revisao" && <span className="badge">Pendente de revisão</span>}
+          </>
+        )}
         headerAction={(
           <>
             <Link className="button-link secondary review-back-link" href={backHref}>

@@ -1,0 +1,140 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - complementary "Navegação do responsável" [ref=e3]:
+      - generic [ref=e4]:
+        - link "Página inicial do responsável" [ref=e5] [cursor=pointer]:
+          - /url: /responsavel/atas
+          - generic [ref=e6]: GS Mapeamento
+        - button "Abrir menu" [ref=e7] [cursor=pointer]
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - paragraph [ref=e12]: Nova ata
+        - heading "Grupo USL" [level=1] [ref=e13]
+        - paragraph [ref=e14]: Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - heading "Informações gerais" [level=2] [ref=e17]
+          - generic [ref=e18]:
+            - generic [ref=e19]:
+              - text: Data
+              - textbox "Data" [ref=e20]: 2026-10-17
+            - generic [ref=e21]:
+              - text: Horário
+              - combobox "Horário" [ref=e22]:
+                - option "07:00"
+                - option "10:00" [selected]
+                - option "15:00"
+                - option "18:00"
+                - option "21:30"
+            - generic [ref=e23]:
+              - text: Plataforma
+              - combobox "Plataforma" [disabled] [ref=e24]:
+                - option "Zoom" [selected]
+                - option "Zello"
+                - option "WhatsApp"
+          - group "Tipo de reunião" [ref=e25]:
+            - generic [ref=e27]:
+              - generic [ref=e28]:
+                - radio "Fechada" [checked] [ref=e29]
+                - text: Fechada
+              - generic [ref=e30]:
+                - radio "Aberta" [ref=e31]
+                - text: Aberta
+          - group "Formatos" [ref=e32]:
+            - generic [ref=e34]:
+              - generic [ref=e35]:
+                - checkbox "Partilha" [checked] [ref=e36]
+                - text: Partilha
+              - generic [ref=e37]:
+                - checkbox "Estudo" [ref=e38]
+                - text: Estudo
+              - generic [ref=e39]:
+                - checkbox "Temática" [ref=e40]
+                - text: Temática
+              - generic [ref=e41]:
+                - checkbox "Literatura" [ref=e42]
+                - text: Literatura
+              - generic [ref=e43]:
+                - checkbox "Passos" [ref=e44]
+                - text: Passos
+              - generic [ref=e45]:
+                - checkbox "Tradições" [ref=e46]
+                - text: Tradições
+              - generic [ref=e47]:
+                - checkbox "Comemorativa" [ref=e48]
+                - text: Comemorativa
+              - generic [ref=e49]:
+                - checkbox "Serviço" [ref=e50]
+                - text: Serviço
+              - generic [ref=e51]:
+                - checkbox "Outros" [ref=e52]
+                - text: Outros
+        - generic [ref=e53]:
+          - heading "Servidores" [level=2] [ref=e55]
+          - button "Adicionar" [ref=e57] [cursor=pointer]
+        - generic [ref=e61]:
+          - heading "Participação" [level=2] [ref=e63]
+          - generic [ref=e64]:
+            - generic [ref=e65]:
+              - generic [ref=e66]: Membros presentes
+              - generic [ref=e67]:
+                - button "Diminuir membros presentes" [disabled] [ref=e68]: "-"
+                - spinbutton "Membros presentes Diminuir membros presentes Aumentar membros presentes" [ref=e69]: "1"
+                - button "Aumentar membros presentes" [active] [ref=e70] [cursor=pointer]: +
+            - generic [ref=e71]:
+              - generic [ref=e72]: Total de partilhas
+              - generic [ref=e73]:
+                - button "Diminuir total de partilhas" [disabled] [ref=e74]: "-"
+                - spinbutton "Total de partilhas Diminuir total de partilhas Aumentar total de partilhas" [ref=e75]
+                - button "Aumentar total de partilhas" [ref=e76] [cursor=pointer]: +
+        - generic [ref=e77]:
+          - heading "Localidades nacionais" [level=2] [ref=e79]
+          - button "Adicionar" [ref=e81] [cursor=pointer]
+        - generic [ref=e85]:
+          - heading "Localidades internacionais" [level=2] [ref=e87]
+          - button "Adicionar" [ref=e89] [cursor=pointer]
+        - generic [ref=e93]:
+          - heading "Visitantes" [level=2] [ref=e95]
+          - button "Adicionar" [ref=e97] [cursor=pointer]
+        - generic [ref=e101]:
+          - heading "Conquista" [level=2] [ref=e103]
+          - button "Adicionar" [ref=e105] [cursor=pointer]
+        - region [ref=e109]:
+          - heading "Resumo" [level=2] [ref=e111]
+          - generic "Resumo calculado da ata" [ref=e112]:
+            - generic [ref=e113]:
+              - term [ref=e114]: Servidores
+              - definition [ref=e115]: "0"
+            - generic [ref=e116]:
+              - term [ref=e117]: Membros
+              - definition [ref=e118]: "1"
+            - generic [ref=e119]:
+              - term [ref=e120]: Partilhas
+              - definition [ref=e121]: "0"
+            - generic [ref=e122]:
+              - term [ref=e123]: Visitantes
+              - definition [ref=e124]: "0"
+            - generic [ref=e125]:
+              - term [ref=e126]: Ingressos
+              - definition [ref=e127]: "0"
+            - generic [ref=e128]:
+              - term [ref=e129]: Conquistas
+              - definition [ref=e130]: "0"
+            - generic [ref=e131]:
+              - term [ref=e132]: Cidades
+              - definition [ref=e133]: "0"
+            - generic [ref=e134]:
+              - term [ref=e135]: Estados
+              - definition [ref=e136]: "0"
+            - generic [ref=e137]:
+              - term [ref=e138]: Outros países
+              - definition [ref=e139]: "0"
+        - button "Revisar e confirmar" [ref=e141] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e150] [cursor=pointer]:
+    - generic [ref=e153]:
+      - text: Rendering
+      - generic [ref=e154]:
+        - generic [ref=e155]: .
+        - generic [ref=e156]: .
+        - generic [ref=e157]: .
+  - alert [ref=e158]

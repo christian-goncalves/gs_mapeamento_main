@@ -13,6 +13,7 @@ import {
   hiddenAtaSubmissionSchema,
   normalizeHiddenAtaSubmission,
 } from "@/domain/hidden-submission";
+import { canAccessGroup } from "@/lib/auth/access";
 import { requireAuthorizedSession } from "@/lib/auth/require-session";
 import { createAtaInSheets } from "@/lib/sheets/create-ata";
 import { getActiveGroupByAtaLink } from "@/lib/sheets/repository";
@@ -50,9 +51,13 @@ function parseSubmissionPayload(payload: FormDataEntryValue | null):
   };
 }
 
-async function persistSubmission(submission: AtaSubmission) {
+async function persistSubmission(
+  submission: AtaSubmission,
+  actorEmail?: string,
+  publicLinkToken?: string,
+) {
   try {
-    return await createAtaInSheets(submission);
+    return await createAtaInSheets(submission, actorEmail, publicLinkToken);
   } catch (error) {
     if (
       error instanceof DuplicateAtaError ||
@@ -77,18 +82,21 @@ export async function createAtaAction(
   _previousState: CreateAtaState,
   formData: FormData,
 ): Promise<CreateAtaState> {
-  await requireAuthorizedSession();
+  const current = await requireAuthorizedSession();
   if (formData.get("confirmed") !== "true") {
     return { error: "Confirme o resumo antes de enviar." };
   }
   const parsed = parseSubmissionPayload(formData.get("payload"));
   if (!parsed.ok) return { error: parsed.error };
+  if (!canAccessGroup(current.access, parsed.submission.ata.grupo_id)) {
+    return { error: "Você não tem permissão para enviar uma ata para este grupo." };
+  }
 
-  const result = await persistSubmission(parsed.submission);
-  if (typeof result !== "string") return result;
+  const result = await persistSubmission(parsed.submission, current.access.email);
+  if ("error" in result) return result;
 
   revalidatePath("/");
-  redirect(`/atas/${result}`);
+  redirect(`/atas/${result.ataId}`);
 }
 
 export async function createAtaByLinkAction(
@@ -114,8 +122,8 @@ export async function createAtaByLinkAction(
       grupo_id: group.group.grupo_id,
     },
   };
-  const result = await persistSubmission(submission);
-  if (typeof result !== "string") return result;
+  const result = await persistSubmission(submission, undefined, link);
+  if ("error" in result) return result;
 
-  redirect(`/preencher/${link}/confirmado`);
+  redirect(`/preencher/${link}/confirmado?ataId=${encodeURIComponent(result.ataId)}`);
 }

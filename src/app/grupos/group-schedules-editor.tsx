@@ -232,7 +232,7 @@ export function GroupSchedulesEditor({
             <thead>
               <tr>
                 <th>Dia</th>
-                <th>Horários</th>
+                <th>Horários*</th>
               </tr>
             </thead>
             <tbody>
@@ -258,6 +258,7 @@ export function GroupSchedulesEditor({
             </tbody>
           </table>
         </div>
+        <p className="schedule-time-note">* Horário de Brasília (BRT)</p>
         <div className="section-footer schedule-view-footer">
           <button
             className="group-wide-action"

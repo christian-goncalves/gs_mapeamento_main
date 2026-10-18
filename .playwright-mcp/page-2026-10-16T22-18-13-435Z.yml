@@ -1,0 +1,118 @@
+- generic [active] [ref=e1]:
+  - iframe [aria-hidden] [ref=e2]
+  - generic [ref=e3]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - link "Google Apps Script" [ref=e580] [cursor=pointer]:
+          - /url: /home
+          - generic [ref=e12]: Apps Script
+        - generic [ref=e13]:
+          - button "Renomear" [ref=e581] [cursor=pointer]: GS Mapeamento | Gateway F1
+          - generic [ref=e24]:
+            - button [ref=e582] [cursor=pointer]:
+              - generic [ref=e32]:
+                - text: Implantar
+                - generic [aria-hidden] [ref=e33]: 
+            - button "Compartilhar este projeto com outros" [ref=e583] [cursor=pointer]:
+              - generic [aria-hidden] [ref=e38]: person_add
+            - button "Suporte" [ref=e622] [cursor=pointer]:
+              - generic [aria-hidden] [ref=e625]: help_outline
+        - generic [ref=e45]:
+          - button "Google Apps" [ref=e585] [cursor=pointer]
+          - 'button "Conta do Google: Christian Gonçalves (chrisapppg1@gmail.com)" [ref=e586] [cursor=pointer]'
+    - generic [ref=e627]:
+      - navigation "Páginas do projeto do Apps Script" [ref=e629]:
+        - link "Visão geral" [ref=e630] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e632]: info_outline
+        - link "Editor" [ref=e634] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e636]: code
+        - link "Histórico do projeto" [ref=e638] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e640]: history
+        - link "Acionadores" [ref=e642] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e644]: alarm
+        - link "Execuções" [ref=e646] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e648]: playlist_play
+        - link "Configurações do projeto" [ref=e650] [cursor=pointer]:
+          - generic [aria-hidden] [ref=e652]: settings
+      - generic [ref=e655]:
+        - generic [ref=e656]:
+          - heading "Execuções" [level=1] [ref=e658]
+          - generic [ref=e659]:
+            - generic [ref=e660]: Mostrando 2 execuções nos últimos sete dias
+            - generic [ref=e661]:
+              - text: "|"
+              - generic [ref=e662]: "Mostrar em tempo real:"
+              - switch "Mostrar execuções em tempo real." [checked] [ref=e663] [cursor=pointer]
+        - generic "Tabela de execução. Use as teclas de seta para acessar o conteúdo da tabela ou \"Tab\" para adicionar ou modificar filtros na tabela." [ref=e674]:
+          - list [ref=e676]:
+            - listitem [ref=e677]:
+              - generic [aria-hidden] [ref=e678]:
+                - generic [aria-hidden] [ref=e679]: 
+                - text: Adicionar um filtro
+              - generic [ref=e681]:
+                - textbox [disabled] [aria-hidden] [ref=e682]
+                - combobox "Filtro de execução" [ref=e683]
+          - generic [ref=e684]:
+            - grid [ref=e686]:
+              - rowgroup [ref=e687]:
+                - row "Implantação Função Tipo Hora de início Duração Status" [ref=e688]:
+                  - columnheader "Implantação" [ref=e689] [cursor=pointer]
+                  - columnheader "Função" [ref=e692] [cursor=pointer]
+                  - columnheader "Tipo" [ref=e695] [cursor=pointer]
+                  - columnheader "Hora de início" [ref=e698] [cursor=pointer]
+                  - columnheader "Duração" [ref=e701] [cursor=pointer]
+                  - columnheader "Status" [ref=e704] [cursor=pointer]
+              - rowgroup [ref=e707]:
+                - row [ref=e708] [cursor=pointer]:
+                  - gridcell "Versão 1" [ref=e709]
+                  - gridcell "doGet" [ref=e710]
+                  - gridcell "App da Web" [ref=e711]
+                  - gridcell "16 de out. de 2026, 19:17:31" [ref=e712]
+                  - gridcell "0.501 s" [ref=e713]
+                  - gridcell "Falha Mais opções Abrir" [ref=e714]:
+                    - generic [ref=e716]:
+                      - generic [ref=e717]: Falha
+                      - generic [ref=e718]:
+                        - button "Mais opções" [ref=e721]:
+                          - generic [aria-hidden] [ref=e724]: 
+                        - button "Abrir" [ref=e725]:
+                          - generic [aria-hidden] [ref=e728]: 
+                - row [ref=e729] [cursor=pointer]:
+                  - gridcell "Teste" [ref=e730]
+                  - gridcell "doGet" [ref=e731]
+                  - gridcell "App da Web" [ref=e732]
+                  - gridcell "16 de out. de 2026, 19:16:29" [ref=e733]
+                  - gridcell "0.425 s" [ref=e734]
+                  - gridcell "Falha Mais opções Abrir" [ref=e735]:
+                    - generic [ref=e737]:
+                      - generic [ref=e738]: Falha
+                      - generic [ref=e739]:
+                        - button "Mais opções" [ref=e742]:
+                          - generic [aria-hidden] [ref=e745]: 
+                        - button "Abrir" [ref=e746]:
+                          - generic [aria-hidden] [ref=e749]: 
+            - navigation "Paginação" [ref=e750]:
+              - generic [ref=e751]:
+                - generic [ref=e752]: "Linhas por página:"
+                - listbox "Número de linhas por página" [ref=e753] [cursor=pointer]:
+                  - option "50" [selected] [ref=e754]
+                  - option "100"
+                  - option "200"
+              - generic [ref=e756]:
+                - button "Ir para a primeira página" [disabled] [ref=e757]:
+                  - generic [aria-hidden] [ref=e760]: 
+                - status [ref=e761]: Página 1 de 1
+                - button "Ir para a página anterior" [disabled] [ref=e762]:
+                  - generic [aria-hidden] [ref=e765]: 
+                - button "Ir para a próxima página" [disabled] [ref=e766]:
+                  - generic [aria-hidden] [ref=e769]: 
+  - generic: URL do app da Web copiado
+  - generic [ref=e770]: Carregando...
+  - generic [ref=e576]:
+    - alert
+    - alert
+    - complementary
+    - complementary
+  - dialog [aria-hidden] [ref=e577]:
+    - iframe [ref=e579]:
+      - region [ref=f5e3]: Acesso atualizado.

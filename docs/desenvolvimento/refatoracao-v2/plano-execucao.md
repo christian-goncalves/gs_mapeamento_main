@@ -2,19 +2,19 @@
 
 ## Situação e regra de avanço
 
-Base do plano confirmada pelo usuário em 16/10/2026 na ESP-Q10, incluindo ordem F0–F7 e checkpoints por fase. A execução da F0 foi autorizada por instrução do usuário em 16/10/2026. O checklist é a única fonte do andamento; a F1 depende do aceite explícito do CP-00.
+Base do plano confirmada pelo usuário em 16/10/2026 na ESP-Q10, incluindo ordem F0–F7 e checkpoints por fase. A execução da F0 foi autorizada por instrução do usuário em 16/10/2026. O checklist é a única fonte do andamento; a F1 dependeu do aceite do CP-00. **Decisão de 16/10/2026:** o fechamento operacional do CP-01 deixa de bloquear o desenvolvimento local da F2. CP-01 continua como gate para novas gravações reais em Sheets, migração, cutover, publicação ou ativação.
 
 Fontes: [requisitos](../../produto/refatoracao-v2/especificacao-funcional.md), [contratos](../../arquitetura/refatoracao-v2/contratos-tecnicos.md) e [checklist](checklist-execucao.md). A ordem segue dependências; as seis responsabilidades do diagnóstico não são seis fases obrigatórias.
 
-Cada fase começa com especificação detalhada aprovada, termina com evidências e exige aceite do usuário para avanço. Código e migração/publicação possuem checkpoints distintos quando alteram dados ou disponibilidade.
+O desenvolvimento local pode avançar entre fases sem aprovações intermediárias por tarefa. Checkpoints registram a prontidão funcional e operacional; qualquer gravação real, migração, cutover, publicação ou ativação exige autorização própria. A autorização anterior para teste de escrita F1 na planilha compartilhada não cobre gravações de negócio da F2.
 
 ## Mapa das fases
 
 | Fase | Entrega e dependência | Requisitos principais | Checkpoint |
 | --- | --- | --- | --- |
 | F0 — Preparação e contratos | Baseline, ambientes identificados, rastreabilidade, schema de transição e decisões transversais fechados. Sem mudança funcional. | Todos, como preparação | CP-00: evidências e contratos suficientes para detalhar e autorizar F1. |
-| F1 — Compatibilidade e fundamento de escrita | Leitura/serialização anterior e nova, intervalos corretos, recuperação e coordenação escolhida. Preserva fluxos existentes; prepara migrações, sem expor ações incompletas. Depende de F0. | Contratos transversais, REV-03 | CP-01: comportamento anterior preservado, novo contrato testado em DEV, retorno para versão compatível demonstrado. |
-| F2 — Cadastro, plataformas e agenda | Cadastro/mesa, catálogo, vínculo por horário, link efetivo, vigência e Brasília; extras com plataforma explícita. Depende de F1 e contrato temporal fechado. | CAD-01, MES-01, PLA-01/02, AGE-01 | CP-02: cadastro → gravação DEV → releitura → ata com plataforma correta; prova de conversão e preservação histórica. |
+| F1 — Compatibilidade e fundamento de escrita | Leitura/serialização anterior e nova, intervalos corretos, recuperação e coordenação escolhida. Preserva fluxos existentes; prepara migrações, sem expor ações incompletas. Depende de F0. | Contratos transversais, REV-03 | CP-01: gate operacional antes de novas gravações reais, migração ou cutover. Não bloqueia desenvolvimento local da F2. |
+| F2 — Cadastro, plataformas e agenda | Cadastro/mesa, catálogo, vínculo por horário, link efetivo, vigência e Brasília; extras com plataforma explícita. Desenvolvimento local pode começar após a base técnica F1; gravações reais aguardam autorização e gate operacional. | CAD-01, MES-01, PLA-01/02, AGE-01 | CP-02: cadastro → gravação autorizada em ambiente identificado → releitura → ata com plataforma correta; prova de conversão e preservação histórica. |
 | F3 — Preenchimento e resumo | Novos formatos, visitante/ingresso, Resumo editável, grade e detalhe/PDF necessários à correção desses dados. Depende de F1/F2. | FOR-01/02, VIS-01/02, RES-01/02, DET-01/02, PDF-01 | CP-03: responsável e link público equivalentes; dado persistido e relido sem duplicação; legado, tela e PDF consistentes. |
 | F4 — Revisão e aprovação | Configuração por grupo, pendências, aprovação individual e lote, auditoria e exclusão de pendentes dos indicadores. Depende de F1; integra consumidores antes de habilitar pendências. | REV-01/02/03/04, REL-01 | CP-04: envio → pendência → aprovação → indicadores, com teste de papéis, lote inválido, repetição e concorrência. |
 | F5 — Edição e exclusão versionadas | Revisões imutáveis, índice por família, aprovação explícita da edição e exclusão lógica. Depende de F4. | CIC-01/02, REL-01 | CP-05: revisão e exclusão preservam histórico, não duplicam totais e não autorizam acesso de outro grupo. |

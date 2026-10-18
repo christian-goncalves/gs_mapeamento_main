@@ -1,13 +1,13 @@
 import type { GrupoServidorMesa } from "./schemas";
 
-export const DEFAULT_MESA_OFFICES = [
+export const KNOWN_MESA_OFFICES = [
   "RSG",
   "RSG suplente",
   "Secretário",
   "Tesoureiro",
 ] as const;
 
-export type DefaultMesaOffice = (typeof DEFAULT_MESA_OFFICES)[number];
+export type KnownMesaOffice = (typeof KNOWN_MESA_OFFICES)[number];
 
 export function normalizeMesaName(value: string) {
   const normalized = value.trim().replace(/\s+/g, " ");
