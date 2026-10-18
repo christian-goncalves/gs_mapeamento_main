@@ -65,11 +65,13 @@ export function MonthlyGroupDashboard({
   groups,
   years,
   showGroupFilter,
+  showFoundationMeetingCard = false,
 }: {
   data: MonthlyDashboardData;
   groups: Grupo[];
   years: number[];
   showGroupFilter: boolean;
+  showFoundationMeetingCard?: boolean;
 }) {
   const selectedMonth = String(data.filters.month);
   const selectedYear = String(data.filters.year);
@@ -102,6 +104,13 @@ export function MonthlyGroupDashboard({
             <h2>1. Consolidado</h2>
           </div>
           <div className="dashboard-metrics-grid">
+            {showFoundationMeetingCard ? (
+              <MetricCard
+                label="Reuniões desde a fundação"
+                value={data.consolidated.reunioesDesdeFundacao}
+                icon={faCalendarDays}
+              />
+            ) : null}
             <MetricCard label="Total de reuniões" value={data.consolidated.totalReunioes} icon={faUsers} />
             <MetricCard label="Reuniões sem ATA / Sala fechada" value={data.consolidated.reunioesSemAtaOuSalaFechada} icon={faDoorClosed} />
             <MetricCard label="Total de presenças" value={data.consolidated.totalPresencas} icon={faUsers} />

@@ -3,15 +3,13 @@ import { redirect } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
-import { ResponsavelAtasTable, type ResponsavelAtaRow } from "./responsavel-atas-table";
+import { currentMonthPeriod } from "@/app/admin/atas/admin-atas-data";
+import { buildResponsavelAtaRows } from "./responsavel-atas-data";
+import { ResponsavelAtasTable } from "./responsavel-atas-table";
 import { ResponsavelShell } from "../responsavel-shell";
 import { AtaApprovalPanel } from "@/app/atas/ata-approval-panel";
 
 export const dynamic = "force-dynamic";
-
-function primaryServerName(servers: { nome: string; ordem: number }[]) {
-  return [...servers].sort((first, second) => first.ordem - second.ordem)[0]?.nome ?? "";
-}
 
 export default async function ResponsavelAtasPage() {
   const { access, result } = await requireAuthorizedSessionWithAggregatedAtas();
@@ -19,20 +17,14 @@ export default async function ResponsavelAtasPage() {
   const [group] = access.groups;
   if (!group) redirect("/login");
 
+  const rows = buildResponsavelAtaRows({
+    group,
+    atas: result.atas,
+    horarios: result.grupo_horarios,
+  });
   const groupAtas = result.atas.filter(
     (item) => item.grupo.grupo_id === group.grupo_id && item.registro.ata.status_registro === "ativa",
   );
-  const rows: ResponsavelAtaRow[] = groupAtas.map((item) => {
-    const { ata } = item.registro;
-    return {
-      ataId: ata.ata_id,
-      indicePersonalizadoGrupo: ata.indice_personalizado_grupo,
-      data: ata.data_reuniao,
-      horario: ata.hora_inicio,
-      servidor: primaryServerName(item.registro.servidores),
-      status: ata.status_aprovacao === "pendente_revisao" ? "Pendente de revisão" : "Enviada",
-    };
-  });
   const approvalRows = groupAtas
     .filter((item) => item.registro.ata.status_aprovacao === "pendente_revisao")
     .map(({ registro }) => ({
@@ -43,6 +35,7 @@ export default async function ResponsavelAtasPage() {
       time: registro.ata.hora_inicio,
       group: group.grupo_nome,
     }));
+  const period = currentMonthPeriod();
 
   return (
     <ResponsavelShell activeSection="responsavel" settingsHref={`/grupos/${group.grupo_id}`}>
@@ -61,7 +54,11 @@ export default async function ResponsavelAtasPage() {
 
       <AtaApprovalPanel rows={approvalRows} />
 
-      <ResponsavelAtasTable rows={rows} />
+      <ResponsavelAtasTable
+        rows={rows}
+        defaultStartDate={period.start}
+        defaultEndDate={period.end}
+      />
     </ResponsavelShell>
   );
 }

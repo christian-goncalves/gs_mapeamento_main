@@ -184,6 +184,22 @@ export function buildMonthlyDashboardData(
   const sentAtas = receivedAtas.filter(
     (item) => item.registro.ata.status_aprovacao === "aprovada",
   );
+  const approvedHistoricalMeetings = new Set(
+    result.atas
+      .filter(
+        (item) =>
+          item.grupo.grupo_id === filters.grupoId &&
+          item.registro.ata.status_registro === "ativa" &&
+          item.registro.ata.status_aprovacao === "aprovada",
+      )
+      .map((item) =>
+        meetingKey(
+          item.grupo.grupo_id,
+          item.registro.ata.data_reuniao,
+          item.registro.ata.hora_inicio,
+        ),
+      ),
+  ).size;
   const sentKeys = new Set(
     receivedAtas.map((item) =>
       meetingKey(
@@ -218,6 +234,8 @@ export function buildMonthlyDashboardData(
     period: { start, end },
     sentAtasCount: sentAtas.length,
     consolidated: {
+      reunioesDesdeFundacao:
+        group.ultima_reuniao_anterior + approvedHistoricalMeetings,
       totalReunioes: expected.length,
       reunioesSemAtaOuSalaFechada: missingMeetings.length,
       totalPresencas,

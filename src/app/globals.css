@@ -434,9 +434,9 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-config-panel .group-save-footer .group-wide-action { width: auto; }
 .responsavel-schedules-section .schedule-summary-table { margin-top: 0; }
 .responsavel-atas-card { margin-top: 1.5rem; padding: 0; overflow: hidden; }
-.responsavel-status-legend { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem 1rem; padding: .8rem 1.5rem 0; color: var(--muted); font-size: .875rem; }
-.responsavel-status-legend-title { font-weight: 800; }
-.responsavel-status-legend-item { display: inline-flex; align-items: center; gap: .4rem; }
+.responsavel-atas-filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; border-bottom: 1px solid var(--line); padding: 1.25rem 1.5rem; }
+.responsavel-atas-filters label { display: grid; min-width: 0; gap: .45rem; color: var(--muted); font-size: .9rem; font-weight: 800; }
+.responsavel-atas-filters input, .responsavel-atas-filters select { width: 100%; min-width: 0; min-height: 2.75rem; }
 .responsavel-status-dot { display: inline-block; width: .75rem; height: .75rem; flex: 0 0 .75rem; border: 2px solid white; border-radius: 999px; box-shadow: 0 0 0 1px currentColor; }
 .responsavel-status-dot-sent { background: #15966b; color: #087a55; }
 .responsavel-status-dot-review { background: #e3a928; color: #9b6b00; }
@@ -464,9 +464,6 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-table-wrap .dt-layout-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0; }
 .responsavel-table-wrap .dt-layout-cell { display: flex; align-items: center; gap: .75rem; }
 .responsavel-table-wrap .dt-layout-cell.dt-layout-full { display: block; width: 100%; overflow-x: auto; }
-.responsavel-table-wrap .dt-length label, .responsavel-table-wrap .dt-search label { display: flex; align-items: center; gap: .5rem; color: var(--muted); font-size: .9rem; font-weight: 700; }
-.responsavel-table-wrap .dt-length select { width: auto; min-width: 5rem; padding: .55rem 2rem .55rem .7rem; }
-.responsavel-table-wrap .dt-search input { width: min(34rem, 100%); min-height: 2.75rem; margin-left: .5rem; border: 1px solid var(--line); border-radius: 8px; padding: .65rem .75rem; background: white; color: var(--ink); }
 .responsavel-table-wrap .dt-info { color: var(--muted); font-weight: 700; }
 .responsavel-table-wrap .dt-paging { display: flex; align-items: center; justify-content: flex-end; gap: .4rem; }
 .responsavel-table-wrap .dt-paging .dt-paging-button { display: inline-grid; min-width: 2.5rem; min-height: 2.5rem; place-items: center; border: 0; border-radius: 8px; padding: .55rem .75rem; background: #e7eee9; color: var(--brand) !important; font: inherit; font-weight: 800; box-shadow: none; }
@@ -475,7 +472,10 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-table-wrap .dt-paging .dt-paging-button:hover:not(.disabled), .responsavel-table-wrap .dt-paging .dt-paging-button:focus-visible:not(.disabled) { border: 0; background: color-mix(in srgb, var(--brand) 18%, white); color: var(--brand) !important; outline: 2px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: 2px; }
 .responsavel-table-wrap .dt-paging .dt-paging-button.current:hover, .responsavel-table-wrap .dt-paging .dt-paging-button.current:focus-visible { background: #007a55; color: white !important; }
 .responsavel-atas-table { min-width: 760px; width: 100% !important; margin-top: 0; border: 1px solid var(--line); border-radius: 8px; border-collapse: separate; border-spacing: 0; overflow: hidden; background: white; }
-.responsavel-atas-table th, .responsavel-atas-table td { padding: .9rem 1rem; vertical-align: middle; }
+.responsavel-atas-table tbody tr { height: 42.5px; }
+.responsavel-atas-table th { padding: .9rem 1rem; vertical-align: middle; }
+.responsavel-atas-table td { padding: .45rem 1rem; vertical-align: middle; }
+.responsavel-atas-card .responsavel-atas-table td { padding-block: .35rem; }
 .responsavel-atas-table th { color: var(--muted); font-size: 1rem; font-weight: 800; }
 .responsavel-atas-table td { color: #233044; font-size: 1rem; }
 .responsavel-atas-table th:first-child, .responsavel-atas-table td:first-child, .responsavel-atas-table .responsavel-data-column { text-align: left !important; }
@@ -490,7 +490,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-ata-actions { flex-wrap: nowrap; justify-content: center; }
 .responsavel-ata-actions .icon-button, .responsavel-ata-actions .danger-icon-button { width: 2.5rem; height: 2.5rem; min-width: 2.5rem; align-self: center; }
 .responsavel-ata-actions .danger-icon-button:disabled { background: #f5e7e7; color: color-mix(in srgb, var(--danger) 70%, white); cursor: not-allowed; }
-.responsavel-action-menu-trigger { display: inline-grid; width: 2.5rem; height: 2.5rem; min-width: 2.5rem; min-height: 2.5rem; place-items: center; padding: 0; background: #e7eee9; color: var(--brand); }
+.responsavel-action-menu-trigger { display: inline-grid; width: 1.875rem; height: 1.875rem; min-width: 1.875rem; min-height: 1.875rem; place-items: center; padding: 0; background: #e7eee9; color: var(--brand); }
 .responsavel-action-menu-trigger svg { width: 1rem; height: 1rem; }
 .responsavel-action-menu-trigger:hover,
 .responsavel-action-menu-trigger:focus-visible { background: color-mix(in srgb, var(--brand) 18%, white); outline: 2px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: 2px; }
@@ -581,7 +581,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .mesa-remove-button { align-self: center; }
 }
 @media (min-width: 721px) and (max-width: 980px) {
-  .admin-atas-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-atas-filters, .responsavel-atas-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .admin-atas-card .admin-atas-table th,
   .admin-atas-card .admin-atas-table td { padding: .75rem .65rem; font-size: .875rem; }
   .admin-atas-card .admin-atas-table-wrap .dt-container,
@@ -609,16 +609,15 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .admin-atas-card .admin-status-display { white-space: normal; font-size: .75rem; }
   .responsavel-atas-card .responsavel-atas-table th,
   .responsavel-atas-card .responsavel-atas-table td { font-size: .875rem; }
-  .responsavel-atas-card .responsavel-atas-table th,
-  .responsavel-atas-card .responsavel-atas-table td { padding: .75rem .65rem; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-container,
-  .responsavel-atas-card .responsavel-atas-table { min-width: 0; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:first-child { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); align-items: center; gap: 1rem; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:first-child .dt-layout-cell { width: auto !important; min-width: 0; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-search,
-  .responsavel-atas-card .responsavel-table-wrap .dt-search label { min-width: 0; width: 100%; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-search input { min-width: 0; width: 100%; }
+  .responsavel-atas-card .responsavel-atas-table th { padding: .75rem .65rem; }
+  .responsavel-atas-card .responsavel-atas-table td { padding: .375rem .65rem; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-container { min-width: 0; width: 100%; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-layout-cell.dt-layout-full { width: 100%; min-width: 0; overflow-x: auto; }
+  .responsavel-atas-card .responsavel-atas-table { min-width: 760px; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:first-child { display: block; width: 100%; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:first-child .dt-layout-cell { width: 100% !important; min-width: 0; }
   .responsavel-atas-card .responsavel-atas-table { table-layout: fixed; }
+  .responsavel-atas-card .responsavel-atas-table tbody tr { height: 43px; }
   .responsavel-atas-card .responsavel-atas-table th:nth-child(1),
   .responsavel-atas-card .responsavel-atas-table td:nth-child(1) { width: 10% !important; }
   .responsavel-atas-card .responsavel-atas-table th:nth-child(2),
@@ -634,6 +633,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 }
 @media (max-width: 720px) {
   .grid, .definition-grid, .metrics, .form-grid, .four-columns, .review-grid { grid-template-columns: 1fr; }
+  .responsavel-atas-filters { grid-template-columns: 1fr; gap: .75rem; padding: 1rem; }
   .ata-general-info-grid,
   .ata-participation-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ata-general-info-grid > label,
@@ -739,26 +739,19 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .responsavel-atas-card .responsavel-table-wrap { padding: .75rem .5rem; overflow-x: visible; }
   .responsavel-atas-card .responsavel-table-wrap .dt-container { gap: .75rem; min-width: 0; width: 100%; }
   .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row { display: grid; min-width: 0; gap: .5rem; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:first-child { grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); align-items: end; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:first-child { display: block; width: 100%; }
   .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:last-child { grid-template-columns: 1fr; }
   .responsavel-atas-card .responsavel-table-wrap .dt-layout-cell { min-width: 0; justify-content: stretch; gap: .35rem; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-layout-cell.dt-layout-full { overflow-x: visible; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-length,
-  .responsavel-atas-card .responsavel-table-wrap .dt-search { min-width: 0; width: 100%; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-length { display: grid; grid-template-rows: auto 2.25rem; justify-content: start; align-content: start; gap: .35rem; text-align: left; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-length label { display: block; min-width: 0; width: 100%; font-size: .8125rem; line-height: 1.25; text-align: left; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-search { display: grid; grid-template-rows: auto 2.25rem; align-content: start; gap: .35rem; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-search label { display: block; min-width: 0; width: 100%; font-size: .8125rem; line-height: 1.25; text-align: left; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-length select { min-width: 3.25rem; min-height: 2.25rem; padding: .4rem 1.35rem .4rem .4rem; font-size: 1rem; }
-  .responsavel-atas-card .responsavel-table-wrap .dt-search input { min-width: 0; min-height: 2.25rem; width: 100%; margin-left: 0; padding: .4rem .5rem; font-size: 1rem; }
+  .responsavel-atas-card .responsavel-table-wrap .dt-layout-cell.dt-layout-full { width: 100%; min-width: 0; overflow-x: auto; }
   .responsavel-atas-card .responsavel-table-wrap .dt-info { font-size: .8125rem; }
   .responsavel-atas-card .responsavel-table-wrap .dt-paging { justify-content: flex-start; flex-wrap: wrap; gap: .25rem; }
   .responsavel-atas-card .responsavel-table-wrap .dt-paging .dt-paging-button { min-width: 2.25rem; min-height: 2.25rem; padding: .4rem .55rem; font-size: .8125rem; }
   .responsavel-atas-card .responsavel-table-wrap .dt-paging .dt-paging-button.first,
   .responsavel-atas-card .responsavel-table-wrap .dt-paging .dt-paging-button.last { display: none; }
-  .responsavel-atas-card .responsavel-atas-table { min-width: 0; width: 100% !important; table-layout: fixed; }
-  .responsavel-atas-card .responsavel-atas-table th,
-  .responsavel-atas-card .responsavel-atas-table td { padding: .55rem .25rem; font-size: .8125rem; line-height: 1.25; }
+  .responsavel-atas-card .responsavel-atas-table { min-width: 520px; width: 100% !important; table-layout: fixed; }
+  .responsavel-atas-card .responsavel-atas-table tbody tr { height: 44.25px; }
+  .responsavel-atas-card .responsavel-atas-table th { padding: .55rem .25rem; font-size: .8125rem; line-height: 1.25; }
+  .responsavel-atas-card .responsavel-atas-table td { padding: .4125rem .25rem; font-size: .8125rem; line-height: 1.25; }
   .responsavel-atas-card .responsavel-atas-table th:nth-child(1),
   .responsavel-atas-card .responsavel-atas-table td:nth-child(1) { width: 14% !important; }
   .responsavel-atas-card .responsavel-atas-table th:nth-child(2),
@@ -775,7 +768,6 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .responsavel-date-mobile { display: block; overflow: hidden; white-space: nowrap; }
   .responsavel-server-name { text-align: left; }
   .responsavel-status-dot { width: .7rem; height: .7rem; flex-basis: .7rem; }
-  .responsavel-action-menu-trigger { width: 2.5rem; height: 2.5rem; min-width: 2.5rem; min-height: 2.5rem; }
   .admin-atas-card .admin-atas-table-wrap { padding: .75rem .5rem; overflow-x: visible; }
   .admin-atas-card .admin-atas-table-wrap .dt-container { gap: .75rem; min-width: 0; width: 100%; }
   .admin-atas-card .admin-atas-table-wrap .dt-container > .dt-layout-row { display: grid; min-width: 0; gap: .5rem; }

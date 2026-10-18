@@ -72,6 +72,7 @@ export default async function ResponsavelRelatoriosPage({
         groups={[group]}
         years={dashboardYears(result)}
         showGroupFilter={false}
+        showFoundationMeetingCard
       />
     </ResponsavelShell>
   );

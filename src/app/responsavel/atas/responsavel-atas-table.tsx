@@ -12,45 +12,38 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { AtaPdfDownloadButton } from "@/app/atas/ata-pdf-download-button";
 import type { ConfigColumns } from "datatables.net";
-
-export type ResponsavelAtaRow = {
-  ataId: string;
-  indicePersonalizadoGrupo: number;
-  data: string;
-  horario: string;
-  servidor: string;
-  status: "Enviada" | "Pendente de revisão";
-};
-
-const statusLegend = [
-  { label: "Enviada", className: "responsavel-status-dot-sent" },
-  { label: "Pendente de revisão", className: "responsavel-status-dot-review" },
-  { label: "Não enviada", className: "responsavel-status-dot-missing" },
-] as const;
+import type { ResponsavelAtaRow, ResponsavelAtaStatus } from "./responsavel-atas-data";
 
 type ResponsavelAtaDataTableRow = [
-  number,
+  number | null,
   string,
   string,
   string,
-  ResponsavelAtaRow["status"],
+  ResponsavelAtaStatus,
   ResponsavelAtaRow,
 ];
 type DataTableComponent = typeof import("datatables.net-react").default;
 
+const statusOptions: { value: "todos" | ResponsavelAtaStatus; label: string }[] = [
+  { value: "todos", label: "Todos" },
+  { value: "Enviada", label: "Enviadas" },
+  { value: "Não enviada", label: "Não enviadas" },
+  { value: "Pendente de revisão", label: "Pendentes de revisão" },
+];
+
 function formatDate(value: string) {
   const [year, month, day] = value.split("-");
   if (!year || !month || !day) return value;
-  return `${day}-${month}-${year}`;
+  return `${day}/${month}/${year}`;
 }
 
 function formatMobileDate(value: string) {
   const [, month, day] = value.split("-");
   if (!month || !day) return value;
-  return `${day}-${month}`;
+  return `${day}/${month}`;
 }
 
-function ResponsavelAtaActions({ ata }: { ata: ResponsavelAtaRow }) {
+function ResponsavelAtaActions({ ata }: { ata: ResponsavelAtaRow & { ataId: string } }) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
@@ -192,10 +185,16 @@ function toDataTableRows(rows: ResponsavelAtaRow[]): ResponsavelAtaDataTableRow[
     row.indicePersonalizadoGrupo,
     row.data,
     row.horario,
-    row.servidor || "Sem servidor",
+    row.servidor || (row.status === "Não enviada" ? "-" : "Sem servidor"),
     row.status,
     row,
   ]);
+}
+
+function statusClassName(status: ResponsavelAtaStatus) {
+  if (status === "Pendente de revisão") return "responsavel-status-dot-review";
+  if (status === "Não enviada") return "responsavel-status-dot-missing";
+  return "responsavel-status-dot-sent";
 }
 
 const columns: ConfigColumns[] = [
@@ -203,7 +202,11 @@ const columns: ConfigColumns[] = [
     title: "Ata",
     className: "responsavel-centered-column responsavel-ata-number-column",
   },
-  { title: "Data", className: "responsavel-data-column" },
+  {
+    title: "Data",
+    className: "responsavel-data-column",
+    orderData: [1, 2],
+  },
   {
     title: "Horário",
     className: "responsavel-centered-column responsavel-time-column",
@@ -215,7 +218,6 @@ const columns: ConfigColumns[] = [
   {
     title: "Status",
     className: "responsavel-centered-column responsavel-status-column",
-    orderable: false,
   },
   {
     title: "Ações",
@@ -225,13 +227,39 @@ const columns: ConfigColumns[] = [
   },
 ];
 
-export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
+export function ResponsavelAtasTable({
+  rows,
+  defaultStartDate,
+  defaultEndDate,
+}: {
+  rows: ResponsavelAtaRow[];
+  defaultStartDate: string;
+  defaultEndDate: string;
+}) {
   const [DataTableComponent, setDataTableComponent] =
     useState<DataTableComponent | null>(null);
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState(defaultEndDate);
+  const [selectedTime, setSelectedTime] = useState("todos");
+  const [selectedStatus, setSelectedStatus] = useState<"todos" | ResponsavelAtaStatus>("todos");
+
+  const timeOptions = useMemo(
+    () => [...new Set(rows.map((row) => row.horario))].sort(),
+    [rows],
+  );
+  const filteredRows = useMemo(
+    () => rows.filter((row) =>
+      row.data >= startDate
+      && row.data <= endDate
+      && (selectedTime === "todos" || row.horario === selectedTime)
+      && (selectedStatus === "todos" || row.status === selectedStatus)
+    ),
+    [rows, startDate, endDate, selectedTime, selectedStatus],
+  );
 
   const tableRows = useMemo(
-    () => toDataTableRows(rows),
-    [rows],
+    () => toDataTableRows(filteredRows),
+    [filteredRows],
   );
 
   useEffect(() => {
@@ -254,17 +282,41 @@ export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
 
   return (
     <section className="card responsavel-atas-card">
-      <div className="responsavel-status-legend" aria-label="Legenda dos status">
-        <span className="responsavel-status-legend-title">Status:</span>
-        {statusLegend.map((status) => (
-          <span className="responsavel-status-legend-item" key={status.label}>
-            <span
-              className={`responsavel-status-dot ${status.className}`}
-              aria-hidden="true"
-            />
-            {status.label}
-          </span>
-        ))}
+      <div className="responsavel-atas-filters" aria-label="Filtros das atas">
+        <label>
+          <span>De</span>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(event) => setStartDate(event.target.value)}
+          />
+        </label>
+        <label>
+          <span>Até</span>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(event) => setEndDate(event.target.value)}
+          />
+        </label>
+        <label>
+          <span>Horário</span>
+          <select value={selectedTime} onChange={(event) => setSelectedTime(event.target.value)}>
+            <option value="todos">Todos</option>
+            {timeOptions.map((time) => <option key={time} value={time}>{time}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Status</span>
+          <select
+            value={selectedStatus}
+            onChange={(event) => setSelectedStatus(event.target.value as "todos" | ResponsavelAtaStatus)}
+          >
+            {statusOptions.map((status) => (
+              <option key={status.value} value={status.value}>{status.label}</option>
+            ))}
+          </select>
+        </label>
       </div>
 
       <div className="responsavel-table-wrap">
@@ -273,20 +325,26 @@ export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
             className="responsavel-atas-table"
             columns={columns}
             data={tableRows}
+            key={`${startDate}-${endDate}-${selectedTime}-${selectedStatus}`}
             options={{
               autoWidth: false,
               ordering: true,
               order: [[0, "desc"]],
-              orderFixed: { post: [[2, "desc"]] },
-              pageLength: 10,
-              lengthMenu: [10, 25, 50],
+              pageLength: 25,
+              searching: false,
+              lengthChange: false,
+              layout: {
+                topStart: null,
+                topEnd: null,
+                bottomStart: "info",
+                bottomEnd: "paging",
+              },
               language: {
                 decimal: ",",
                 emptyTable: "Nenhuma ata encontrada.",
                 info: "_START_ - _END_ de _TOTAL_",
                 infoEmpty: "0 - 0 de 0",
                 infoFiltered: "(filtrado de _MAX_ atas)",
-                lengthMenu: "Mostrar _MENU_",
                 loadingRecords: "Carregando...",
                 paginate: {
                   first: "Primeira",
@@ -294,14 +352,25 @@ export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
                   next: "Próxima",
                   previous: "Anterior",
                 },
-                search: "Buscar:",
-                searchPlaceholder: "Buscar...",
                 zeroRecords: "Nenhuma ata encontrada.",
               },
             }}
             slots={{
-              0: (data: number) => (data >= 1 && data <= 9 ? `0${data}` : `${data}`),
-              1: (data: string, row: ResponsavelAtaDataTableRow) => (
+              0: (
+                data: number | null,
+                type: string,
+                _row: ResponsavelAtaDataTableRow,
+                _meta: unknown,
+              ) => {
+                if (type !== "display") return data ?? -1;
+                return data === null ? "-" : (data >= 1 && data <= 9 ? `0${data}` : `${data}`);
+              },
+              1: (
+                data: string,
+                type: string,
+                row: ResponsavelAtaDataTableRow,
+                _meta: unknown,
+              ) => type !== "display" ? data : (
                 <>
                   <span className="responsavel-date-desktop">{formatDate(data)}</span>
                   <span className="responsavel-date-mobile">
@@ -315,22 +384,36 @@ export function ResponsavelAtasTable({ rows }: { rows: ResponsavelAtaRow[] }) {
                   {data}
                 </span>
               ),
-              4: (data: ResponsavelAtaRow["status"]) => (
-                <span
-                  className={`responsavel-status-dot ${data === "Pendente de revisão" ? "responsavel-status-dot-review" : "responsavel-status-dot-sent"}`}
-                  role="img"
-                  aria-label={`Status: ${data}`}
-                  title={data}
-                />
-              ),
+              4: (
+                data: ResponsavelAtaStatus,
+                type: string,
+                _row: ResponsavelAtaDataTableRow,
+                _meta: unknown,
+              ) => {
+                if (type !== "display") {
+                  if (data === "Enviada") return 0;
+                  if (data === "Pendente de revisão") return 1;
+                  return 2;
+                }
+
+                return (
+                  <span
+                    className={`responsavel-status-dot ${statusClassName(data)}`}
+                    role="img"
+                    aria-label={`Status: ${data}`}
+                    title={data}
+                  />
+                );
+              },
               5: (_data: ResponsavelAtaRow, row: ResponsavelAtaDataTableRow) => {
                 const ata = row[5];
+                if (!ata.ataId) return <span aria-hidden="true" />;
 
                 return (
                   <div
                     className="row-actions responsavel-ata-actions"
                   >
-                    <ResponsavelAtaActions ata={ata} />
+                    <ResponsavelAtaActions ata={ata as ResponsavelAtaRow & { ataId: string }} />
                   </div>
                 );
               },
