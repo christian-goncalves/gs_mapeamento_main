@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faClockRotateLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
 import { currentMonthPeriod } from "@/app/admin/atas/admin-atas-data";
 import { buildResponsavelAtaRows } from "./responsavel-atas-data";
@@ -11,7 +11,13 @@ import { AtaApprovalPanel } from "@/app/atas/ata-approval-panel";
 
 export const dynamic = "force-dynamic";
 
-export default async function ResponsavelAtasPage() {
+export default async function ResponsavelAtasPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ historico?: string }>;
+}) {
+  const { historico } = await searchParams;
+  const historyMode = historico === "1";
   const { access, result } = await requireAuthorizedSessionWithAggregatedAtas();
   if (access.role === "administrador") redirect("/admin/grupos");
   const [group] = access.groups;
@@ -23,7 +29,8 @@ export default async function ResponsavelAtasPage() {
     horarios: result.grupo_horarios,
   });
   const groupAtas = result.atas.filter(
-    (item) => item.grupo.grupo_id === group.grupo_id && item.registro.ata.status_registro === "ativa",
+    (item) => item.grupo.grupo_id === group.grupo_id
+      && item.registro.ata.status_registro === "ativa",
   );
   const approvalRows = groupAtas
     .filter((item) => item.registro.ata.status_aprovacao === "pendente_revisao")
@@ -36,28 +43,47 @@ export default async function ResponsavelAtasPage() {
       group: group.grupo_nome,
     }));
   const period = currentMonthPeriod();
+  const historicalDates = rows
+    .filter((row) => row.ataId && row.registroStatus !== "ativa")
+    .map((row) => row.data)
+    .sort();
+  const historyStart = historyMode ? historicalDates[0] ?? period.start : period.start;
+  const historyEnd = historyMode ? historicalDates.at(-1) ?? period.end : period.end;
 
   return (
     <ResponsavelShell activeSection="responsavel" settingsHref={`/grupos/${group.grupo_id}`}>
       <header className="responsavel-page-header">
         <div>
-          <p className="eyebrow">Responsável</p>
+          <p className="eyebrow">Histórico de atas</p>
           <h1>GRUPO {group.grupo_nome.toLocaleUpperCase("pt-BR")}</h1>
         </div>
-        <Link className="button-link responsavel-new-ata-button" href="/atas/nova">
-          <span className="button-content">
-            <FontAwesomeIcon icon={faPlus} />
-            Nova Ata
-          </span>
-        </Link>
+        <div className="responsavel-page-header-actions">
+          <Link
+            className="button-link responsavel-history-button"
+            href={historyMode ? "/responsavel/atas" : "/responsavel/atas?historico=1"}
+          >
+            <span className="button-content">
+              <FontAwesomeIcon icon={historyMode ? faArrowLeft : faClockRotateLeft} />
+              {historyMode ? "Atas atuais" : "Histórico"}
+            </span>
+          </Link>
+          <Link className="button-link responsavel-new-ata-button" href="/atas/nova">
+            <span className="button-content">
+              <FontAwesomeIcon icon={faPlus} />
+              Nova Ata
+            </span>
+          </Link>
+        </div>
       </header>
 
       <AtaApprovalPanel rows={approvalRows} />
 
       <ResponsavelAtasTable
+        key={historyMode ? "historico" : "atuais"}
         rows={rows}
-        defaultStartDate={period.start}
-        defaultEndDate={period.end}
+        historyMode={historyMode}
+        defaultStartDate={historyStart}
+        defaultEndDate={historyEnd}
       />
     </ResponsavelShell>
   );

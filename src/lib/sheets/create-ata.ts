@@ -99,10 +99,17 @@ export async function createAtaInSheets(
       }
     : submission;
   const existingKeys: AtaBusinessKey[] = rows.atas.flatMap((row) => {
+    if (row.value.status_registro !== "ativa") return [];
     const result = sheetAtaBusinessKeySchema.safeParse(row.value);
     return result.success ? [result.data] : [];
   });
   const existingIdentifiers = rows.atas.flatMap((row) => {
+    const result = sheetAtaIdentifiersSchema.safeParse(row.value);
+    if (!result.success) throw new InvalidAtaIdentifiersError();
+    return [result.data];
+  });
+  const activeIdentifiers = rows.atas.flatMap((row) => {
+    if (row.value.status_registro !== "ativa") return [];
     const result = sheetAtaIdentifiersSchema.safeParse(row.value);
     if (!result.success) throw new InvalidAtaIdentifiersError();
     return [result.data];
@@ -126,6 +133,7 @@ export async function createAtaInSheets(
   const identifiers = nextAtaCreationIdentifiers(
     normalizedSubmission.ata.grupo_id,
     existingIdentifiers,
+    activeIdentifiers,
   );
 
   const sheetsByName = Object.fromEntries(

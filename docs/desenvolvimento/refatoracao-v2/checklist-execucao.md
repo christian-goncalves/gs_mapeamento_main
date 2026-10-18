@@ -13,6 +13,22 @@
 - [x] Execução da F0 autorizada pelo usuário em 16/10/2026.
 - [x] F1 autorizada pelo usuário em 16/10/2026 após conferência do CP-00.
 
+## Configuração atual das planilhas (18/10/2026)
+
+- O usuário decidiu manter somente a variável `GOOGLE_SHEETS_ID` no projeto.
+- `.env.local` e Vercel Preview/Development devem usar o ID da planilha Dev.
+- Vercel Production deve usar o ID da cópia Prod que o usuário está criando.
+- Esta configuração substitui a decisão de 16/10/2026 de compartilhar a mesma
+  planilha entre Dev e Prod. A separação efetiva dos valores Vercel ainda não
+  está confirmada.
+- Inspeção Vercel em 18/10, sem descriptografar valores: há uma entrada sensível
+  `GOOGLE_SHEETS_ID` aplicada a Production e Development, sem override Prod
+  separado visível na API. O valor não foi recuperado. Separar os escopos antes
+  do próximo deployment de produção.
+- O código local de simulação continua usando apenas `.env.local` e mantém as
+  confirmações explícitas de escrita; nenhuma simulação foi executada nesta
+  alteração.
+
 ## F0
 
 - [x] F00-T01 — Base, branch, commit, worktree e alterações preexistentes identificados e preservados.
@@ -65,8 +81,17 @@
   - REL-01 — Histórico do administrador e do responsável mostra Pendentes de revisão; pendentes continuam recebidas para não projetar ausência. Listagens e indicadores excluem registros não ativos, e os indicadores mensais/contadores usam somente atas aprovadas.
   - Verificações: nenhuma suíte, lint ou build executados, conforme instrução do usuário. Nenhuma escrita em Sheets, migração, alteração de Apps Script, publicação ou ativação externa foi feita.
   - Pendências: executar testes direcionados, lint e build quando solicitado; CP-01 segue não aceito, então coordenação entre instâncias/escritores, ledger, repetição e concorrência da gravação de aprovação não estão comprovados. CP-04 não apresentado para aceite.
-- [ ] F5 / CP-05 — Edição e exclusão versionadas.
-- [ ] F6 / CP-06 — Histórico, faltantes e relatórios.
+- [ ] F5 / CP-05 — Implementação local concluída; checkpoint operacional pendente.
+  - CIC-01 — Responsável pode iniciar revisão de ata ativa aprovada ou pendente. Formulário preenchido preserva os dados atuais, exige motivo e confirmação, gera nova ata e dependentes com IDs inéditos, mantém o índice visual, avança o sequencial e marca a origem como substituída na mesma chamada `spreadsheets.batchUpdate`. A aprovação da nova versão herda o estado da origem.
+  - CIC-02 — Exclusão lógica disponível somente em ata ativa aprovada; exige motivo e confirmação, registra ator/data e preserva ata e dependentes.
+  - HIS-01 — Alternância “Histórico” na área Responsável > Atas lista versões substituídas/excluídas do próprio grupo, com detalhe e PDF. A listagem normal mantém apenas registros ativos e faltantes projetadas.
+  - DET-01 — Removida do detalhe a seção de identificação/índice personalizado mostrada na tela de referência.
+  - Persistência usa writer direto em Sheets e depende das colunas do contrato V2 já reconciliadas. Escritores concorrentes e proteção contra corrida distribuída continuam sem coordenação comprovada, conforme CP-01/ESP-Q7.
+  - Verificações locais desta etapa: suíte completa passou (48 arquivos/355 testes), `npm run lint` e `npm run build` passaram. Nenhuma gravação em Sheets, migração ou publicação foi realizada.
+  - Pendências de CP-05: revisão manual da interface e fluxos, validação de gravação/readback em ambiente identificado e prova dos critérios de integridade, autorização entre grupos, concorrência e totais. Os botões estão habilitados no código local por decisão do usuário; isto não fecha CP-05 nem autoriza uso com gravações reais.
+- [ ] F6 / CP-06 — Em andamento; HIS-03 implementado localmente, checkpoint pendente.
+  - HIS-03 — Detalhe oferece “Ata anterior” e “Próxima ata”. Abrindo pela listagem, a navegação reusa filtros, grupo/status e ordenação atual; ausências projetadas não viram destino. Sem contexto de listagem, percorre atas ativas do mesmo grupo por data/hora decrescentes. Botões ficam desabilitados nos extremos.
+  - Validação funcional visual e CP-06 permanecem pendentes; nenhuma escrita em Sheets ou publicação foi feita nesta tarefa.
 - [ ] F7 / CP-07 — Consistência final.
 
 ## Registro de checkpoint — CP-00 em conferência

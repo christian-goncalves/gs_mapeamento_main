@@ -53,11 +53,12 @@ mensais antes de preparar a escrita.
 
 ## Persistência DEV
 
-O planejamento pode ler somente o ID de `GOOGLE_SHEETS_DEV_ID` e nunca escreve.
+O planejamento usa `GOOGLE_SHEETS_ID` de `.env.local`, configurado para Dev,
+e nunca escreve.
 O commit exige simultaneamente:
 
 - `ATA_SIMULATION_ENABLED=true`;
-- `GOOGLE_SHEETS_DEV_ID` presente;
+- `GOOGLE_SHEETS_ID` presente em `.env.local`;
 - destino idêntico ao ID DEV configurado;
 - autorização explícita representada por `--authorized`;
 - ausência de qualquer pedido de produção.

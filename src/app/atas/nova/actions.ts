@@ -96,7 +96,8 @@ export async function createAtaAction(
   if ("error" in result) return result;
 
   revalidatePath("/");
-  redirect(`/atas/${result.ataId}`);
+  revalidatePath("/responsavel/atas");
+  redirect("/responsavel/atas");
 }
 
 export async function createAtaByLinkAction(

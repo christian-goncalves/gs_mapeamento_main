@@ -125,7 +125,10 @@ O rascunho não é persistido. Após a confirmação do resumo, o backend:
 6. retorna sucesso somente após a confirmação da API.
 
 As suboperações do lote devem ser atômicas: uma falha impede todas as escritas.
-Atas persistidas são somente leitura na aplicação.
+Os campos de negócio de uma ata persistida não são sobrescritos: uma revisão
+cria uma nova ata e novos dependentes. O ciclo de vida pode atualizar somente
+os metadados de estado/auditoria da versão anterior para marcá-la substituída ou
+excluída, preservando seus valores e dependentes.
 
 O Sheets não oferece restrição única condicional. A consulta da chave de negócio
 e o bloqueio de reenvio na interface reduzem o risco de duplicidade, mas duas

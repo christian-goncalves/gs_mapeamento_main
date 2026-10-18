@@ -225,12 +225,12 @@ export function AtaReviewLayout({
         <div><FontAwesomeIcon icon={faUsers} aria-hidden="true" /><dt>Servidores</dt><dd>{data.servers.length}</dd></div>
         <div><FontAwesomeIcon icon={faUsers} aria-hidden="true" /><dt>Membros</dt><dd>{data.membersPresent}</dd></div>
         <div><FontAwesomeIcon icon={faComments} aria-hidden="true" /><dt>Partilhas</dt><dd>{data.shares}</dd></div>
-        <div><FontAwesomeIcon icon={faLocationDot} aria-hidden="true" /><dt>Cidades</dt><dd>{data.supplementalMetrics?.cities ?? data.locations.length}</dd></div>
-        <div><FontAwesomeIcon icon={faLocationDot} aria-hidden="true" /><dt>Estados</dt><dd>{data.supplementalMetrics?.states ?? 0}</dd></div>
-        <div><FontAwesomeIcon icon={faGlobe} aria-hidden="true" /><dt>Países</dt><dd>{data.supplementalMetrics?.otherCountries ?? data.internationalMembers.length}</dd></div>
         <div><FontAwesomeIcon icon={faUsers} aria-hidden="true" /><dt>Visitantes</dt><dd>{data.visitors.length}</dd></div>
         <div><FontAwesomeIcon icon={faTicket} aria-hidden="true" /><dt>Ingressos</dt><dd>{data.admissions.length}</dd></div>
-        <div><FontAwesomeIcon icon={faClock} aria-hidden="true" /><dt>Conquistas de tempo</dt><dd>{data.achievements.length}</dd></div>
+        <div><FontAwesomeIcon icon={faClock} aria-hidden="true" /><dt>Conquistas</dt><dd>{data.achievements.length}</dd></div>
+        <div><FontAwesomeIcon icon={faLocationDot} aria-hidden="true" /><dt>Cidades</dt><dd>{data.supplementalMetrics?.cities ?? data.locations.length}</dd></div>
+        <div><FontAwesomeIcon icon={faLocationDot} aria-hidden="true" /><dt>Estados</dt><dd>{data.supplementalMetrics?.states ?? 0}</dd></div>
+        <div><FontAwesomeIcon icon={faGlobe} aria-hidden="true" /><dt>Outros países</dt><dd>{data.supplementalMetrics?.otherCountries ?? data.internationalMembers.length}</dd></div>
       </dl>
 
       <div className="review-sections">

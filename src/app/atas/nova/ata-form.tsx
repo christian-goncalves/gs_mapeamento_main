@@ -45,6 +45,7 @@ type Draft = Omit<
   membros_internacionais: (HiddenAtaSubmission["membros_internacionais"][number] & ClientRow)[];
   visitantes: (VisitorDraft & ClientRow)[];
   trocas_chaveiro: (HiddenAtaSubmission["trocas_chaveiro"][number] & ClientRow)[];
+  legacyIngressos: ({ nome?: string; cidade?: string } & ClientRow)[];
 };
 
 const initialActionState: CreateAtaState = {};
@@ -163,13 +164,41 @@ function submissionFromDraft(draft: Draft) {
         como_chegou_a_na,
       }),
     ),
-    ingressos: draft.visitantes.flatMap((visitor, visitante_indice) =>
-      visitor.has_ingresso ? [{ visitante_indice }] : [],
-    ),
+    ingressos: [
+      ...draft.visitantes.flatMap((visitor, visitante_indice) =>
+        visitor.has_ingresso ? [{ visitante_indice }] : [],
+      ),
+      ...draft.legacyIngressos.map(({ nome, cidade }) => ({ nome, cidade })),
+    ],
     trocas_chaveiro: draft.trocas_chaveiro.map(({ tempo_limpo, quantidade }) => ({
       tempo_limpo,
       quantidade,
     })),
+  };
+}
+
+function draftFromSubmission(submission: HiddenAtaSubmission): Draft {
+  const linkedVisitors = new Set(
+    submission.ingressos.flatMap((item) =>
+      item.visitante_indice === undefined ? [] : [item.visitante_indice],
+    ),
+  );
+  return {
+    ata: submission.ata,
+    servidores: submission.servidores.map((item) => ({ ...item, clientId: clientId() })),
+    participacao: submission.participacao.map((item) => ({ ...item, clientId: clientId() })),
+    membros_internacionais: submission.membros_internacionais.map((item) => ({ ...item, clientId: clientId() })),
+    visitantes: submission.visitantes.map((item, index) => ({
+      ...item,
+      clientId: clientId(),
+      has_ingresso: linkedVisitors.has(index),
+    })),
+    trocas_chaveiro: submission.trocas_chaveiro.map((item) => ({ ...item, clientId: clientId() })),
+    legacyIngressos: submission.ingressos.flatMap((item) =>
+      item.visitante_indice === undefined
+        ? [{ nome: item.nome, cidade: item.cidade, clientId: clientId() }]
+        : [],
+    ),
   };
 }
 
@@ -179,6 +208,8 @@ export function AtaForm({
   action = createAtaAction,
   fixedGroupId,
   linkFormularioAta,
+  initialSubmission,
+  revision,
 }: {
   groups: {
     id: string;
@@ -187,12 +218,15 @@ export function AtaForm({
     horarios?: { dia_semana: string; hora_inicio: string; link_reuniao: string }[];
   }[];
   today: string;
-  action?: (
-    previousState: CreateAtaState,
-    formData: FormData,
-  ) => Promise<CreateAtaState>;
+  action?: (previousState: { error?: string }, formData: FormData) => Promise<{ error?: string }>;
   fixedGroupId?: string;
   linkFormularioAta?: string;
+  initialSubmission?: HiddenAtaSubmission;
+  revision?: {
+    ataId: string;
+    updatedAt: string;
+    approvalStatus: "aprovada" | "pendente_revisao";
+  };
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [reviewing, setReviewing] = useState(false);
@@ -208,26 +242,30 @@ export function AtaForm({
   const initialGroupId = fixedGroupId ?? groups[0].id;
   const initialGroup = groups.find((group) => group.id === initialGroupId);
   const initialTime = initialGroup?.horarios?.[0]?.hora_inicio ?? "20:00";
-  const [draft, setDraft] = useState<Draft>({
-    ata: {
-      grupo_id: initialGroupId,
-      data_reuniao: today,
-      hora_inicio: initialTime,
-      duracao: "",
-      formato_outros: "",
-      preenchido_por: "",
-      plataforma: initialGroup?.plataforma ?? "zoom",
-      tipo_reuniao: "fechada",
-      formatos: [],
-      total_membros_presentes: 0,
-      total_partilhas: 0,
-    },
-    servidores: [],
-    participacao: [],
-    membros_internacionais: [],
-    visitantes: [],
-    trocas_chaveiro: [],
-  });
+  const [draft, setDraft] = useState<Draft>(() => initialSubmission
+    ? draftFromSubmission(initialSubmission)
+    : {
+        ata: {
+          grupo_id: initialGroupId,
+          data_reuniao: today,
+          hora_inicio: initialTime,
+          duracao: "",
+          formato_outros: "",
+          preenchido_por: "",
+          plataforma: initialGroup?.plataforma ?? "zoom",
+          tipo_reuniao: "fechada",
+          formatos: [],
+          total_membros_presentes: 0,
+          total_partilhas: 0,
+        },
+        servidores: [],
+        participacao: [],
+        membros_internacionais: [],
+        visitantes: [],
+        trocas_chaveiro: [],
+        legacyIngressos: [],
+      });
+  const [revisionReason, setRevisionReason] = useState("");
   const submission = submissionFromDraft(draft);
   const selectedGroup = groups.find((group) => group.id === draft.ata.grupo_id);
   const paisSuggestions = paises.map((pais) => pais.nome);
@@ -247,6 +285,9 @@ export function AtaForm({
     formats: draft.ata.formatos.map((code) => formatoMapping.toSheet(code)).join(", "),
     membersPresent: draft.ata.total_membros_presentes,
     shares: draft.ata.total_partilhas,
+    additionalInformation: revision && revisionReason.trim()
+      ? [{ label: "Motivo da alteração", value: revisionReason.trim() }]
+      : undefined,
     servers: draft.servidores.map((item) => ({
       id: item.clientId,
       name: item.nome,
@@ -282,7 +323,12 @@ export function AtaForm({
         city: location.cidade,
         state: location.estado,
       };
-    }),
+    }).concat(draft.legacyIngressos.map((item) => ({
+      id: item.clientId,
+      label: item.nome || "Ingresso",
+      city: item.cidade || "",
+      state: cidadeEstado(item.cidade || "").estado,
+    }))),
     achievements: reviewConquistasTempo.map((item, index) => ({
       id: item.id,
       label: `Conquista ${index + 1}`,
@@ -384,6 +430,12 @@ export function AtaForm({
     >
       <input type="hidden" name="confirmed" value={reviewing ? "true" : "false"} />
       <input type="hidden" name="payload" value={JSON.stringify(submission)} />
+      {revision && (
+        <>
+          <input type="hidden" name="ata_id" value={revision.ataId} />
+          <input type="hidden" name="updated_at" value={revision.updatedAt} />
+        </>
+      )}
       {linkFormularioAta && (
         <input type="hidden" name="link_formulario_ata" value={linkFormularioAta} />
       )}
@@ -686,11 +738,29 @@ export function AtaForm({
           <div><dt>Servidores</dt><dd>{draft.servidores.length}</dd></div>
           <div><dt>Membros</dt><dd>{draft.ata.total_membros_presentes}</dd></div>
           <div><dt>Partilhas</dt><dd>{draft.ata.total_partilhas}</dd></div>
-          <div><dt>Visitantes</dt><dd>{draft.visitantes.length}</dd></div><div><dt>Ingressos</dt><dd>{draft.visitantes.filter((item) => item.has_ingresso).length}</dd></div>
+          <div><dt>Visitantes</dt><dd>{draft.visitantes.length}</dd></div><div><dt>Ingressos</dt><dd>{draft.visitantes.filter((item) => item.has_ingresso).length + draft.legacyIngressos.length}</dd></div>
           <div><dt>Conquistas</dt><dd>{draft.trocas_chaveiro.reduce((total, item) => total + item.quantidade, 0)}</dd></div><div><dt>Cidades</dt><dd>{new Set(draft.participacao.map((item) => item.localidade.trim().toLocaleLowerCase("pt-BR")).filter(Boolean)).size}</dd></div>
           <div><dt>Estados</dt><dd>{new Set(draft.participacao.map((item) => cidadeEstado(item.localidade).estado).filter((state) => state !== "-")).size}</dd></div><div><dt>Outros países</dt><dd>{new Set(draft.membros_internacionais.map((item) => item.pais.trim().toLocaleLowerCase("pt-BR")).filter((country) => country && country !== "brasil")).size}</dd></div>
         </dl>
       </section>
+
+      {revision && (
+        <section className="card form-section">
+          <label htmlFor="ata-revision-reason">Motivo da alteração</label>
+          <textarea
+            id="ata-revision-reason"
+            name="motivo_alteracao"
+            value={revisionReason}
+            onChange={(event) => setRevisionReason(event.target.value)}
+            maxLength={1000}
+            rows={3}
+            required
+          />
+          {draft.legacyIngressos.length > 0 && (
+            <p className="muted">{draft.legacyIngressos.length} ingresso(s) sem vínculo com visitante serão preservados nesta revisão.</p>
+          )}
+        </section>
+      )}
 
       {(clientError || (!reviewing && actionState.error)) && (
         <p className="form-error" role="alert">{clientError ?? actionState.error}</p>
@@ -703,7 +773,7 @@ export function AtaForm({
         <div className="modal-backdrop">
           <section className="confirmation-modal" role="dialog" aria-modal="true" aria-labelledby="confirmation-title">
             <AtaReviewLayout
-              title="Resumo da ata"
+              title={revision ? "Resumo da revisão" : "Resumo da ata"}
               titleId="confirmation-title"
               data={reviewLayoutData}
               showFilledBy={false}
@@ -712,7 +782,7 @@ export function AtaForm({
                   {actionState.error && <p className="form-error" role="alert">{actionState.error}</p>}
                   <div className="modal-actions">
                     <button type="button" className="secondary" disabled={pending} autoFocus onClick={() => setReviewing(false)}><span className="button-content"><FontAwesomeIcon icon={faPenToSquare} />Corrigir</span></button>
-                    <button type="submit" disabled={pending}><span className="button-content"><FontAwesomeIcon icon={faPaperPlane} />{pending ? "Enviando..." : "Aprovar"}</span></button>
+                    <button type="submit" disabled={pending}><span className="button-content"><FontAwesomeIcon icon={faPaperPlane} />{pending ? "Salvando..." : revision?.approvalStatus === "pendente_revisao" ? "Enviar para revisão" : revision ? "Salvar revisão aprovada" : "Enviar"}</span></button>
                   </div>
                 </>
               )}

@@ -229,8 +229,23 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .message-close:hover { background: rgb(0 0 0 / 6%); }
 .modal-backdrop { position: fixed; z-index: 20; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgb(16 28 21 / 65%); }
 .confirmation-modal { width: min(1040px, 100%); max-height: calc(100vh - 2rem); overflow-y: auto; border-radius: 16px; padding: 1.5rem; background: var(--surface); box-shadow: 0 20px 60px rgb(0 0 0 / 25%); scrollbar-gutter: stable; }
+.ata-delete-backdrop { z-index: 120; }
+.ata-delete-modal { width: min(34rem, 100%); }
+.ata-delete-modal form { display: grid; gap: 1rem; }
+.ata-delete-modal h2,
+.ata-delete-modal p { margin: 0; }
+.ata-delete-modal label { display: grid; gap: .4rem; }
+.ata-delete-modal textarea { width: 100%; resize: vertical; }
+.ata-delete-confirm-label { grid-template-columns: auto 1fr; align-items: center; }
+.responsavel-page-header-actions { display: flex; align-items: center; gap: .75rem; }
+.responsavel-history-title { margin: 0 0 1rem; font-size: 1rem; }
 .ata-review-layout h1, .ata-review-layout h2 { margin: 0; }
 .ata-detail-review-shell { width: min(1120px, calc(100% - 2rem)); }
+.ata-record-navigation { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .75rem; }
+.ata-record-navigation .button-link,
+.ata-record-navigation button { min-width: 10rem; }
+.ata-record-navigation .button-link:last-child,
+.ata-record-navigation button:last-child { margin-left: auto; }
 .ata-review-page { border: 1px solid var(--line); border-radius: 16px; padding: 1.5rem; background: var(--surface); box-shadow: 0 14px 36px rgb(16 28 21 / 8%); }
 .review-layout-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
 .review-layout-header-actions { display: flex; flex: 0 0 auto; align-items: center; justify-content: flex-end; gap: .6rem; }
@@ -441,6 +456,10 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-status-dot-sent { background: #15966b; color: #087a55; }
 .responsavel-status-dot-review { background: #e3a928; color: #9b6b00; }
 .responsavel-status-dot-missing { background: #d95b5b; color: #a52e2e; }
+.responsavel-status-dot-history { background: #8c9690; color: #66716b; }
+.responsavel-history-status { display: inline-block; border-radius: 999px; padding: .2rem .55rem; background: #edf0ee; color: #46524b; font-size: .75rem; white-space: nowrap; }
+.responsavel-history-status.is-substituted { background: #e8edf2; color: #44586d; }
+.responsavel-history-status.is-deleted { background: #f4e9e8; color: #8c4542; }
 .ata-approval-panel { display: grid; gap: 1rem; margin-top: 1.5rem; }
 .ata-approval-panel > header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .ata-approval-panel > header p { margin: .25rem 0 0; color: var(--muted); }
@@ -632,8 +651,10 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .responsavel-atas-card .responsavel-atas-table td:nth-child(6) { width: 11% !important; }
 }
 @media (max-width: 720px) {
+  .ata-record-navigation .button-link,
+  .ata-record-navigation button { min-width: 0; flex: 1 1 0; }
   .grid, .definition-grid, .metrics, .form-grid, .four-columns, .review-grid { grid-template-columns: 1fr; }
-  .responsavel-atas-filters { grid-template-columns: 1fr; gap: .75rem; padding: 1rem; }
+  .responsavel-atas-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; padding: 1rem; }
   .ata-general-info-grid,
   .ata-participation-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ata-general-info-grid > label,
@@ -720,6 +741,8 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .responsavel-page-header { display: grid; align-items: stretch; }
   .responsavel-config-page .responsavel-page-header { grid-template-columns: minmax(0, 1fr); }
   .responsavel-page-header .button-link { width: 100%; text-align: center; }
+  .responsavel-page-header-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; width: 100%; }
+  .responsavel-page-header-actions .button-link { display: flex; justify-content: center; }
   .responsavel-page-header .responsavel-new-ata-button { display: flex; justify-content: center; }
   .responsavel-header-actions { display: grid; justify-content: stretch; }
   .responsavel-header-actions .secondary { width: 100%; }

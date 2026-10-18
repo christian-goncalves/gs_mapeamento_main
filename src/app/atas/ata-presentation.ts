@@ -74,6 +74,9 @@ export function buildAtaPresentation(item: AggregatedAta): AtaPresentation {
       additionalInformation: [
         ata.duracao ? { label: "Duração", value: ata.duracao } : null,
         ata.formato_outros ? { label: "Formato outros", value: ata.formato_outros } : null,
+        ata.status_registro === "substituida" ? { label: "Situação", value: "Versão substituída" } : null,
+        ata.status_registro === "excluida" ? { label: "Situação", value: "Ata excluída" } : null,
+        ata.motivo_alteracao ? { label: "Motivo da alteração", value: ata.motivo_alteracao } : null,
       ].filter((entry): entry is { label: string; value: string } => entry !== null),
       servers: registro.servidores.map((entry) => ({
         id: entry.servidor_id,

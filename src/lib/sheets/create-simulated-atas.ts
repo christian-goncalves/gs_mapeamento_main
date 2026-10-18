@@ -226,7 +226,7 @@ export async function readSimulationSheetSnapshot(
 
 export function assertDevSimulationGate(options: {
   enabled: string | undefined;
-  configuredDevId: string | undefined;
+  configuredSheetId: string | undefined;
   targetId: string | undefined;
   authorized: boolean;
   productionRequested?: boolean;
@@ -237,16 +237,16 @@ export function assertDevSimulationGate(options: {
   if (options.enabled !== "true") {
     throw new Error("ATA_SIMULATION_ENABLED deve ser exatamente true.");
   }
-  if (!options.configuredDevId) {
-    throw new Error("GOOGLE_SHEETS_DEV_ID é obrigatório.");
+  if (!options.configuredSheetId) {
+    throw new Error("GOOGLE_SHEETS_ID é obrigatório.");
   }
-  if (!options.targetId || options.targetId !== options.configuredDevId) {
+  if (!options.targetId || options.targetId !== options.configuredSheetId) {
     throw new Error("O destino não corresponde ao Google Sheets DEV configurado.");
   }
   if (!options.authorized) {
     throw new Error("Autorização explícita ausente.");
   }
-  return options.configuredDevId;
+  return options.configuredSheetId;
 }
 
 function sameBusinessData(first: SimulationPlan, second: SimulationPlan) {

@@ -8,7 +8,7 @@ import type { Ata } from "@/domain/entities";
 import { getSheetsClient, getSpreadsheetId } from "./client";
 import { SHEET_HEADERS } from "./contract";
 import { parseRows, type ParsedRow, type SheetCell } from "./rows";
-import { rowsToCompatibleObjects, sheetReadRange } from "./contract-v2";
+import { rowsToVersionedObjects, sheetReadRange } from "./contract-v2";
 import { buildCellUpdateRequest, executeAtomicBatch } from "./write";
 import { domainAtaToSheet, sheetAtaSchema, sheetAtaToDomain } from "./schemas";
 
@@ -54,7 +54,7 @@ async function updateAtaRow(
 
 async function readAtaRows() {
   const values = await readAtaValues();
-  const rows = rowsToCompatibleObjects("atas", values);
+  const rows = rowsToVersionedObjects("atas", values);
   return parseRows("atas", sheetAtaSchema, rows, sheetAtaToDomain);
 }
 
@@ -76,8 +76,13 @@ export async function updateAtaCustomGroupIndex(
   const validRows = rows.filter((row): row is ValidRow<Ata> => row.valid);
   const existing = validRows.find((row) => row.data.ata_id === ataId);
   if (!existing) throw new Error("Ata não encontrada.");
+  if (existing.data.status_registro !== "ativa") {
+    throw new Error("Somente atas ativas podem ter o índice atualizado.");
+  }
 
-  const identifiers = validRows.map((row) => ataIdentifier(row.data));
+  const identifiers = validRows
+    .filter((row) => (row.data.status_registro ?? "ativa") === "ativa")
+    .map((row) => ataIdentifier(row.data));
   assertUniqueAtaCustomIndex(
     existing.data.grupo_id,
     indicePersonalizadoGrupo,

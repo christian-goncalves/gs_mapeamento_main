@@ -156,8 +156,8 @@ async function planCommand() {
       fixture.countries,
     );
   } else {
-    const spreadsheetId = process.env.GOOGLE_SHEETS_DEV_ID;
-    if (!spreadsheetId) throw new Error("GOOGLE_SHEETS_DEV_ID é obrigatório.");
+    const spreadsheetId = process.env.GOOGLE_SHEETS_ID;
+    if (!spreadsheetId) throw new Error("GOOGLE_SHEETS_ID é obrigatório.");
     const client = getSimulationSheetsClient();
     const snapshot = await readSimulationSheetSnapshot(client, spreadsheetId);
     plan = createMonthlySimulationPlan(
@@ -215,10 +215,10 @@ async function commitCommand() {
   const runDirectory = resolve(requiredArgument("--run"));
   const productionRequested = hasArgument("--prod");
   const authorized = hasArgument("--authorized");
-  const spreadsheetId = process.env.GOOGLE_SHEETS_DEV_ID;
+  const spreadsheetId = process.env.GOOGLE_SHEETS_ID;
   assertDevSimulationGate({
     enabled: process.env.ATA_SIMULATION_ENABLED,
-    configuredDevId: spreadsheetId,
+    configuredSheetId: spreadsheetId,
     targetId: spreadsheetId,
     authorized,
     productionRequested,

@@ -1,7 +1,8 @@
 import type { AggregatedAta } from "@/domain/aggregate";
 import type { Grupo, GrupoHorario } from "@/domain/entities";
 
-export type ResponsavelAtaStatus = "Enviada" | "Não enviada" | "Pendente de revisão";
+export type ResponsavelAtaStatus = "Enviada" | "Não enviada" | "Pendente de revisão" | "Substituída" | "Excluída";
+export type ResponsavelAtaRegistroStatus = "ativa" | "substituida" | "excluida";
 
 export type ResponsavelAtaRow = {
   ataId: string | null;
@@ -10,6 +11,10 @@ export type ResponsavelAtaRow = {
   horario: string;
   servidor: string;
   status: ResponsavelAtaStatus;
+  registroStatus: ResponsavelAtaRegistroStatus;
+  updatedAt: string;
+  canEdit: boolean;
+  canDelete: boolean;
 };
 
 const weekDayByIndex = [
@@ -110,22 +115,37 @@ export function buildResponsavelAtaRows({
   now?: Date;
 }): ResponsavelAtaRow[] {
   const groupAtas = atas.filter(
-    (item) => item.grupo.grupo_id === group.grupo_id
-      && item.registro.ata.status_registro === "ativa",
+    (item) => item.grupo.grupo_id === group.grupo_id,
   );
   const rows: ResponsavelAtaRow[] = groupAtas.map((item) => {
     const { ata } = item.registro;
+    const registroStatus = ata.status_registro ?? "ativa";
+    const approvalStatus = ata.status_aprovacao ?? "aprovada";
+    const status = registroStatus === "substituida"
+      ? "Substituída"
+      : registroStatus === "excluida"
+        ? "Excluída"
+        : approvalStatus === "pendente_revisao"
+          ? "Pendente de revisão"
+          : "Enviada";
     return {
       ataId: ata.ata_id,
       indicePersonalizadoGrupo: ata.indice_personalizado_grupo,
       data: ata.data_reuniao,
       horario: ata.hora_inicio,
       servidor: ata.preenchido_por || primaryServerName(item.registro.servidores),
-      status: ata.status_aprovacao === "pendente_revisao" ? "Pendente de revisão" : "Enviada",
+      status,
+      registroStatus,
+      updatedAt: ata.updated_at,
+      canEdit: registroStatus === "ativa"
+        && ["aprovada", "pendente_revisao"].includes(approvalStatus),
+      canDelete: registroStatus === "ativa" && approvalStatus === "aprovada",
     };
   });
 
-  const receivedMeetings = new Set(rows.map((row) => ataKey(row.data, row.horario)));
+  const receivedMeetings = new Set(rows
+    .filter((row) => row.registroStatus === "ativa")
+    .map((row) => ataKey(row.data, row.horario)));
   const groupSchedules = horarios.filter(
     (schedule) => schedule.grupo_id === group.grupo_id && schedule.ativo,
   );
@@ -162,6 +182,10 @@ export function buildResponsavelAtaRows({
           horario: schedule.hora_inicio,
           servidor: "",
           status: "Não enviada",
+          registroStatus: "ativa",
+          updatedAt: "",
+          canEdit: false,
+          canDelete: false,
         });
       }
     }

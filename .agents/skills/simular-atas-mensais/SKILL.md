@@ -27,7 +27,7 @@ description: Planeja, valida e persiste de forma atômica atas mensais simuladas
 
 3. Confirmar no resultado:
    - grupo único e ativo;
-   - horários ativos lidos do Sheets DEV;
+   - horários ativos lidos da planilha Dev selecionada por `GOOGLE_SHEETS_ID` local;
    - reuniões calculadas pelo calendário real;
    - ausência de qualquer chave existente;
    - seed efetiva e quantidade total de atas;
@@ -56,8 +56,9 @@ comparar os dados; materializar UUIDs; atualizar o manifesto pendente; enviar
 todas as abas em uma única chamada `spreadsheets.batchUpdate`; reler o Sheets;
 e criar o manifesto committed apenas após reconciliação.
 
-Não adicionar `--prod`. Não substituir `GOOGLE_SHEETS_DEV_ID`. Não habilitar
-`ATA_SIMULATION_ENABLED` sem o usuário autorizar a operação real.
+Não adicionar `--prod`. O comando usa `GOOGLE_SHEETS_ID` de `.env.local`, que
+deve apontar para Dev; não sobrescrever o ID para apontar a produção. Não
+habilitar `ATA_SIMULATION_ENABLED` sem o usuário autorizar a operação real.
 
 ## Tratar falhas
 

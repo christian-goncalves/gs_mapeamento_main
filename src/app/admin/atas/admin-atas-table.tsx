@@ -87,7 +87,7 @@ function AdminAtaStatus({ status }: { status: AdminAtaStatus }) {
   );
 }
 
-function AdminAtaActions({ ata }: { ata: AdminAtaRow }) {
+function AdminAtaActions({ ata, navigationQuery }: { ata: AdminAtaRow; navigationQuery: string }) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
@@ -194,7 +194,7 @@ function AdminAtaActions({ ata }: { ata: AdminAtaRow }) {
               {ata.ataId ? (
                 <Link
                   className="responsavel-action-menu-item"
-                  href={`/atas/${ata.ataId}`}
+                  href={`/atas/${ata.ataId}?${navigationQuery}`}
                   role="menuitem"
                   aria-label={`Visualizar ata de ${dateLabel} às ${ata.horario}`}
                 >
@@ -305,6 +305,7 @@ export function AdminAtasTable({
   const [status, setStatus] = useState<"todos" | AdminAtaStatus>(
     DEFAULT_ADMIN_ATA_STATUS_FILTER,
   );
+  const [tableOrder, setTableOrder] = useState("1.desc");
 
   const groups = useMemo(
     () =>
@@ -341,6 +342,15 @@ export function AdminAtasTable({
     () => toAdminAtaDataTableRows(filteredRows),
     [filteredRows],
   );
+  const navigationQuery = useMemo(() => new URLSearchParams({
+    origem: "admin",
+    de: startDate,
+    ate: endDate,
+    grupo: groupId,
+    preenchido: filledBy,
+    status,
+    ordem: tableOrder,
+  }).toString(), [startDate, endDate, groupId, filledBy, status, tableOrder]);
 
   useEffect(() => {
     let mounted = true;
@@ -447,6 +457,13 @@ export function AdminAtasTable({
               zeroRecords: "Nenhum registro encontrado.",
             },
           }}
+          onOrder={(_event: Event, settings: unknown) => {
+            const sorting = (settings as { aaSorting?: [number, number | string][] }).aaSorting ?? [];
+            const encoded = sorting
+              .map(([column, direction]) => `${column}.${direction === 1 || direction === "asc" ? "asc" : "desc"}`)
+              .join(",");
+            if (encoded) setTableOrder(encoded);
+          }}
           slots={{
             1: (data: string, row: AdminAtaDataTableRow) => (
               <>
@@ -476,7 +493,7 @@ export function AdminAtasTable({
                   className="row-actions responsavel-ata-actions"
                   aria-label={`Ações da ata de ${dateLabel}`}
                 >
-                  <AdminAtaActions ata={ata} />
+                  <AdminAtaActions ata={ata} navigationQuery={navigationQuery} />
                 </div>
               );
             },

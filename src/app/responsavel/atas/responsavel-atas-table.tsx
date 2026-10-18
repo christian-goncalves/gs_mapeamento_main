@@ -11,6 +11,7 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { AtaPdfDownloadButton } from "@/app/atas/ata-pdf-download-button";
+import { AtaDeleteAction } from "@/app/atas/ata-delete-action";
 import type { ConfigColumns } from "datatables.net";
 import type { ResponsavelAtaRow, ResponsavelAtaStatus } from "./responsavel-atas-data";
 
@@ -24,11 +25,16 @@ type ResponsavelAtaDataTableRow = [
 ];
 type DataTableComponent = typeof import("datatables.net-react").default;
 
-const statusOptions: { value: "todos" | ResponsavelAtaStatus; label: string }[] = [
+const activeStatusOptions: { value: "todos" | ResponsavelAtaStatus; label: string }[] = [
   { value: "todos", label: "Todos" },
   { value: "Enviada", label: "Enviadas" },
   { value: "Não enviada", label: "Não enviadas" },
   { value: "Pendente de revisão", label: "Pendentes de revisão" },
+];
+const historyStatusOptions: { value: "todos" | ResponsavelAtaStatus; label: string }[] = [
+  { value: "todos", label: "Todos" },
+  { value: "Substituída", label: "Substituídas" },
+  { value: "Excluída", label: "Excluídas" },
 ];
 
 function formatDate(value: string) {
@@ -43,7 +49,13 @@ function formatMobileDate(value: string) {
   return `${day}/${month}`;
 }
 
-function ResponsavelAtaActions({ ata }: { ata: ResponsavelAtaRow & { ataId: string } }) {
+function ResponsavelAtaActions({
+  ata,
+  navigationQuery,
+}: {
+  ata: ResponsavelAtaRow & { ataId: string };
+  navigationQuery: string;
+}) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
@@ -85,7 +97,8 @@ function ResponsavelAtaActions({ ata }: { ata: ResponsavelAtaRow & { ataId: stri
       const target = event.target as Node;
       if (
         !buttonRef.current?.contains(target) &&
-        !menuRef.current?.contains(target)
+        !menuRef.current?.contains(target) &&
+        !document.querySelector(".ata-delete-modal")?.contains(target)
       ) {
         setOpen(false);
       }
@@ -141,7 +154,7 @@ function ResponsavelAtaActions({ ata }: { ata: ResponsavelAtaRow & { ataId: stri
             >
               <Link
                 className="responsavel-action-menu-item"
-                href={`/atas/${ata.ataId}`}
+                href={`/atas/${ata.ataId}?${navigationQuery}`}
                 role="menuitem"
               >
                 <FontAwesomeIcon icon={faEye} />
@@ -152,26 +165,35 @@ function ResponsavelAtaActions({ ata }: { ata: ResponsavelAtaRow & { ataId: stri
                 onComplete={() => setOpen(false)}
                 compact
               />
-              <button
-                type="button"
-                className="responsavel-action-menu-item"
-                role="menuitem"
-                disabled
-              >
-                <FontAwesomeIcon icon={faPenToSquare} />
-                <span>Editar</span>
-                <small>Indisponível</small>
-              </button>
-              <button
-                type="button"
-                className="responsavel-action-menu-item responsavel-action-menu-item-danger"
-                role="menuitem"
-                disabled
-              >
-                <FontAwesomeIcon icon={faTrashCan} />
-                <span>Excluir</span>
-                <small>Indisponível</small>
-              </button>
+              {ata.canEdit ? (
+                <Link
+                  className="responsavel-action-menu-item"
+                  href={`/atas/${ata.ataId}/editar`}
+                  role="menuitem"
+                >
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                  <span>Editar</span>
+                </Link>
+              ) : null}
+              {ata.canDelete ? (
+                <AtaDeleteAction
+                  ataId={ata.ataId}
+                  updatedAt={ata.updatedAt}
+                  onComplete={() => setOpen(false)}
+                />
+              ) : (
+                <button
+                  type="button"
+                  className="responsavel-action-menu-item responsavel-action-menu-item-danger"
+                  role="menuitem"
+                  disabled
+                  title={ata.status === "Pendente de revisão" ? "Aprove a ata antes de excluí-la." : "Disponível somente para atas ativas e aprovadas."}
+                >
+                  <FontAwesomeIcon icon={faTrashCan} />
+                  <span>Excluir</span>
+                  <small>{ata.status === "Pendente de revisão" ? "Aprove primeiro" : "Indisponível"}</small>
+                </button>
+              )}
             </div>,
             document.body,
           )
@@ -194,6 +216,7 @@ function toDataTableRows(rows: ResponsavelAtaRow[]): ResponsavelAtaDataTableRow[
 function statusClassName(status: ResponsavelAtaStatus) {
   if (status === "Pendente de revisão") return "responsavel-status-dot-review";
   if (status === "Não enviada") return "responsavel-status-dot-missing";
+  if (status === "Substituída" || status === "Excluída") return "responsavel-status-dot-history";
   return "responsavel-status-dot-sent";
 }
 
@@ -229,10 +252,12 @@ const columns: ConfigColumns[] = [
 
 export function ResponsavelAtasTable({
   rows,
+  historyMode,
   defaultStartDate,
   defaultEndDate,
 }: {
   rows: ResponsavelAtaRow[];
+  historyMode: boolean;
   defaultStartDate: string;
   defaultEndDate: string;
 }) {
@@ -242,25 +267,41 @@ export function ResponsavelAtasTable({
   const [endDate, setEndDate] = useState(defaultEndDate);
   const [selectedTime, setSelectedTime] = useState("todos");
   const [selectedStatus, setSelectedStatus] = useState<"todos" | ResponsavelAtaStatus>("todos");
+  const [tableOrder, setTableOrder] = useState("0.desc");
+  const statusOptions = historyMode ? historyStatusOptions : activeStatusOptions;
+  const modeRows = useMemo(
+    () => rows.filter((row) => historyMode
+      ? row.ataId !== null && row.registroStatus !== "ativa"
+      : row.registroStatus === "ativa"),
+    [rows, historyMode],
+  );
 
   const timeOptions = useMemo(
-    () => [...new Set(rows.map((row) => row.horario))].sort(),
-    [rows],
+    () => [...new Set(modeRows.map((row) => row.horario))].sort(),
+    [modeRows],
   );
   const filteredRows = useMemo(
-    () => rows.filter((row) =>
+    () => modeRows.filter((row) =>
       row.data >= startDate
       && row.data <= endDate
       && (selectedTime === "todos" || row.horario === selectedTime)
       && (selectedStatus === "todos" || row.status === selectedStatus)
     ),
-    [rows, startDate, endDate, selectedTime, selectedStatus],
+    [modeRows, startDate, endDate, selectedTime, selectedStatus],
   );
 
   const tableRows = useMemo(
     () => toDataTableRows(filteredRows),
     [filteredRows],
   );
+  const navigationQuery = useMemo(() => new URLSearchParams({
+    origem: historyMode ? "historico" : "responsavel",
+    de: startDate,
+    ate: endDate,
+    horario: selectedTime,
+    status: selectedStatus,
+    ordem: tableOrder,
+  }).toString(), [historyMode, startDate, endDate, selectedTime, selectedStatus, tableOrder]);
 
   useEffect(() => {
     let mounted = true;
@@ -355,21 +396,20 @@ export function ResponsavelAtasTable({
                 zeroRecords: "Nenhuma ata encontrada.",
               },
             }}
+            onOrder={(_event: Event, settings: unknown) => {
+              const sorting = (settings as { aaSorting?: [number, number | string][] }).aaSorting ?? [];
+              const encoded = sorting
+                .map(([column, direction]) => `${column}.${direction === 1 || direction === "asc" ? "asc" : "desc"}`)
+                .join(",");
+              if (encoded) setTableOrder(encoded);
+            }}
             slots={{
-              0: (
-                data: number | null,
-                type: string,
-                _row: ResponsavelAtaDataTableRow,
-                _meta: unknown,
-              ) => {
-                if (type !== "display") return data ?? -1;
-                return data === null ? "-" : (data >= 1 && data <= 9 ? `0${data}` : `${data}`);
-              },
+              0: (data: number | null) =>
+                data === null ? "-" : (data >= 1 && data <= 9 ? `0${data}` : `${data}`),
               1: (
                 data: string,
                 type: string,
                 row: ResponsavelAtaDataTableRow,
-                _meta: unknown,
               ) => type !== "display" ? data : (
                 <>
                   <span className="responsavel-date-desktop">{formatDate(data)}</span>
@@ -384,18 +424,8 @@ export function ResponsavelAtasTable({
                   {data}
                 </span>
               ),
-              4: (
-                data: ResponsavelAtaStatus,
-                type: string,
-                _row: ResponsavelAtaDataTableRow,
-                _meta: unknown,
-              ) => {
-                if (type !== "display") {
-                  if (data === "Enviada") return 0;
-                  if (data === "Pendente de revisão") return 1;
-                  return 2;
-                }
-
+              4: (data: ResponsavelAtaStatus) => {
+                if (historyMode) return <span className={`responsavel-history-status ${data === "Substituída" ? "is-substituted" : "is-deleted"}`}>{data}</span>;
                 return (
                   <span
                     className={`responsavel-status-dot ${statusClassName(data)}`}
@@ -413,7 +443,10 @@ export function ResponsavelAtasTable({
                   <div
                     className="row-actions responsavel-ata-actions"
                   >
-                    <ResponsavelAtaActions ata={ata as ResponsavelAtaRow & { ataId: string }} />
+                    <ResponsavelAtaActions
+                      ata={ata as ResponsavelAtaRow & { ataId: string }}
+                      navigationQuery={navigationQuery}
+                    />
                   </div>
                 );
               },

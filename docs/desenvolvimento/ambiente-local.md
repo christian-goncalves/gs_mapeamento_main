@@ -27,28 +27,32 @@ locais ficam em `.env.local`, ignorado pelo Git.
 | `AUTH_GOOGLE_ID` | ID do cliente OAuth da aplicação |
 | `AUTH_GOOGLE_SECRET` | Segredo do cliente OAuth |
 | `AUTH_ALLOWED_EMAILS` | E-mails autorizados separados por vírgula |
-| `GOOGLE_SHEETS_ID` | Planilha oficial |
+| `GOOGLE_SHEETS_ID` | Planilha do ambiente atual |
 | `GOOGLE_SERVICE_ACCOUNT_EMAIL` | Conta de serviço do backend |
 | `GOOGLE_PRIVATE_KEY` | Chave privada da conta de serviço |
 | `MANUAL_SHEETS_EDIT_ENABLED` | Política declarada de edição manual |
 
 Nenhuma variável de segredo pode usar o prefixo `NEXT_PUBLIC_`.
 
+## Ambientes Dev e Prod
+
+O projeto usa somente a variável `GOOGLE_SHEETS_ID`. O nome é igual em todos
+os ambientes; o valor depende do ambiente:
+
+- `.env.local`: planilha Dev.
+- Vercel Preview e Development: planilha Dev.
+- Vercel Production: planilha Prod.
+
+Cada ambiente lê e escreve na planilha indicada pelo seu próprio valor. Antes
+de executar localmente qualquer rotina que altere dados ou estrutura, confirme
+que `.env.local` seleciona a planilha Dev. IDs e segredos ficam fora do
+repositório, no ambiente local ou no provedor de execução.
+
 ## Reconciliação estrutural do contrato
 
-`GOOGLE_SHEETS_ID` pode continuar apontando para a planilha oficial em
-`.env.local`. Para validar ou aplicar mudanças estruturais do contrato, use
-sobrescrita segura no comando e execute primeiro em DEV:
-
-```bash
-GOOGLE_SHEETS_ID=1oHQ_VgwlRHEEUZP5gXyUX8RiGz0hEEZebHUhXiy1imU npm run sheets:reconcile-contract
-GOOGLE_SHEETS_ID=1itgYTa7CCWgjdux_Pt1ffNAxoNA8zTn9GTzsShH_1Yw npm run sheets:reconcile-contract
-```
-
 A rotina `sheets:reconcile-contract` cria abas ausentes e adiciona colunas
-faltantes do contrato estrutural. IDs de planilhas e segredos continuam fora do
-repositório; valores sensíveis devem ficar somente no ambiente local ou no
-provedor de execução.
+faltantes do contrato estrutural. Execute-a localmente somente depois de
+confirmar que `GOOGLE_SHEETS_ID` em `.env.local` aponta para Dev.
 
 ## Proteções do Sheets
 

@@ -120,7 +120,7 @@ describe("Server Action de criação", () => {
     );
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/");
     expect(mocks.redirect).toHaveBeenCalledWith(
-      "/atas/93ef9660-8c64-4b51-9bc5-09069ce629c1",
+      "/responsavel/atas",
     );
   });
 

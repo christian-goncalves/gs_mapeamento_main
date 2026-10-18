@@ -2,9 +2,9 @@
 
 ## Situação e origem
 
-Base de especificação funcional confirmada pelo usuário na ESP-Q10 em 16/10/2026, após entrevista por grilling. Não autoriza implementação, escrita no Sheets ou publicação.
+Base de especificação funcional confirmada pelo usuário na ESP-Q10 em 16/10/2026, após entrevista por grilling. As decisões complementares de F5 foram confirmadas em 18/10/2026. A especificação, por si só, não autoriza escrita no Sheets ou publicação.
 
-Base confirmada: [diagnóstico V2 e decisões Q1–Q22](../../analise-diagnostico/refatoracao-v2-2026-10-16.md). Este documento transforma as decisões em requisitos verificáveis; não substitui o registro das evidências. Os contratos canônicos afetados serão harmonizados na etapa de especificação aprovada, antes de habilitar novos comportamentos.
+Base confirmada: [diagnóstico V2 e decisões Q1–Q22](../../analise-diagnostico/refatoracao-v2-2026-10-16.md). Este documento transforma as decisões em requisitos verificáveis; não substitui o registro das evidências. Os contratos canônicos afetados são harmonizados com as decisões complementares registradas abaixo.
 
 Plano e acompanhamento: [índice da execução](../../desenvolvimento/refatoracao-v2/README.md). Contratos transversais: [contratos técnicos](../../arquitetura/refatoracao-v2/contratos-tecnicos.md).
 
@@ -36,8 +36,8 @@ Cada ID permanece estável entre especificação, tarefa, teste e checkpoint. Os
 | REV-02 | Desligar revisão não aprova pendências antigas. | Ata que já estava pendente permanece assim; apenas próximos envios seguem a nova configuração. |
 | REV-03 | Responsável aprova no próprio grupo; administrador em todos os grupos; link público só envia. | Ações no servidor rejeitam acesso a outro grupo e não confiam em controles ocultos da interface. |
 | REV-04 | Aprovação em lote dos pendentes explicitamente selecionados na página visível, com confirmação do conjunto/quantidade. | Se a validação anterior à escrita detectar qualquer item alterado, excluído ou não autorizado, o lote inteiro é cancelado e os itens são informados. Trocar página/filtro limpa a seleção; limite técnico será fechado na F0. |
-| CIC-01 | Editar abre apresentação preenchida do resumo e cria revisão, com motivo/autor/data. | Aprovar por responsável/admin gera nova revisão já aprovada; anterior fica substituída e preservada; reunião conta uma vez; identidade visual permanece. |
-| CIC-02 | Exclusão é lógica, com confirmação e motivo, conforme contrato canônico. | Ata e dependentes permanecem auditáveis; deixam listagens e indicadores normais; índices não são reutilizados. |
+| CIC-01 | Editar ata ativa aprovada ou pendente abre o resumo preenchido e cria revisão com motivo/autor/data. | A nova revisão herda o estado: aprovada permanece aprovada; pendente permanece pendente. A anterior fica substituída e preservada; reunião conta uma vez; índice visual permanece. |
+| CIC-02 | Exclusão lógica de ata ativa aprovada exige confirmação e motivo, conforme contrato canônico. | Ata e dependentes permanecem auditáveis; deixam listagens e indicadores normais; índices não são reutilizados. |
 | REL-01 | Somente revisões ativas aprovadas entram em indicadores. | Pendente, substituída e excluída não aumentam totais; dados de reunião são contados uma vez. |
 | REL-02 | Reuniões desde a fundação = referência anterior + reuniões com ata ativa aprovada até hoje. | Usa todo o histórico até hoje mesmo em relatório de mês antigo; demais indicadores continuam mensais; não contar faltantes ou revisões duplicadas. |
 | PDF-01 | PDF acompanha dados e rótulos do detalhe, com composição própria de impressão. | Números, datas, plataforma, totais e estado não contradizem a tela; evidências visuais cobrem impressão e ausência de identificação técnica pedida. |
@@ -48,6 +48,8 @@ Cada ID permanece estável entre especificação, tarefa, teste e checkpoint. Os
 - Aprovação pelo responsável do grupo: mesma reunião passa a contar uma vez; repetir a mesma operação não duplica efeito.
 - Tentativa de outro grupo: ação negada e nenhuma escrita.
 - Editar aprovada + Aprovar: versão anterior preservada, nova versão aprovada, total de reuniões permanece o mesmo.
+- Editar pendente: versão anterior preservada como substituída e a nova versão continua pendente até aprovação.
+- Histórico por responsável: detalhe e PDF de versões antigas somente dentro do próprio grupo.
 - Desligar revisão com pendências existentes: pendências continuam aguardando aprovação.
 - Lote com um item inválido detectado antes da escrita: nenhuma aprovação iniciada.
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { canAccessGroup } from "@/lib/auth/access";
 import {
   buildAtaPresentation,
@@ -11,18 +11,20 @@ import {
   AtaReviewLayout,
 } from "../ata-review-layout";
 import { getAtaDetailBackHref } from "../nova/ata-review";
-import { AtaIndexForm } from "./ata-index-form";
 import { AtaPdfActions } from "../ata-pdf-actions";
+import { getAtaNavigation, type AtaNavigationSearchParams } from "../ata-navigation";
 
 export const dynamic = "force-dynamic";
 
 export default async function AtaDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ ataId: string }>;
+  searchParams: Promise<AtaNavigationSearchParams>;
 }) {
   const { access, result } = await requireAuthorizedSessionWithAggregatedAtas();
-  const { ataId } = await params;
+  const [{ ataId }, query] = await Promise.all([params, searchParams]);
   const item = result.atas.find(
     (candidate) => candidate.registro.ata.ata_id === ataId,
   );
@@ -32,10 +34,40 @@ export default async function AtaDetailPage({
   const { grupo, registro } = item;
   const { ata } = registro;
   const presentation = buildAtaPresentation(item);
-  const backHref = getAtaDetailBackHref(access.role);
+  const navigation = getAtaNavigation({
+    currentAtaId: ata.ata_id,
+    currentGroupId: grupo.grupo_id,
+    atas: result.atas,
+    access,
+    searchParams: query,
+  });
+  const origin = Array.isArray(query.origem) ? query.origem[0] : query.origem;
+  const backHref = access.role === "responsavel_grupo" && origin === "historico"
+    ? "/responsavel/atas?historico=1"
+    : getAtaDetailBackHref(access.role);
 
   return (
     <main className="shell ata-detail-review-shell">
+      <nav className="ata-record-navigation" aria-label="Navegação entre atas">
+        {navigation.previousId ? (
+          <Link className="button-link secondary" href={`/atas/${navigation.previousId}${navigation.query}`}>
+            <span className="button-content"><FontAwesomeIcon icon={faArrowLeft} />Ata anterior</span>
+          </Link>
+        ) : (
+          <button className="secondary" type="button" disabled>
+            <span className="button-content"><FontAwesomeIcon icon={faArrowLeft} />Ata anterior</span>
+          </button>
+        )}
+        {navigation.nextId ? (
+          <Link className="button-link secondary" href={`/atas/${navigation.nextId}${navigation.query}`}>
+            <span className="button-content">Próxima ata<FontAwesomeIcon icon={faArrowRight} /></span>
+          </Link>
+        ) : (
+          <button className="secondary" type="button" disabled>
+            <span className="button-content">Próxima ata<FontAwesomeIcon icon={faArrowRight} /></span>
+          </button>
+        )}
+      </nav>
       <AtaReviewLayout
         className="ata-review-page"
         title={presentation.title}
@@ -46,6 +78,8 @@ export default async function AtaDetailPage({
           <>
             {!grupo.ativo && <span className="badge">Grupo inativo</span>}
             {ata.status_aprovacao === "pendente_revisao" && <span className="badge">Pendente de revisão</span>}
+            {ata.status_registro === "substituida" && <span className="badge">Versão substituída</span>}
+            {ata.status_registro === "excluida" && <span className="badge">Ata excluída</span>}
           </>
         )}
         headerAction={(
@@ -64,17 +98,6 @@ export default async function AtaDetailPage({
             />
           </>
         )}
-        identification={{
-          groupReference: String(ata.indice_personalizado_grupo),
-          sequential: ata.numero_sequencial_grupo,
-          internalId: ata.ata_id,
-          editor: (
-            <AtaIndexForm
-              ataId={ata.ata_id}
-              currentIndex={ata.indice_personalizado_grupo}
-            />
-          ),
-        }}
       />
     </main>
   );

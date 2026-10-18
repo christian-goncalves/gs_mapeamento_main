@@ -83,7 +83,7 @@ export function validateContractIntegrity(rows: ContractRows) {
       "numero_sequencial_grupo duplicado para o mesmo grupo.",
     ),
     ...duplicateDiagnostics(
-      rows.atas,
+      rows.atas.filter((row) => (row.data.status_registro ?? "ativa") === "ativa"),
       "indice_personalizado_grupo",
       (item) => `${item.grupo_id}|${item.indice_personalizado_grupo}`,
       "indice_personalizado_grupo duplicado para o mesmo grupo.",

@@ -87,10 +87,11 @@ export function assertUniqueAtaCustomIndex(
 export function nextAtaCreationIdentifiers(
   grupoId: string,
   existing: readonly AtaIdentifier[],
+  activeExisting: readonly AtaIdentifier[] = existing,
 ): AtaCreationIdentifiers {
   const sequence = nextAtaSequence(grupoId, existing);
   assertUniqueAtaSequence(grupoId, sequence, existing);
-  assertUniqueAtaCustomIndex(grupoId, sequence, existing);
+  assertUniqueAtaCustomIndex(grupoId, sequence, activeExisting);
   return {
     numero_sequencial_grupo: sequence,
     indice_personalizado_grupo: sequence,

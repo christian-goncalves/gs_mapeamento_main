@@ -4,6 +4,13 @@
 
 Contratos lógicos e diretrizes transversais confirmados como parte da base documental na ESP-Q10 em 16/10/2026. O schema físico e o mecanismo de coordenação serão fechados na F0. Não executar migração a partir deste documento. Referências: [requisitos funcionais](../../produto/refatoracao-v2/especificacao-funcional.md), [diagnóstico confirmado](../../analise-diagnostico/refatoracao-v2-2026-10-16.md) e [ciclo de vida canônico](../../produto/contratos/ciclo-de-vida-atas.md).
 
+Decisões complementares do usuário em 18/10/2026: revisões podem partir de atas
+ativas aprovadas ou pendentes e herdam o estado de aprovação; exclusão lógica é
+permitida somente para atas ativas aprovadas; responsáveis consultam versões
+antigas apenas do próprio grupo. O usuário também autorizou habilitar os botões
+na implementação local antes do CP-05. Isso não fecha a coordenação operacional
+exigida pela ESP-Q7 nem autoriza gravações reais, migração ou publicação.
+
 ## Identidade e estados
 
 - UUID identifica cada registro/revisão. A ocorrência continua distinguida por grupo, data e horário; plataforma não cria uma segunda reunião simultânea na mesma chave.

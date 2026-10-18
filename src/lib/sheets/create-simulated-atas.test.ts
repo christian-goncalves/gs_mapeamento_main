@@ -101,11 +101,11 @@ function identity() {
 
 describe("gate técnico DEV", () => {
   it.each([
-    [{ enabled: "false", configuredDevId: "dev", targetId: "dev", authorized: true }, "ATA_SIMULATION_ENABLED"],
-    [{ enabled: "true", configuredDevId: undefined, targetId: undefined, authorized: true }, "GOOGLE_SHEETS_DEV_ID"],
-    [{ enabled: "true", configuredDevId: "dev", targetId: "prod", authorized: true }, "não corresponde"],
-    [{ enabled: "true", configuredDevId: "dev", targetId: "dev", authorized: false }, "Autorização"],
-    [{ enabled: "true", configuredDevId: "dev", targetId: "dev", authorized: true, productionRequested: true }, "Produção"],
+    [{ enabled: "false", configuredSheetId: "dev", targetId: "dev", authorized: true }, "ATA_SIMULATION_ENABLED"],
+    [{ enabled: "true", configuredSheetId: undefined, targetId: undefined, authorized: true }, "GOOGLE_SHEETS_ID"],
+    [{ enabled: "true", configuredSheetId: "dev", targetId: "prod", authorized: true }, "não corresponde"],
+    [{ enabled: "true", configuredSheetId: "dev", targetId: "dev", authorized: false }, "Autorização"],
+    [{ enabled: "true", configuredSheetId: "dev", targetId: "dev", authorized: true, productionRequested: true }, "Produção"],
   ])("rejeita configuração insegura", (options, message) => {
     expect(() => assertDevSimulationGate(options)).toThrow(message);
   });
@@ -114,7 +114,7 @@ describe("gate técnico DEV", () => {
     expect(
       assertDevSimulationGate({
         enabled: "true",
-        configuredDevId: "dev",
+        configuredSheetId: "dev",
         targetId: "dev",
         authorized: true,
       }),

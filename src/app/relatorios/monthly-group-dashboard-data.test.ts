@@ -62,6 +62,8 @@ function ata({
         formatos: ["partilha" as const],
         total_membros_presentes: present,
         total_partilhas: 1,
+        status_registro: "ativa" as const,
+        status_aprovacao: "aprovada" as const,
         ...audit,
       },
       servidores: [],
