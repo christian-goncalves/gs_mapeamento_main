@@ -57,6 +57,10 @@ const sheetBoolean = z.preprocess((value) => {
   if (typeof value === "string" && value.toUpperCase() === "FALSE") return false;
   return value;
 }, z.boolean());
+const sheetOptionalBoolean = z.preprocess(
+  (value) => (value === "" || value == null ? false : value),
+  sheetBoolean,
+);
 
 const sheetInteger = (minimum: number) =>
   z.preprocess((value) => {
@@ -226,8 +230,8 @@ export const sheetAtaSchema = z
     formato_literatura: sheetBoolean,
     formato_passos: sheetBoolean,
     formato_tradicoes: sheetBoolean,
-    formato_comemorativa: sheetBoolean.optional().default(false),
-    formato_servico: sheetBoolean.optional().default(false),
+    formato_comemorativa: sheetOptionalBoolean,
+    formato_servico: sheetOptionalBoolean,
     total_membros_presentes: sheetInteger(1),
     total_partilhas: sheetInteger(1),
     status_registro: z.enum(["ativa", "substituida", "excluida"]).optional().default("ativa"),

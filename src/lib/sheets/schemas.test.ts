@@ -142,6 +142,19 @@ describe("schemas das linhas do Sheets", () => {
     expect(sheetAtaToDomain(sheet).formatos).toEqual(expect.arrayContaining(["comemorativa", "servico"]));
   });
 
+  it("trata campos booleanos opcionais vazios como falso em atas legadas", () => {
+    const parsed = sheetAtaSchema.parse({
+      ...valid.ata,
+      formato_comemorativa: "",
+      formato_servico: "",
+    });
+
+    expect(parsed).toMatchObject({
+      formato_comemorativa: false,
+      formato_servico: false,
+    });
+  });
+
   it("trata colunas textuais opcionais de grupos com FALSE herdado como texto vazio", () => {
     const parsed = sheetGrupoSchema.parse({
       ...valid.grupo,
