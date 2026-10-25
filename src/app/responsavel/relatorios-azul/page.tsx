@@ -24,12 +24,9 @@ export default function ResponsavelRelatoriosAzulPage() {
         <header className="responsavel-relatorios-azul-demo-header">
           <div>
             <p className="eyebrow">Relatórios</p>
-            <h1>DASHBOARD - {fixture.group.name}</h1>
+            <h1>GRUPO {fixture.group.name.toLocaleUpperCase("pt-BR")}</h1>
             <p className="responsavel-relatorios-azul-demo-description">
               Visualize as informações por período.
-            </p>
-            <p className="responsavel-relatorios-azul-demo-note">
-              Comparação visual estática.
             </p>
           </div>
           <Link

@@ -130,7 +130,7 @@ export function MonthlyGroupDashboard({
           <div>
             <p className="eyebrow">Relatórios</p>
             <h1>
-              DASHBOARD - {data.group.grupo_nome.toLocaleUpperCase("pt-BR")}
+              GRUPO {data.group.grupo_nome.toLocaleUpperCase("pt-BR")}
             </h1>
             <p className="responsavel-page-description">
               Visualize as informações por período.

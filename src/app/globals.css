@@ -235,7 +235,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .dashboard-section { display: grid; gap: 1rem; border: 1px solid var(--line); border-radius: 10px; padding: 1rem; background: #fff; }
 .dashboard-section-title { display: flex; align-items: center; gap: .75rem; }
 .dashboard-section-title h2 { margin: 0; color: #111827; font-size: 1.35rem; line-height: 1.15; }
-.responsavel-page-header.dashboard-responsavel-title h1 { color: #004a30; }
+.responsavel-page-header.dashboard-responsavel-title h1 { color: #102033; }
 .dashboard-responsavel-mesa .dashboard-section-title h2,
 .dashboard-responsavel-consolidated .dashboard-section-title h2,
 .dashboard-responsavel-meeting-results .dashboard-section-title h2,
@@ -254,6 +254,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .dashboard-metric-icon { display: grid; width: 3.5rem; height: 3.5rem; place-items: center; border-radius: 999px; background: #e6f3eb; color: #008a5b; font-size: 1.65rem; }
 .dashboard-metric-card h3 { max-width: 10rem; margin: 0; color: #111827; font-size: .98rem; line-height: 1.2; font-weight: 500; }
 .dashboard-metric-card strong { color: #111827; font-size: 2rem; line-height: 1; }
+.dashboard-responsavel-consolidated .dashboard-metric-card strong { color: #102033; }
 .dashboard-table-wrap { overflow-x: auto; }
 .dashboard-table, .dashboard-achievement-table { margin: 0; border: 1px solid #e3e7e4; border-radius: 8px; overflow: hidden; border-collapse: separate; border-spacing: 0; }
 .dashboard-table th, .dashboard-table td, .dashboard-achievement-table th, .dashboard-achievement-table td { border-right: 1px solid #e3e7e4; border-bottom: 1px solid #e3e7e4; padding: .85rem 1rem; text-align: center; color: #111827; }
@@ -291,7 +292,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .dashboard-achievement-label { width: 100%; margin: 0; color: #5b6f86; font-size: .8rem; line-height: 1.2; font-weight: 700; text-align: left; text-transform: uppercase; }
 .dashboard-achievements-cards .dashboard-achievement-label { color: #999; font-size: calc(.882rem - 3.6px); }
 .dashboard-achievement-card strong { display: block; color: #1d4ed8; font-size: 2rem; line-height: 1; text-align: left; }
-.dashboard-achievements-cards .dashboard-achievement-card strong { color: #111827; }
+.dashboard-achievements-cards .dashboard-achievement-card strong { color: #102033; }
 .dashboard-mesa-table th, .dashboard-mesa-table td { height: 4rem; text-align: left; }
 .dashboard-responsavel-mesa-table { width: 100%; table-layout: fixed; }
 .dashboard-responsavel-mesa-table th, .dashboard-responsavel-mesa-table td { height: auto; text-align: left; }
@@ -346,16 +347,17 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-relatorios-azul-demo-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
 .responsavel-relatorios-azul-demo .eyebrow,
 .responsavel-relatorios-azul-demo-header h1 { color: #0b3a7a; }
-.responsavel-relatorios-azul-demo-header h1 { margin: 0; font-size: clamp(1.35rem, 3vw, 1.75rem); line-height: 1.15; }
+.responsavel-relatorios-azul-demo-header .eyebrow { margin: 0; }
+.responsavel-relatorios-azul-demo-header h1 { margin: 0; font-size: clamp(2rem, 4vw, 2.65rem); line-height: 1.1; }
 .responsavel-relatorios-azul-demo-description { margin: .35rem 0 0; color: #6e849a; font-size: .875rem; }
 .responsavel-relatorios-azul-demo-note { margin: .15rem 0 0; color: #6e849a; font-size: .75rem; }
-.responsavel-relatorios-azul-demo-header .button-link { flex: 0 0 auto; border-color: #e4edf6; background: #fff; color: #6b9bd1; }
-.responsavel-relatorios-azul-demo-header .button-link:hover { border-color: #6b9bd1; background: #e6f1fa; color: #4f76a0; }
+.responsavel-relatorios-azul-demo-header .button-link { flex: 0 0 auto; border-color: #e4edf6; background: #fff; color: #1D4ED8; }
+.responsavel-relatorios-azul-demo-header .button-link:hover { border-color: #1D4ED8; background: #e6f1fa; color: #1D4ED8; }
 .responsavel-relatorios-azul-demo-content { display: grid; gap: .75rem; min-width: 0; }
 .responsavel-relatorios-azul-demo-filters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 5.5rem; gap: .625rem; align-items: end; border: 1px solid #e4edf6; border-radius: 12px; padding: .75rem; background: #fff; }
 .responsavel-relatorios-azul-demo-filters label { gap: .2rem; color: #6e849a; font-size: .75rem; font-weight: 600; text-transform: uppercase; }
 .responsavel-relatorios-azul-demo-filters select { min-height: 2.25rem; border-color: #e4edf6; border-radius: 8px; padding: .45rem .6rem; color: #18304a; font-size: .875rem; font-weight: 600; }
-.responsavel-relatorios-azul-demo-filters .dashboard-pdf-button { grid-column: auto; width: 5.5rem; min-height: 2.25rem; padding-inline: .65rem; background: #6b9bd1; box-shadow: none; font-size: .8rem; }
+.responsavel-relatorios-azul-demo-filters .dashboard-pdf-button { grid-column: auto; width: 5.5rem; min-height: 2.25rem; padding-inline: .65rem; background: #1D4ED8; box-shadow: none; font-size: .8rem; }
 .responsavel-relatorios-azul-demo-section { display: grid; gap: .75rem; min-width: 0; border: 1px solid #e4edf6; border-radius: 12px; padding: .75rem; background: #fff; }
 .responsavel-relatorios-azul-demo-section h2 { margin: 0; color: #0b3a7a; font-size: 1.35rem; line-height: 1.15; }
 .responsavel-relatorios-azul-demo-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .625rem; }
@@ -379,7 +381,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-relatorios-azul-demo-achievements h3 { max-width: 12rem; margin: 0; color: #6e849a; font-size: .6875rem; line-height: 1.2; font-weight: 600; text-transform: uppercase; }
 .responsavel-relatorios-azul-demo-achievements strong { color: #1d4ed8; font-size: 1.875rem; line-height: 1; }
 .responsavel-relatorios-azul-demo-footer { display: flex; justify-content: center; align-items: center; gap: .4rem; color: #6e849a; font-size: .75rem; text-align: center; }
-.responsavel-relatorios-azul-demo a:focus-visible, .responsavel-relatorios-azul-demo button:focus-visible, .responsavel-relatorios-azul-demo select:focus-visible { outline: 2px solid #6b9bd1; outline-offset: 2px; }
+.responsavel-relatorios-azul-demo a:focus-visible, .responsavel-relatorios-azul-demo button:focus-visible, .responsavel-relatorios-azul-demo select:focus-visible { outline: 2px solid #1D4ED8; outline-offset: 2px; }
 @media (max-width: 900px) {
   .responsavel-relatorios-azul-demo-header { display: grid; align-items: stretch; }
   .responsavel-relatorios-azul-demo-header .button-link { width: 100%; justify-content: center; }
@@ -662,6 +664,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .admin-ata-action-context { display: grid; gap: .2rem; border-bottom: 1px solid var(--line); padding: .55rem .65rem .7rem; color: var(--muted); font-size: .75rem; line-height: 1.25; }
 .admin-ata-action-context strong { overflow-wrap: anywhere; color: var(--ink); font-size: .875rem; }
 .responsavel-page-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+.responsavel-page-header:not(.ata-new-page-header) .eyebrow { margin: 0; }
 .responsavel-page-header h1 { margin: 0; font-size: clamp(2rem, 4vw, 2.65rem); line-height: 1.1; color: #102033; }
 .responsavel-page-description { margin: .55rem 0 0; color: #526070; font-size: .82rem; font-weight: 700; line-height: 1.35; }
 .responsavel-header-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .75rem; }

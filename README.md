@@ -1,3 +1,5 @@
+#1D4ED8
+
 # Minhas anotações
 
 1. Quando quiser voltar, diga: “Restaure somente /responsavel/relatorios a partir do snapshot de 22/10/2026.” O componente e o CSS também são compartilhados com outras telas, então a restauração será seletiva para preservar o Admin. O snapshot registra o código e os dados visíveis nas imagens; não copia a planilha.
