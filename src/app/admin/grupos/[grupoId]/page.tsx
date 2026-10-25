@@ -16,11 +16,11 @@ export default async function AdminGroupDetailPage({
   searchParams,
 }: {
   params: Promise<{ grupoId: string }>;
-  searchParams?: Promise<{ status?: string }>;
+  searchParams?: Promise<{ status?: string; settingsSection?: string }>;
 }) {
   const { result } = await requireAdminSessionWithAggregatedAtas();
   const { grupoId } = await params;
-  const status = (await searchParams)?.status;
+  const { status, settingsSection } = (await searchParams) ?? {};
   const group = result.grupos.find((item) => item.grupo_id === grupoId);
   if (!group) notFound();
   const groupWithSecureAtaLink = await ensureSecureAtaLinkToken(
@@ -40,6 +40,7 @@ export default async function AdminGroupDetailPage({
     <GroupEditor
       group={groupWithSecureAtaLink}
       horarios={horarios}
+      plataformas={result.grupo_plataformas.filter((platform) => platform.grupo_id === grupoId)}
       servidoresMesa={servidoresMesa}
       canCreate
       canManageAccess
@@ -53,6 +54,7 @@ export default async function AdminGroupDetailPage({
           isActivationInviteExpired(pendingActivation.convite_expira_em),
       )}
       status={status}
+      initialOpenSection={settingsSection}
       publicOrigin={publicOrigin}
     />
   );

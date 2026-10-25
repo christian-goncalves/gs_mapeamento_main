@@ -4,10 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faClockRotateLeft, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
 import { currentMonthPeriod } from "@/app/admin/atas/admin-atas-data";
-import { buildResponsavelAtaRows } from "./responsavel-atas-data";
+import { buildResponsavelAtaRows, nextResponsavelMissingAtaRefreshAt } from "./responsavel-atas-data";
 import { ResponsavelAtasTable } from "./responsavel-atas-table";
 import { ResponsavelShell } from "../responsavel-shell";
 import { AtaApprovalPanel } from "@/app/atas/ata-approval-panel";
+import { AtaHistoryRefresh } from "@/app/atas/ata-history-refresh";
 
 export const dynamic = "force-dynamic";
 
@@ -23,10 +24,18 @@ export default async function ResponsavelAtasPage({
   const [group] = access.groups;
   if (!group) redirect("/login");
 
+  const now = new Date();
   const rows = buildResponsavelAtaRows({
     group,
     atas: result.atas,
     horarios: result.grupo_horarios,
+    now,
+  });
+  const nextMissingAtaRefreshAt = nextResponsavelMissingAtaRefreshAt({
+    group,
+    atas: result.atas,
+    horarios: result.grupo_horarios,
+    now,
   });
   const groupAtas = result.atas.filter(
     (item) => item.grupo.grupo_id === group.grupo_id
@@ -52,9 +61,10 @@ export default async function ResponsavelAtasPage({
 
   return (
     <ResponsavelShell activeSection="responsavel" settingsHref={`/grupos/${group.grupo_id}`}>
+      <AtaHistoryRefresh at={nextMissingAtaRefreshAt} />
       <header className="responsavel-page-header">
         <div>
-          <p className="eyebrow">Histórico de atas</p>
+          <p className="eyebrow">Histórico de Atas</p>
           <h1>GRUPO {group.grupo_nome.toLocaleUpperCase("pt-BR")}</h1>
         </div>
         <div className="responsavel-page-header-actions">
@@ -82,6 +92,7 @@ export default async function ResponsavelAtasPage({
         key={historyMode ? "historico" : "atuais"}
         rows={rows}
         historyMode={historyMode}
+        groupId={group.grupo_id}
         defaultStartDate={historyStart}
         defaultEndDate={historyEnd}
       />

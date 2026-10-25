@@ -31,6 +31,7 @@ export function DashboardFilters({
   selectedMonth,
   selectedYear,
   showGroupFilter,
+  isResponsavelDashboard = false,
 }: {
   action: string;
   groups: Grupo[];
@@ -39,14 +40,15 @@ export function DashboardFilters({
   selectedMonth: string;
   selectedYear: string;
   showGroupFilter: boolean;
+  isResponsavelDashboard?: boolean;
 }) {
   return (
     <form
-      className={
-        showGroupFilter
-          ? "dashboard-filters"
-          : "dashboard-filters dashboard-filters-no-group"
-      }
+      className={[
+        "dashboard-filters",
+        !showGroupFilter && "dashboard-filters-no-group",
+        isResponsavelDashboard && "dashboard-filters-responsavel",
+      ].filter(Boolean).join(" ")}
       action={action}
     >
       {showGroupFilter && (
@@ -65,7 +67,7 @@ export function DashboardFilters({
           </select>
         </label>
       )}
-      <label>
+      <label className={isResponsavelDashboard ? "dashboard-filter-period-label" : undefined}>
         Mês
         <select
           name="mes"
@@ -77,7 +79,7 @@ export function DashboardFilters({
           ))}
         </select>
       </label>
-      <label>
+      <label className={isResponsavelDashboard ? "dashboard-filter-period-label" : undefined}>
         Ano
         <select
           name="ano"

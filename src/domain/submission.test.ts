@@ -40,7 +40,7 @@ const submission = {
       como_chegou_a_na: "indicacao_pessoal",
     },
   ],
-  ingressos: [{ visitante_indice: 1 }],
+  ingressos: [{ cidade: "Itajaí - SC" }],
   trocas_chaveiro: [{ tempo_limpo: "dias_30", quantidade: 2 }],
 } satisfies AtaSubmission;
 const group = {
@@ -60,14 +60,12 @@ const group = {
 } satisfies Grupo;
 
 describe("envio imutável", () => {
-  it("só associa ingresso a visitante provável adicto", () => {
-    const invalidLink = ataSubmissionSchema.safeParse({
+  it("associa ingresso somente a uma cidade dos visitantes", () => {
+    expect(ataSubmissionSchema.safeParse(submission).success).toBe(true);
+    expect(ataSubmissionSchema.safeParse({
       ...submission,
-      ingressos: [{ visitante_indice: 0 }],
-    });
-    expect(invalidLink.success).toBe(false);
-    const validLink = ataSubmissionSchema.safeParse(submission);
-    expect(validLink.success).toBe(true);
+      ingressos: [{ cidade: "Salvador - BA" }],
+    }).success).toBe(false);
   });
 
   it("rejeita soma de participação acima do total", () => {
@@ -123,9 +121,8 @@ describe("envio imutável", () => {
     ]);
     expect(registro.ingressos[0]).toMatchObject({
       ata_id: registro.ata.ata_id,
-      nome: "visitante_2",
+      nome: "ingresso_1",
       cidade: "Itajaí - SC",
-      visitante_id: registro.visitantes[1].visitante_id,
     });
     expect(registro.trocas_chaveiro[0]).toMatchObject({
       tempo_limpo: "dias_30",

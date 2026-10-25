@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faArrowRight, faFilePdf, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { canAccessGroup } from "@/lib/auth/access";
 import {
   buildAtaPresentation,
@@ -84,17 +84,42 @@ export default async function AtaDetailPage({
         )}
         headerAction={(
           <>
-            <Link className="button-link secondary review-back-link" href={backHref}>
-              <span className="button-content">
-                <FontAwesomeIcon icon={faArrowLeft} />
-                Voltar
-              </span>
+            <Link
+              className="button-link secondary review-back-link ata-pdf-icon-button"
+              href={backHref}
+              title="Voltar"
+              aria-label="Voltar"
+            >
+              <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
+            {ata.status_registro === "ativa"
+              && ["aprovada", "pendente_revisao"].includes(ata.status_aprovacao ?? "aprovada") && (
+                <Link
+                  className="button-link secondary review-edit-button ata-pdf-icon-button"
+                  href={`/atas/${ata.ata_id}/editar`}
+                  title="Editar"
+                  aria-label="Editar"
+                >
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                </Link>
+              )}
+            <a
+              className="button-link secondary review-pdf-button ata-pdf-icon-button"
+              href={`/atas/${ata.ata_id}/pdf`}
+              target="_blank"
+              rel="noreferrer"
+              title="Visualizar PDF"
+              aria-label="Visualizar PDF"
+            >
+              <FontAwesomeIcon icon={faFilePdf} />
+            </a>
             <AtaPdfActions
               ataId={ata.ata_id}
               title={presentation.title}
               filename={presentation.filename}
               defaultRecipient={presentation.groupEmail}
+              showPreview={false}
+              iconOnly
             />
           </>
         )}

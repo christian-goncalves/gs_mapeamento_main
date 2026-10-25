@@ -1,0 +1,71 @@
+- generic [ref=f17e1]:
+  - main [ref=f17e2]:
+    - link "Voltar" [ref=f17e3] [cursor=pointer]:
+      - /url: /admin/grupos
+    - generic [ref=f17e7]:
+      - paragraph [ref=f17e8]: Grupo
+      - heading "USL" [level=1] [ref=f17e9]
+    - generic [ref=f17e10]:
+      - generic [ref=f17e11]:
+        - heading "Dados do grupo" [level=2] [ref=f17e12]
+        - generic [ref=f17e13]:
+          - generic [ref=f17e14]:
+            - text: Nome
+            - textbox "Nome" [ref=f17e15]: USL
+          - generic [ref=f17e16]:
+            - generic [ref=f17e17]:
+              - generic [ref=f17e18]: Revisão de Atas
+              - group [ref=f17e19]:
+                - generic "Informações sobre a revisão de atas" [ref=f17e20] [cursor=pointer]
+            - combobox "Revisão de Atas Informações sobre a revisão de atas" [ref=f17e23]:
+              - option "Aprovação ativada" [selected]
+              - option "Aprovação desativada (padrão)"
+          - generic [ref=f17e24]:
+            - text: Grupo ativo
+            - combobox "Grupo ativo" [ref=f17e25]:
+              - option "Ativo" [selected]
+              - option "Inativo"
+          - generic [ref=f17e26]:
+            - text: Última reunião antes do sistema
+            - spinbutton "Última reunião antes do sistema" [ref=f17e27]: "0"
+        - generic [ref=f17e28]:
+          - generic [ref=f17e30]:
+            - generic [ref=f17e31]: Link da ata
+            - generic [ref=f17e32]:
+              - textbox "Link da ata" [ref=f17e33]: http://localhost:3000/preencher/1218223fc61c1c375dacd2cab9f774dbdc9e114e61e0b53f17a3915c3a75329d
+              - button "Copiar link da ata" [ref=f17e34] [cursor=pointer]
+              - button "Rotacionar link de preenchimento" [ref=f17e37] [cursor=pointer]
+          - generic [ref=f17e41]:
+            - text: E-mail
+            - textbox "E-mail" [ref=f17e42]: codex.odonto@gmail.com
+        - button "Salvar dados do grupo" [ref=f17e44] [cursor=pointer]
+      - group [ref=f17e48]:
+        - generic "Servidores da Mesa" [active] [ref=f17e49] [cursor=pointer]
+        - generic [ref=f17e74]:
+          - table [ref=f17e76]:
+            - rowgroup [ref=f17e77]:
+              - row [ref=f17e78]:
+                - columnheader "Encargo" [ref=f17e79]
+                - columnheader "Servidor" [ref=f17e80]
+                - columnheader "Desde" [ref=f17e81]
+                - columnheader "Ações" [ref=f17e82]
+            - rowgroup [ref=f17e83]:
+              - row [ref=f17e84]:
+                - rowheader "RSG" [ref=f17e85]
+                - cell "Christian" [ref=f17e86]
+                - cell "17/10/2026" [ref=f17e87]
+                - cell [ref=f17e88]:
+                  - button "Abrir ações de RSG" [ref=f17e89] [cursor=pointer]
+              - row [ref=f17e92]:
+                - rowheader "RSG suplente" [ref=f17e93]
+                - cell "Alisson" [ref=f17e94]
+                - cell "17/10/2026" [ref=f17e95]
+                - cell [ref=f17e96]:
+                  - button "Abrir ações de RSG suplente" [ref=f17e97] [cursor=pointer]
+          - button "Adicionar servidores" [ref=f17e101] [cursor=pointer]
+    - group [ref=f17e53]:
+      - generic "Plataformas" [ref=f17e54] [cursor=pointer]
+    - group [ref=f17e58]:
+      - generic "Horários de Reunião" [ref=f17e59] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f17e68] [cursor=pointer]
+  - alert [ref=f17e72]

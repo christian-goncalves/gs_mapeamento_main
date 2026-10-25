@@ -118,7 +118,7 @@ export function AdminGroupsPanel({
         </p>
       )}
 
-      <section className="summary-cards" aria-label="Resumo dos grupos">
+      <section className="summary-cards" aria-label="Resumo dos Grupos">
         <dl className="summary-card">
           <span className="summary-icon summary-icon-active" aria-hidden="true">
             <FontAwesomeIcon icon={faUsers} />
@@ -214,7 +214,7 @@ export function AdminGroupsPanel({
           {filteredGroups.length === 0 ? (
             <p className="empty-state" role="status">{emptyMessage}</p>
           ) : (
-            <ol className="admin-group-list" aria-label="Grupos administrativos">
+            <ol className="admin-group-list" aria-label="Grupos Administrativos">
               {filteredGroups.map((group) => {
                 const createdAt = formatCreatedAt(group.created_at);
                 return (

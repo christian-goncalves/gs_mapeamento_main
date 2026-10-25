@@ -1,0 +1,39 @@
+- generic [ref=f7e1]:
+  - main [ref=f7e2]:
+    - link "Voltar" [ref=f7e3] [cursor=pointer]:
+      - /url: /admin/grupos
+    - generic [ref=f7e7]:
+      - paragraph [ref=f7e8]: Grupo
+      - heading "Novo grupo" [level=1] [ref=f7e9]
+    - generic [ref=f7e10]:
+      - generic [ref=f7e11]:
+        - heading "Dados do grupo" [level=2] [ref=f7e12]
+        - generic [ref=f7e13]:
+          - generic [ref=f7e14]:
+            - text: Nome
+            - textbox "Nome" [ref=f7e15]
+          - generic [ref=f7e16]:
+            - generic [ref=f7e17]:
+              - generic [ref=f7e18]: Revisão de Atas
+              - group [ref=f7e19]:
+                - generic "Informações sobre a revisão de atas" [ref=f7e20] [cursor=pointer]
+            - combobox "Revisão de Atas Informações sobre a revisão de atas" [ref=f7e23]:
+              - option "Aprovação ativada"
+              - option "Aprovação desativada (padrão)" [selected]
+          - generic [ref=f7e24]:
+            - text: Grupo ativo
+            - combobox "Grupo ativo" [ref=f7e25]:
+              - option "Ativo" [selected]
+              - option "Inativo"
+          - generic [ref=f7e26]:
+            - text: Última reunião antes do sistema
+            - spinbutton "Última reunião antes do sistema" [ref=f7e27]: "0"
+        - generic [ref=f7e29]:
+          - text: E-mail
+          - textbox "E-mail" [ref=f7e30]
+      - button "Criar grupo" [ref=f7e32] [cursor=pointer]
+    - region [ref=f7e36]:
+      - heading "Plataformas" [level=2] [ref=f7e37]
+      - status [ref=f7e38]: Crie o grupo primeiro para depois cadastrar as plataformas.
+  - button "Open Next.js Dev Tools" [ref=f7e44] [cursor=pointer]
+  - alert [ref=f7e48]

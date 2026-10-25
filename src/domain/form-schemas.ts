@@ -27,7 +27,7 @@ const optionalEmail = optionalText.refine(
   "E-mail inválido.",
 );
 export const grupoFormSchema = z.object({
-  acesso_plataforma: requiredText,
+  acesso_plataforma: optionalText.default(""),
   plataforma: z.enum(plataformaMapping.codes),
   fuso_horario: z.enum(fusoHorarioMapping.codes),
   grupo_nome: requiredText,
@@ -144,15 +144,7 @@ export const visitanteFormSchema = z.object({
 });
 
 export const ingressoFormSchema = z.object({
-  nome: z.string().trim().optional(),
-  cidade: z.string().trim().optional(),
-  visitante_indice: z.number().int().min(0).optional(),
-}).superRefine((ingresso, context) => {
-  if (ingresso.visitante_indice !== undefined) return;
-  if (!ingresso.nome) context.addIssue({ code: "custom", path: ["nome"], message: "Campo obrigatório." });
-  if (!ingresso.cidade || !isMunicipioOption(ingresso.cidade)) {
-    context.addIssue({ code: "custom", path: ["cidade"], message: "Município inexistente." });
-  }
+  cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
 });
 
 export const trocaChaveiroFormSchema = z.object({
@@ -189,18 +181,26 @@ export const ataSubmissionSchema = z
           "Para registrar um ingresso, registre primeiro pelo menos um visitante.",
       });
     }
-    const linkedVisitors = new Set<number>();
+    const visitorCities = new Set(
+      submission.visitantes.map((visitor) => normalizeCityKey(visitor.cidade)),
+    );
     for (const [index, ingresso] of submission.ingressos.entries()) {
-      if (ingresso.visitante_indice === undefined) continue;
-      const visitor = submission.visitantes[ingresso.visitante_indice];
-      if (!visitor || visitor.descricao !== "provavel_adicto") {
-        context.addIssue({ code: "custom", path: ["ingressos", index], message: "Ingresso deve estar vinculado a um visitante provável adicto." });
+      if (!visitorCities.has(normalizeCityKey(ingresso.cidade))) {
+        context.addIssue({
+          code: "custom",
+          path: ["ingressos", index, "cidade"],
+          message: "A cidade do ingresso deve estar entre as cidades dos visitantes.",
+        });
       }
-      if (linkedVisitors.has(ingresso.visitante_indice)) {
-        context.addIssue({ code: "custom", path: ["ingressos", index], message: "Visitante já possui ingresso." });
-      }
-      linkedVisitors.add(ingresso.visitante_indice);
     }
   });
 
 export type AtaSubmission = z.infer<typeof ataSubmissionSchema>;
+
+function normalizeCityKey(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLocaleLowerCase("pt-BR");
+}

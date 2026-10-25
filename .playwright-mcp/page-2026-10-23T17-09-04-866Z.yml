@@ -1,0 +1,194 @@
+- generic [ref=f11e1]:
+  - button "Open Next.js Dev Tools" [ref=f11e187] [cursor=pointer]
+  - alert [ref=f11e15]
+  - main [ref=f11e16]:
+    - link "Voltar" [ref=f11e17] [cursor=pointer]:
+      - /url: /admin/grupos
+    - generic [ref=f11e21]:
+      - paragraph [ref=f11e22]: Grupo
+      - heading "CODEX 6666" [level=1] [ref=f11e23]
+    - generic [ref=f11e24]:
+      - generic [ref=f11e25]:
+        - heading "Dados do grupo" [level=2] [ref=f11e26]
+        - generic [ref=f11e27]:
+          - generic [ref=f11e28]:
+            - text: Nome
+            - textbox "Nome" [ref=f11e29]: CODEX 6666
+          - generic [ref=f11e30]:
+            - generic [ref=f11e31]:
+              - generic [ref=f11e32]: Revisão de Atas
+              - group [ref=f11e33]:
+                - generic "Informações sobre a revisão de atas" [ref=f11e34] [cursor=pointer]
+            - combobox "Revisão de Atas Informações sobre a revisão de atas" [ref=f11e37]:
+              - option "Aprovação ativada" [selected]
+              - option "Aprovação desativada (padrão)"
+          - generic [ref=f11e38]:
+            - text: Grupo ativo
+            - combobox "Grupo ativo" [ref=f11e39]:
+              - option "Ativo" [selected]
+              - option "Inativo"
+          - generic [ref=f11e40]:
+            - text: Última reunião antes do sistema
+            - spinbutton "Última reunião antes do sistema" [ref=f11e41]: "100"
+        - generic [ref=f11e42]:
+          - generic [ref=f11e44]:
+            - generic [ref=f11e45]: Link da ata
+            - generic [ref=f11e46]:
+              - textbox "Link da ata" [ref=f11e47]: http://localhost:3000/preencher/4d1b59c9d0973900570b6914437147a4b0aaeba78731ff69815c9aca3af04df5
+              - button "Copiar link da ata" [ref=f11e48] [cursor=pointer]
+              - button "Rotacionar link de preenchimento" [ref=f11e51] [cursor=pointer]
+          - generic [ref=f11e55]:
+            - text: E-mail
+            - textbox "E-mail" [ref=f11e56]: codex.odonto6@gmail.com
+        - generic [ref=f11e57]:
+          - generic [ref=f11e59]:
+            - generic [ref=f11e60]: Link de ativação do acesso do grupo
+            - generic [ref=f11e61]:
+              - textbox "Link de ativação do acesso do grupo" [ref=f11e62]: Ativar acesso CODEX 6666
+              - button "Copiar link de ativação do acesso do grupo" [ref=f11e63] [cursor=pointer]
+              - button "Rotacionar convite de ativação" [ref=f11e66] [cursor=pointer]
+          - button "Salvar dados do grupo" [ref=f11e70] [cursor=pointer]
+      - generic [ref=f11e75]:
+        - heading "Servidores da Mesa" [level=2] [ref=f11e78]
+        - table [ref=f11e80]:
+          - rowgroup [ref=f11e81]:
+            - row [ref=f11e82]:
+              - columnheader "Encargo" [ref=f11e83]
+              - columnheader "Servidor" [ref=f11e84]
+              - columnheader "Desde" [ref=f11e85]
+              - columnheader "Ações" [ref=f11e86]
+          - rowgroup [ref=f11e87]:
+            - row [ref=f11e88]:
+              - rowheader "RSG" [ref=f11e89]
+              - cell "Christian" [ref=f11e90]
+              - cell "28/09/2026" [ref=f11e91]
+              - cell [ref=f11e92]:
+                - button "Abrir ações de RSG" [ref=f11e93] [cursor=pointer]
+        - button "Adicionar servidores" [ref=f11e97] [cursor=pointer]
+    - region [ref=f11e101]:
+      - generic [ref=f11e103]:
+        - heading "Plataformas" [level=2] [ref=f11e104]
+        - paragraph [ref=f11e105]: Cadastre até uma configuração de cada tipo. Os horários serão liberados depois do primeiro cadastro.
+      - generic [ref=f11e106]:
+        - article [ref=f11e107]:
+          - generic [ref=f11e108]:
+            - heading "Zoom" [level=3] [ref=f11e109]
+            - paragraph [ref=f11e111]: Cadastrada
+          - button "Editar dados" [ref=f11e112] [cursor=pointer]
+          - group [ref=f11e113]:
+            - generic "Desativar plataforma" [ref=f11e114] [cursor=pointer]
+            - option "Selecione uma plataforma" [selected]
+            - option "Zello"
+            - option "WhatsApp"
+        - article [ref=f11e115]:
+          - generic [ref=f11e116]:
+            - heading "Zello" [level=3] [ref=f11e117]
+            - paragraph [ref=f11e119]: Cadastrada
+          - button "Editar dados" [ref=f11e120] [cursor=pointer]
+          - group [ref=f11e121]:
+            - generic "Desativar plataforma" [ref=f11e122] [cursor=pointer]
+            - option "Selecione uma plataforma" [selected]
+            - option "Zoom"
+            - option "WhatsApp"
+        - article [ref=f11e123]:
+          - generic [ref=f11e124]:
+            - heading "WhatsApp" [level=3] [ref=f11e125]
+            - paragraph [ref=f11e127]: Cadastrada
+          - button "Editar dados" [ref=f11e128] [cursor=pointer]
+          - group [ref=f11e129]:
+            - generic "Desativar plataforma" [ref=f11e130] [cursor=pointer]
+            - option "Selecione uma plataforma" [selected]
+            - option "Zoom"
+            - option "Zello"
+      - group [ref=f11e131]:
+        - generic "Associação de horários" [ref=f11e132] [cursor=pointer]
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "WhatsApp"
+        - option "Zoom"
+        - option "Zello"
+        - option "WhatsApp" [selected]
+        - option "Zoom"
+        - option "Zello" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "WhatsApp"
+      - paragraph [ref=f11e133]: "Tipos disponíveis: Zoom, WhatsApp e Zello."
+    - generic [ref=f11e134]:
+      - generic [ref=f11e135]:
+        - heading "Horários de Reunião" [level=2] [ref=f11e136]
+        - group [ref=f11e137]:
+          - generic "Informações sobre o horário da agenda" [ref=f11e138] [cursor=pointer]
+      - generic [ref=f11e141]:
+        - table [ref=f11e143]:
+          - rowgroup [ref=f11e144]:
+            - row [ref=f11e191]:
+              - columnheader "Dia" [ref=f11e146]
+              - columnheader "Horário" [ref=f11e192]
+              - columnheader "Ações" [ref=f11e193]
+          - rowgroup [ref=f11e148]:
+            - row [ref=f11e194]:
+              - cell "Domingo" [ref=f11e195]
+              - cell [ref=f11e196]:
+                - generic [ref=f11e197]:
+                  - text: 10:00
+                  - img "Zoom" [ref=f11e198]
+              - cell [ref=f11e199]:
+                - generic [ref=f11e200]:
+                  - button "Editar Domingo 10:00" [ref=f11e201] [cursor=pointer]
+                  - button "Excluir Domingo 10:00" [ref=f11e204] [cursor=pointer]
+            - row [ref=f11e207]:
+              - cell [ref=f11e208]
+              - cell [ref=f11e209]:
+                - generic [ref=f11e210]:
+                  - text: 17:00
+                  - img "WhatsApp" [ref=f11e211]
+              - cell [ref=f11e212]:
+                - generic [ref=f11e213]:
+                  - button "Editar Domingo 17:00" [ref=f11e214] [cursor=pointer]
+                  - button "Excluir Domingo 17:00" [ref=f11e217] [cursor=pointer]
+            - row [ref=f11e220]:
+              - cell "Segunda" [ref=f11e221]
+              - cell [ref=f11e222]:
+                - generic [ref=f11e223]:
+                  - text: 10:00
+                  - img "Zello" [ref=f11e224]
+              - cell [ref=f11e225]:
+                - generic [ref=f11e226]:
+                  - button "Editar Segunda 10:00" [ref=f11e227] [cursor=pointer]
+                  - button "Excluir Segunda 10:00" [ref=f11e230] [cursor=pointer]
+            - row [ref=f11e233]:
+              - cell "Terça" [ref=f11e234]
+              - cell [ref=f11e235]:
+                - generic [ref=f11e236]:
+                  - text: 09:00
+                  - img "Zoom" [ref=f11e237]
+              - cell [ref=f11e238]:
+                - generic [ref=f11e239]:
+                  - button "Editar Terça 09:00" [ref=f11e240] [cursor=pointer]
+                  - button "Excluir Terça 09:00" [ref=f11e243] [cursor=pointer]
+        - button "Adicionar horário" [ref=f11e247] [cursor=pointer]
+        - generic [ref=f11e251]:
+          - button "CONFIRMAR" [active] [ref=f11e252] [cursor=pointer]
+          - button "Cancelar edição" [ref=f11e256] [cursor=pointer]
+        - dialog [ref=f11e260]:
+          - heading "Confirmar horários" [level=2] [ref=f11e261]
+          - generic [ref=f11e262]:
+            - generic [ref=f11e263]:
+              - heading "Domingo" [level=3] [ref=f11e264]
+              - list [ref=f11e265]:
+                - listitem [ref=f11e266]: 10:00 | Zoom
+                - listitem [ref=f11e267]: 17:00 | WhatsApp
+            - generic [ref=f11e268]:
+              - heading "Segunda" [level=3] [ref=f11e269]
+              - list [ref=f11e270]:
+                - listitem [ref=f11e271]: 10:00 | Zello
+            - generic [ref=f11e272]:
+              - heading "Terça" [level=3] [ref=f11e273]
+              - list [ref=f11e274]:
+                - listitem [ref=f11e275]: 09:00 | Zoom
+          - generic [ref=f11e277]:
+            - button "Voltar para corrigir" [ref=f11e278] [cursor=pointer]
+            - button "Cancelar" [ref=f11e282] [cursor=pointer]
+            - button "CONFIRMAR" [ref=f11e286] [cursor=pointer]

@@ -9,7 +9,7 @@ export type AtaBusinessKey = Pick<
 
 export class DuplicateAtaError extends Error {
   constructor() {
-    super("Já existe uma ata para este grupo, data e horário.");
+    super("A ata com esta data e horário já está preenchida. Escolha outra data e outro horário.");
     this.name = "DuplicateAtaError";
   }
 }

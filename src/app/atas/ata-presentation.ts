@@ -76,7 +76,7 @@ export function buildAtaPresentation(item: AggregatedAta): AtaPresentation {
         ata.formato_outros ? { label: "Formato outros", value: ata.formato_outros } : null,
         ata.status_registro === "substituida" ? { label: "Situação", value: "Versão substituída" } : null,
         ata.status_registro === "excluida" ? { label: "Situação", value: "Ata excluída" } : null,
-        ata.motivo_alteracao ? { label: "Motivo da alteração", value: ata.motivo_alteracao } : null,
+        ata.motivo_alteracao ? { label: "Motivo da Alteração", value: ata.motivo_alteracao } : null,
       ].filter((entry): entry is { label: string; value: string } => entry !== null),
       servers: registro.servidores.map((entry) => ({
         id: entry.servidor_id,
@@ -93,30 +93,25 @@ export function buildAtaPresentation(item: AggregatedAta): AtaPresentation {
         country: entry.pais,
         count: entry.presencas,
       })),
-      visitors: registro.visitantes.map((entry, index) => ({
+      visitors: registro.visitantes.map((entry) => ({
         id: entry.visitante_id,
-        label: `Visitante ${index + 1}`,
+        label: "Visitante",
         city: entry.cidade,
         category: categoriaVisitanteMapping.toSheet(entry.descricao),
         origin: origemContatoMapping.toSheet(entry.como_chegou_a_na),
       })),
-      admissions: registro.ingressos.map((entry, index) => {
+      admissions: registro.ingressos.map((entry) => {
         const location = cidadeEstado(entry.cidade);
-        const visitorIndex = entry.visitante_id
-          ? registro.visitantes.findIndex((visitor) => visitor.visitante_id === entry.visitante_id)
-          : -1;
         return {
           id: entry.ingresso_id,
-          label: visitorIndex >= 0
-            ? `Ingresso do Visitante ${visitorIndex + 1}`
-            : `Ingresso ${index + 1}`,
+          label: "Ingresso",
           city: location.cidade,
           state: location.estado,
         };
       }),
-      achievements: achievements.map((entry, index) => ({
+      achievements: achievements.map((entry) => ({
         id: entry.id,
-        label: `Conquista ${index + 1}`,
+        label: "Conquista",
         time: entry.time,
       })),
       supplementalMetrics: {

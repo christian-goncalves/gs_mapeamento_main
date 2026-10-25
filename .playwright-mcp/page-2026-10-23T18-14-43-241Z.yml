@@ -1,0 +1,96 @@
+- generic [ref=f13e1]:
+  - main [ref=f13e2]:
+    - link "Voltar" [ref=f13e3] [cursor=pointer]:
+      - /url: /admin/grupos
+    - generic [ref=f13e7]:
+      - paragraph [ref=f13e8]: Grupo
+      - heading "BOM DIA BRASIL" [level=1] [ref=f13e9]
+    - generic [ref=f13e10]:
+      - generic [ref=f13e11]:
+        - heading "Dados do grupo" [level=2] [ref=f13e12]
+        - generic [ref=f13e13]:
+          - generic [ref=f13e14]:
+            - text: Nome
+            - textbox "Nome" [ref=f13e15]: BOM DIA BRASIL
+          - generic [ref=f13e16]:
+            - generic [ref=f13e17]:
+              - generic [ref=f13e18]: Revisão de Atas
+              - group [ref=f13e19]:
+                - generic "Informações sobre a revisão de atas" [ref=f13e20] [cursor=pointer]
+            - combobox "Revisão de Atas Informações sobre a revisão de atas" [ref=f13e23]:
+              - option "Aprovação ativada" [selected]
+              - option "Aprovação desativada (padrão)"
+          - generic [ref=f13e24]:
+            - text: Grupo ativo
+            - combobox "Grupo ativo" [ref=f13e25]:
+              - option "Ativo" [selected]
+              - option "Inativo"
+          - generic [ref=f13e26]:
+            - text: Última reunião antes do sistema
+            - spinbutton "Última reunião antes do sistema" [ref=f13e27]: "10"
+        - generic [ref=f13e28]:
+          - generic [ref=f13e30]:
+            - generic [ref=f13e31]: Link da ata
+            - generic [ref=f13e32]:
+              - textbox "Link da ata" [ref=f13e33]: http://localhost:3000/preencher/1336a011bafc96864644f95d95ca492969fcb7e0223c19308e19ad297ad96be7
+              - button "Copiar link da ata" [ref=f13e34] [cursor=pointer]
+              - button "Rotacionar link de preenchimento" [ref=f13e37] [cursor=pointer]
+          - generic [ref=f13e41]:
+            - text: E-mail
+            - textbox "E-mail" [ref=f13e42]: chrisapppg@gmail.com
+        - generic [ref=f13e43]:
+          - generic [ref=f13e45]:
+            - generic [ref=f13e46]: Link de ativação do acesso do grupo
+            - generic [ref=f13e47]:
+              - textbox "Link de ativação do acesso do grupo" [ref=f13e48]: Ativar acesso BOM DIA BRASIL
+              - button "Copiar link de ativação do acesso do grupo" [ref=f13e49] [cursor=pointer]
+              - button "Rotacionar convite de ativação" [ref=f13e52] [cursor=pointer]
+          - button "Salvar dados do grupo" [ref=f13e56] [cursor=pointer]
+      - group [ref=f13e60]:
+        - generic "Servidores da Mesa" [ref=f13e61] [cursor=pointer]
+    - group [ref=f13e65]:
+      - generic "Plataformas" [ref=f13e66] [cursor=pointer]
+      - option "Selecione uma plataforma" [selected]
+      - option "Zello" [selected]
+    - group [ref=f13e70]:
+      - generic "Horários de Reunião Informações sobre o horário da agenda" [ref=f13e71] [cursor=pointer]:
+        - generic [ref=f13e72]:
+          - generic [ref=f13e73]: Horários de Reunião
+          - img "Informações sobre o horário da agenda" [ref=f13e74]
+      - generic [ref=f13e79]:
+        - list "Legenda de plataformas" [ref=f13e80]:
+          - listitem [ref=f13e81]: Zoom
+          - listitem [ref=f13e83]: Zello
+          - listitem [ref=f13e85]: WhatsApp
+        - generic [ref=f13e87]:
+          - table [ref=f13e89]:
+            - rowgroup [ref=f13e90]:
+              - row [ref=f13e91]:
+                - columnheader "Dia" [ref=f13e92]
+                - columnheader "Horários*" [ref=f13e93]
+            - rowgroup [ref=f13e94]:
+              - row [ref=f13e95]:
+                - rowheader "Domingo" [ref=f13e96]
+                - cell "-" [ref=f13e97]
+              - row [ref=f13e98]:
+                - rowheader "Segunda" [ref=f13e99]
+                - cell "08:30" [ref=f13e100]
+              - row [ref=f13e102]:
+                - rowheader "Terça" [ref=f13e103]
+                - cell "-" [ref=f13e104]
+              - row [ref=f13e105]:
+                - rowheader "Quarta" [ref=f13e106]
+                - cell "-" [ref=f13e107]
+              - row [ref=f13e108]:
+                - rowheader "Quinta" [ref=f13e109]
+                - cell "-" [ref=f13e110]
+              - row [ref=f13e111]:
+                - rowheader "Sexta" [ref=f13e112]
+                - cell "-" [ref=f13e113]
+              - row [ref=f13e114]:
+                - rowheader "Sábado" [ref=f13e115]
+                - cell "-" [ref=f13e116]
+          - paragraph [ref=f13e117]: "* Horário de Brasília (BRT)"
+          - button "Editar horários" [ref=f13e119] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f13e128] [cursor=pointer]
+  - alert [ref=f13e132]

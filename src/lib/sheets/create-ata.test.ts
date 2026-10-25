@@ -2,10 +2,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { InvalidAtaIdentifiersError } from "@/domain/ata-identifiers";
 import type { AtaSubmission } from "@/domain/form-schemas";
 import { SHEET_HEADERS, type SheetName } from "./contract";
-import { compatibleHeaders } from "./contract-v2";
+import { compatibleHeaders, V2_NEW_SHEET_HEADERS } from "./contract-v2";
 
 const mocks = vi.hoisted(() => ({
   batchGet: vi.fn(),
+  valuesGet: vi.fn(),
   get: vi.fn(),
   batchUpdate: vi.fn(),
   updateAtaNameSuggestionsFromSubmission: vi.fn(),
@@ -19,7 +20,7 @@ vi.mock("./client", () => ({
   getSpreadsheetId: () => "spreadsheet-test",
   getSheetsClient: () => ({
     spreadsheets: {
-      values: { batchGet: mocks.batchGet },
+      values: { batchGet: mocks.batchGet, get: mocks.valuesGet },
       get: mocks.get,
       batchUpdate: mocks.batchUpdate,
     },
@@ -79,6 +80,7 @@ describe("criação de ata no Sheets", () => {
       },
     });
     mocks.updateAtaNameSuggestionsFromSubmission.mockResolvedValue({});
+    mocks.valuesGet.mockResolvedValue({ data: { values: [[...V2_NEW_SHEET_HEADERS.grupo_plataformas], ["22222222-2222-4222-8222-222222222222", groupId, "zoom", "https://zoom.example.org", "secret-access-id", "secret-pin", true, audit.created_at, audit.updated_at]] } });
   });
 
   it("aborta quando uma ata existente tem identificadores inválidos", async () => {
@@ -167,7 +169,7 @@ describe("criação de ata no Sheets", () => {
     );
   });
 
-  it("impõe a plataforma cadastrada no grupo sobre o payload", async () => {
+  it("resolve a plataforma pela associação do horário recorrente, ignorando a plataforma legada do grupo", async () => {
     mocks.batchGet.mockResolvedValue({
       data: {
         valueRanges: values({
@@ -187,6 +189,10 @@ describe("criação de ata no Sheets", () => {
               ...audit,
             }),
           ],
+          grupo_horarios: [
+            [...SHEET_HEADERS.grupo_horarios, "plataforma_id"],
+            [...row("grupo_horarios", { horario_id: "33333333-3333-4333-8333-333333333333", grupo_id: groupId, dia_semana: "domingo", hora_inicio: "10:00", ativo: true, ...audit }), "22222222-2222-4222-8222-222222222222"],
+          ],
         }),
       },
     });
@@ -197,8 +203,69 @@ describe("criação de ata no Sheets", () => {
     }, undefined, "public-link-token");
 
     expect(mocks.updateAtaNameSuggestionsFromSubmission).toHaveBeenCalledWith(
-      expect.objectContaining({ ata: expect.objectContaining({ plataforma: "zello" }) }),
+      expect.objectContaining({ ata: expect.objectContaining({ plataforma: "zoom" }) }),
     );
+    const ataValues = mocks.batchUpdate.mock.calls[0][0].requestBody.requests[0].updateCells.rows[0].values;
+    expect(ataValues[compatibleHeaders("atas").indexOf("plataforma")].userEnteredValue)
+      .toEqual({ stringValue: "Zoom" });
+    expect(JSON.stringify(ataValues)).not.toContain("22222222-2222-4222-8222-222222222222");
+    expect(JSON.stringify(ataValues)).not.toContain("secret-");
+  });
+
+  it("não chama batchUpdate quando uma recorrência está sem plataforma ativa", async () => {
+    mocks.batchGet.mockResolvedValue({
+      data: { valueRanges: values({
+        grupos: [
+          [...SHEET_HEADERS.grupos],
+          row("grupos", { grupo_id: groupId, zoom_id: "123", grupo_nome: "Grupo", ordem: 1, ativo: true, link_formulario_ata: "token", ultima_reuniao_anterior: 0, fuso_horario: "America/Sao_Paulo", ...audit }),
+        ],
+        grupo_horarios: [
+          [...SHEET_HEADERS.grupo_horarios, "plataforma_id"],
+          [...row("grupo_horarios", { horario_id: "33333333-3333-4333-8333-333333333333", grupo_id: groupId, dia_semana: "domingo", hora_inicio: "10:00", ativo: true, ...audit }), ""],
+        ],
+      }) },
+    });
+
+    await expect(createAtaInSheets(submission, "responsavel@example.com"))
+      .rejects.toThrow("Este horário recorrente ainda não tem uma plataforma configurada");
+    expect(mocks.batchUpdate).not.toHaveBeenCalled();
+  });
+
+  it("não chama batchUpdate quando há horários recorrentes duplicados", async () => {
+    const schedules = ["33333333-3333-4333-8333-333333333333", "44444444-4444-4444-8444-444444444444"];
+    mocks.batchGet.mockResolvedValue({
+      data: { valueRanges: values({
+        grupos: [
+          [...SHEET_HEADERS.grupos],
+          row("grupos", { grupo_id: groupId, zoom_id: "123", grupo_nome: "Grupo", ordem: 1, ativo: true, link_formulario_ata: "token", ultima_reuniao_anterior: 0, fuso_horario: "America/Sao_Paulo", ...audit }),
+        ],
+        grupo_horarios: [
+          [...SHEET_HEADERS.grupo_horarios, "plataforma_id"],
+          ...schedules.map((horario_id) => [...row("grupo_horarios", { horario_id, grupo_id: groupId, dia_semana: "domingo", hora_inicio: "10:00", ativo: true, ...audit }), "22222222-2222-4222-8222-222222222222"]),
+        ],
+      }) },
+    });
+
+    await expect(createAtaInSheets(submission, "responsavel@example.com"))
+      .rejects.toThrow("horários duplicados");
+    expect(mocks.batchUpdate).not.toHaveBeenCalled();
+  });
+
+  it("não chama batchUpdate quando uma reunião extra escolhe plataforma inativa ou de outro grupo", async () => {
+    mocks.batchGet.mockResolvedValue({ data: { valueRanges: values({
+      grupos: [
+        [...SHEET_HEADERS.grupos],
+        row("grupos", { grupo_id: groupId, zoom_id: "123", grupo_nome: "Grupo", ordem: 1, ativo: true, link_formulario_ata: "token", ultima_reuniao_anterior: 0, ...audit }),
+      ],
+    }) } });
+    mocks.valuesGet.mockResolvedValue({ data: { values: [
+      [...V2_NEW_SHEET_HEADERS.grupo_plataformas],
+      ["22222222-2222-4222-8222-222222222222", "99999999-9999-4999-8999-999999999999", "zoom", "https://zoom.example.org", "", "", true, audit.created_at, audit.updated_at],
+    ] } });
+
+    await expect(createAtaInSheets(submission, "responsavel@example.com"))
+      .rejects.toThrow("Selecione uma plataforma ativa do grupo");
+    expect(mocks.batchUpdate).not.toHaveBeenCalled();
   });
 
   it("lê a configuração do grupo e grava o novo envio como pendente", async () => {

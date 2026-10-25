@@ -1,5 +1,6 @@
 import type { AggregatedAta } from "@/domain/aggregate";
 import type { Grupo, GrupoHorario } from "@/domain/entities";
+import { buildMissingAtaOccurrences } from "@/domain/missing-ata-occurrences";
 
 export type AdminAtaStatus = "Enviada" | "Não enviada" | "Pendente de revisão";
 
@@ -13,16 +14,6 @@ export type AdminAtaRow = {
   preenchidoPor: string;
   status: AdminAtaStatus;
 };
-
-const weekDayByIndex = [
-  "domingo",
-  "segunda",
-  "terca",
-  "quarta",
-  "quinta",
-  "sexta",
-  "sabado",
-] as const;
 
 function isoDate(date: Date) {
   return date.toISOString().slice(0, 10);
@@ -45,21 +36,6 @@ export function currentMonthPeriod(reference = new Date()) {
     end: isoDate(today),
     key: isoDate(start).slice(0, 7),
   };
-}
-
-function dateRange(start: string, end: string) {
-  const dates: string[] = [];
-  const current = new Date(`${start}T00:00:00.000Z`);
-  const final = new Date(`${end}T00:00:00.000Z`);
-  while (current <= final) {
-    dates.push(isoDate(current));
-    current.setUTCDate(current.getUTCDate() + 1);
-  }
-  return dates;
-}
-
-function ataKey(row: Pick<AdminAtaRow, "grupoId" | "data" | "horario">) {
-  return `${row.grupoId}|${row.data}|${row.horario}`;
 }
 
 export function primaryServerName(servers: { nome: string; ordem: number }[]) {
@@ -92,42 +68,47 @@ export function buildMissingAtaRows({
   sentRows,
   start,
   end,
+  now = new Date(),
 }: {
   grupos: Grupo[];
   horarios: GrupoHorario[];
   sentRows: AdminAtaRow[];
   start: string;
   end: string;
+  now?: Date;
 }): AdminAtaRow[] {
   const groupsById = new Map(grupos.map((group) => [group.grupo_id, group]));
-  const sentKeys = new Set(sentRows.map(ataKey));
-  const rows: AdminAtaRow[] = [];
+  const occurrences = buildMissingAtaOccurrences({
+    groups: grupos,
+    schedules: horarios,
+    receivedMeetings: sentRows.map((row) => ({
+      groupId: row.grupoId,
+      date: row.data,
+      time: row.horario,
+    })),
+    now,
+    fromDate: start,
+  });
 
-  for (const data of dateRange(start, end)) {
-    const dayName = weekDayByIndex[new Date(`${data}T00:00:00.000Z`).getUTCDay()];
-    for (const horario of horarios) {
-      if (!horario.ativo || horario.dia_semana !== dayName) continue;
-      const group = groupsById.get(horario.grupo_id);
-      if (!group) continue;
-
-      const row: AdminAtaRow = {
+  return occurrences
+    .filter((occurrence) => occurrence.date <= end)
+    .flatMap((occurrence) => {
+      const group = groupsById.get(occurrence.groupId);
+      return group ? [{
         ataId: "",
         indicePersonalizadoGrupo: null,
-        data,
-        horario: horario.hora_inicio,
+        data: occurrence.date,
+        horario: occurrence.time,
         grupoId: group.grupo_id,
         grupo: group.grupo_nome,
         preenchidoPor: "",
-        status: "Não enviada",
-      };
-      if (!sentKeys.has(ataKey(row))) rows.push(row);
-    }
-  }
-
-  return rows.sort(
-    (first, second) =>
-      second.data.localeCompare(first.data) ||
-      first.horario.localeCompare(second.horario) ||
-      first.grupo.localeCompare(second.grupo, "pt-BR"),
-  );
+        status: "Não enviada" as const,
+      }] : [];
+    })
+    .sort(
+      (first, second) =>
+        second.data.localeCompare(first.data) ||
+        first.horario.localeCompare(second.horario) ||
+        first.grupo.localeCompare(second.grupo, "pt-BR"),
+    );
 }

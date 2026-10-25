@@ -1,0 +1,72 @@
+- generic [ref=f29e1]:
+  - main [ref=f29e2]:
+    - link "Voltar" [ref=f29e3] [cursor=pointer]:
+      - /url: /admin/grupos
+    - generic [ref=f29e7]:
+      - paragraph [ref=f29e8]: Grupo
+      - heading "BOM DIA BRASIL" [level=1] [ref=f29e9]
+    - generic [ref=f29e10]:
+      - generic [ref=f29e11]:
+        - heading "Dados do grupo" [level=2] [ref=f29e12]
+        - generic [ref=f29e13]:
+          - generic [ref=f29e14]:
+            - text: Nome
+            - textbox "Nome" [ref=f29e15]: BOM DIA BRASIL
+          - generic [ref=f29e16]:
+            - generic [ref=f29e17]:
+              - generic [ref=f29e18]: Revisão de Atas
+              - group [ref=f29e19]:
+                - generic "Informações sobre a revisão de atas" [ref=f29e20] [cursor=pointer]
+            - combobox "Revisão de Atas Informações sobre a revisão de atas" [ref=f29e23]:
+              - option "Aprovação ativada"
+              - option "Aprovação desativada (padrão)" [selected]
+          - generic [ref=f29e24]:
+            - text: Grupo ativo
+            - combobox "Grupo ativo" [ref=f29e25]:
+              - option "Ativo" [selected]
+              - option "Inativo"
+          - generic [ref=f29e26]:
+            - text: Última reunião antes do sistema
+            - spinbutton "Última reunião antes do sistema" [ref=f29e27]: "100000"
+        - generic [ref=f29e28]:
+          - generic [ref=f29e30]:
+            - generic [ref=f29e31]: Link da ata
+            - generic [ref=f29e32]:
+              - textbox "Link da ata" [ref=f29e33]: http://localhost:3000/preencher/f20b37c98f09c17d185d310cd74251f09fb1111d02e928d62ae496867c7f64ef
+              - button "Copiar link da ata" [ref=f29e34] [cursor=pointer]
+              - button "Rotacionar link de preenchimento" [ref=f29e37] [cursor=pointer]
+          - generic [ref=f29e41]:
+            - text: E-mail
+            - textbox "E-mail" [ref=f29e42]: chrisapppg@gmail.com
+        - button "Salvar dados do grupo" [ref=f29e44] [cursor=pointer]
+      - group [ref=f29e48]:
+        - generic "Servidores da Mesa" [ref=f29e49] [cursor=pointer]
+    - group [ref=f29e53]:
+      - generic "Plataformas" [ref=f29e54] [cursor=pointer]
+      - generic [ref=f29e58]:
+        - status [ref=f29e59]: Cadastre pelo menos uma plataforma para depois cadastrar os horários do grupo.
+        - region "Plataformas" [ref=f29e60]:
+          - generic [ref=f29e61]:
+            - article [ref=f29e62]:
+              - generic [ref=f29e63]:
+                - heading "Zoom" [level=3] [ref=f29e64]
+                - paragraph [ref=f29e66]: Ainda não cadastrada
+              - button "Cadastrar" [ref=f29e67] [cursor=pointer]
+            - article [ref=f29e68]:
+              - generic [ref=f29e69]:
+                - heading "Zello" [level=3] [ref=f29e70]
+                - paragraph [ref=f29e72]: Ainda não cadastrada
+              - button "Cadastrar" [ref=f29e73] [cursor=pointer]
+            - article [ref=f29e74]:
+              - generic [ref=f29e75]:
+                - heading "WhatsApp" [level=3] [ref=f29e76]
+                - paragraph [ref=f29e78]: Ainda não cadastrada
+              - button "Cadastrar" [ref=f29e79] [cursor=pointer]
+          - paragraph [ref=f29e80]: "Tipos disponíveis: Zoom, WhatsApp e Zello."
+    - group [ref=f29e81]:
+      - generic "Horários de Reunião Informações sobre o horário da agenda" [ref=f29e82] [cursor=pointer]:
+        - generic [ref=f29e83]:
+          - generic [ref=f29e84]: Horários de Reunião
+          - img "Informações sobre o horário da agenda" [ref=f29e85]
+  - button "Open Next.js Dev Tools" [ref=f29e95] [cursor=pointer]
+  - alert [ref=f29e99]

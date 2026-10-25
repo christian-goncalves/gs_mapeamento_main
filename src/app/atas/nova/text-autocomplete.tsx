@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type KeyboardEvent } from "react";
 
 function normalize(value: string) {
   return value
@@ -24,6 +24,21 @@ export function filterTextSuggestions(
     .slice(0, limit);
 }
 
+export function nextAutocompleteIndex(
+  current: number,
+  key: "ArrowDown" | "ArrowUp",
+  length: number,
+) {
+  if (length === 0) return -1;
+  if (key === "ArrowDown") return ((current + 1) % length + length) % length;
+  return current <= 0 ? length - 1 : (current - 1) % length;
+}
+
+export function selectedAutocompleteIndex(activeIndex: number, length: number) {
+  if (length === 0) return -1;
+  return activeIndex >= 0 && activeIndex < length ? activeIndex : 0;
+}
+
 export function TextAutocomplete({
   id,
   ariaLabel,
@@ -42,9 +57,40 @@ export function TextAutocomplete({
   onChange: (value: string) => void;
 }) {
   const [focused, setFocused] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const visibleSuggestions = focused
     ? filterTextSuggestions(suggestions, value)
     : [];
+
+  function selectSuggestion(index: number) {
+    const suggestion = visibleSuggestions[index];
+    if (!suggestion) return;
+    onChange(suggestion);
+    setFocused(false);
+    setActiveIndex(-1);
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (visibleSuggestions.length === 0) return;
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setActiveIndex((current) => nextAutocompleteIndex(current, "ArrowDown", visibleSuggestions.length));
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setActiveIndex((current) => nextAutocompleteIndex(current, "ArrowUp", visibleSuggestions.length));
+      return;
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      selectSuggestion(selectedAutocompleteIndex(activeIndex, visibleSuggestions.length));
+      return;
+    }
+    if (event.key === "Tab") {
+      selectSuggestion(selectedAutocompleteIndex(activeIndex, visibleSuggestions.length));
+    }
+  }
 
   return (
     <div className="autocomplete">
@@ -60,9 +106,19 @@ export function TextAutocomplete({
         aria-autocomplete="list"
         aria-expanded={visibleSuggestions.length > 0}
         aria-controls={id ? `${id}-options` : undefined}
-        onFocus={() => setFocused(true)}
+        aria-activedescendant={
+          activeIndex >= 0 && id ? `${id}-option-${activeIndex}` : undefined
+        }
+        onFocus={() => {
+          setActiveIndex(-1);
+          setFocused(true);
+        }}
         onBlur={() => setFocused(false)}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={(event) => {
+          setActiveIndex(-1);
+          onChange(event.target.value);
+        }}
+        onKeyDown={handleKeyDown}
       />
       {visibleSuggestions.length > 0 && (
         <ul
@@ -70,15 +126,18 @@ export function TextAutocomplete({
           className="autocomplete-options"
           role="listbox"
         >
-          {visibleSuggestions.map((suggestion) => (
-            <li key={suggestion} role="option" aria-selected={value === suggestion}>
+          {visibleSuggestions.map((suggestion, index) => (
+            <li
+              key={suggestion}
+              id={id ? `${id}-option-${index}` : undefined}
+              role="option"
+              aria-selected={activeIndex === index || value === suggestion}
+              className={activeIndex === index ? "is-active" : undefined}
+            >
               <button
                 type="button"
                 onMouseDown={(event) => event.preventDefault()}
-                onClick={() => {
-                  onChange(suggestion);
-                  setFocused(false);
-                }}
+                onClick={() => selectSuggestion(index)}
               >
                 {suggestion}
               </button>

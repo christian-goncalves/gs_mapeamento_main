@@ -114,9 +114,8 @@ describe("schemas de formulário", () => {
   });
 
   it("valida ingresso e troca de chaveiro full", () => {
-    expect(ingressoFormSchema.safeParse({ visitante_indice: 0 }).success).toBe(true);
-    expect(ingressoFormSchema.safeParse({ nome: "Anonimo", cidade: "Itajaí - SC" }).success).toBe(true);
-    expect(ingressoFormSchema.safeParse({ nome: "Anonimo", cidade: "" }).success).toBe(false);
+    expect(ingressoFormSchema.safeParse({ cidade: "Itajaí - SC" }).success).toBe(true);
+    expect(ingressoFormSchema.safeParse({ cidade: "" }).success).toBe(false);
     expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "dias_30", quantidade: 1 }).success).toBe(true);
     expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "valor_invalido", quantidade: 1 }).success).toBe(false);
     expect(trocaChaveiroFormSchema.safeParse({ tempo_limpo: "dias_30", quantidade: 0 }).success).toBe(false);
@@ -140,7 +139,7 @@ describe("schemas de formulário", () => {
       servidores: [],
       participacao: [],
       visitantes: [],
-      ingressos: [{ nome: "Anonimo", cidade: "Itajaí - SC" }],
+      ingressos: [{ cidade: "Itajaí - SC" }],
       trocas_chaveiro: [],
     });
     expect(result.success).toBe(false);
@@ -149,6 +148,40 @@ describe("schemas de formulário", () => {
         "Para registrar um ingresso, registre primeiro pelo menos um visitante.",
       );
     }
+  });
+
+  it("limita o ingresso às cidades dos visitantes", () => {
+    const base = {
+      ata: {
+        grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
+        data_reuniao: "2026-06-22",
+        hora_inicio: "20:30",
+        duracao: "",
+        formato_outros: "",
+        preenchido_por: "Patricia",
+        plataforma: "zoom" as const,
+        tipo_reuniao: "aberta" as const,
+        formatos: ["partilha" as const],
+        total_membros_presentes: 1,
+        total_partilhas: 1,
+      },
+      servidores: [],
+      participacao: [],
+      visitantes: [{ cidade: "Itajaí - SC", descricao: "outro" as const, como_chegou_a_na: "outro" as const }],
+      ingressos: [{ cidade: "Itajaí - SC" }],
+      trocas_chaveiro: [],
+    };
+    expect(ataSubmissionSchema.safeParse(base).success).toBe(true);
+    expect(
+      ataSubmissionSchema.safeParse({
+        ...base,
+        visitantes: [...base.visitantes, { cidade: "Itajaí - SC", descricao: "familiar", como_chegou_a_na: "familiar" }],
+        ingressos: [{ cidade: "Itajaí - SC" }, { cidade: "Itajaí - SC" }],
+      }).success,
+    ).toBe(true);
+    const invalid = ataSubmissionSchema.safeParse({ ...base, ingressos: [{ cidade: "Joinville - SC" }] });
+    expect(invalid.success).toBe(false);
+    if (!invalid.success) expect(invalid.error.issues[0]?.message).toContain("cidades dos visitantes");
   });
 
   it("aceita envio completo com listas vazias", () => {

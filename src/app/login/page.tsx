@@ -36,13 +36,15 @@ function GoogleIcon() {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ error?: string }>;
+  searchParams?: Promise<{ error?: string; emailChange?: string }>;
 }) {
   const session = await auth();
   const access = await resolveAccessByEmail(session?.user?.email);
   if (access) redirect(access.role === "administrador" ? "/admin/grupos" : "/responsavel/atas");
   const params = searchParams ? await searchParams : {};
   const accessDenied = params.error === "AccessDenied";
+  const emailChangeComplete = params.emailChange === "complete";
+  const emailChangeInvalid = params.emailChange === "invalid";
 
   return (
     <main className="login">
@@ -52,6 +54,16 @@ export default async function LoginPage({
         {accessDenied && (
           <p className="form-error">
             Este Google não tem acesso ao GS Mapeamento.
+          </p>
+        )}
+        {emailChangeComplete && (
+          <p className="form-success" role="status">
+            E-mail alterado. Entre novamente usando o novo endereço.
+          </p>
+        )}
+        {emailChangeInvalid && (
+          <p className="form-error" role="alert">
+            O link de alteração é inválido ou expirou. Solicite uma nova confirmação.
           </p>
         )}
         <PasswordLoginForm />

@@ -1,0 +1,162 @@
+- generic [active] [ref=f25e1]:
+  - main [ref=f25e2]:
+    - link "Voltar" [ref=f25e3] [cursor=pointer]:
+      - /url: /admin/grupos
+    - generic [ref=f25e7]:
+      - paragraph [ref=f25e8]: Grupo
+      - heading "USL" [level=1] [ref=f25e9]
+    - generic [ref=f25e10]:
+      - generic [ref=f25e11]:
+        - heading "Dados do grupo" [level=2] [ref=f25e12]
+        - generic [ref=f25e13]:
+          - generic [ref=f25e14]:
+            - text: Nome
+            - textbox "Nome" [ref=f25e15]: USL
+          - generic [ref=f25e16]:
+            - generic [ref=f25e17]:
+              - generic [ref=f25e18]: Revisão de Atas
+              - group [ref=f25e19]:
+                - generic "Informações sobre a revisão de atas" [ref=f25e20] [cursor=pointer]
+            - combobox "Revisão de Atas Informações sobre a revisão de atas" [ref=f25e23]:
+              - option "Aprovação ativada" [selected]
+              - option "Aprovação desativada (padrão)"
+          - generic [ref=f25e24]:
+            - text: Grupo ativo
+            - combobox "Grupo ativo" [ref=f25e25]:
+              - option "Ativo" [selected]
+              - option "Inativo"
+          - generic [ref=f25e26]:
+            - text: Última reunião antes do sistema
+            - spinbutton "Última reunião antes do sistema" [ref=f25e27]: "0"
+        - generic [ref=f25e28]:
+          - generic [ref=f25e30]:
+            - generic [ref=f25e31]: Link da ata
+            - generic [ref=f25e32]:
+              - textbox "Link da ata" [ref=f25e33]: http://localhost:3000/preencher/1218223fc61c1c375dacd2cab9f774dbdc9e114e61e0b53f17a3915c3a75329d
+              - button "Copiar link da ata" [ref=f25e34] [cursor=pointer]
+              - button "Rotacionar link de preenchimento" [ref=f25e37] [cursor=pointer]
+          - generic [ref=f25e41]:
+            - text: E-mail
+            - textbox "E-mail" [ref=f25e42]: codex.odonto@gmail.com
+        - button "Salvar dados do grupo" [ref=f25e44] [cursor=pointer]
+      - group [ref=f25e48]:
+        - generic "Servidores da Mesa" [ref=f25e49] [cursor=pointer]
+    - group [ref=f25e53]:
+      - generic "Plataformas" [ref=f25e54] [cursor=pointer]
+      - region "Plataformas" [ref=f25e59]:
+        - generic [ref=f25e60]:
+          - article [ref=f25e61]:
+            - generic [ref=f25e62]:
+              - heading "Zoom" [level=3] [ref=f25e63]
+              - paragraph [ref=f25e65]: Cadastrada
+            - button "Editar dados" [ref=f25e66] [cursor=pointer]
+            - group [ref=f25e67]:
+              - generic "Desativar plataforma" [ref=f25e68] [cursor=pointer]
+              - option "Selecione uma plataforma" [selected]
+              - option "Zello"
+              - option "WhatsApp"
+          - article [ref=f25e69]:
+            - generic [ref=f25e70]:
+              - heading "Zello" [level=3] [ref=f25e71]
+              - paragraph [ref=f25e73]: Cadastrada
+            - button "Editar dados" [ref=f25e74] [cursor=pointer]
+            - group [ref=f25e75]:
+              - generic "Desativar plataforma" [ref=f25e76] [cursor=pointer]
+              - option "Selecione uma plataforma" [selected]
+              - option "Zoom"
+              - option "WhatsApp"
+          - article [ref=f25e77]:
+            - generic [ref=f25e78]:
+              - heading "WhatsApp" [level=3] [ref=f25e79]
+              - paragraph [ref=f25e81]: Cadastrada
+            - button "Editar dados" [ref=f25e82] [cursor=pointer]
+            - group [ref=f25e83]:
+              - generic "Desativar plataforma" [ref=f25e84] [cursor=pointer]
+              - option "Selecione uma plataforma" [selected]
+              - option "Zoom"
+              - option "Zello"
+        - group [ref=f25e85]:
+          - generic "Associação de horários" [ref=f25e86] [cursor=pointer]
+          - option "Zoom"
+          - option "Zello" [selected]
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom"
+          - option "Zello"
+          - option "WhatsApp" [selected]
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+          - option "Zoom" [selected]
+          - option "Zello"
+          - option "WhatsApp"
+        - paragraph [ref=f25e87]: "Tipos disponíveis: Zoom, WhatsApp e Zello."
+    - group [ref=f25e88]:
+      - generic "Horários de Reunião" [ref=f25e89] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f25e98] [cursor=pointer]
+  - alert [ref=f25e102]

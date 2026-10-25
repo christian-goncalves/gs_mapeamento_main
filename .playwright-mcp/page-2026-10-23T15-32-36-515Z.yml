@@ -1,0 +1,152 @@
+- generic [active] [ref=f1e1]:
+  - main [ref=f1e2]:
+    - link "Voltar" [ref=f1e3] [cursor=pointer]:
+      - /url: /admin/grupos
+    - generic [ref=f1e7]:
+      - paragraph [ref=f1e8]: Grupo
+      - heading "GRUPO TESTE A" [level=1] [ref=f1e9]
+    - generic [ref=f1e10]:
+      - generic [ref=f1e11]:
+        - heading "Dados do grupo" [level=2] [ref=f1e12]
+        - generic [ref=f1e13]:
+          - generic [ref=f1e14]:
+            - text: Nome
+            - textbox "Nome" [ref=f1e15]: GRUPO TESTE A
+          - generic [ref=f1e16]:
+            - generic [ref=f1e17]:
+              - generic [ref=f1e18]: Revisão de Atas
+              - group [ref=f1e19]:
+                - generic "Informações sobre a revisão de atas" [ref=f1e20] [cursor=pointer]
+            - combobox "Revisão de Atas Informações sobre a revisão de atas" [ref=f1e23]:
+              - option "Aprovação ativada"
+              - option "Aprovação desativada (padrão)" [selected]
+          - generic [ref=f1e24]:
+            - text: Grupo ativo
+            - combobox "Grupo ativo" [ref=f1e25]:
+              - option "Ativo" [selected]
+              - option "Inativo"
+          - generic [ref=f1e26]:
+            - text: Última reunião antes do sistema
+            - spinbutton "Última reunião antes do sistema" [ref=f1e27]: "0"
+        - generic [ref=f1e29]:
+          - text: E-mail
+          - textbox "E-mail" [ref=f1e30]: codex.odonto7@gmail.com
+        - generic [ref=f1e32]:
+          - generic [ref=f1e33]: Link da ata
+          - generic [ref=f1e34]:
+            - textbox "Link da ata" [ref=f1e35]: http://localhost:3000/preencher/a2fab308a7726e46f94febccaa42c81da0f1d964bcb95af5810be374b7da2029
+            - button "Copiar link da ata" [ref=f1e36] [cursor=pointer]
+            - button "Rotacionar link de preenchimento" [ref=f1e39] [cursor=pointer]
+      - generic [ref=f1e44]:
+        - heading "Servidores da Mesa" [level=2] [ref=f1e47]
+        - paragraph [ref=f1e49]: Nenhum encargo cadastrado para este grupo.
+        - button "Adicionar servidores" [ref=f1e51] [cursor=pointer]
+      - button "Salvar alterações" [ref=f1e56] [cursor=pointer]
+    - generic [ref=f1e60]:
+      - generic [ref=f1e61]:
+        - heading "Horários de Reunião" [level=2] [ref=f1e62]
+        - group [ref=f1e63]:
+          - generic "Informações sobre o horário da agenda" [ref=f1e64] [cursor=pointer]
+      - generic [ref=f1e67]:
+        - table [ref=f1e69]:
+          - rowgroup [ref=f1e70]:
+            - row [ref=f1e71]:
+              - columnheader "Dia" [ref=f1e72]
+              - columnheader "Horários*" [ref=f1e73]
+          - rowgroup [ref=f1e74]:
+            - row [ref=f1e75]:
+              - rowheader "Domingo" [ref=f1e76]
+              - cell "-" [ref=f1e77]
+            - row [ref=f1e78]:
+              - rowheader "Segunda" [ref=f1e79]
+              - cell "-" [ref=f1e80]
+            - row [ref=f1e81]:
+              - rowheader "Terça" [ref=f1e82]
+              - cell "-" [ref=f1e83]
+            - row [ref=f1e84]:
+              - rowheader "Quarta" [ref=f1e85]
+              - cell "-" [ref=f1e86]
+            - row [ref=f1e87]:
+              - rowheader "Quinta" [ref=f1e88]
+              - cell "-" [ref=f1e89]
+            - row [ref=f1e90]:
+              - rowheader "Sexta" [ref=f1e91]
+              - cell "10:00" [ref=f1e92]
+            - row [ref=f1e93]:
+              - rowheader "Sábado" [ref=f1e94]
+              - cell "-" [ref=f1e95]
+        - paragraph [ref=f1e96]: "* Horário de Brasília (BRT)"
+        - button "Editar horários" [ref=f1e98] [cursor=pointer]
+      - region [ref=f1e102]:
+        - heading "Plataformas do grupo" [level=2] [ref=f1e103]
+        - paragraph [ref=f1e104]: Links e dados de acesso ficam disponíveis somente para pessoas autorizadas neste grupo.
+        - article [ref=f1e105]:
+          - heading "Zoom" [level=3] [ref=f1e106]
+          - generic [ref=f1e107]:
+            - generic [ref=f1e108]:
+              - text: Transferir horários para
+              - combobox "Transferir horários para" [ref=f1e109]:
+                - option "Selecione uma plataforma" [selected]
+                - option "WhatsApp"
+            - button "Transferir horários e desativar" [ref=f1e110] [cursor=pointer]
+          - generic [ref=f1e111]:
+            - generic [ref=f1e112]:
+              - text: Link
+              - textbox "Link" [ref=f1e113]: https://us02web.zoom.us/j/grupoTesteA
+            - generic [ref=f1e114]:
+              - text: ID de acesso (opcional)
+              - textbox "ID de acesso (opcional)" [ref=f1e115]: grupoTesteA
+            - generic [ref=f1e116]:
+              - text: Senha/PIN (opcional)
+              - textbox "Senha/PIN (opcional)" [ref=f1e117]
+            - button "Salvar dados de acesso" [ref=f1e118] [cursor=pointer]
+        - article [ref=f1e119]:
+          - heading "WhatsApp" [level=3] [ref=f1e120]
+          - generic [ref=f1e121]:
+            - generic [ref=f1e122]:
+              - text: Transferir horários para
+              - combobox "Transferir horários para" [disabled] [ref=f1e123]:
+                - option "Nenhum horário associado" [selected]
+                - option "Zoom"
+            - button "Desativar plataforma" [ref=f1e124] [cursor=pointer]
+          - generic [ref=f1e125]:
+            - generic [ref=f1e126]:
+              - text: Link
+              - textbox "Link" [ref=f1e127]: https://whatsapp.us/j/grupoTesteA
+            - generic [ref=f1e128]:
+              - text: ID de acesso (opcional)
+              - textbox "ID de acesso (opcional)" [ref=f1e129]: whatsappGrupoTesteA
+            - generic [ref=f1e130]:
+              - text: Senha/PIN (opcional)
+              - textbox "Senha/PIN (opcional)" [ref=f1e131]
+            - button "Salvar dados de acesso" [ref=f1e132] [cursor=pointer]
+        - generic [ref=f1e133]:
+          - generic [ref=f1e134]:
+            - text: Nova plataforma
+            - combobox "Nova plataforma" [ref=f1e135]:
+              - option "Selecione o tipo" [disabled] [selected]
+              - option "Zello"
+          - generic [ref=f1e136]:
+            - text: Link
+            - textbox "Link" [ref=f1e137]
+          - generic [ref=f1e138]:
+            - text: ID de acesso (opcional)
+            - textbox "ID de acesso (opcional)" [ref=f1e139]
+          - generic [ref=f1e140]:
+            - text: Senha/PIN (opcional)
+            - textbox "Senha/PIN (opcional)" [ref=f1e141]
+          - button "Cadastrar plataforma" [ref=f1e142] [cursor=pointer]
+        - heading "Horários associados" [level=3] [ref=f1e143]
+        - generic [ref=f1e144]:
+          - generic [ref=f1e145]: Sexta às 10:00 — Zoom
+          - generic [ref=f1e146]:
+            - text: Transferir para
+            - combobox "Transferir para" [ref=f1e147]:
+              - option "Zoom" [selected]
+              - option "WhatsApp"
+          - button "Transferir horário" [ref=f1e148] [cursor=pointer]
+        - heading "Horários sem plataforma" [level=3] [ref=f1e149]
+        - paragraph [ref=f1e150]: Nenhum horário pendente.
+        - paragraph [ref=f1e151]: "Tipos disponíveis: Zoom, WhatsApp e Zello. A lista é controlada pelo código do produto."
+  - button "Open Next.js Dev Tools" [ref=f1e157] [cursor=pointer]
+  - alert [ref=f1e161]

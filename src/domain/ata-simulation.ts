@@ -341,10 +341,7 @@ function generateSubmission(
     ingressos: hasIngreso
       ? [
           {
-            nome: "Anonimo",
-            cidade: municipioOption(
-              pick(random, municipioDocument.municipios),
-            ),
+            cidade: visitors[0].cidade,
           },
         ]
       : [],

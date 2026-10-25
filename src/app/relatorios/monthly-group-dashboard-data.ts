@@ -5,6 +5,7 @@ import {
   isVacantMesaName,
 } from "@/domain/grupo-servidores-mesa";
 import { tempoLimpoMapping, type TempoLimpo } from "@/domain/enums";
+import { roundPresenceAverage } from "./presence-average";
 
 export type MonthlyDashboardFilters = {
   grupoId: string;
@@ -129,6 +130,33 @@ function distinctCountries(atas: readonly AggregatedAta[]) {
   ).size;
 }
 
+function distinctCities(atas: readonly AggregatedAta[]) {
+  return new Set(
+    atas.flatMap((item) => item.registro.participacao)
+      .filter((row) => row.localidade.trim())
+      .map((row) =>
+        `${row.localidade.trim()}|${row.estado.trim()}|${row.pais.trim()}`
+          .toLocaleLowerCase("pt-BR"),
+      ),
+  ).size;
+}
+
+function distinctStates(atas: readonly AggregatedAta[]) {
+  return new Set(
+    atas.flatMap((item) => item.registro.participacao)
+      .map((row) => row.estado.trim().toLocaleLowerCase("pt-BR"))
+      .filter(Boolean),
+  ).size;
+}
+
+function distinctOtherCountries(atas: readonly AggregatedAta[]) {
+  return new Set(
+    atas.flatMap((item) => item.registro.participacao)
+      .map((row) => row.pais.trim().toLocaleLowerCase("pt-BR"))
+      .filter((country) => country && country !== "brasil"),
+  ).size;
+}
+
 function achievements(atas: readonly AggregatedAta[], ingressos: number) {
   const values = Object.fromEntries(
     achievementOrder.map((code) => [code, 0]),
@@ -227,6 +255,22 @@ export function buildMonthlyDashboardData(
     0,
   );
   const horarios = [...new Set(schedules.map((item) => item.hora_inicio))].sort();
+  const meetingResults = [...sentAtas]
+    .sort((first, second) =>
+      second.registro.ata.data_reuniao.localeCompare(first.registro.ata.data_reuniao) ||
+      second.registro.ata.hora_inicio.localeCompare(first.registro.ata.hora_inicio),
+    )
+    .map((item) => ({
+      id: item.registro.ata.ata_id,
+      date: item.registro.ata.data_reuniao,
+      time: item.registro.ata.hora_inicio,
+      presences: item.registro.ata.total_membros_presentes,
+      ingressos: item.registro.ingressos.length,
+      achievements: item.registro.trocas_chaveiro.reduce(
+        (total, troca) => total + troca.quantidade,
+        0,
+      ),
+    }));
 
   return {
     group,
@@ -240,6 +284,7 @@ export function buildMonthlyDashboardData(
       reunioesSemAtaOuSalaFechada: missingMeetings.length,
       totalPresencas,
       mediaPresencas: roundAverage(totalPresencas, sentAtas.length),
+      mediaPresencasResponsavel: roundPresenceAverage(totalPresencas, sentAtas.length),
       visitantes: sentAtas.reduce(
         (total, item) => total + item.registro.visitantes.length,
         0,
@@ -247,6 +292,9 @@ export function buildMonthlyDashboardData(
       mediaLocalidades: roundAverage(totalLocalidades, sentAtas.length),
       mediaEstados: roundAverage(totalEstados, sentAtas.length),
       totalPaises: distinctCountries(sentAtas),
+      totalCidades: distinctCities(sentAtas),
+      totalEstadosUnicos: distinctStates(sentAtas),
+      totalOutrosPaises: distinctOtherCountries(sentAtas),
       ingressos: totalIngressos,
     },
     bySchedule: {
@@ -272,6 +320,7 @@ export function buildMonthlyDashboardData(
       totalMediaParticipantes: roundAverage(totalPresencas, sentAtas.length),
       totalIngressos,
     },
+    meetingResults,
     achievements: achievements(sentAtas, totalIngressos),
     mesa: mesaRows(result.grupo_servidores_mesa, filters.grupoId),
   };

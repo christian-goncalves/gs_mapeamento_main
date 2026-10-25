@@ -3,7 +3,7 @@ import { rowsToObjects, type LocatedObject, type SheetCell } from "./rows";
 
 const SHEET_V2_EXTENSIONS: Partial<Record<SheetName, readonly string[]>> = {
   grupos: ["revisao_atas_ativa"],
-  grupo_horarios: ["plataforma_id", "vigente_desde", "vigente_ate"],
+  grupo_horarios: ["plataforma_id"],
   atas: [
     "status_registro",
     "status_aprovacao",
@@ -17,16 +17,16 @@ const SHEET_V2_EXTENSIONS: Partial<Record<SheetName, readonly string[]>> = {
     "formato_comemorativa",
     "formato_servico",
   ],
-  ingressos: ["visitante_id"],
 } as const satisfies Partial<Record<SheetName, readonly string[]>>;
 
 export const V2_NEW_SHEET_HEADERS = {
   grupo_plataformas: [
     "plataforma_id",
     "grupo_id",
-    "nome",
     "tipo",
-    "link_padrao",
+    "link",
+    "id_acesso",
+    "senha_pin",
     "ativo",
     "created_at",
     "updated_at",
@@ -42,6 +42,8 @@ export const V2_NEW_SHEET_HEADERS = {
     "resultado_ref",
   ],
 } as const;
+
+export const V2_OPTIONAL_SHEETS = ["grupo_plataformas"] as const;
 
 export type AtaRegistroStatus = "ativa" | "substituida" | "excluida";
 export type AtaApprovalStatus = "aprovada" | "pendente_revisao";
@@ -63,6 +65,10 @@ function normalizeHeaderAliases(name: SheetName, values: SheetCell[][]) {
 
 export function compatibleHeaders(name: SheetName): readonly string[] {
   return [...SHEET_HEADERS[name], ...(SHEET_V2_EXTENSIONS[name] ?? [])];
+}
+
+export function groupPlatformRowsToObjects(values: SheetCell[][]): LocatedObject[] {
+  return rowsToObjects(V2_NEW_SHEET_HEADERS.grupo_plataformas, values);
 }
 
 export function rowsToCompatibleObjects(

@@ -52,7 +52,7 @@ export const diaSemanaOrder = Object.fromEntries(
 
 export const grupoSchema = z.object({
   grupo_id: uuid,
-  zoom_id: requiredText,
+  zoom_id: optionalText.default(""),
   grupo_nome: requiredText,
   ordem: z.number().int().min(1),
   ativo: z.boolean(),
@@ -65,7 +65,7 @@ export const grupoSchema = z.object({
   ultima_reuniao_anterior: z.number().int().min(0).default(0),
   fuso_horario: z.enum(fusoHorarioMapping.codes),
   plataforma: z.enum(plataformaMapping.codes),
-  acesso_plataforma: requiredText,
+  acesso_plataforma: optionalText.default(""),
   ...auditFields,
 });
 
@@ -75,9 +75,23 @@ export const grupoHorarioSchema = z.object({
   dia_semana: diaSemanaSchema,
   hora_inicio: horaInicioSchema,
   link_reuniao: optionalText,
+  plataforma_id: z.preprocess((value) => value === "" || value == null ? undefined : value, uuid.optional()),
   ativo: z.boolean(),
   ...auditFields,
 });
+
+export const grupoPlataformaSchema = z.object({
+  plataforma_id: uuid,
+  grupo_id: uuid,
+  tipo: z.enum(plataformaMapping.codes),
+  link: requiredText.url("Informe um link válido."),
+  id_acesso: optionalText,
+  senha_pin: optionalText,
+  ativo: z.boolean(),
+  ...auditFields,
+});
+
+export type GrupoPlataforma = z.infer<typeof grupoPlataformaSchema>;
 
 export const grupoServidorMesaSchema = z
   .object({
@@ -211,7 +225,6 @@ export const visitanteSchema = z.object({
 export const ingressoSchema = z.object({
   ingresso_id: uuid,
   ata_id: uuid,
-  visitante_id: uuid.optional(),
   nome: requiredText,
   cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
   ...auditFields,

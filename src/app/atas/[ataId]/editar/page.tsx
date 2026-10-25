@@ -40,14 +40,7 @@ function hiddenSubmission(item: AggregatedAta): HiddenAtaSubmission {
       descricao,
       como_chegou_a_na,
     })),
-    ingressos: ingressos.map((ingresso) => {
-      const index = ingresso.visitante_id
-        ? visitantes.findIndex((visitante) => visitante.visitante_id === ingresso.visitante_id)
-        : -1;
-      return index >= 0
-        ? { visitante_indice: index }
-        : { nome: ingresso.nome, cidade: ingresso.cidade };
-    }),
+    ingressos: ingressos.map(({ cidade }) => ({ cidade })),
     trocas_chaveiro: trocas_chaveiro.map(({ tempo_limpo, quantidade }) => ({ tempo_limpo, quantidade })),
   };
 }
@@ -89,9 +82,11 @@ export default async function EditAtaPage({
           id: item.grupo.grupo_id,
           name: item.grupo.grupo_nome,
           plataforma: item.grupo.plataforma,
+          fuso_horario: item.grupo.fuso_horario,
+          plataformas: result.grupo_plataformas.filter((platform) => platform.grupo_id === item.grupo.grupo_id && platform.ativo).map((platform) => platform.tipo),
           horarios: result.grupo_horarios
             .filter((horario) => horario.grupo_id === item.grupo.grupo_id && horario.ativo)
-            .map(({ dia_semana, hora_inicio, link_reuniao }) => ({ dia_semana, hora_inicio, link_reuniao })),
+            .map((horario) => ({ dia_semana: horario.dia_semana, hora_inicio: horario.hora_inicio, link_reuniao: horario.link_reuniao, plataformaTipo: result.grupo_plataformas.find((platform) => platform.plataforma_id === horario.plataforma_id && platform.ativo)?.tipo })),
         }]}
         fixedGroupId={item.grupo.grupo_id}
         today={ata.data_reuniao}

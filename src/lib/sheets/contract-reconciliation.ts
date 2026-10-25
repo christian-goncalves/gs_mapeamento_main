@@ -8,6 +8,7 @@ import {
   tempoLimpoMapping,
 } from "@/domain/enums";
 import { SHEET_HEADERS, type SheetName } from "./contract";
+import { compatibleHeaders, V2_NEW_SHEET_HEADERS } from "./contract-v2";
 
 type SheetSnapshot = {
   properties?: {
@@ -17,6 +18,11 @@ type SheetSnapshot = {
       rowCount?: number | null;
     } | null;
   } | null;
+};
+
+type SpreadsheetMetadata = {
+  properties?: { title?: string | null } | null;
+  sheets?: SheetSnapshot[] | null;
 };
 
 type ValuesResponse = {
@@ -30,7 +36,7 @@ export type ContractReconciliationClient = {
     get: (request: {
       spreadsheetId: string;
       fields: string;
-    }) => Promise<{ data: { sheets?: SheetSnapshot[] | null } }>;
+    }) => Promise<{ data: SpreadsheetMetadata }>;
     values: {
       get: (request: {
         spreadsheetId: string;
@@ -44,6 +50,28 @@ export type ContractReconciliationClient = {
       requestBody: { requests: sheets_v4.Schema$Request[] };
     }) => Promise<unknown>;
   };
+};
+
+export type AtaSchemaProvisioningResult = {
+  operationId: string;
+  spreadsheetTitle: string;
+  createdSheets: string[];
+  addedColumns: Array<{ sheet: string; column: string }>;
+  validatedHeaders: string[];
+  requestCount: number;
+  applied: boolean;
+};
+
+export type AtaSchemaProvisioningOptions = {
+  apply?: boolean;
+  onPlan?: (plan: {
+    operationId: string;
+    spreadsheetTitle: string;
+    spreadsheetId: string;
+    createdSheets: string[];
+    addedColumns: Array<{ sheet: string; column: string }>;
+    requestCount: number;
+  }) => void;
 };
 
 export type ContractReconciliationResult = {
@@ -71,7 +99,7 @@ const ataIdentifierColumns = [
 const ataIdentifierColumnSet = new Set<string>(ataIdentifierColumns);
 
 function headerMismatchMessage(
-  sheet: SheetName,
+  sheet: string,
   expected: readonly string[],
   actual: unknown[],
 ) {
@@ -690,6 +718,190 @@ async function readMetadata(
     fields: "sheets(properties(sheetId,title,gridProperties(rowCount)))",
   });
   return response.data.sheets ?? [];
+}
+
+function assertExactHeader(sheet: string, actual: unknown[], expected: readonly string[]) {
+  if (new Set(actual.map(String)).size !== actual.length) {
+    throw new Error(`Cabeçalho duplicado em ${sheet}; nenhuma alteração foi planejada.`);
+  }
+  if (JSON.stringify(actual) !== JSON.stringify([...expected])) {
+    throw new Error(headerMismatchMessage(sheet, expected, actual));
+  }
+}
+
+function assertHeaderPrefix(sheet: string, actual: unknown[], expected: readonly string[]) {
+  if (new Set(actual.map(String)).size !== actual.length) {
+    throw new Error(`Cabeçalho duplicado em ${sheet}; nenhuma alteração foi planejada.`);
+  }
+  const legacy = SHEET_HEADERS.grupo_horarios;
+  const isLegacy = JSON.stringify(actual) === JSON.stringify([...legacy]);
+  const isCurrent = JSON.stringify(actual) === JSON.stringify([...expected]);
+  if (!isLegacy && !isCurrent) {
+    throw new Error(headerMismatchMessage(sheet, expected, actual));
+  }
+}
+
+async function readNamedHeader(
+  client: ContractReconciliationClient,
+  spreadsheetId: string,
+  sheet: string,
+) {
+  const response = await client.spreadsheets.values.get({
+    spreadsheetId,
+    range: `${sheet}!1:1`,
+  });
+  return response.data.values?.[0] ?? [];
+}
+
+/**
+ * Plans or applies only the V2 headers needed to configure a platform and link
+ * a recurring schedule. It never reads business rows or unrelated sheet ranges.
+ */
+export async function provisionAtaGroupSchema(
+  client: ContractReconciliationClient,
+  spreadsheetId: string,
+  options: AtaSchemaProvisioningOptions = {},
+): Promise<AtaSchemaProvisioningResult> {
+  if (!spreadsheetId.trim()) throw new Error("ID da planilha ausente.");
+  const operationId = globalThis.crypto.randomUUID();
+
+  const metadataResponse = await client.spreadsheets.get({
+    spreadsheetId,
+    fields: "properties(title),sheets(properties(sheetId,title,gridProperties(rowCount)))",
+  });
+  const metadata = metadataResponse.data.sheets ?? [];
+  const titles = metadata.map((sheet) => sheet.properties?.title).filter(Boolean);
+  for (const title of ["grupo_horarios", "grupo_plataformas"]) {
+    if (titles.filter((item) => item === title).length > 1) {
+      throw new Error(`Metadados contêm mais de uma aba chamada ${title}; nenhuma alteração foi planejada.`);
+    }
+  }
+  const byName = new Map(
+    metadata.flatMap((sheet) => {
+      const title = sheet.properties?.title;
+      return title ? [[title, sheet] as const] : [];
+    }),
+  );
+  const schedule = byName.get("grupo_horarios");
+  const scheduleId = schedule?.properties?.sheetId;
+  if (!Number.isInteger(scheduleId) || scheduleId == null) {
+    throw new Error("Aba grupo_horarios ausente ou sem sheetId válido; interrompido antes de escrever.");
+  }
+
+  const platformHeaders = [...V2_NEW_SHEET_HEADERS.grupo_plataformas];
+  const scheduleHeaders = [...compatibleHeaders("grupo_horarios")];
+  const actualSchedule = await readNamedHeader(client, spreadsheetId, "grupo_horarios");
+  assertHeaderPrefix("grupo_horarios", actualSchedule, scheduleHeaders);
+
+  const platform = byName.get("grupo_plataformas");
+  const actualPlatform = platform
+    ? await readNamedHeader(client, spreadsheetId, "grupo_plataformas")
+    : undefined;
+  if (actualPlatform) assertExactHeader("grupo_plataformas", actualPlatform, platformHeaders);
+
+  const requests: sheets_v4.Schema$Request[] = [];
+  const createdSheets: string[] = [];
+  const addedColumns: Array<{ sheet: string; column: string }> = [];
+  const headersToReadback: string[] = [];
+  const validatedHeaders = ["grupo_horarios", ...(actualPlatform ? ["grupo_plataformas"] : [])];
+
+  if (actualSchedule.length < scheduleHeaders.length) {
+    const missingHeaders = scheduleHeaders.slice(actualSchedule.length);
+    requests.push({
+      insertDimension: {
+        range: {
+          sheetId: scheduleId,
+          dimension: "COLUMNS",
+          startIndex: actualSchedule.length,
+          endIndex: scheduleHeaders.length,
+        },
+        inheritFromBefore: true,
+      },
+    });
+    requests.push({
+      updateCells: {
+        range: {
+          sheetId: scheduleId,
+          startRowIndex: 0,
+          endRowIndex: 1,
+          startColumnIndex: actualSchedule.length,
+          endColumnIndex: scheduleHeaders.length,
+        },
+        rows: [{ values: missingHeaders.map((header) => ({ userEnteredValue: { stringValue: header } })) }],
+        fields: "userEnteredValue",
+      },
+    });
+    addedColumns.push(...missingHeaders.map((column) => ({ sheet: "grupo_horarios", column })));
+    headersToReadback.push("grupo_horarios");
+  }
+
+  if (!platform) {
+    const existingIds = metadata
+      .map((sheet) => sheet.properties?.sheetId)
+      .filter((id): id is number => Number.isInteger(id));
+    const platformId = Math.max(0, ...existingIds) + 1;
+    requests.push({
+      addSheet: {
+        properties: {
+          sheetId: platformId,
+          title: "grupo_plataformas",
+          gridProperties: { rowCount: 1000, columnCount: platformHeaders.length, frozenRowCount: 1 },
+        },
+      },
+    });
+    requests.push({
+      updateCells: {
+        range: { sheetId: platformId, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: platformHeaders.length },
+        rows: [{ values: platformHeaders.map((header) => ({ userEnteredValue: { stringValue: header } })) }],
+        fields: "userEnteredValue",
+      },
+    });
+    createdSheets.push("grupo_plataformas");
+    headersToReadback.push("grupo_plataformas");
+  }
+
+  options.onPlan?.({
+    operationId,
+    spreadsheetTitle: metadataResponse.data.properties?.title ?? "(título não disponível)",
+    spreadsheetId,
+    createdSheets,
+    addedColumns,
+    requestCount: requests.length,
+  });
+
+  if (requests.length > 0 && options.apply) {
+    try {
+      await client.spreadsheets.batchUpdate({ spreadsheetId, requestBody: { requests } });
+    } catch {
+      throw new Error(`Operação ${operationId}: batchUpdate estrutural falhou ou teve resultado incerto. Não repita; exija inspeção e readback autorizado antes de nova execução.`);
+    }
+
+    for (const name of headersToReadback) {
+      let actual: unknown[];
+      try {
+        actual = await readNamedHeader(client, spreadsheetId, name);
+      } catch {
+        throw new Error(`Operação ${operationId}: batchUpdate aceito, mas o readback do cabeçalho ${name} falhou. Resultado estrutural incerto; não repita sem inspeção autorizada.`);
+      }
+      const expected = name === "grupo_plataformas" ? platformHeaders : scheduleHeaders;
+      try {
+        assertExactHeader(name, actual, expected);
+      } catch {
+        throw new Error(`Operação ${operationId}: batchUpdate aceito, mas o readback de ${name} divergiu. Resultado estrutural incerto; não repita sem inspeção autorizada.`);
+      }
+      if (!validatedHeaders.includes(name)) validatedHeaders.push(name);
+    }
+  }
+
+  return {
+    operationId,
+    spreadsheetTitle: metadataResponse.data.properties?.title ?? "(título não disponível)",
+    createdSheets,
+    addedColumns,
+    validatedHeaders,
+    requestCount: requests.length,
+    applied: Boolean(options.apply && requests.length),
+  };
 }
 
 async function readHeader(

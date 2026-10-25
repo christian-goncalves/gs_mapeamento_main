@@ -5,7 +5,7 @@ import {
   validateContractIntegrity,
   type ContractRows,
 } from "./integrity";
-import type { Ata, Grupo, Servidor, Visitante, Ingresso } from "./schemas";
+import type { Ata, Grupo, Servidor, Ingresso } from "./schemas";
 
 const audit = {
   created_at: "2026-06-21T12:00:00.000Z",
@@ -48,6 +48,18 @@ function row<T>(sheet: string, rowNumber: number, data: T) {
 }
 
 describe("integridade entre linhas", () => {
+  it("valida existência, estado, grupo e unicidade de plataforma", () => {
+    const platformId = "22222222-2222-4222-8222-222222222222";
+    const schedule = row("grupo_horarios", 2, { horario_id: "33333333-3333-4333-8333-333333333333", grupo_id: group.grupo_id, dia_semana: "segunda", hora_inicio: "20:00", plataforma_id: platformId, ativo: true, link_reuniao: "", ...audit });
+    const platform = row("grupo_plataformas", 2, { plataforma_id: platformId, grupo_id: group.grupo_id, tipo: "zoom", link: "https://example.org", id_acesso: "", senha_pin: "", ativo: true, ...audit });
+    const base = { grupos: [], grupo_horarios: [schedule], grupo_plataformas: [platform], grupo_servidores_mesa: [], atas: [], servidores: [], participacao: [], visitantes: [], ingressos: [], trocas_chaveiro: [] } as unknown as ContractRows;
+    expect(validateContractIntegrity(base)).toEqual([]);
+    expect(validateContractIntegrity({ ...base, grupo_plataformas: [] })).toContainEqual(expect.objectContaining({ field: "plataforma_id", message: "plataforma_id não referencia uma plataforma existente." }));
+    expect(validateContractIntegrity({ ...base, grupo_plataformas: [row("grupo_plataformas", 2, { ...platform.data, ativo: false })] })).toContainEqual(expect.objectContaining({ field: "plataforma_id", message: "plataforma_id referencia uma plataforma inativa." }));
+    expect(validateContractIntegrity({ ...base, grupo_plataformas: [row("grupo_plataformas", 2, { ...platform.data, grupo_id: "44444444-4444-4444-8444-444444444444" })] })).toContainEqual(expect.objectContaining({ field: "plataforma_id", message: "A plataforma pertence a outro grupo." }));
+    expect(validateContractIntegrity({ ...base, grupo_horarios: [], grupo_plataformas: [platform, row("grupo_plataformas", 3, { ...platform.data, plataforma_id: "55555555-5555-4555-8555-555555555555" })] })).toContainEqual(expect.objectContaining({ field: "tipo", message: "Já existe uma plataforma ativa deste tipo para o grupo." }));
+  });
+
   it("rejeita IDs duplicados com aba, linha e campo", () => {
     const rows = {
       grupos: [row("grupos", 2, group), row("grupos", 8, { ...group, ordem: 2 })],
@@ -68,36 +80,20 @@ describe("integridade entre linhas", () => {
     });
   });
 
-  it("valida somente vínculos explícitos entre ingresso e visitante da mesma ata", () => {
-    const visitor = {
-      visitante_id: "a86f8bc3-e943-48e8-8853-cabbb41ab071",
-      ata_id: ata.ata_id,
-      nome: "visitante_1",
-      cidade: "Itajaí - SC",
-      descricao: "provavel_adicto",
-      como_chegou_a_na: "internet",
-      ...audit,
-    } satisfies Visitante;
+  it("não exige vínculo técnico entre ingresso e visitante", () => {
     const ticket = {
       ingresso_id: "5c3e7ec5-1d30-4e92-a0fb-389d7afed99d",
       ata_id: ata.ata_id,
-      visitante_id: "a86f8bc3-e943-48e8-8853-cabbb41ab070",
-      nome: "visitante_1",
-      cidade: visitor.cidade,
+      nome: "ingresso_1",
+      cidade: "Itajaí - SC",
       ...audit,
     } satisfies Ingresso;
     const rows = {
       grupos: [], grupo_horarios: [], grupo_servidores_mesa: [], atas: [],
-      servidores: [], participacao: [], visitantes: [row("visitantes", 2, visitor)],
+      servidores: [], participacao: [], visitantes: [],
       ingressos: [row("ingressos", 2, ticket)], trocas_chaveiro: [],
     } satisfies ContractRows;
-    expect(validateContractIntegrity(rows)).toContainEqual({
-      sheet: "ingressos",
-      rowNumber: 2,
-      field: "visitante_id",
-      message: "visitante_id não referencia um visitante da mesma ata.",
-    });
-    expect(validateContractIntegrity({ ...rows, ingressos: [row("ingressos", 2, { ...ticket, visitante_id: undefined })] })).toEqual([]);
+    expect(validateContractIntegrity(rows)).toEqual([]);
   });
 
   it("permite ordem de grupo duplicada porque a ordenação é alfabética", () => {

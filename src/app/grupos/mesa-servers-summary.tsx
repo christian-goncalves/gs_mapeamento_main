@@ -105,7 +105,7 @@ function MesaServerModal({
         <header className="mesa-server-modal-header">
           <div>
             <h2 id="mesa-server-modal-title">
-              {item.grupo_servidor_mesa_id ? "Editar encargo" : "Adicionar servidores"}
+              {item.grupo_servidor_mesa_id ? "Editar encargo" : "Adicionar Servidores"}
             </h2>
           </div>
           <button
@@ -121,6 +121,7 @@ function MesaServerModal({
         </header>
 
         <input type="hidden" name="grupo_id" value={grupoId} />
+        <input type="hidden" name="settings_section" value="servers" />
         <input
           type="hidden"
           name="grupo_servidor_mesa_id"
@@ -159,7 +160,7 @@ function MesaServerModal({
             </label>
           )}
           <label>
-            Nome do servidor
+            Nome do Servidor
             <input
               name="nome"
               value={name}
@@ -318,6 +319,7 @@ function MesaServerActions({
                   }}
                 >
                   <input type="hidden" name="grupo_id" value={grupoId} />
+                  <input type="hidden" name="settings_section" value="servers" />
                   <input
                     type="hidden"
                     name="grupo_servidor_mesa_id"
@@ -346,11 +348,13 @@ export function MesaServersSummary({
   servidores,
   disabled = false,
   informativeNotice = "",
+  hideHeading = false,
 }: {
   grupoId: string;
   servidores: GrupoServidorMesa[];
   disabled?: boolean;
   informativeNotice?: string;
+  hideHeading?: boolean;
 }) {
   const items = mesaServerItems(servidores);
   const [selected, setSelected] = useState<MesaServerItem | null>(null);
@@ -360,11 +364,13 @@ export function MesaServersSummary({
       {informativeNotice && (
         <p className="mesa-info-notice" role="status">{informativeNotice}</p>
       )}
-      <div className="mesa-servers-header">
-        <div>
-          <h2>Servidores da Mesa</h2>
+      {!hideHeading && (
+        <div className="mesa-servers-header">
+          <div>
+            <h2>Servidores da Mesa</h2>
+          </div>
         </div>
-      </div>
+      )}
       <div className="table-wrap">
         {items.length > 0 ? (
         <table className="schedule-summary-table mesa-summary-table mesa-summary-table-actions">
@@ -422,7 +428,7 @@ export function MesaServersSummary({
         >
           <span className="button-content">
             <FontAwesomeIcon icon={faPlus} />
-            Adicionar servidores
+            Adicionar Servidores
           </span>
         </button>
       </div>

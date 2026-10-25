@@ -2,11 +2,15 @@ import { describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   getAtaNameSuggestionsByGroup: vi.fn(),
+  listRecentServerNamesByGroup: vi.fn(),
 }));
 
 vi.mock("server-only", () => ({}));
 vi.mock("@/lib/ata-name-suggestions.server", () => ({
   getAtaNameSuggestionsByGroup: mocks.getAtaNameSuggestionsByGroup,
+}));
+vi.mock("@/lib/sheets/repository", () => ({
+  listRecentServerNamesByGroup: mocks.listRecentServerNamesByGroup,
 }));
 
 import { GET } from "./route";
@@ -29,6 +33,7 @@ describe("API de sugestões de nomes de ata", () => {
       servidores: ["Hércules"],
       updatedAt: "2026-07-19T12:00:00.000Z",
     });
+    mocks.listRecentServerNamesByGroup.mockResolvedValue(["Brusque", "Hércules"]);
 
     const response = await GET(
       new Request(`http://localhost/api/ata-name-suggestions?grupo_id=${groupId}`),
@@ -37,10 +42,11 @@ describe("API de sugestões de nomes de ata", () => {
     await expect(response.json()).resolves.toEqual({
       suggestions: {
         preenchido_por: ["Patricia"],
-        servidores: ["Hércules"],
+        servidores: ["Brusque", "Hércules"],
         updatedAt: "2026-07-19T12:00:00.000Z",
       },
     });
     expect(mocks.getAtaNameSuggestionsByGroup).toHaveBeenCalledWith(groupId);
+    expect(mocks.listRecentServerNamesByGroup).toHaveBeenCalledWith(groupId);
   });
 });

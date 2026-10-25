@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faClipboardCheck,
@@ -10,7 +10,7 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import type { HiddenAtaSubmission } from "@/domain/hidden-submission";
-import type { Plataforma } from "@/domain/enums";
+import type { FusoHorario, Plataforma } from "@/domain/enums";
 import type { Pais } from "@/domain/paises";
 import {
   categoriaVisitanteMapping,
@@ -21,10 +21,13 @@ import {
   tempoLimpoMapping,
   tipoReuniaoMapping,
 } from "@/domain/enums";
-import { createAtaAction, type CreateAtaState } from "./actions";
+import { checkAtaAvailabilityAction, createAtaAction, type CreateAtaState } from "./actions";
 import { AtaReviewLayout, type AtaReviewLayoutData } from "../ata-review-layout";
 import { MunicipioAutocomplete } from "./municipio-autocomplete";
 import { TextAutocomplete } from "./text-autocomplete";
+import { convertLocalMeetingToBrasilia } from "@/domain/time-zones";
+import { ataPlatformErrorMessage, findRecurringAtaSchedules, getAtaPlatformPreflightError } from "@/domain/ata-platform";
+import type { GrupoHorario } from "@/domain/schemas";
 
 type ClientRow = { clientId: string };
 type VisitorSubmission = HiddenAtaSubmission["visitantes"][number];
@@ -34,7 +37,6 @@ type VisitorDraft = Omit<
 > & {
   descricao: VisitorSubmission["descricao"] | "";
   como_chegou_a_na: VisitorSubmission["como_chegou_a_na"] | "";
-  has_ingresso: boolean;
 };
 type Draft = Omit<
   HiddenAtaSubmission,
@@ -44,8 +46,8 @@ type Draft = Omit<
   participacao: (HiddenAtaSubmission["participacao"][number] & ClientRow)[];
   membros_internacionais: (HiddenAtaSubmission["membros_internacionais"][number] & ClientRow)[];
   visitantes: (VisitorDraft & ClientRow)[];
+  ingressos: (HiddenAtaSubmission["ingressos"][number] & ClientRow)[];
   trocas_chaveiro: (HiddenAtaSubmission["trocas_chaveiro"][number] & ClientRow)[];
-  legacyIngressos: ({ nome?: string; cidade?: string } & ClientRow)[];
 };
 
 const initialActionState: CreateAtaState = {};
@@ -57,7 +59,42 @@ const tipoReuniaoOptions: Draft["ata"]["tipo_reuniao"][] = [
   "fechada",
   "aberta",
 ];
+const weekdayCodes = ["domingo", "segunda", "terca", "quarta", "quinta", "sexta", "sabado"];
+
+type AtaFormGroup = {
+  id: string;
+  name: string;
+  plataforma: Plataforma;
+  fuso_horario?: FusoHorario;
+  plataformas?: Plataforma[];
+  horarios?: { dia_semana: GrupoHorario["dia_semana"]; hora_inicio: string; link_reuniao: string; plataformaTipo?: Plataforma }[];
+};
+
+function nextRecurringOccurrence(group: AtaFormGroup | undefined, today: string) {
+  if (!group) return { date: today, time: "20:00" };
+  const matches = (group.horarios ?? []).flatMap((schedule) => {
+    for (let shift = -1; shift <= 8; shift += 1) {
+      const candidate = new Date(`${today}T00:00:00.000Z`);
+      candidate.setUTCDate(candidate.getUTCDate() + shift);
+      const sourceDate = candidate.toISOString().slice(0, 10);
+      if (weekdayCodes[new Date(`${sourceDate}T00:00:00.000Z`).getUTCDay()] !== schedule.dia_semana) continue;
+      const converted = convertLocalMeetingToBrasilia(sourceDate, schedule.hora_inicio, group.fuso_horario ?? "America/Sao_Paulo");
+      if (converted.data >= today) return [{ date: converted.data, time: converted.horario }];
+    }
+    return [];
+  });
+  return matches.sort((first, second) => `${first.date}|${first.time}`.localeCompare(`${second.date}|${second.time}`))[0] ?? { date: today, time: "20:00" };
+}
 const servidorFuncaoOptions = servidorFuncoes;
+
+function addRowOnEnter(event: KeyboardEvent<HTMLDivElement>, addRow: () => void) {
+  if (event.key !== "Enter" || event.nativeEvent.isComposing) return;
+  const target = event.target;
+  if (!(target instanceof HTMLInputElement || target instanceof HTMLSelectElement)) return;
+  if (target instanceof HTMLInputElement && target.type === "checkbox") return;
+  event.preventDefault();
+  addRow();
+}
 
 type AtaNameSuggestions = {
   servidores: string[];
@@ -71,6 +108,14 @@ function cidadeEstado(value: string) {
   const match = value.match(/^(.*)\s+-\s+([A-Z]{2})$/);
   if (!match) return { cidade: value, estado: "-" };
   return { cidade: match[1], estado: match[2] };
+}
+
+function cidadeKey(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLocaleLowerCase("pt-BR");
 }
 
 function NumberStepper({
@@ -164,12 +209,7 @@ function submissionFromDraft(draft: Draft) {
         como_chegou_a_na,
       }),
     ),
-    ingressos: [
-      ...draft.visitantes.flatMap((visitor, visitante_indice) =>
-        visitor.has_ingresso ? [{ visitante_indice }] : [],
-      ),
-      ...draft.legacyIngressos.map(({ nome, cidade }) => ({ nome, cidade })),
-    ],
+    ingressos: draft.ingressos.map(({ cidade }) => ({ cidade })),
     trocas_chaveiro: draft.trocas_chaveiro.map(({ tempo_limpo, quantidade }) => ({
       tempo_limpo,
       quantidade,
@@ -178,27 +218,17 @@ function submissionFromDraft(draft: Draft) {
 }
 
 function draftFromSubmission(submission: HiddenAtaSubmission): Draft {
-  const linkedVisitors = new Set(
-    submission.ingressos.flatMap((item) =>
-      item.visitante_indice === undefined ? [] : [item.visitante_indice],
-    ),
-  );
   return {
     ata: submission.ata,
     servidores: submission.servidores.map((item) => ({ ...item, clientId: clientId() })),
     participacao: submission.participacao.map((item) => ({ ...item, clientId: clientId() })),
     membros_internacionais: submission.membros_internacionais.map((item) => ({ ...item, clientId: clientId() })),
-    visitantes: submission.visitantes.map((item, index) => ({
+    visitantes: submission.visitantes.map((item) => ({
       ...item,
       clientId: clientId(),
-      has_ingresso: linkedVisitors.has(index),
     })),
+    ingressos: submission.ingressos.map((item) => ({ ...item, clientId: clientId() })),
     trocas_chaveiro: submission.trocas_chaveiro.map((item) => ({ ...item, clientId: clientId() })),
-    legacyIngressos: submission.ingressos.flatMap((item) =>
-      item.visitante_indice === undefined
-        ? [{ nome: item.nome, cidade: item.cidade, clientId: clientId() }]
-        : [],
-    ),
   };
 }
 
@@ -215,7 +245,9 @@ export function AtaForm({
     id: string;
     name: string;
     plataforma: Plataforma;
-    horarios?: { dia_semana: string; hora_inicio: string; link_reuniao: string }[];
+    fuso_horario?: FusoHorario;
+    plataformas?: Plataforma[];
+    horarios?: { dia_semana: GrupoHorario["dia_semana"]; hora_inicio: string; link_reuniao: string; plataformaTipo?: Plataforma }[];
   }[];
   today: string;
   action?: (previousState: { error?: string }, formData: FormData) => Promise<{ error?: string }>;
@@ -241,14 +273,14 @@ export function AtaForm({
   );
   const initialGroupId = fixedGroupId ?? groups[0].id;
   const initialGroup = groups.find((group) => group.id === initialGroupId);
-  const initialTime = initialGroup?.horarios?.[0]?.hora_inicio ?? "20:00";
+  const initialOccurrence = nextRecurringOccurrence(initialGroup as AtaFormGroup | undefined, today);
   const [draft, setDraft] = useState<Draft>(() => initialSubmission
     ? draftFromSubmission(initialSubmission)
     : {
         ata: {
           grupo_id: initialGroupId,
-          data_reuniao: today,
-          hora_inicio: initialTime,
+          data_reuniao: initialOccurrence.date,
+          hora_inicio: initialOccurrence.time,
           duracao: "",
           formato_outros: "",
           preenchido_por: "",
@@ -262,13 +294,59 @@ export function AtaForm({
         participacao: [],
         membros_internacionais: [],
         visitantes: [],
+        ingressos: [],
         trocas_chaveiro: [],
-        legacyIngressos: [],
       });
   const [revisionReason, setRevisionReason] = useState("");
-  const submission = submissionFromDraft(draft);
+  const [availability, setAvailability] = useState<
+    | { status: "checking"; key: string }
+    | { status: "ready"; key: string; occupiedTimes: string[] }
+    | { status: "error"; key: string; message: string }
+  >({ status: "checking", key: "" });
   const selectedGroup = groups.find((group) => group.id === draft.ata.grupo_id);
-  const paisSuggestions = paises.map((pais) => pais.nome);
+  const availabilityKey = `${draft.ata.grupo_id}|${draft.ata.data_reuniao}|${revision?.ataId ?? ""}`;
+  const availabilityReady = availability.status === "ready" && availability.key === availabilityKey;
+  const availabilityChecking = availability.status === "checking" || availability.key !== availabilityKey;
+  const availabilityError = availability.status === "error" && availability.key === availabilityKey
+    ? availability.message
+    : undefined;
+  const groupSchedules = (selectedGroup?.horarios ?? []).map((schedule) => ({
+    grupo_id: selectedGroup?.id ?? "",
+    ativo: true,
+    dia_semana: schedule.dia_semana,
+    hora_inicio: schedule.hora_inicio,
+  }));
+  const matchingRecurringSchedules = selectedGroup ? findRecurringAtaSchedules({
+    groupId: selectedGroup.id,
+    timeZone: selectedGroup.fuso_horario ?? "America/Sao_Paulo",
+    date: draft.ata.data_reuniao,
+    time: draft.ata.hora_inicio,
+    schedules: groupSchedules,
+  }) : [];
+  const recurringScheduleForAta = matchingRecurringSchedules.length === 1 ? selectedGroup?.horarios?.find((schedule) =>
+    schedule.dia_semana === matchingRecurringSchedules[0].dia_semana && schedule.hora_inicio === matchingRecurringSchedules[0].hora_inicio
+  ) : undefined;
+  const recurringPlatformType = recurringScheduleForAta?.plataformaTipo;
+  const availablePlatformTypes = selectedGroup?.plataformas ?? [];
+  const platformPreflightError = getAtaPlatformPreflightError({
+    matchingScheduleCount: matchingRecurringSchedules.length,
+    recurringPlatformType,
+    explicitPlatformConfirmed: false,
+    activePlatformTypes: availablePlatformTypes,
+    selectedPlatform: draft.ata.plataforma,
+  });
+  const submission = submissionFromDraft({ ...draft, ata: { ...draft.ata, plataforma: recurringPlatformType ?? draft.ata.plataforma } });
+  const paisSuggestions = paises
+    .map((pais) => pais.nome)
+    .filter((pais) => pais.localeCompare("Brasil", "pt-BR", { sensitivity: "accent" }) !== 0);
+  const visitorCityOptions = [...new Map(
+    draft.visitantes
+      .filter((item) => item.cidade.trim())
+      .map((item) => [cidadeKey(item.cidade), item.cidade] as const),
+  ).values()].sort((first, second) => first.localeCompare(second, "pt-BR", { sensitivity: "base" }));
+  const hasBrazilAsInternational = draft.membros_internacionais.some((item) =>
+    item.pais.trim().localeCompare("Brasil", "pt-BR", { sensitivity: "accent" }) === 0,
+  );
   const reviewConquistasTempo = draft.trocas_chaveiro.flatMap((item) =>
     Array.from({ length: item.quantidade }, (_, index) => ({
       id: `${item.clientId}-${index}`,
@@ -280,13 +358,13 @@ export function AtaForm({
     date: draft.ata.data_reuniao,
     time: draft.ata.hora_inicio,
     filledBy: draft.ata.preenchido_por,
-    platform: plataformaMapping.toSheet(draft.ata.plataforma),
+    platform: plataformaMapping.toSheet(recurringPlatformType ?? draft.ata.plataforma),
     meetingType: tipoReuniaoMapping.toSheet(draft.ata.tipo_reuniao),
     formats: draft.ata.formatos.map((code) => formatoMapping.toSheet(code)).join(", "),
     membersPresent: draft.ata.total_membros_presentes,
     shares: draft.ata.total_partilhas,
     additionalInformation: revision && revisionReason.trim()
-      ? [{ label: "Motivo da alteração", value: revisionReason.trim() }]
+      ? [{ label: "Motivo da Alteração", value: revisionReason.trim() }]
       : undefined,
     servers: draft.servidores.map((item) => ({
       id: item.clientId,
@@ -303,9 +381,9 @@ export function AtaForm({
       country: item.pais,
       count: item.presencas,
     })),
-    visitors: draft.visitantes.map((item, index) => ({
+    visitors: draft.visitantes.map((item) => ({
       id: item.clientId,
-      label: `Visitante ${index + 1}`,
+      label: "Visitante",
       city: item.cidade,
       category: item.descricao
         ? categoriaVisitanteMapping.toSheet(item.descricao)
@@ -314,24 +392,18 @@ export function AtaForm({
         ? origemContatoMapping.toSheet(item.como_chegou_a_na)
         : "Não informada",
     })),
-    admissions: draft.visitantes.flatMap((item) => {
-      if (!item.has_ingresso) return [];
+    admissions: draft.ingressos.map((item) => {
       const location = cidadeEstado(item.cidade);
       return {
-        id: `${item.clientId}-ingresso`,
-        label: `Ingresso ${draft.visitantes.filter((visitor) => visitor.has_ingresso).findIndex((visitor) => visitor.clientId === item.clientId) + 1}`,
+        id: item.clientId,
+        label: "Ingresso",
         city: location.cidade,
         state: location.estado,
       };
-    }).concat(draft.legacyIngressos.map((item) => ({
-      id: item.clientId,
-      label: item.nome || "Ingresso",
-      city: item.cidade || "",
-      state: cidadeEstado(item.cidade || "").estado,
-    }))),
-    achievements: reviewConquistasTempo.map((item, index) => ({
+    }),
+    achievements: reviewConquistasTempo.map((item) => ({
       id: item.id,
-      label: `Conquista ${index + 1}`,
+      label: "Conquista",
       time: item.tempo,
     })),
     supplementalMetrics: {
@@ -340,13 +412,29 @@ export function AtaForm({
       otherCountries: new Set(draft.membros_internacionais.map((item) => item.pais.trim().toLocaleLowerCase("pt-BR")).filter((country) => country && country !== "brasil")).size,
     },
   };
-  const horarioOptions = Array.from(
-    new Set(
-      (selectedGroup?.horarios?.length
-        ? selectedGroup.horarios.map((horario) => horario.hora_inicio)
-        : horarios),
-    ),
-  ).sort();
+  const scheduledTimesForDate = selectedGroup
+    ? horarios.filter((time) => findRecurringAtaSchedules({
+        groupId: selectedGroup.id,
+        timeZone: selectedGroup.fuso_horario ?? "America/Sao_Paulo",
+        date: draft.ata.data_reuniao,
+        time,
+        schedules: groupSchedules,
+      }).length > 0)
+    : [];
+  const occupiedTimes = availability.status === "ready" && availability.key === availabilityKey
+    ? availability.occupiedTimes
+    : [];
+  const horarioOptions = availabilityReady
+    ? scheduledTimesForDate.filter((time) => !occupiedTimes.includes(time))
+    : [];
+  const noScheduledTimes = availabilityReady && scheduledTimesForDate.length === 0;
+  const noAvailableTimes = availabilityReady && scheduledTimesForDate.length > 0 && horarioOptions.length === 0;
+  const selectedHorario = horarioOptions.includes(draft.ata.hora_inicio)
+    ? draft.ata.hora_inicio
+    : horarioOptions[0] ?? "";
+  const displayedPlatformType = recurringPlatformType ?? (
+    availablePlatformTypes.length === 1 ? availablePlatformTypes[0] : undefined
+  );
 
   useEffect(() => {
     const controller = new AbortController();
@@ -392,6 +480,40 @@ export function AtaForm({
     return () => controller.abort();
   }, [draft.ata.grupo_id]);
 
+  useEffect(() => {
+    let current = true;
+    setAvailability({ status: "checking", key: availabilityKey });
+    const timer = window.setTimeout(() => {
+      void checkAtaAvailabilityAction({
+        grupo_id: draft.ata.grupo_id,
+        data_reuniao: draft.ata.data_reuniao,
+        link_formulario_ata: linkFormularioAta,
+        ignorar_ata_id: revision?.ataId,
+      }).then((result) => {
+        if (!current) return;
+        if ("error" in result) {
+          setAvailability({ status: "error", key: availabilityKey, message: result.error ?? "Não foi possível verificar a disponibilidade agora. Tente novamente." });
+        } else {
+          setAvailability({ status: "ready", key: availabilityKey, occupiedTimes: result.occupiedTimes });
+        }
+      }).catch(() => {
+        if (current) setAvailability({ status: "error", key: availabilityKey, message: "Não foi possível verificar a disponibilidade agora. Tente novamente." });
+      });
+    }, 250);
+    return () => {
+      current = false;
+      window.clearTimeout(timer);
+    };
+  }, [availabilityKey, draft.ata.grupo_id, draft.ata.data_reuniao, linkFormularioAta, revision?.ataId]);
+
+  useEffect(() => {
+    if (!availabilityReady) return;
+    setDraft((current) => current.ata.hora_inicio === selectedHorario
+      ? current
+      : { ...current, ata: { ...current.ata, hora_inicio: selectedHorario } },
+    );
+  }, [availabilityReady, selectedHorario]);
+
   function removeVisitante(clientIdToRemove: string) {
     setDraft((current) => ({
       ...current,
@@ -401,8 +523,78 @@ export function AtaForm({
     }));
   }
 
+  function focusAddedField(id: string) {
+    window.requestAnimationFrame(() => document.getElementById(id)?.focus());
+  }
+
+  function addServer() {
+    const id = clientId();
+    setDraft((current) => ({
+      ...current,
+      servidores: [...current.servidores, { clientId: id, nome: "", funcao: "" }],
+    }));
+    focusAddedField(`server-name-${id}`);
+  }
+
+  function addNationalLocation() {
+    const id = clientId();
+    setDraft((current) => ({
+      ...current,
+      participacao: [...current.participacao, { clientId: id, localidade: "", presencas: 1 }],
+    }));
+    focusAddedField(`participation-city-${id}`);
+  }
+
+  function addInternationalLocation() {
+    const id = clientId();
+    setDraft((current) => ({
+      ...current,
+      membros_internacionais: [...current.membros_internacionais, { clientId: id, pais: "", presencas: 1 }],
+    }));
+    focusAddedField(`international-country-${id}`);
+  }
+
+  function addVisitor() {
+    const id = clientId();
+    setDraft((current) => ({
+      ...current,
+      visitantes: [...current.visitantes, { clientId: id, cidade: "", descricao: "", como_chegou_a_na: "" }],
+    }));
+    focusAddedField(`city-${id}`);
+  }
+
+  function addIngresso() {
+    const id = clientId();
+    setDraft((current) => ({
+      ...current,
+      ingressos: [...current.ingressos, { clientId: id, cidade: "" }],
+    }));
+    focusAddedField(`ingresso-city-${id}`);
+  }
+
+  function addAchievement() {
+    const id = clientId();
+    setDraft((current) => ({
+      ...current,
+      trocas_chaveiro: [...current.trocas_chaveiro, { clientId: id, tempo_limpo: "dias_30", quantidade: 1 }],
+    }));
+    focusAddedField(`clean-time-${id}`);
+  }
+
   function review() {
     setClientError(undefined);
+    if (platformPreflightError) {
+      setClientError(ataPlatformErrorMessage(platformPreflightError));
+      return;
+    }
+    if (!availabilityReady) {
+      setClientError(availabilityError ?? "Aguarde a verificação da disponibilidade de horário.");
+      return;
+    }
+    if (hasBrazilAsInternational) {
+      setClientError("Brasil deve ser cadastrado em Localidades nacionais.");
+      return;
+    }
     if (!formRef.current?.reportValidity()) return;
     if (draft.ata.formatos.length === 0) {
       setClientError("Selecione pelo menos um formato de reunião.");
@@ -414,6 +606,13 @@ export function AtaForm({
     ].reduce((total, item) => total + item.presencas, 0);
     if (presencas > draft.ata.total_membros_presentes) {
       setClientError("A soma das presenças por localidade supera o total de membros presentes.");
+      return;
+    }
+    const visitorCities = new Set(
+      draft.visitantes.map((visitor) => cidadeKey(visitor.cidade)),
+    );
+    if (draft.ingressos.some((ingresso) => !visitorCities.has(cidadeKey(ingresso.cidade)))) {
+      setClientError("Cada ingresso deve usar uma cidade cadastrada em Visitantes. Remova ou corrija o ingresso antes de salvar.");
       return;
     }
     setReviewing(true);
@@ -449,21 +648,19 @@ export function AtaForm({
               <select
                 required
                 value={draft.ata.grupo_id}
-                onChange={(event) =>
+                onChange={(event) => {
                   setDraft((current) => ({
                     ...current,
                     ata: {
                       ...current.ata,
                       grupo_id: event.target.value,
-                      plataforma:
-                        groups.find((group) => group.id === event.target.value)
-                          ?.plataforma ?? current.ata.plataforma,
+                      plataforma: groups.find((group) => group.id === event.target.value)?.plataformas?.[0] ?? current.ata.plataforma,
                       hora_inicio:
                         groups.find((group) => group.id === event.target.value)
                           ?.horarios?.[0]?.hora_inicio ?? current.ata.hora_inicio,
                     },
-                  }))
-                }
+                  }));
+                }}
               >
                 {groups.map((group) => <option key={group.id} value={group.id}>{group.name}</option>)}
               </select>
@@ -476,53 +673,73 @@ export function AtaForm({
               type="date"
               required
               value={draft.ata.data_reuniao}
-              onChange={(event) => setDraft((current) => ({
+              onChange={(event) => { setDraft((current) => ({
                 ...current,
                 ata: { ...current.ata, data_reuniao: event.target.value },
-              }))}
+              })); }}
             />
           </label>
           <label>
             Horário
             <select
               required
-              value={draft.ata.hora_inicio}
-              onChange={(event) => setDraft((current) => ({
+              disabled={!availabilityReady || horarioOptions.length === 0}
+              value={selectedHorario}
+              onChange={(event) => { setDraft((current) => ({
                 ...current,
                 ata: { ...current.ata, hora_inicio: event.target.value },
-              }))}
+              })); }}
             >
-              {horarioOptions.map((time) => <option key={time}>{time}</option>)}
-            </select>
-          </label>
-          <label className="ata-platform-field">
-            Plataforma
-            <select value={draft.ata.plataforma} disabled>
-              {plataformaMapping.codes.map((code) => (
-                <option key={code} value={code}>{plataformaMapping.toSheet(code)}</option>
-              ))}
+              <option value="">Selecione...</option>
+              {horarioOptions.map((time) => <option key={time} value={time}>{time}</option>)}
             </select>
           </label>
         </div>
+        {availabilityChecking ? (
+          <p className="muted" role="status">Verificando disponibilidade de horário…</p>
+        ) : availabilityError ? (
+          <p className="form-error" role="alert">{availabilityError}</p>
+        ) : noScheduledTimes ? (
+          <p className="form-error" role="alert">Não há horários cadastrados na agenda para esta data. Escolha outra data.</p>
+        ) : noAvailableTimes ? (
+          <p className="form-error" role="alert">Todos os horários da agenda para esta data já estão preenchidos. Escolha outra data.</p>
+        ) : null}
+        {availabilityReady && horarioOptions.length > 0 && (
+          <>
+        {platformPreflightError && <p className="form-error" role="alert">{ataPlatformErrorMessage(platformPreflightError)}</p>}
 
-        <fieldset>
-          <legend>Tipo de reunião</legend>
-          <div className="choice-row">
-            {tipoReuniaoOptions.map((code) => (
-              <label key={code} className="choice">
-                <input
-                  type="radio"
-                  checked={draft.ata.tipo_reuniao === code}
-                  onChange={() => setDraft((current) => ({
-                    ...current,
-                    ata: { ...current.ata, tipo_reuniao: code },
-                  }))}
-                />
-                {tipoReuniaoMapping.toSheet(code)}
-              </label>
-            ))}
-          </div>
-        </fieldset>
+        <div className="ata-type-platform-grid">
+          <fieldset>
+            <legend>Tipo de Reunião</legend>
+            <div className="choice-row">
+              {tipoReuniaoOptions.map((code) => (
+                <label key={code} className="choice">
+                  <input
+                    type="radio"
+                    checked={draft.ata.tipo_reuniao === code}
+                    onChange={() => setDraft((current) => ({
+                      ...current,
+                      ata: { ...current.ata, tipo_reuniao: code },
+                    }))}
+                  />
+                  {tipoReuniaoMapping.toSheet(code)}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset className="ata-platform-card" aria-live="polite">
+            <legend>Plataforma</legend>
+            {displayedPlatformType ? (
+              <span className={`platform-legend-badge platform-legend-badge--${displayedPlatformType}`}>
+                <span className={`platform-color-dot platform-color-dot--${displayedPlatformType}`} aria-hidden="true" />
+                {plataformaMapping.toSheet(displayedPlatformType)}
+              </span>
+            ) : (
+              <span className="muted">Não configurada para este horário</span>
+            )}
+          </fieldset>
+        </div>
 
         <fieldset>
           <legend>Formatos</legend>
@@ -561,19 +778,23 @@ export function AtaForm({
             </label>
           )}
         </fieldset>
+          </>
+        )}
       </section>
 
+      {availabilityReady && horarioOptions.length > 0 && (
+        <>
       <section className="card form-section">
         <div className="section-heading">
           <h2>Servidores</h2>
         </div>
         {draft.servidores.map((item, index) => (
-          <div className="repeat-row repeat-row--double repeat-row--server repeat-row--unseparated" key={item.clientId}>
-            <label>{index === 0 && <span>Nome</span>}<TextAutocomplete ariaLabel={index === 0 ? undefined : "Nome do servidor"} required value={item.nome} placeholder="Nome..." suggestions={nameSuggestions.servidores} onChange={(value) => setDraft((current) => ({
+          <div className="repeat-row repeat-row--double repeat-row--server repeat-row--unseparated" key={item.clientId} onKeyDown={(event) => addRowOnEnter(event, addServer)}>
+            <label>{index === 0 && <span>Nome</span>}<TextAutocomplete id={`server-name-${item.clientId}`} ariaLabel={index === 0 ? undefined : "Nome do Servidor"} required value={item.nome} placeholder="Nome..." suggestions={nameSuggestions.servidores} onChange={(value) => setDraft((current) => ({
               ...current,
               servidores: current.servidores.map((server) => server.clientId === item.clientId ? { ...server, nome: value } : server),
             }))} /></label>
-            <label>{index === 0 && <span>Função</span>}<select aria-label={index === 0 ? undefined : "Função do servidor"} value={item.funcao ?? ""} onChange={(event) => setDraft((current) => ({
+            <label>{index === 0 && <span>Função</span>}<select aria-label={index === 0 ? undefined : "Função do Servidor"} value={item.funcao ?? ""} onChange={(event) => setDraft((current) => ({
               ...current,
               servidores: current.servidores.map((server) => server.clientId === item.clientId ? { ...server, funcao: event.target.value } : server),
             }))}>
@@ -589,10 +810,7 @@ export function AtaForm({
           <button
             type="button"
             className="secondary"
-            onClick={() => setDraft((current) => ({
-              ...current,
-              servidores: [...current.servidores, { clientId: clientId(), nome: "", funcao: "" }],
-            }))}
+            onClick={addServer}
           ><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
         </div>
       </section>
@@ -604,7 +822,7 @@ export function AtaForm({
         <div className="form-grid ata-participation-grid">
           <NumberStepper
             id="total-membros-presentes"
-            label="Membros presentes"
+            label="Membros"
             value={draft.ata.total_membros_presentes}
             min={1}
             max={100}
@@ -615,7 +833,7 @@ export function AtaForm({
           />
           <NumberStepper
             id="total-partilhas"
-            label="Total de partilhas"
+            label="Partilhas"
             value={draft.ata.total_partilhas}
             min={1}
             max={30}
@@ -629,10 +847,10 @@ export function AtaForm({
 
       <section className="card form-section">
         <div className="section-heading">
-          <h2>Localidades nacionais</h2>
+          <h2>Localidades Nacionais</h2>
         </div>
         {draft.participacao.map((item, index) => (
-          <div className="repeat-row repeat-row--city repeat-row--locality repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId}>
+          <div className="repeat-row repeat-row--city repeat-row--locality repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId} onKeyDown={(event) => addRowOnEnter(event, addNationalLocation)}>
             <label htmlFor={`participation-city-${item.clientId}`}>{index === 0 && <span>Cidade</span>}<MunicipioAutocomplete ariaLabel={index === 0 ? undefined : "Cidade"} id={`participation-city-${item.clientId}`} placeholder="Cidade..." value={item.localidade} onChange={(value) => setDraft((current) => ({ ...current, participacao: current.participacao.map((entry) => entry.clientId === item.clientId ? { ...entry, localidade: value } : entry) }))} /></label>
             <NumberStepper
               id={`participation-count-${item.clientId}`}
@@ -647,10 +865,7 @@ export function AtaForm({
           </div>
         ))}
         <div className="section-footer">
-          <button type="button" className="secondary" onClick={() => setDraft((current) => ({
-            ...current,
-            participacao: [...current.participacao, { clientId: clientId(), localidade: "", presencas: 1 }],
-          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
+          <button type="button" className="secondary" onClick={addNationalLocation}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
         </div>
       </section>
 
@@ -659,8 +874,8 @@ export function AtaForm({
           <h2>Localidades internacionais</h2>
         </div>
         {draft.membros_internacionais.map((item, index) => (
-          <div className="repeat-row repeat-row--international repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId}>
-            <label>{index === 0 && <span>País</span>}<TextAutocomplete ariaLabel={index === 0 ? undefined : "País"} required value={item.pais} placeholder="Digite o país..." suggestions={paisSuggestions} onChange={(value) => setDraft((current) => ({ ...current, membros_internacionais: current.membros_internacionais.map((entry) => entry.clientId === item.clientId ? { ...entry, pais: value } : entry) }))} /></label>
+          <div className="repeat-row repeat-row--international repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId} onKeyDown={(event) => addRowOnEnter(event, addInternationalLocation)}>
+            <label>{index === 0 && <span>País</span>}<TextAutocomplete id={`international-country-${item.clientId}`} ariaLabel={index === 0 ? undefined : "País"} required value={item.pais} placeholder="Digite o país..." suggestions={paisSuggestions} onChange={(value) => setDraft((current) => ({ ...current, membros_internacionais: current.membros_internacionais.map((entry) => entry.clientId === item.clientId ? { ...entry, pais: value } : entry) }))} /></label>
             <NumberStepper
               id={`international-count-${item.clientId}`}
               label="Quantidade"
@@ -673,11 +888,9 @@ export function AtaForm({
             <button type="button" className="danger-icon-button" aria-label="Remover membro internacional" title="Remover membro internacional" onClick={() => setDraft((current) => ({ ...current, membros_internacionais: current.membros_internacionais.filter((entry) => entry.clientId !== item.clientId) }))}><FontAwesomeIcon icon={faTrashCan} /></button>
           </div>
         ))}
+        {hasBrazilAsInternational && <p className="form-error" role="alert">Brasil deve ser cadastrado em Localidades nacionais.</p>}
         <div className="section-footer">
-          <button type="button" className="secondary" onClick={() => setDraft((current) => ({
-            ...current,
-            membros_internacionais: [...current.membros_internacionais, { clientId: clientId(), pais: "", presencas: 1 }],
-          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
+          <button type="button" className="secondary" onClick={addInternationalLocation}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
         </div>
       </section>
 
@@ -686,23 +899,64 @@ export function AtaForm({
           <h2>Visitantes</h2>
         </div>
         {draft.visitantes.map((item, index) => (
-          <div className="repeat-row repeat-row--visitor repeat-row--unseparated" key={item.clientId}>
+          <div className="repeat-row repeat-row--visitor repeat-row--unseparated" key={item.clientId} onKeyDown={(event) => addRowOnEnter(event, addVisitor)}>
             <div className="visitor-primary-row">
-              <label htmlFor={`city-${item.clientId}`}>{index === 0 && <span>Cidade</span>}<MunicipioAutocomplete ariaLabel={index === 0 ? undefined : "Cidade do visitante"} id={`city-${item.clientId}`} placeholder="Cidade..." value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
-              <label>{index === 0 && <span>Descrição</span>}<select required aria-label={index === 0 ? undefined : "Descrição do visitante"} value={item.descricao} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, descricao: event.target.value as typeof entry.descricao, has_ingresso: event.target.value === "provavel_adicto" && entry.has_ingresso } : entry) }))}><option value="" disabled>Escolha...</option>{categoriaVisitanteMapping.codes.map((code) => <option key={code} value={code}>{categoriaVisitanteMapping.toSheet(code)}</option>)}</select></label>
+              <label htmlFor={`city-${item.clientId}`}>{index === 0 && <span>Cidade</span>}<MunicipioAutocomplete ariaLabel={index === 0 ? undefined : "Cidade do Visitante"} id={`city-${item.clientId}`} placeholder="Cidade..." value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
+              <label>{index === 0 && <span>Descrição</span>}<select required aria-label={index === 0 ? undefined : "Descrição do Visitante"} value={item.descricao} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, descricao: event.target.value as typeof entry.descricao } : entry) }))}><option value="" disabled>Escolha...</option>{categoriaVisitanteMapping.codes.map((code) => <option key={code} value={code}>{categoriaVisitanteMapping.toSheet(code)}</option>)}</select></label>
             </div>
             <div className="visitor-secondary-row">
-              <label>{index === 0 && <span>Como chegou a NA?</span>}<select required aria-label={index === 0 ? undefined : "Como o visitante chegou a NA"} value={item.como_chegou_a_na} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, como_chegou_a_na: event.target.value as typeof entry.como_chegou_a_na } : entry) }))}><option value="" disabled>Escolha...</option>{origemContatoMapping.codes.map((code) => <option key={code} value={code}>{origemContatoMapping.toSheet(code)}</option>)}</select></label>
-              {item.descricao === "provavel_adicto" && <label className="choice"><input type="checkbox" checked={item.has_ingresso} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, has_ingresso: event.target.checked } : entry) }))} />Ingresso</label>}
+              <label>{index === 0 && <span>Como Chegou a NA?</span>}<select required aria-label={index === 0 ? undefined : "Como o Visitante Chegou a NA"} value={item.como_chegou_a_na} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, como_chegou_a_na: event.target.value as typeof entry.como_chegou_a_na } : entry) }))}><option value="" disabled>Escolha...</option>{origemContatoMapping.codes.map((code) => <option key={code} value={code}>{origemContatoMapping.toSheet(code)}</option>)}</select></label>
               <button type="button" className="danger-icon-button" aria-label="Remover visitante" title="Remover visitante" onClick={() => removeVisitante(item.clientId)}><FontAwesomeIcon icon={faTrashCan} /></button>
             </div>
           </div>
         ))}
         <div className="section-footer">
-          <button type="button" className="secondary" onClick={() => setDraft((current) => ({
-            ...current,
-            visitantes: [...current.visitantes, { clientId: clientId(), cidade: "", descricao: "", como_chegou_a_na: "", has_ingresso: false }],
-          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
+          <button type="button" className="secondary" onClick={addVisitor}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
+        </div>
+      </section>
+
+      <section className="card form-section">
+        <div className="section-heading">
+          <h2>Ingressos</h2>
+        </div>
+        {draft.ingressos.map((item, index) => (
+          <div className="repeat-row repeat-row--visitor repeat-row--unseparated" key={item.clientId}>
+            <label htmlFor={`ingresso-city-${item.clientId}`}>
+              {index === 0 && <span>Cidade</span>}
+              <select
+                id={`ingresso-city-${item.clientId}`}
+                required
+                aria-label={index === 0 ? undefined : "Cidade do ingresso"}
+                value={item.cidade}
+                onChange={(event) => setDraft((current) => ({
+                  ...current,
+                  ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId
+                    ? { ...entry, cidade: event.target.value }
+                    : entry),
+                }))}
+              >
+                <option value="" disabled>Selecione a cidade do visitante...</option>
+                {visitorCityOptions.map((city) => <option key={cidadeKey(city)} value={city}>{city}</option>)}
+              </select>
+            </label>
+            <button
+              type="button"
+              className="danger-icon-button"
+              aria-label="Remover ingresso"
+              title="Remover ingresso"
+              onClick={() => setDraft((current) => ({
+                ...current,
+                ingressos: current.ingressos.filter((entry) => entry.clientId !== item.clientId),
+              }))}
+            >
+              <FontAwesomeIcon icon={faTrashCan} />
+            </button>
+          </div>
+        ))}
+        <div className="section-footer">
+          <button type="button" className="secondary" onClick={addIngresso} disabled={visitorCityOptions.length === 0}>
+            <span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span>
+          </button>
         </div>
       </section>
 
@@ -711,8 +965,8 @@ export function AtaForm({
           <h2>Conquista</h2>
         </div>
         {draft.trocas_chaveiro.map((item, index) => (
-          <div className="repeat-row repeat-row--double repeat-row--clean-time repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId}>
-            <label>{index === 0 && <span>Tempo limpo</span>}<select aria-label={index === 0 ? undefined : "Tempo limpo"} value={item.tempo_limpo} onChange={(event) => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.map((entry) => entry.clientId === item.clientId ? { ...entry, tempo_limpo: event.target.value as typeof entry.tempo_limpo } : entry) }))}>{tempoLimpoMapping.codes.map((code) => <option key={code} value={code}>{tempoLimpoMapping.toSheet(code)}</option>)}</select></label>
+          <div className="repeat-row repeat-row--double repeat-row--clean-time repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId} onKeyDown={(event) => addRowOnEnter(event, addAchievement)}>
+            <label>{index === 0 && <span>Tempo Limpo</span>}<select id={`clean-time-${item.clientId}`} aria-label={index === 0 ? undefined : "Tempo Limpo"} value={item.tempo_limpo} onChange={(event) => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.map((entry) => entry.clientId === item.clientId ? { ...entry, tempo_limpo: event.target.value as typeof entry.tempo_limpo } : entry) }))}>{tempoLimpoMapping.codes.map((code) => <option key={code} value={code}>{tempoLimpoMapping.toSheet(code)}</option>)}</select></label>
             <NumberStepper
               id={`clean-time-count-${item.clientId}`}
               label="Quantidade"
@@ -725,10 +979,7 @@ export function AtaForm({
           </div>
         ))}
         <div className="section-footer">
-          <button type="button" className="secondary" onClick={() => setDraft((current) => ({
-            ...current,
-            trocas_chaveiro: [...current.trocas_chaveiro, { clientId: clientId(), tempo_limpo: "dias_30", quantidade: 1 }],
-          }))}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
+          <button type="button" className="secondary" onClick={addAchievement}><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
         </div>
       </section>
 
@@ -738,15 +989,15 @@ export function AtaForm({
           <div><dt>Servidores</dt><dd>{draft.servidores.length}</dd></div>
           <div><dt>Membros</dt><dd>{draft.ata.total_membros_presentes}</dd></div>
           <div><dt>Partilhas</dt><dd>{draft.ata.total_partilhas}</dd></div>
-          <div><dt>Visitantes</dt><dd>{draft.visitantes.length}</dd></div><div><dt>Ingressos</dt><dd>{draft.visitantes.filter((item) => item.has_ingresso).length + draft.legacyIngressos.length}</dd></div>
+          <div><dt>Visitantes</dt><dd>{draft.visitantes.length}</dd></div><div><dt>Ingressos</dt><dd>{draft.ingressos.length}</dd></div>
           <div><dt>Conquistas</dt><dd>{draft.trocas_chaveiro.reduce((total, item) => total + item.quantidade, 0)}</dd></div><div><dt>Cidades</dt><dd>{new Set(draft.participacao.map((item) => item.localidade.trim().toLocaleLowerCase("pt-BR")).filter(Boolean)).size}</dd></div>
-          <div><dt>Estados</dt><dd>{new Set(draft.participacao.map((item) => cidadeEstado(item.localidade).estado).filter((state) => state !== "-")).size}</dd></div><div><dt>Outros países</dt><dd>{new Set(draft.membros_internacionais.map((item) => item.pais.trim().toLocaleLowerCase("pt-BR")).filter((country) => country && country !== "brasil")).size}</dd></div>
+          <div><dt>Estados</dt><dd>{new Set(draft.participacao.map((item) => cidadeEstado(item.localidade).estado).filter((state) => state !== "-")).size}</dd></div><div><dt>Outros Países</dt><dd>{new Set(draft.membros_internacionais.map((item) => item.pais.trim().toLocaleLowerCase("pt-BR")).filter((country) => country && country !== "brasil")).size}</dd></div>
         </dl>
       </section>
 
       {revision && (
         <section className="card form-section">
-          <label htmlFor="ata-revision-reason">Motivo da alteração</label>
+          <label htmlFor="ata-revision-reason">Motivo da Alteração</label>
           <textarea
             id="ata-revision-reason"
             name="motivo_alteracao"
@@ -756,9 +1007,6 @@ export function AtaForm({
             rows={3}
             required
           />
-          {draft.legacyIngressos.length > 0 && (
-            <p className="muted">{draft.legacyIngressos.length} ingresso(s) sem vínculo com visitante serão preservados nesta revisão.</p>
-          )}
         </section>
       )}
 
@@ -766,7 +1014,7 @@ export function AtaForm({
         <p className="form-error" role="alert">{clientError ?? actionState.error}</p>
       )}
       <div className="form-footer">
-        <button type="button" onClick={review}><span className="button-content"><FontAwesomeIcon icon={faClipboardCheck} />Revisar e confirmar</span></button>
+        <button type="button" onClick={review} disabled={Boolean(platformPreflightError || hasBrazilAsInternational)}><span className="button-content"><FontAwesomeIcon icon={faClipboardCheck} />Revisar e confirmar</span></button>
       </div>
 
       {reviewing && (
@@ -789,6 +1037,8 @@ export function AtaForm({
             />
           </section>
         </div>
+      )}
+        </>
       )}
     </form>
   );

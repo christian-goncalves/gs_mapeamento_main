@@ -141,7 +141,7 @@ export const sheetAtaIdentifiersSchema = z.object({
 
 export const sheetGrupoSchema = z.object({
   grupo_id: uuid,
-  zoom_id: requiredSheetText,
+  zoom_id: optionalText,
   grupo_nome: requiredText,
   ordem: sheetInteger(1),
   ativo: sheetBoolean,
@@ -170,9 +170,22 @@ export const sheetGrupoHorarioSchema = z.object({
   dia_semana: sheetDiaSemanaSchema,
   hora_inicio: sheetTime,
   link_reuniao: optionalText,
+  plataforma_id: z.preprocess((value) => value === "" || value == null ? undefined : value, uuid.optional()),
   ativo: sheetBoolean,
   ...auditFields,
 });
+
+export const sheetGrupoPlataformaSchema = z.object({
+  plataforma_id: uuid,
+  grupo_id: uuid,
+  tipo: z.enum(plataformaMapping.codes),
+  link: requiredSheetText.refine((value) => z.url().safeParse(value).success, "Link de plataforma inválido."),
+  id_acesso: optionalText,
+  senha_pin: optionalText,
+  ativo: sheetBoolean,
+  ...auditFields,
+});
+
 
 export const sheetGrupoServidorMesaSchema = z
   .object({
@@ -344,7 +357,6 @@ export const sheetTrocaChaveiroSchema = z.object({
 export const sheetIngressoSchema = z.object({
   ingresso_id: uuid,
   ata_id: uuid,
-  visitante_id: uuid.optional(),
   nome: requiredText,
   cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
   ...auditFields,
@@ -352,6 +364,7 @@ export const sheetIngressoSchema = z.object({
 
 export type SheetGrupo = z.infer<typeof sheetGrupoSchema>;
 export type SheetGrupoHorario = z.infer<typeof sheetGrupoHorarioSchema>;
+export type SheetGrupoPlataforma = z.infer<typeof sheetGrupoPlataformaSchema>;
 export type SheetGrupoServidorMesa = z.infer<typeof sheetGrupoServidorMesaSchema>;
 export type SheetUsuarioGrupo = z.infer<typeof sheetUsuarioGrupoSchema>;
 export type SheetAta = z.infer<typeof sheetAtaSchema>;
@@ -383,6 +396,8 @@ export const sheetGrupoHorarioToDomain = (
 export const domainGrupoHorarioToSheet = (
   item: GrupoHorario,
 ): SheetGrupoHorario => item;
+export const sheetGrupoPlataformaToDomain = (row: SheetGrupoPlataforma): import("@/domain/entities").GrupoPlataforma => row;
+export const domainGrupoPlataformaToSheet = (item: import("@/domain/entities").GrupoPlataforma): SheetGrupoPlataforma => item;
 export const sheetGrupoServidorMesaToDomain = (
   row: SheetGrupoServidorMesa,
 ): GrupoServidorMesa => row;

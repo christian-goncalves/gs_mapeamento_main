@@ -1,0 +1,100 @@
+- generic [ref=f21e1]:
+  - button "Open Next.js Dev Tools" [ref=f21e68] [cursor=pointer]
+  - alert [ref=f21e72]
+  - main [ref=f21e73]:
+    - link "Voltar" [ref=f21e74] [cursor=pointer]:
+      - /url: /admin/grupos
+    - generic [ref=f21e78]:
+      - paragraph [ref=f21e79]: Grupo
+      - heading "USL" [level=1] [ref=f21e80]
+    - generic [ref=f21e81]:
+      - generic [ref=f21e82]:
+        - heading "Dados do grupo" [level=2] [ref=f21e83]
+        - generic [ref=f21e84]:
+          - generic [ref=f21e85]:
+            - text: Nome
+            - textbox "Nome" [ref=f21e86]: USL
+          - generic [ref=f21e87]:
+            - generic [ref=f21e88]:
+              - generic [ref=f21e89]: Revisão de Atas
+              - group [ref=f21e90]:
+                - generic "Informações sobre a revisão de atas" [ref=f21e91] [cursor=pointer]
+            - combobox "Revisão de Atas Informações sobre a revisão de atas" [ref=f21e94]:
+              - option "Aprovação ativada" [selected]
+              - option "Aprovação desativada (padrão)"
+          - generic [ref=f21e95]:
+            - text: Grupo ativo
+            - combobox "Grupo ativo" [ref=f21e96]:
+              - option "Ativo" [selected]
+              - option "Inativo"
+          - generic [ref=f21e97]:
+            - text: Última reunião antes do sistema
+            - spinbutton "Última reunião antes do sistema" [ref=f21e98]: "0"
+        - generic [ref=f21e99]:
+          - generic [ref=f21e101]:
+            - generic [ref=f21e102]: Link da ata
+            - generic [ref=f21e103]:
+              - textbox "Link da ata" [ref=f21e104]: http://localhost:3000/preencher/1218223fc61c1c375dacd2cab9f774dbdc9e114e61e0b53f17a3915c3a75329d
+              - button "Copiar link da ata" [ref=f21e105] [cursor=pointer]
+              - button "Rotacionar link de preenchimento" [ref=f21e108] [cursor=pointer]
+          - generic [ref=f21e112]:
+            - text: E-mail
+            - textbox "E-mail" [ref=f21e113]: codex.odonto@gmail.com
+        - button "Salvar dados do grupo" [ref=f21e115] [cursor=pointer]
+      - group [ref=f21e119]:
+        - generic "Servidores da Mesa" [ref=f21e120] [cursor=pointer]
+    - group [ref=f21e124]:
+      - generic "Plataformas" [active] [ref=f21e125] [cursor=pointer]
+      - region "Plataformas" [ref=f21e130]:
+        - generic [ref=f21e131]:
+          - article [ref=f21e132]:
+            - generic [ref=f21e133]:
+              - heading "Zoom" [level=3] [ref=f21e134]
+              - paragraph [ref=f21e136]: Cadastrada
+            - button "Editar dados" [ref=f21e137] [cursor=pointer]
+          - article [ref=f21e138]:
+            - generic [ref=f21e139]:
+              - heading "Zello" [level=3] [ref=f21e140]
+              - paragraph [ref=f21e142]: Ainda não cadastrada
+            - button "Cadastrar" [ref=f21e143] [cursor=pointer]
+          - article [ref=f21e144]:
+            - generic [ref=f21e145]:
+              - heading "WhatsApp" [level=3] [ref=f21e146]
+              - paragraph [ref=f21e148]: Ainda não cadastrada
+            - button "Cadastrar" [ref=f21e149] [cursor=pointer]
+        - group [ref=f21e150]:
+          - generic "Associação de horários" [ref=f21e151] [cursor=pointer]
+          - generic [ref=f21e152]:
+            - heading "Horários associados" [level=3] [ref=f21e153]
+            - heading "Horários sem plataforma" [level=3] [ref=f21e154]
+            - list [ref=f21e155]:
+              - listitem [ref=f21e156]: Domingo às 10:00
+              - listitem [ref=f21e157]: Domingo às 18:00
+              - listitem [ref=f21e158]: Domingo às 21:30
+              - listitem [ref=f21e159]: Segunda às 07:00
+              - listitem [ref=f21e160]: Segunda às 10:00
+              - listitem [ref=f21e161]: Segunda às 15:00
+              - listitem [ref=f21e162]: Segunda às 21:30
+              - listitem [ref=f21e163]: Terça às 07:00
+              - listitem [ref=f21e164]: Terça às 10:00
+              - listitem [ref=f21e165]: Terça às 15:00
+              - listitem [ref=f21e166]: Terça às 21:30
+              - listitem [ref=f21e167]: Quarta às 07:00
+              - listitem [ref=f21e168]: Quarta às 10:00
+              - listitem [ref=f21e169]: Quarta às 15:00
+              - listitem [ref=f21e170]: Quarta às 21:30
+              - listitem [ref=f21e171]: Quinta às 07:00
+              - listitem [ref=f21e172]: Quinta às 10:00
+              - listitem [ref=f21e173]: Quinta às 15:00
+              - listitem [ref=f21e174]: Quinta às 21:30
+              - listitem [ref=f21e175]: Sexta às 10:00
+              - listitem [ref=f21e176]: Sexta às 15:00
+              - listitem [ref=f21e177]: Sexta às 21:30
+              - listitem [ref=f21e178]: Sábado às 07:00
+              - listitem [ref=f21e179]: Sábado às 10:00
+              - listitem [ref=f21e180]: Sábado às 15:00
+              - listitem [ref=f21e181]: Sábado às 21:30
+            - button "Associar todos à Zoom" [ref=f21e183] [cursor=pointer]
+        - paragraph [ref=f21e184]: "Tipos disponíveis: Zoom, WhatsApp e Zello."
+    - group [ref=f21e185]:
+      - generic "Horários de Reunião" [ref=f21e186] [cursor=pointer]

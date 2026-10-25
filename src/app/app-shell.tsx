@@ -27,6 +27,29 @@ export function AppShell({
   const navigationId = useId();
   const shellNavigationRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const hoverCloseTimer = useRef<number | null>(null);
+
+  function clearHoverCloseTimer() {
+    if (hoverCloseTimer.current === null) return;
+    window.clearTimeout(hoverCloseTimer.current);
+    hoverCloseTimer.current = null;
+  }
+
+  function scheduleHoverClose() {
+    clearHoverCloseTimer();
+    hoverCloseTimer.current = window.setTimeout(() => {
+      hoverCloseTimer.current = null;
+      setOpen(false);
+    }, 1000);
+  }
+
+  useEffect(() => {
+    return () => {
+      if (hoverCloseTimer.current !== null) {
+        window.clearTimeout(hoverCloseTimer.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -37,12 +60,14 @@ export function AppShell({
         target instanceof Node &&
         !shellNavigationRef.current?.contains(target)
       ) {
+        clearHoverCloseTimer();
         setOpen(false);
       }
     }
 
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
+      clearHoverCloseTimer();
       setOpen(false);
       triggerRef.current?.focus();
     }
@@ -58,7 +83,10 @@ export function AppShell({
 
   useEffect(() => {
     const desktop = window.matchMedia("(min-width: 981px)");
-    const closeResponsiveMenu = () => setOpen(false);
+    const closeResponsiveMenu = () => {
+      clearHoverCloseTimer();
+      setOpen(false);
+    };
     desktop.addEventListener("change", closeResponsiveMenu);
     return () => desktop.removeEventListener("change", closeResponsiveMenu);
   }, []);
@@ -69,6 +97,19 @@ export function AppShell({
         ref={shellNavigationRef}
         className={`app-sidebar ${variant}-sidebar`}
         aria-label={navigationLabel}
+        onPointerEnter={(event) => {
+          if (
+            event.pointerType === "mouse" &&
+            window.matchMedia("(max-width: 980px)").matches
+          ) {
+            clearHoverCloseTimer();
+            setOpen(true);
+          }
+        }}
+        onPointerLeave={(event) => {
+          if (event.pointerType !== "mouse") return;
+          if (window.matchMedia("(max-width: 980px)").matches) scheduleHoverClose();
+        }}
       >
         <div className="app-navigation-header">
           <Link
@@ -97,7 +138,10 @@ export function AppShell({
             aria-expanded={open}
             aria-controls={navigationId}
             title={open ? "Fechar menu" : "Abrir menu"}
-            onClick={() => setOpen((current) => !current)}
+            onClick={() => {
+              clearHoverCloseTimer();
+              setOpen((current) => !current);
+            }}
           >
             <FontAwesomeIcon icon={open ? faXmark : faBars} />
           </button>
@@ -114,7 +158,18 @@ export function AppShell({
               target instanceof Element &&
               target.closest("a, button[type='submit']")
             ) {
+              clearHoverCloseTimer();
               setOpen(false);
+            }
+          }}
+          onPointerEnter={(event) => {
+            if (event.pointerType !== "mouse") return;
+            clearHoverCloseTimer();
+          }}
+          onPointerLeave={(event) => {
+            if (event.pointerType !== "mouse") return;
+            if (window.matchMedia("(max-width: 980px)").matches) {
+              scheduleHoverClose();
             }
           }}
         >

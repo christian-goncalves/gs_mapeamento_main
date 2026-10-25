@@ -89,6 +89,12 @@ const valid = {
 };
 
 describe("schemas das linhas do Sheets", () => {
+  it("trata plataforma vazia de horário V1 como vínculo pendente e rejeita UUID inválido", () => {
+    const legacy = sheetGrupoHorarioSchema.safeParse({ ...valid.grupoHorario, plataforma_id: "" });
+    expect(legacy.success && legacy.data.plataforma_id).toBeUndefined();
+    expect(sheetGrupoHorarioSchema.safeParse({ ...valid.grupoHorario, plataforma_id: "nao-e-uuid" }).success).toBe(false);
+  });
+
   it.each([
     ["grupos", sheetGrupoSchema, valid.grupo],
     ["grupo_horarios", sheetGrupoHorarioSchema, valid.grupoHorario],

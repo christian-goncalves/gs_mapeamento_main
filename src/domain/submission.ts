@@ -53,23 +53,13 @@ export function materializeAtaSubmission(
       ...audit,
     })),
     visitantes,
-    ingressos: submission.ingressos.map((item) => {
-      const visitante = item.visitante_indice === undefined
-        ? undefined
-        : visitantes[item.visitante_indice];
-      return {
+    ingressos: submission.ingressos.map((item, index) => ({
         ingresso_id: identity.uuid(),
         ata_id: ataId,
-        ...(visitante
-          ? {
-              visitante_id: visitante.visitante_id,
-              nome: visitante.nome,
-              cidade: visitante.cidade,
-            }
-          : { nome: item.nome?.trim() || "Anonimo", cidade: item.cidade ?? "" }),
+        nome: `ingresso_${index + 1}`,
+        cidade: item.cidade,
         ...audit,
-      };
-    }),
+      })),
     trocas_chaveiro: submission.trocas_chaveiro.map((item) => ({
       troca_chaveiro_id: identity.uuid(),
       ata_id: ataId,

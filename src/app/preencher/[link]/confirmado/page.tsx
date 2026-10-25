@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getActiveGroupByAtaLink, listAtas } from "@/lib/sheets/repository";
+import { PublicAtaConfirmationActions } from "./public-ata-confirmation-actions";
 
 export default async function PublicAtaConfirmedPage({
   params,
@@ -32,9 +32,7 @@ export default async function PublicAtaConfirmedPage({
               ? "A ata foi registrada com sucesso."
               : "O registro foi recebido. O responsável poderá confirmar o estado no histórico do grupo."}
         </p>
-        <Link className="button-link" href={`/preencher/${link}`}>
-          Registrar outra ata
-        </Link>
+        <PublicAtaConfirmationActions link={link} />
       </section>
     </main>
   );

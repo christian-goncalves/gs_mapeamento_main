@@ -33,8 +33,8 @@ function hiddenPayload() {
       { cidade: "Brusque - SC", descricao: "provavel_adicto", como_chegou_a_na: "internet" },
     ],
     ingressos: [
-      { nome: "", cidade: "Itajaí - SC" },
-      { nome: "Ingressante", cidade: "Joinville - SC" },
+      { cidade: "Itajaí - SC" },
+      { cidade: "Brusque - SC" },
     ],
     trocas_chaveiro: [{ tempo_limpo: "dias_30", quantidade: 2 }],
   } as const;
@@ -57,8 +57,8 @@ describe("normalização do formulário hidden", () => {
         { cidade: "Brusque - SC", descricao: "provavel_adicto", como_chegou_a_na: "internet" },
       ],
       ingressos: [
-        { nome: "Anonimo", cidade: "Itajaí - SC" },
-        { nome: "Ingressante", cidade: "Joinville - SC" },
+        { cidade: "Itajaí - SC" },
+        { cidade: "Brusque - SC" },
       ],
       trocas_chaveiro: [{ tempo_limpo: "dias_30", quantidade: 2 }],
     });
@@ -115,7 +115,7 @@ describe("normalização do formulário hidden", () => {
     const payload = hiddenPayload();
     const result = hiddenAtaSubmissionSchema.safeParse({
       ...payload,
-      ingressos: [{ nome: "", cidade: "" }],
+      ingressos: [{ cidade: "" }],
     });
     expect(result.success).toBe(false);
   });
@@ -132,6 +132,16 @@ describe("normalização do formulário hidden", () => {
         "Para registrar um ingresso, registre primeiro pelo menos um visitante.",
       );
     }
+  });
+
+  it("rejeita ingresso hidden fora das cidades dos visitantes", () => {
+    const payload = hiddenPayload();
+    const result = hiddenAtaSubmissionSchema.safeParse({
+      ...payload,
+      ingressos: [{ cidade: "Joinville - SC" }],
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) expect(result.error.issues.at(-1)?.message).toContain("cidades dos visitantes");
   });
 
   it("mantem limites numericos do payload hidden", () => {

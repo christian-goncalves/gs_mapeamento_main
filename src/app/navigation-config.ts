@@ -34,12 +34,12 @@ export function responsavelNavigationItems(
   return [
     {
       section: "configuracoes",
-      label: "Dados cadastrais",
+      label: "Configurações",
       href: settingsHref,
     },
     {
       section: "responsavel",
-      label: "Histórico de atas",
+      label: "Histórico de Atas",
       href: "/responsavel/atas",
     },
     {

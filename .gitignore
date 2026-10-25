@@ -31,8 +31,6 @@ data/ata-name-suggestions.json
 .agents/*
 !.agents/skills/
 .agents/skills/*
-!.agents/skills/gs-mapeamento-atas/
-!.agents/skills/gs-mapeamento-atas/**
 !.agents/skills/simular-atas-mensais/
 !.agents/skills/simular-atas-mensais/**
 !.agents/skills/executar-fase-refatoracao-v2/

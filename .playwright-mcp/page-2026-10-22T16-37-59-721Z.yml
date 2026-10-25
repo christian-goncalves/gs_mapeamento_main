@@ -1,0 +1,1323 @@
+- generic [ref=e1]:
+  - banner "Controles do artefato" [ref=e3]:
+    - generic [ref=e4]:
+      - link "Início" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [aria-hidden] [ref=e9]: 
+      - generic [ref=e10]:
+        - button "CSRs Brasil e Nordeste · Bahia · Dashboard executivo" [ref=e11] [cursor=pointer]:
+          - generic [ref=e14]:
+            - generic [ref=e15]: CSRs Brasil e Nordeste · Bahia · Dashboard executivo
+            - generic [aria-hidden] [ref=e17]: 
+        - generic [ref=e18]: O conteúdo é gerado pelo usuário e não verificado.
+      - generic [ref=e19]:
+        - button "Você" [ref=e20] [cursor=pointer]:
+          - group "Você" [ref=e21]:
+            - img "christian" [ref=e23]: C
+        - button [ref=e24] [cursor=pointer]:
+          - generic [ref=e27]:
+            - generic [aria-hidden] [ref=e29]: 
+            - text: Compartilhar
+        - status [ref=e30]
+        - alert [ref=e31]
+  - main [ref=e32]:
+    - iframe [active] [ref=e34]:
+      - generic [active] [ref=f4e1]:
+        - link "← Mapa do Brasil" [ref=f4e2] [cursor=pointer]:
+          - /url: https://claude.ai/artifact/6xhjWNJobjZMHLgajbJFaU
+        - banner [ref=f4e3]:
+          - heading "CSRs Brasil e Nordeste · Bahia — Grupos de NA, dashboard executivo" [level=1] [ref=f4e4]
+          - paragraph [ref=f4e5]: Planilha do Bahia · 37 de 37 grupos abertos · 9 de 9 localidades fechadas exibidas
+        - generic [ref=f4e6]:
+          - generic [ref=f4e7]:
+            - text: CSR
+            - combobox "CSR" [ref=f4e8]:
+              - option "Todos" [selected]
+              - option "CSR Brasil"
+              - option "CSR Nordeste"
+          - generic [ref=f4e9]:
+            - text: CSA
+            - combobox "CSA" [ref=f4e10]:
+              - option "Todas" [selected]
+              - option "CSA Base"
+              - option "CSA Costa do Cacau"
+              - option "CSA Extremo Sul da Bahia"
+              - option "CSA Litoral Norte Bahia"
+              - option "CSA Mandacaru"
+              - option "CSA S.O.S."
+              - option "CSA Salvador"
+          - generic [ref=f4e11]:
+            - text: Acessibilidade
+            - combobox "Acessibilidade" [ref=f4e12]:
+              - option "Todas" [selected]
+              - option "Com acessibilidade"
+              - option "Sem acessibilidade"
+              - option "Sem registro"
+          - generic [ref=f4e13]:
+            - text: Escala populacional
+            - combobox "Escala populacional" [ref=f4e14]:
+              - option "Todas" [selected]
+              - option "< 10 mil"
+              - option "10–25 mil"
+              - option "25–50 mil"
+              - option "50–100 mil"
+              - option "> 100 mil"
+              - option "Sem dado"
+          - button "Limpar filtros" [ref=f4e15] [cursor=pointer]
+        - generic [ref=f4e16]:
+          - generic [ref=f4e17]:
+            - text: Grupos
+            - generic [ref=f4e18]: "37"
+          - generic [ref=f4e19]:
+            - text: Reuniões semanais
+            - generic [ref=f4e20]: "71"
+          - generic [ref=f4e21]:
+            - text: Média de reuniões por grupo
+            - generic [ref=f4e22]: 1,9
+          - generic [ref=f4e23]:
+            - text: Municípios
+            - generic [ref=f4e24]: "16"
+          - generic [ref=f4e25]:
+            - text: CSAs
+            - generic [ref=f4e26]: "7"
+          - generic [ref=f4e27]:
+            - text: Com acessibilidade
+            - generic [ref=f4e28]: 0 (0%)
+          - generic [ref=f4e29]:
+            - text: Localidades fechadas
+            - generic [ref=f4e30]: "9"
+          - generic [ref=f4e31]:
+            - text: População das localidades fechadas
+            - generic [ref=f4e32]: "499.931"
+        - generic [ref=f4e33]: "Destaques: CSA Base tem mais grupos (21); CSA Base soma mais reuniões semanais (35); Salvador é o município com mais grupos (17). Há 9 localidades que já tiveram grupo e estão fechadas, somando 499.931 habitantes; a maior é Eunápolis (112.477)."
+        - generic [ref=f4e34]:
+          - generic [ref=f4e35]:
+            - heading "Mapa dos grupos · clique numa CSA da legenda para filtrar" [level=2] [ref=f4e36]
+            - generic [ref=f4e37]:
+              - img "Mapa do Bahia com os grupos de NA dos CSRs Brasil e Nordeste" [ref=f4e38]:
+                - generic "Abaíra (BA)" [ref=f4e39]
+                - generic "Abaré (BA)" [ref=f4e40]
+                - generic "Acajutiba (BA)" [ref=f4e41]
+                - generic "Adustina (BA)" [ref=f4e42]
+                - generic "Água Fria (BA)" [ref=f4e43]
+                - generic "Érico Cardoso (BA)" [ref=f4e44]
+                - generic "Aiquara (BA)" [ref=f4e45]
+                - generic "Alagoinhas (BA)" [ref=f4e46]
+                - generic "Alcobaça (BA)" [ref=f4e47]
+                - generic "Almadina (BA)" [ref=f4e48]
+                - generic "Amargosa (BA)" [ref=f4e49]
+                - generic "Amélia Rodrigues (BA)" [ref=f4e50]
+                - generic "América Dourada (BA)" [ref=f4e51]
+                - generic "Anagé (BA)" [ref=f4e52]
+                - generic "Andaraí (BA)" [ref=f4e53]
+                - generic "Andorinha (BA)" [ref=f4e54]
+                - generic "Angical (BA)" [ref=f4e55]
+                - generic "Anguera (BA)" [ref=f4e56]
+                - generic "Antas (BA)" [ref=f4e57]
+                - generic "Antônio Cardoso (BA)" [ref=f4e58]
+                - generic "Antônio Gonçalves (BA)" [ref=f4e59]
+                - generic "Aporá (BA)" [ref=f4e60]
+                - generic "Apuarema (BA)" [ref=f4e61]
+                - generic "Aracatu (BA)" [ref=f4e62]
+                - generic "Araças (BA)" [ref=f4e63]
+                - generic "Araci (BA)" [ref=f4e64]
+                - generic "Aramari (BA)" [ref=f4e65]
+                - generic "Arataca (BA)" [ref=f4e66]
+                - generic "Aratuípe (BA)" [ref=f4e67]
+                - generic "Aurelino Leal (BA)" [ref=f4e68]
+                - generic "Baianópolis (BA)" [ref=f4e69]
+                - generic "Baixa Grande (BA)" [ref=f4e70]
+                - generic "Banzaê (BA)" [ref=f4e71]
+                - generic "Barra (BA)" [ref=f4e72]
+                - generic "Barra da Estiva (BA)" [ref=f4e73]
+                - generic "Barra do Choça (BA)" [ref=f4e74]
+                - generic "Barra do Mendes (BA)" [ref=f4e75]
+                - generic "Barra do Rocha (BA)" [ref=f4e76]
+                - generic "Barreiras (BA)" [ref=f4e77]
+                - generic "Barro Alto (BA)" [ref=f4e78]
+                - generic "Barrocas (BA)" [ref=f4e79]
+                - generic "Barro Preto (BA)" [ref=f4e80]
+                - generic "Belmonte (BA)" [ref=f4e81]
+                - generic "Belo Campo (BA)" [ref=f4e82]
+                - generic "Biritinga (BA)" [ref=f4e83]
+                - generic "Boa Nova (BA)" [ref=f4e84]
+                - generic "Boa Vista do Tupim (BA)" [ref=f4e85]
+                - generic "Bom Jesus da Lapa (BA)" [ref=f4e86]
+                - generic "Bom Jesus da Serra (BA)" [ref=f4e87]
+                - generic "Boninal (BA)" [ref=f4e88]
+                - generic "Bonito (BA)" [ref=f4e89]
+                - generic "Boquira (BA)" [ref=f4e90]
+                - generic "Botuporã (BA)" [ref=f4e91]
+                - generic "Brejões (BA)" [ref=f4e92]
+                - generic "Brejolândia (BA)" [ref=f4e93]
+                - generic "Brotas de Macaúbas (BA)" [ref=f4e94]
+                - generic "Brumado (BA)" [ref=f4e95]
+                - generic "Buerarema (BA)" [ref=f4e96]
+                - generic "Buritirama (BA)" [ref=f4e97]
+                - generic "Caatiba (BA)" [ref=f4e98]
+                - generic "Cabaceiras do Paraguaçu (BA)" [ref=f4e99]
+                - generic "Cachoeira (BA)" [ref=f4e100]
+                - generic "Caculé (BA)" [ref=f4e101]
+                - generic "Caém (BA)" [ref=f4e102]
+                - generic "Caetanos (BA)" [ref=f4e103]
+                - generic "Caetité (BA)" [ref=f4e104]
+                - generic "Cafarnaum (BA)" [ref=f4e105]
+                - generic "Cairu (BA)" [ref=f4e106]
+                - generic "Caldeirão Grande (BA)" [ref=f4e107]
+                - generic "Camacan (BA)" [ref=f4e108]
+                - generic "Camaçari (BA)" [ref=f4e109]
+                - generic "Camamu (BA)" [ref=f4e110]
+                - generic "Campo Alegre de Lourdes (BA)" [ref=f4e111]
+                - generic "Campo Formoso (BA)" [ref=f4e112]
+                - generic "Canápolis (BA)" [ref=f4e113]
+                - generic "Canarana (BA)" [ref=f4e114]
+                - generic "Canavieiras (BA)" [ref=f4e115]
+                - generic "Candeal (BA)" [ref=f4e116]
+                - generic "Candeias (BA)" [ref=f4e117]
+                - generic "Candiba (BA)" [ref=f4e118]
+                - generic "Cândido Sales (BA)" [ref=f4e119]
+                - generic "Cansanção (BA)" [ref=f4e120]
+                - generic "Canudos (BA)" [ref=f4e121]
+                - generic "Capela do Alto Alegre (BA)" [ref=f4e122]
+                - generic "Capim Grosso (BA)" [ref=f4e123]
+                - generic "Caraíbas (BA)" [ref=f4e124]
+                - generic "Caravelas (BA)" [ref=f4e125]
+                - generic "Cardeal da Silva (BA)" [ref=f4e126]
+                - generic "Carinhanha (BA)" [ref=f4e127]
+                - generic "Casa Nova (BA)" [ref=f4e128]
+                - generic "Castro Alves (BA)" [ref=f4e129]
+                - generic "Catolândia (BA)" [ref=f4e130]
+                - generic "Catu (BA)" [ref=f4e131]
+                - generic "Caturama (BA)" [ref=f4e132]
+                - generic "Central (BA)" [ref=f4e133]
+                - generic "Chorrochó (BA)" [ref=f4e134]
+                - generic "Cícero Dantas (BA)" [ref=f4e135]
+                - generic "Cipó (BA)" [ref=f4e136]
+                - generic "Coaraci (BA)" [ref=f4e137]
+                - generic "Cocos (BA)" [ref=f4e138]
+                - generic "Conceição da Feira (BA)" [ref=f4e139]
+                - generic "Conceição do Almeida (BA)" [ref=f4e140]
+                - generic "Conceição do Coité (BA)" [ref=f4e141]
+                - generic "Conceição do Jacuípe (BA)" [ref=f4e142]
+                - generic "Conde (BA)" [ref=f4e143]
+                - generic "Condeúba (BA)" [ref=f4e144]
+                - generic "Contendas do Sincorá (BA)" [ref=f4e145]
+                - generic "Coração de Maria (BA)" [ref=f4e146]
+                - generic "Cordeiros (BA)" [ref=f4e147]
+                - generic "Coribe (BA)" [ref=f4e148]
+                - generic "Coronel João Sá (BA)" [ref=f4e149]
+                - generic "Correntina (BA)" [ref=f4e150]
+                - generic "Cotegipe (BA)" [ref=f4e151]
+                - generic "Cravolândia (BA)" [ref=f4e152]
+                - generic "Crisópolis (BA)" [ref=f4e153]
+                - generic "Cristópolis (BA)" [ref=f4e154]
+                - generic "Cruz das Almas (BA)" [ref=f4e155]
+                - generic "Curaçá (BA)" [ref=f4e156]
+                - generic "Dário Meira (BA)" [ref=f4e157]
+                - generic "Dias d'Ávila (BA)" [ref=f4e158]
+                - generic "Dom Basílio (BA)" [ref=f4e159]
+                - generic "Dom Macedo Costa (BA)" [ref=f4e160]
+                - generic "Elísio Medrado (BA)" [ref=f4e161]
+                - generic "Encruzilhada (BA)" [ref=f4e162]
+                - generic "Entre Rios (BA)" [ref=f4e163]
+                - generic "Esplanada (BA)" [ref=f4e164]
+                - generic "Euclides da Cunha (BA)" [ref=f4e165]
+                - generic "Eunápolis (BA)" [ref=f4e166]
+                - generic "Fátima (BA)" [ref=f4e167]
+                - generic "Feira da Mata (BA)" [ref=f4e168]
+                - generic "Feira de Santana (BA)" [ref=f4e169]
+                - generic "Filadélfia (BA)" [ref=f4e170]
+                - generic "Firmino Alves (BA)" [ref=f4e171]
+                - generic "Floresta Azul (BA)" [ref=f4e172]
+                - generic "Formosa do Rio Preto (BA)" [ref=f4e173]
+                - generic "Gandu (BA)" [ref=f4e174]
+                - generic "Gavião (BA)" [ref=f4e175]
+                - generic "Gentio do Ouro (BA)" [ref=f4e176]
+                - generic "Glória (BA)" [ref=f4e177]
+                - generic "Gongogi (BA)" [ref=f4e178]
+                - generic "Governador Mangabeira (BA)" [ref=f4e179]
+                - generic "Guajeru (BA)" [ref=f4e180]
+                - generic "Guanambi (BA)" [ref=f4e181]
+                - generic "Guaratinga (BA)" [ref=f4e182]
+                - generic "Heliópolis (BA)" [ref=f4e183]
+                - generic "Iaçu (BA)" [ref=f4e184]
+                - generic "Ibiassucê (BA)" [ref=f4e185]
+                - generic "Ibicaraí (BA)" [ref=f4e186]
+                - generic "Ibicoara (BA)" [ref=f4e187]
+                - generic "Ibicuí (BA)" [ref=f4e188]
+                - generic "Ibipeba (BA)" [ref=f4e189]
+                - generic "Ibipitanga (BA)" [ref=f4e190]
+                - generic "Ibiquera (BA)" [ref=f4e191]
+                - generic "Ibirapitanga (BA)" [ref=f4e192]
+                - generic "Ibirapuã (BA)" [ref=f4e193]
+                - generic "Ibirataia (BA)" [ref=f4e194]
+                - generic "Ibitiara (BA)" [ref=f4e195]
+                - generic "Ibititá (BA)" [ref=f4e196]
+                - generic "Ibotirama (BA)" [ref=f4e197]
+                - generic "Ichu (BA)" [ref=f4e198]
+                - generic "Igaporã (BA)" [ref=f4e199]
+                - generic "Igrapiúna (BA)" [ref=f4e200]
+                - generic "Iguaí (BA)" [ref=f4e201]
+                - generic "Ilhéus (BA)" [ref=f4e202]
+                - generic "Inhambupe (BA)" [ref=f4e203]
+                - generic "Ipecaetá (BA)" [ref=f4e204]
+                - generic "Ipiaú (BA)" [ref=f4e205]
+                - generic "Ipirá (BA)" [ref=f4e206]
+                - generic "Ipupiara (BA)" [ref=f4e207]
+                - generic "Irajuba (BA)" [ref=f4e208]
+                - generic "Iramaia (BA)" [ref=f4e209]
+                - generic "Iraquara (BA)" [ref=f4e210]
+                - generic "Irará (BA)" [ref=f4e211]
+                - generic "Irecê (BA)" [ref=f4e212]
+                - generic "Itabela (BA)" [ref=f4e213]
+                - generic "Itaberaba (BA)" [ref=f4e214]
+                - generic "Itabuna (BA)" [ref=f4e215]
+                - generic "Itacaré (BA)" [ref=f4e216]
+                - generic "Itaeté (BA)" [ref=f4e217]
+                - generic "Itagi (BA)" [ref=f4e218]
+                - generic "Itagibá (BA)" [ref=f4e219]
+                - generic "Itagimirim (BA)" [ref=f4e220]
+                - generic "Itaguaçu da Bahia (BA)" [ref=f4e221]
+                - generic "Itaju do Colônia (BA)" [ref=f4e222]
+                - generic "Itajuípe (BA)" [ref=f4e223]
+                - generic "Itamaraju (BA)" [ref=f4e224]
+                - generic "Itamari (BA)" [ref=f4e225]
+                - generic "Itambé (BA)" [ref=f4e226]
+                - generic "Itanagra (BA)" [ref=f4e227]
+                - generic "Itanhém (BA)" [ref=f4e228]
+                - generic "Itaparica (BA)" [ref=f4e229]
+                - generic "Itapé (BA)" [ref=f4e230]
+                - generic "Itapebi (BA)" [ref=f4e231]
+                - generic "Itapetinga (BA)" [ref=f4e232]
+                - generic "Itapicuru (BA)" [ref=f4e233]
+                - generic "Itapitanga (BA)" [ref=f4e234]
+                - generic "Itaquara (BA)" [ref=f4e235]
+                - generic "Itarantim (BA)" [ref=f4e236]
+                - generic "Itatim (BA)" [ref=f4e237]
+                - generic "Itiruçu (BA)" [ref=f4e238]
+                - generic "Itiúba (BA)" [ref=f4e239]
+                - generic "Itororó (BA)" [ref=f4e240]
+                - generic "Ituaçu (BA)" [ref=f4e241]
+                - generic "Ituberá (BA)" [ref=f4e242]
+                - generic "Iuiú (BA)" [ref=f4e243]
+                - generic "Jaborandi (BA)" [ref=f4e244]
+                - generic "Jacaraci (BA)" [ref=f4e245]
+                - generic "Jacobina (BA)" [ref=f4e246]
+                - generic "Jaguaquara (BA)" [ref=f4e247]
+                - generic "Jaguarari (BA)" [ref=f4e248]
+                - generic "Jaguaripe (BA)" [ref=f4e249]
+                - generic "Jandaíra (BA)" [ref=f4e250]
+                - generic "Jequié (BA)" [ref=f4e251]
+                - generic "Jeremoabo (BA)" [ref=f4e252]
+                - generic "Jiquiriçá (BA)" [ref=f4e253]
+                - generic "Jitaúna (BA)" [ref=f4e254]
+                - generic "João Dourado (BA)" [ref=f4e255]
+                - generic "Juazeiro (BA)" [ref=f4e256]
+                - generic "Jucuruçu (BA)" [ref=f4e257]
+                - generic "Jussara (BA)" [ref=f4e258]
+                - generic "Jussari (BA)" [ref=f4e259]
+                - generic "Jussiape (BA)" [ref=f4e260]
+                - generic "Lafaiete Coutinho (BA)" [ref=f4e261]
+                - generic "Lagoa Real (BA)" [ref=f4e262]
+                - generic "Laje (BA)" [ref=f4e263]
+                - generic "Lajedão (BA)" [ref=f4e264]
+                - generic "Lajedinho (BA)" [ref=f4e265]
+                - generic "Lajedo do Tabocal (BA)" [ref=f4e266]
+                - generic "Lamarão (BA)" [ref=f4e267]
+                - generic "Lapão (BA)" [ref=f4e268]
+                - generic "Lauro de Freitas (BA)" [ref=f4e269]
+                - generic "Lençóis (BA)" [ref=f4e270]
+                - generic "Licínio de Almeida (BA)" [ref=f4e271]
+                - generic "Livramento de Nossa Senhora (BA)" [ref=f4e272]
+                - generic "Luís Eduardo Magalhães (BA)" [ref=f4e273]
+                - generic "Macajuba (BA)" [ref=f4e274]
+                - generic "Macarani (BA)" [ref=f4e275]
+                - generic "Macaúbas (BA)" [ref=f4e276]
+                - generic "Macururé (BA)" [ref=f4e277]
+                - generic "Madre de Deus (BA)" [ref=f4e278]
+                - generic "Maetinga (BA)" [ref=f4e279]
+                - generic "Maiquinique (BA)" [ref=f4e280]
+                - generic "Mairi (BA)" [ref=f4e281]
+                - generic "Malhada (BA)" [ref=f4e282]
+                - generic "Malhada de Pedras (BA)" [ref=f4e283]
+                - generic "Manoel Vitorino (BA)" [ref=f4e284]
+                - generic "Mansidão (BA)" [ref=f4e285]
+                - generic "Maracás (BA)" [ref=f4e286]
+                - generic "Maragogipe (BA)" [ref=f4e287]
+                - generic "Maraú (BA)" [ref=f4e288]
+                - generic "Marcionílio Souza (BA)" [ref=f4e289]
+                - generic "Mascote (BA)" [ref=f4e290]
+                - generic "Mata de São João (BA)" [ref=f4e291]
+                - generic "Matina (BA)" [ref=f4e292]
+                - generic "Medeiros Neto (BA)" [ref=f4e293]
+                - generic "Miguel Calmon (BA)" [ref=f4e294]
+                - generic "Milagres (BA)" [ref=f4e295]
+                - generic "Mirangaba (BA)" [ref=f4e296]
+                - generic "Mirante (BA)" [ref=f4e297]
+                - generic "Monte Santo (BA)" [ref=f4e298]
+                - generic "Morpará (BA)" [ref=f4e299]
+                - generic "Morro do Chapéu (BA)" [ref=f4e300]
+                - generic "Mortugaba (BA)" [ref=f4e301]
+                - generic "Mucugê (BA)" [ref=f4e302]
+                - generic "Mucuri (BA)" [ref=f4e303]
+                - generic "Mulungu do Morro (BA)" [ref=f4e304]
+                - generic "Mundo Novo (BA)" [ref=f4e305]
+                - generic "Muniz Ferreira (BA)" [ref=f4e306]
+                - generic "Muquém de São Francisco (BA)" [ref=f4e307]
+                - generic "Muritiba (BA)" [ref=f4e308]
+                - generic "Mutuípe (BA)" [ref=f4e309]
+                - generic "Nazaré (BA)" [ref=f4e310]
+                - generic "Nilo Peçanha (BA)" [ref=f4e311]
+                - generic "Nordestina (BA)" [ref=f4e312]
+                - generic "Nova Canaã (BA)" [ref=f4e313]
+                - generic "Nova Fátima (BA)" [ref=f4e314]
+                - generic "Nova Ibiá (BA)" [ref=f4e315]
+                - generic "Nova Itarana (BA)" [ref=f4e316]
+                - generic "Nova Redenção (BA)" [ref=f4e317]
+                - generic "Nova Soure (BA)" [ref=f4e318]
+                - generic "Nova Viçosa (BA)" [ref=f4e319]
+                - generic "Novo Horizonte (BA)" [ref=f4e320]
+                - generic "Novo Triunfo (BA)" [ref=f4e321]
+                - generic "Olindina (BA)" [ref=f4e322]
+                - generic "Oliveira dos Brejinhos (BA)" [ref=f4e323]
+                - generic "Ouriçangas (BA)" [ref=f4e324]
+                - generic "Ourolândia (BA)" [ref=f4e325]
+                - generic "Palmas de Monte Alto (BA)" [ref=f4e326]
+                - generic "Palmeiras (BA)" [ref=f4e327]
+                - generic "Paramirim (BA)" [ref=f4e328]
+                - generic "Paratinga (BA)" [ref=f4e329]
+                - generic "Paripiranga (BA)" [ref=f4e330]
+                - generic "Pau Brasil (BA)" [ref=f4e331]
+                - generic "Paulo Afonso (BA)" [ref=f4e332]
+                - generic "Pé de Serra (BA)" [ref=f4e333]
+                - generic "Pedrão (BA)" [ref=f4e334]
+                - generic "Pedro Alexandre (BA)" [ref=f4e335]
+                - generic "Piatã (BA)" [ref=f4e336]
+                - generic "Pilão Arcado (BA)" [ref=f4e337]
+                - generic "Pindaí (BA)" [ref=f4e338]
+                - generic "Pindobaçu (BA)" [ref=f4e339]
+                - generic "Pintadas (BA)" [ref=f4e340]
+                - generic "Piraí do Norte (BA)" [ref=f4e341]
+                - generic "Piripá (BA)" [ref=f4e342]
+                - generic "Piritiba (BA)" [ref=f4e343]
+                - generic "Planaltino (BA)" [ref=f4e344]
+                - generic "Planalto (BA)" [ref=f4e345]
+                - generic "Poções (BA)" [ref=f4e346]
+                - generic "Pojuca (BA)" [ref=f4e347]
+                - generic "Ponto Novo (BA)" [ref=f4e348]
+                - generic "Porto Seguro (BA)" [ref=f4e349]
+                - generic "Potiraguá (BA)" [ref=f4e350]
+                - generic "Prado (BA)" [ref=f4e351]
+                - generic "Presidente Dutra (BA)" [ref=f4e352]
+                - generic "Presidente Jânio Quadros (BA)" [ref=f4e353]
+                - generic "Presidente Tancredo Neves (BA)" [ref=f4e354]
+                - generic "Queimadas (BA)" [ref=f4e355]
+                - generic "Quijingue (BA)" [ref=f4e356]
+                - generic "Quixabeira (BA)" [ref=f4e357]
+                - generic "Rafael Jambeiro (BA)" [ref=f4e358]
+                - generic "Remanso (BA)" [ref=f4e359]
+                - generic "Retirolândia (BA)" [ref=f4e360]
+                - generic "Riachão das Neves (BA)" [ref=f4e361]
+                - generic "Riachão do Jacuípe (BA)" [ref=f4e362]
+                - generic "Riacho de Santana (BA)" [ref=f4e363]
+                - generic "Ribeira do Amparo (BA)" [ref=f4e364]
+                - generic "Ribeira do Pombal (BA)" [ref=f4e365]
+                - generic "Ribeirão do Largo (BA)" [ref=f4e366]
+                - generic "Rio de Contas (BA)" [ref=f4e367]
+                - generic "Rio do Antônio (BA)" [ref=f4e368]
+                - generic "Rio do Pires (BA)" [ref=f4e369]
+                - generic "Rio Real (BA)" [ref=f4e370]
+                - generic "Rodelas (BA)" [ref=f4e371]
+                - generic "Ruy Barbosa (BA)" [ref=f4e372]
+                - generic "Salinas da Margarida (BA)" [ref=f4e373]
+                - generic "Salvador (BA)" [ref=f4e374]
+                - generic "Santa Bárbara (BA)" [ref=f4e375]
+                - generic "Santa Brígida (BA)" [ref=f4e376]
+                - generic "Santa Cruz Cabrália (BA)" [ref=f4e377]
+                - generic "Santa Cruz da Vitória (BA)" [ref=f4e378]
+                - generic "Santa Inês (BA)" [ref=f4e379]
+                - generic "Santaluz (BA)" [ref=f4e380]
+                - generic "Santa Luzia (BA)" [ref=f4e381]
+                - generic "Santa Maria da Vitória (BA)" [ref=f4e382]
+                - generic "Santana (BA)" [ref=f4e383]
+                - generic "Santanópolis (BA)" [ref=f4e384]
+                - generic "Santa Rita de Cássia (BA)" [ref=f4e385]
+                - generic "Santa Teresinha (BA)" [ref=f4e386]
+                - generic "Santo Amaro (BA)" [ref=f4e387]
+                - generic "Santo Antônio de Jesus (BA)" [ref=f4e388]
+                - generic "Santo Estêvão (BA)" [ref=f4e389]
+                - generic "São Desidério (BA)" [ref=f4e390]
+                - generic "São Domingos (BA)" [ref=f4e391]
+                - generic "São Félix (BA)" [ref=f4e392]
+                - generic "São Félix do Coribe (BA)" [ref=f4e393]
+                - generic "São Felipe (BA)" [ref=f4e394]
+                - generic "São Francisco do Conde (BA)" [ref=f4e395]
+                - generic "São Gabriel (BA)" [ref=f4e396]
+                - generic "São Gonçalo dos Campos (BA)" [ref=f4e397]
+                - generic "São José da Vitória (BA)" [ref=f4e398]
+                - generic "São José do Jacuípe (BA)" [ref=f4e399]
+                - generic "São Miguel das Matas (BA)" [ref=f4e400]
+                - generic "São Sebastião do Passé (BA)" [ref=f4e401]
+                - generic "Sapeaçu (BA)" [ref=f4e402]
+                - generic "Sátiro Dias (BA)" [ref=f4e403]
+                - generic "Saubara (BA)" [ref=f4e404]
+                - generic "Saúde (BA)" [ref=f4e405]
+                - generic "Seabra (BA)" [ref=f4e406]
+                - generic "Sebastião Laranjeiras (BA)" [ref=f4e407]
+                - generic "Senhor do Bonfim (BA)" [ref=f4e408]
+                - generic "Serra do Ramalho (BA)" [ref=f4e409]
+                - generic "Sento Sé (BA)" [ref=f4e410]
+                - generic "Serra Dourada (BA)" [ref=f4e411]
+                - generic "Serra Preta (BA)" [ref=f4e412]
+                - generic "Serrinha (BA)" [ref=f4e413]
+                - generic "Serrolândia (BA)" [ref=f4e414]
+                - generic "Simões Filho (BA)" [ref=f4e415]
+                - generic "Sítio do Mato (BA)" [ref=f4e416]
+                - generic "Sítio do Quinto (BA)" [ref=f4e417]
+                - generic "Sobradinho (BA)" [ref=f4e418]
+                - generic "Souto Soares (BA)" [ref=f4e419]
+                - generic "Tabocas do Brejo Velho (BA)" [ref=f4e420]
+                - generic "Tanhaçu (BA)" [ref=f4e421]
+                - generic "Tanque Novo (BA)" [ref=f4e422]
+                - generic "Tanquinho (BA)" [ref=f4e423]
+                - generic "Taperoá (BA)" [ref=f4e424]
+                - generic "Tapiramutá (BA)" [ref=f4e425]
+                - generic "Teixeira de Freitas (BA)" [ref=f4e426]
+                - generic "Teodoro Sampaio (BA)" [ref=f4e427]
+                - generic "Teofilândia (BA)" [ref=f4e428]
+                - generic "Teolândia (BA)" [ref=f4e429]
+                - generic "Terra Nova (BA)" [ref=f4e430]
+                - generic "Tremedal (BA)" [ref=f4e431]
+                - generic "Tucano (BA)" [ref=f4e432]
+                - generic "Uauá (BA)" [ref=f4e433]
+                - generic "Ubaíra (BA)" [ref=f4e434]
+                - generic "Ubaitaba (BA)" [ref=f4e435]
+                - generic "Ubatã (BA)" [ref=f4e436]
+                - generic "Uibaí (BA)" [ref=f4e437]
+                - generic "Umburanas (BA)" [ref=f4e438]
+                - generic "Una (BA)" [ref=f4e439]
+                - generic "Urandi (BA)" [ref=f4e440]
+                - generic "Uruçuca (BA)" [ref=f4e441]
+                - generic "Utinga (BA)" [ref=f4e442]
+                - generic "Valença (BA)" [ref=f4e443]
+                - generic "Valente (BA)" [ref=f4e444]
+                - generic "Várzea da Roça (BA)" [ref=f4e445]
+                - generic "Várzea do Poço (BA)" [ref=f4e446]
+                - generic "Várzea Nova (BA)" [ref=f4e447]
+                - generic "Varzedo (BA)" [ref=f4e448]
+                - generic "Vera Cruz (BA)" [ref=f4e449]
+                - generic "Vereda (BA)" [ref=f4e450]
+                - generic "Vitória da Conquista (BA)" [ref=f4e451]
+                - generic "Wagner (BA)" [ref=f4e452]
+                - generic "Wanderley (BA)" [ref=f4e453]
+                - generic "Wenceslau Guimarães (BA)" [ref=f4e454]
+                - generic "Xique-Xique (BA)" [ref=f4e455]
+                - generic [ref=f4e456]:
+                  - generic [ref=f4e457] [cursor=pointer]
+                  - generic [ref=f4e458] [cursor=pointer]
+                  - generic [ref=f4e459] [cursor=pointer]
+                  - generic [ref=f4e460] [cursor=pointer]
+                  - generic [ref=f4e461] [cursor=pointer]
+                  - generic [ref=f4e462] [cursor=pointer]
+                  - generic [ref=f4e463] [cursor=pointer]
+                  - generic [ref=f4e464] [cursor=pointer]
+                  - generic [ref=f4e465] [cursor=pointer]
+                  - generic [ref=f4e466] [cursor=pointer]
+                  - generic [ref=f4e467] [cursor=pointer]
+                  - generic [ref=f4e468] [cursor=pointer]
+                  - generic [ref=f4e469] [cursor=pointer]
+                  - generic [ref=f4e470] [cursor=pointer]
+                  - generic [ref=f4e471] [cursor=pointer]
+                  - generic [ref=f4e472] [cursor=pointer]
+                  - generic [ref=f4e473] [cursor=pointer]
+                  - generic [ref=f4e474] [cursor=pointer]
+                  - generic [ref=f4e475] [cursor=pointer]
+                  - generic [ref=f4e476] [cursor=pointer]
+                  - generic [ref=f4e477] [cursor=pointer]
+                  - generic [ref=f4e478] [cursor=pointer]
+                  - generic [ref=f4e479] [cursor=pointer]
+                  - generic [ref=f4e480] [cursor=pointer]
+                  - generic [ref=f4e481] [cursor=pointer]
+                  - generic [ref=f4e482] [cursor=pointer]
+                  - generic [ref=f4e483] [cursor=pointer]
+                  - generic [ref=f4e484] [cursor=pointer]
+                  - generic [ref=f4e485] [cursor=pointer]
+                  - generic [ref=f4e486] [cursor=pointer]
+                  - generic [ref=f4e487] [cursor=pointer]
+                  - generic [ref=f4e488] [cursor=pointer]
+                  - generic [ref=f4e489] [cursor=pointer]
+                  - generic [ref=f4e490] [cursor=pointer]
+                  - generic [ref=f4e491] [cursor=pointer]
+                  - generic [ref=f4e492] [cursor=pointer]
+                  - generic [ref=f4e493] [cursor=pointer]
+                  - generic [ref=f4e494] [cursor=pointer]
+                  - generic [ref=f4e495] [cursor=pointer]
+                  - generic [ref=f4e496] [cursor=pointer]
+                  - generic [ref=f4e497] [cursor=pointer]
+                  - generic [ref=f4e498] [cursor=pointer]
+                  - generic [ref=f4e499] [cursor=pointer]
+                  - generic [ref=f4e500] [cursor=pointer]
+                  - generic [ref=f4e501] [cursor=pointer]
+                  - generic [ref=f4e502] [cursor=pointer]
+              - generic [ref=f4e503]:
+                - button "Aproximar" [ref=f4e504] [cursor=pointer]: +
+                - button "Afastar" [ref=f4e505] [cursor=pointer]: −
+                - button "Enquadrar os grupos" [ref=f4e506] [cursor=pointer]: ⌂
+            - generic [ref=f4e507]: Bahia
+            - generic [ref=f4e510]: ● pino redondo colorido = grupo aberto (cor da CSA) · ◆ pino vermelho = localidade que já teve grupo e está fechada
+            - generic [ref=f4e511]:
+              - button "◆ Localidades fechadas (9)" [ref=f4e512] [cursor=pointer]
+              - button "Base (21)" [ref=f4e513] [cursor=pointer]
+              - button "Costa do Cacau (1)" [ref=f4e515] [cursor=pointer]
+              - button "Extremo Sul da Bahia (3)" [ref=f4e517] [cursor=pointer]
+              - button "Litoral Norte Bahia (4)" [ref=f4e519] [cursor=pointer]
+              - button "Mandacaru (1)" [ref=f4e521] [cursor=pointer]
+              - button "S.O.S. (4)" [ref=f4e523] [cursor=pointer]
+              - button "Salvador (3)" [ref=f4e525] [cursor=pointer]
+            - generic [ref=f4e527]: Passe o mouse (ou toque) sobre um ponto do mapa para ver as informações do grupo ou da localidade fechada.
+          - generic [ref=f4e529]:
+            - generic [ref=f4e530]:
+              - heading "Grupos por CSA" [level=2] [ref=f4e531]
+              - generic [ref=f4e532]:
+                - generic [ref=f4e533] [cursor=pointer]:
+                  - generic "CSA Base" [ref=f4e534]
+                  - generic [ref=f4e537]: "21"
+                - generic [ref=f4e538] [cursor=pointer]:
+                  - generic "CSA Litoral Norte Bahia" [ref=f4e539]
+                  - generic [ref=f4e542]: "4"
+                - generic [ref=f4e543] [cursor=pointer]:
+                  - generic "CSA S.O.S." [ref=f4e544]
+                  - generic [ref=f4e547]: "4"
+                - generic [ref=f4e548] [cursor=pointer]:
+                  - generic "CSA Extremo Sul da Bahia" [ref=f4e549]
+                  - generic [ref=f4e552]: "3"
+                - generic [ref=f4e553] [cursor=pointer]:
+                  - generic "CSA Salvador" [ref=f4e554]
+                  - generic [ref=f4e557]: "3"
+                - generic [ref=f4e558] [cursor=pointer]:
+                  - generic "CSA Costa do Cacau" [ref=f4e559]
+                  - generic [ref=f4e562]: "1"
+                - generic [ref=f4e563] [cursor=pointer]:
+                  - generic "CSA Mandacaru" [ref=f4e564]
+                  - generic [ref=f4e567]: "1"
+            - generic [ref=f4e568]:
+              - heading "Reuniões semanais por CSA" [level=2] [ref=f4e569]
+              - generic [ref=f4e570]:
+                - generic [ref=f4e571] [cursor=pointer]:
+                  - generic "CSA Base" [ref=f4e572]
+                  - generic [ref=f4e575]: "35"
+                - generic [ref=f4e576] [cursor=pointer]:
+                  - generic "CSA Extremo Sul da Bahia" [ref=f4e577]
+                  - generic [ref=f4e580]: "13"
+                - generic [ref=f4e581] [cursor=pointer]:
+                  - generic "CSA S.O.S." [ref=f4e582]
+                  - generic [ref=f4e585]: "8"
+                - generic [ref=f4e586] [cursor=pointer]:
+                  - generic "CSA Litoral Norte Bahia" [ref=f4e587]
+                  - generic [ref=f4e590]: "7"
+                - generic [ref=f4e591] [cursor=pointer]:
+                  - generic "CSA Salvador" [ref=f4e592]
+                  - generic [ref=f4e595]: "4"
+                - generic [ref=f4e596] [cursor=pointer]:
+                  - generic "CSA Costa do Cacau" [ref=f4e597]
+                  - generic [ref=f4e600]: "3"
+                - generic [ref=f4e601] [cursor=pointer]:
+                  - generic "CSA Mandacaru" [ref=f4e602]
+                  - generic [ref=f4e605]: "1"
+            - generic [ref=f4e606]:
+              - heading "Média de reuniões semanais por grupo, por CSA" [level=2] [ref=f4e607]
+              - generic [ref=f4e608]:
+                - generic [ref=f4e609] [cursor=pointer]:
+                  - generic "CSA Extremo Sul da Bahia" [ref=f4e610]
+                  - generic [ref=f4e613]: 4,3
+                - generic [ref=f4e614] [cursor=pointer]:
+                  - generic "CSA Costa do Cacau" [ref=f4e615]
+                  - generic [ref=f4e618]: "3"
+                - generic [ref=f4e619] [cursor=pointer]:
+                  - generic "CSA S.O.S." [ref=f4e620]
+                  - generic [ref=f4e623]: "2"
+                - generic [ref=f4e624] [cursor=pointer]:
+                  - generic "CSA Litoral Norte Bahia" [ref=f4e625]
+                  - generic [ref=f4e628]: 1,8
+                - generic [ref=f4e629] [cursor=pointer]:
+                  - generic "CSA Base" [ref=f4e630]
+                  - generic [ref=f4e633]: 1,7
+                - generic [ref=f4e634] [cursor=pointer]:
+                  - generic "CSA Salvador" [ref=f4e635]
+                  - generic [ref=f4e638]: 1,3
+                - generic [ref=f4e639] [cursor=pointer]:
+                  - generic "CSA Mandacaru" [ref=f4e640]
+                  - generic [ref=f4e643]: "1"
+        - generic [ref=f4e644]:
+          - generic [ref=f4e645]:
+            - heading "Acessibilidade (conforme a planilha)" [level=2] [ref=f4e646]
+            - generic [ref=f4e648] [cursor=pointer]:
+              - generic "Sem registro" [ref=f4e649]
+              - generic [ref=f4e652]: "37"
+          - generic [ref=f4e653]:
+            - heading "Reuniões semanais por grupo" [level=2] [ref=f4e654]
+            - generic [ref=f4e655]:
+              - generic [ref=f4e656]:
+                - generic "1 reunião" [ref=f4e657]
+                - generic [ref=f4e660]: "18"
+              - generic [ref=f4e661]:
+                - generic "2 reuniões" [ref=f4e662]
+                - generic [ref=f4e665]: "12"
+              - generic [ref=f4e666]:
+                - generic "3 reuniões" [ref=f4e667]
+                - generic [ref=f4e670]: "5"
+              - generic [ref=f4e671]:
+                - generic "5 ou mais" [ref=f4e672]
+                - generic [ref=f4e675]: "2"
+          - generic [ref=f4e676]:
+            - heading "Grupos por escala populacional do município" [level=2] [ref=f4e677]
+            - generic [ref=f4e678]:
+              - generic [ref=f4e679] [cursor=pointer]:
+                - generic "25–50 mil" [ref=f4e680]
+                - generic [ref=f4e683]: "2"
+              - generic [ref=f4e684] [cursor=pointer]:
+                - generic "50–100 mil" [ref=f4e685]
+                - generic [ref=f4e688]: "1"
+              - generic [ref=f4e689] [cursor=pointer]:
+                - generic "> 100 mil" [ref=f4e690]
+                - generic [ref=f4e693]: "34"
+          - generic [ref=f4e694]:
+            - heading "10 municípios com mais grupos" [level=2] [ref=f4e695]
+            - generic [ref=f4e696]:
+              - generic [ref=f4e697]:
+                - generic "Salvador" [ref=f4e698]
+                - generic [ref=f4e701]: "17"
+              - generic [ref=f4e702]:
+                - generic "Porto Seguro" [ref=f4e703]
+                - generic [ref=f4e706]: "3"
+              - generic [ref=f4e707]:
+                - generic "Vitória da Conquista" [ref=f4e708]
+                - generic [ref=f4e711]: "2"
+              - generic [ref=f4e712]:
+                - generic "Teixeira de Freitas" [ref=f4e713]
+                - generic [ref=f4e716]: "2"
+              - generic [ref=f4e717]:
+                - generic "Lauro de Freitas" [ref=f4e718]
+                - generic [ref=f4e721]: "2"
+              - generic [ref=f4e722]:
+                - generic "Feira de Santana" [ref=f4e723]
+                - generic [ref=f4e726]: "1"
+              - generic [ref=f4e727]:
+                - generic "Camaçari" [ref=f4e728]
+                - generic [ref=f4e731]: "1"
+              - generic [ref=f4e732]:
+                - generic "Remanso" [ref=f4e733]
+                - generic [ref=f4e736]: "1"
+              - generic [ref=f4e737]:
+                - generic "Luís Eduardo Magalhães" [ref=f4e738]
+                - generic [ref=f4e741]: "1"
+              - generic [ref=f4e742]:
+                - generic "Jequié" [ref=f4e743]
+                - generic [ref=f4e746]: "1"
+          - generic [ref=f4e747]:
+            - heading "Localidades fechadas por CSA do grupo aberto mais próximo" [level=2] [ref=f4e748]
+            - generic [ref=f4e749]:
+              - generic [ref=f4e750]:
+                - generic "CSA Base" [ref=f4e751]
+                - generic [ref=f4e754]: "4"
+              - generic [ref=f4e755]:
+                - generic "CSA S.O.S." [ref=f4e756]
+                - generic [ref=f4e759]: "3"
+              - generic [ref=f4e760]:
+                - generic "CSA Litoral Norte Bahia" [ref=f4e761]
+                - generic [ref=f4e764]: "1"
+              - generic [ref=f4e765]:
+                - generic "CSA Mandacaru" [ref=f4e766]
+                - generic [ref=f4e769]: "1"
+          - generic [ref=f4e770]:
+            - heading "População das localidades fechadas (Censo 2022)" [level=2] [ref=f4e771]
+            - generic [ref=f4e772]:
+              - generic [ref=f4e773]:
+                - generic "Eunápolis" [ref=f4e774]
+                - generic [ref=f4e777]: "112.477"
+              - generic [ref=f4e778]:
+                - generic "Valença" [ref=f4e779]
+                - generic [ref=f4e782]: "96.226"
+              - generic [ref=f4e783]:
+                - generic "Brumado" [ref=f4e784]
+                - generic [ref=f4e787]: "70.268"
+              - generic [ref=f4e788]:
+                - generic "Santo Amaro" [ref=f4e789]
+                - generic [ref=f4e792]: "55.935"
+              - generic [ref=f4e793]:
+                - generic "Poções" [ref=f4e794]
+                - generic [ref=f4e797]: "48.197"
+              - generic [ref=f4e798]:
+                - generic "Nova Viçosa" [ref=f4e799]
+                - generic [ref=f4e802]: "41.089"
+              - generic [ref=f4e803]:
+                - generic "Vera Cruz" [ref=f4e804]
+                - generic [ref=f4e807]: "40.915"
+              - generic [ref=f4e808]:
+                - generic "Sobradinho" [ref=f4e809]
+                - generic [ref=f4e812]: "24.799"
+              - generic [ref=f4e813]:
+                - generic "Dário Meira" [ref=f4e814]
+                - generic [ref=f4e817]: "10.025"
+          - generic [ref=f4e818]:
+            - heading "Grupos abertos por escala populacional do município" [level=2] [ref=f4e819]
+            - generic [ref=f4e820]:
+              - img "Gráfico de pizza dos grupos abertos por escala populacional" [ref=f4e821]:
+                - 'generic "25 a 50 mil: 2 grupos" [ref=f4e822]'
+                - 'generic "50 a 100 mil: 1 grupos" [ref=f4e823]'
+                - 'generic "Mais de 100 mil: 34 grupos" [ref=f4e824]'
+              - list [ref=f4e825]:
+                - listitem [ref=f4e826]:
+                  - text: Menos de 10 mil
+                  - generic [ref=f4e828]: 0 · 0%
+                - listitem [ref=f4e829]:
+                  - text: 10 a 25 mil
+                  - generic [ref=f4e831]: 0 · 0%
+                - listitem [ref=f4e832]:
+                  - text: 25 a 50 mil
+                  - generic [ref=f4e834]: 2 · 5%
+                - listitem [ref=f4e835]:
+                  - text: 50 a 100 mil
+                  - generic [ref=f4e837]: 1 · 3%
+                - listitem [ref=f4e838]:
+                  - text: Mais de 100 mil
+                  - generic [ref=f4e840]: 34 · 92%
+                - listitem [ref=f4e841]:
+                  - generic [ref=f4e842]: Total
+                  - generic [ref=f4e843]: "37"
+          - generic [ref=f4e844]:
+            - heading "Municípios sem grupos abertos por escala populacional" [level=2] [ref=f4e845]
+            - generic [ref=f4e846]:
+              - img "Gráfico de pizza dos municípios sem grupos abertos por escala populacional" [ref=f4e847]:
+                - 'generic "Menos de 10 mil: 77 municípios" [ref=f4e848]'
+                - 'generic "10 a 25 mil: 216 municípios" [ref=f4e849]'
+                - 'generic "25 a 50 mil: 79 municípios" [ref=f4e850]'
+                - 'generic "50 a 100 mil: 24 municípios" [ref=f4e851]'
+                - 'generic "Mais de 100 mil: 5 municípios" [ref=f4e852]'
+              - list [ref=f4e853]:
+                - listitem [ref=f4e854]:
+                  - text: Menos de 10 mil
+                  - generic [ref=f4e856]: 77 · 19%
+                - listitem [ref=f4e857]:
+                  - text: 10 a 25 mil
+                  - generic [ref=f4e859]: 216 · 54%
+                - listitem [ref=f4e860]:
+                  - text: 25 a 50 mil
+                  - generic [ref=f4e862]: 79 · 20%
+                - listitem [ref=f4e863]:
+                  - text: 50 a 100 mil
+                  - generic [ref=f4e865]: 24 · 6%
+                - listitem [ref=f4e866]:
+                  - text: Mais de 100 mil
+                  - generic [ref=f4e868]: 5 · 1%
+                - listitem [ref=f4e869]:
+                  - generic [ref=f4e870]: Total
+                  - generic [ref=f4e871]: "401"
+            - generic [ref=f4e872]: 417 municípios no estado, dos quais 16 têm grupo aberto. A pizza segue só o filtro de escala populacional e inclui as 9 localidades que já tiveram grupo e estão fechadas.
+        - generic [ref=f4e873]:
+          - heading "Mapa do Bahia por escala populacional (tons de vermelho) com os grupos abertos" [level=2] [ref=f4e874]
+          - generic [ref=f4e875]:
+            - generic [ref=f4e876]:
+              - img "Mapa do Bahia colorido pela escala populacional dos municípios" [ref=f4e877]:
+                - generic "Abaíra · 7.290 hab. · Menos de 10 mil" [ref=f4e878]
+                - generic "Abaré · 18.766 hab. · 10 a 25 mil" [ref=f4e879]
+                - generic "Acajutiba · 13.715 hab. · 10 a 25 mil" [ref=f4e880]
+                - generic "Adustina · 14.166 hab. · 10 a 25 mil" [ref=f4e881]
+                - generic "Água Fria · 17.398 hab. · 10 a 25 mil" [ref=f4e882]
+                - generic "Érico Cardoso · 10.581 hab. · 10 a 25 mil" [ref=f4e883]
+                - generic "Aiquara · 4.566 hab. · Menos de 10 mil" [ref=f4e884]
+                - generic "Alagoinhas · 157.864 hab. · Mais de 100 mil" [ref=f4e885]
+                - generic "Alcobaça · 23.633 hab. · 10 a 25 mil" [ref=f4e886]
+                - generic "Almadina · 5.195 hab. · Menos de 10 mil" [ref=f4e887]
+                - generic "Amargosa · 36.260 hab. · 25 a 50 mil" [ref=f4e888]
+                - generic "Amélia Rodrigues · 23.639 hab. · 10 a 25 mil" [ref=f4e889]
+                - generic "América Dourada · 15.104 hab. · 10 a 25 mil" [ref=f4e890]
+                - generic "Anagé · 25.452 hab. · 25 a 50 mil" [ref=f4e891]
+                - generic "Andaraí · 13.406 hab. · 10 a 25 mil" [ref=f4e892]
+                - generic "Andorinha · 15.011 hab. · 10 a 25 mil" [ref=f4e893]
+                - generic "Angical · 14.973 hab. · 10 a 25 mil" [ref=f4e894]
+                - generic "Anguera · 11.019 hab. · 10 a 25 mil" [ref=f4e895]
+                - generic "Antas · 14.453 hab. · 10 a 25 mil" [ref=f4e896]
+                - generic "Antônio Cardoso · 11.268 hab. · 10 a 25 mil" [ref=f4e897]
+                - generic "Antônio Gonçalves · 11.921 hab. · 10 a 25 mil" [ref=f4e898]
+                - generic "Aporá · 16.909 hab. · 10 a 25 mil" [ref=f4e899]
+                - generic "Apuarema · 6.900 hab. · Menos de 10 mil" [ref=f4e900]
+                - generic "Aracatu · 13.819 hab. · 10 a 25 mil" [ref=f4e901]
+                - generic "Araças · 12.605 hab. · 10 a 25 mil" [ref=f4e902]
+                - generic "Araci · 51.377 hab. · 50 a 100 mil" [ref=f4e903]
+                - generic "Aramari · 9.781 hab. · Menos de 10 mil" [ref=f4e904]
+                - generic "Arataca · 8.219 hab. · Menos de 10 mil" [ref=f4e905]
+                - generic "Aratuípe · 10.006 hab. · 10 a 25 mil" [ref=f4e906]
+                - generic "Aurelino Leal · 11.782 hab. · 10 a 25 mil" [ref=f4e907]
+                - generic "Baianópolis · 13.618 hab. · 10 a 25 mil" [ref=f4e908]
+                - generic "Baixa Grande · 17.880 hab. · 10 a 25 mil" [ref=f4e909]
+                - generic "Banzaê · 11.869 hab. · 10 a 25 mil" [ref=f4e910]
+                - generic "Barra · 50.543 hab. · 50 a 100 mil" [ref=f4e911]
+                - generic "Barra da Estiva · 26.031 hab. · 25 a 50 mil" [ref=f4e912]
+                - generic "Barra do Choça · 40.025 hab. · 25 a 50 mil" [ref=f4e913]
+                - generic "Barra do Mendes · 13.852 hab. · 10 a 25 mil" [ref=f4e914]
+                - generic "Barra do Rocha · 6.682 hab. · Menos de 10 mil" [ref=f4e915]
+                - generic "Barreiras · 165.413 hab. · Mais de 100 mil" [ref=f4e916]
+                - generic "Barro Alto · 13.761 hab. · 10 a 25 mil" [ref=f4e917]
+                - generic "Barrocas · 15.396 hab. · 10 a 25 mil" [ref=f4e918]
+                - generic "Barro Preto · 5.820 hab. · Menos de 10 mil" [ref=f4e919]
+                - generic "Belmonte · 20.565 hab. · 10 a 25 mil" [ref=f4e920]
+                - generic "Belo Campo · 18.399 hab. · 10 a 25 mil" [ref=f4e921]
+                - generic "Biritinga · 15.151 hab. · 10 a 25 mil" [ref=f4e922]
+                - generic "Boa Nova · 14.160 hab. · 10 a 25 mil" [ref=f4e923]
+                - generic "Boa Vista do Tupim · 19.320 hab. · 10 a 25 mil" [ref=f4e924]
+                - generic "Bom Jesus da Lapa · 74.040 hab. · 50 a 100 mil" [ref=f4e925]
+                - generic "Bom Jesus da Serra · 9.572 hab. · Menos de 10 mil" [ref=f4e926]
+                - generic "Boninal · 13.653 hab. · 10 a 25 mil" [ref=f4e927]
+                - generic "Bonito · 15.837 hab. · 10 a 25 mil" [ref=f4e928]
+                - generic "Boquira · 20.588 hab. · 10 a 25 mil" [ref=f4e929]
+                - generic "Botuporã · 11.040 hab. · 10 a 25 mil" [ref=f4e930]
+                - generic "Brejões · 12.914 hab. · 10 a 25 mil" [ref=f4e931]
+                - generic "Brejolândia · 9.114 hab. · Menos de 10 mil" [ref=f4e932]
+                - generic "Brotas de Macaúbas · 12.467 hab. · 10 a 25 mil" [ref=f4e933]
+                - generic "Brumado · 70.268 hab. · 50 a 100 mil" [ref=f4e934]
+                - generic "Buerarema · 16.880 hab. · 10 a 25 mil" [ref=f4e935]
+                - generic "Buritirama · 19.514 hab. · 10 a 25 mil" [ref=f4e936]
+                - generic "Caatiba · 6.915 hab. · Menos de 10 mil" [ref=f4e937]
+                - generic "Cabaceiras do Paraguaçu · 19.432 hab. · 10 a 25 mil" [ref=f4e938]
+                - generic "Cachoeira · 31.982 hab. · 25 a 50 mil" [ref=f4e939]
+                - generic "Caculé · 22.412 hab. · 10 a 25 mil" [ref=f4e940]
+                - generic "Caém · 10.360 hab. · 10 a 25 mil" [ref=f4e941]
+                - generic "Caetanos · 13.242 hab. · 10 a 25 mil" [ref=f4e942]
+                - generic "Caetité · 52.099 hab. · 50 a 100 mil" [ref=f4e943]
+                - generic "Cafarnaum · 17.975 hab. · 10 a 25 mil" [ref=f4e944]
+                - generic "Cairu · 17.591 hab. · 10 a 25 mil" [ref=f4e945]
+                - generic "Caldeirão Grande · 13.063 hab. · 10 a 25 mil" [ref=f4e946]
+                - generic "Camacan · 22.460 hab. · 10 a 25 mil" [ref=f4e947]
+                - generic "Camaçari · 334.195 hab. · Mais de 100 mil" [ref=f4e948]
+                - generic "Camamu · 30.480 hab. · 25 a 50 mil" [ref=f4e949]
+                - generic "Campo Alegre de Lourdes · 30.659 hab. · 25 a 50 mil" [ref=f4e950]
+                - generic "Campo Formoso · 68.571 hab. · 50 a 100 mil" [ref=f4e951]
+                - generic "Canápolis · 10.225 hab. · 10 a 25 mil" [ref=f4e952]
+                - generic "Canarana · 23.491 hab. · 10 a 25 mil" [ref=f4e953]
+                - generic "Canavieiras · 33.080 hab. · 25 a 50 mil" [ref=f4e954]
+                - generic "Candeal · 7.785 hab. · Menos de 10 mil" [ref=f4e955]
+                - generic "Candeias · 77.026 hab. · 50 a 100 mil" [ref=f4e956]
+                - generic "Candiba · 13.007 hab. · 10 a 25 mil" [ref=f4e957]
+                - generic "Cândido Sales · 25.278 hab. · 25 a 50 mil" [ref=f4e958]
+                - generic "Cansanção · 39.475 hab. · 25 a 50 mil" [ref=f4e959]
+                - generic "Canudos · 15.906 hab. · 10 a 25 mil" [ref=f4e960]
+                - generic "Capela do Alto Alegre · 10.754 hab. · 10 a 25 mil" [ref=f4e961]
+                - generic "Capim Grosso · 33.344 hab. · 25 a 50 mil" [ref=f4e962]
+                - generic "Caraíbas · 9.938 hab. · Menos de 10 mil" [ref=f4e963]
+                - generic "Caravelas · 21.612 hab. · 10 a 25 mil" [ref=f4e964]
+                - generic "Cardeal da Silva · 8.376 hab. · Menos de 10 mil" [ref=f4e965]
+                - generic "Carinhanha · 28.869 hab. · 25 a 50 mil" [ref=f4e966]
+                - generic "Casa Nova · 71.572 hab. · 50 a 100 mil" [ref=f4e967]
+                - generic "Castro Alves · 24.700 hab. · 10 a 25 mil" [ref=f4e968]
+                - generic "Catolândia · 3.480 hab. · Menos de 10 mil" [ref=f4e969]
+                - generic "Catu · 48.137 hab. · 25 a 50 mil" [ref=f4e970]
+                - generic "Caturama · 8.847 hab. · Menos de 10 mil" [ref=f4e971]
+                - generic "Central · 16.223 hab. · 10 a 25 mil" [ref=f4e972]
+                - generic "Chorrochó · 10.587 hab. · 10 a 25 mil" [ref=f4e973]
+                - generic "Cícero Dantas · 30.836 hab. · 25 a 50 mil" [ref=f4e974]
+                - generic "Cipó · 17.246 hab. · 10 a 25 mil" [ref=f4e975]
+                - generic "Coaraci · 17.949 hab. · 10 a 25 mil" [ref=f4e976]
+                - generic "Cocos · 19.156 hab. · 10 a 25 mil" [ref=f4e977]
+                - generic "Conceição da Feira · 22.936 hab. · 10 a 25 mil" [ref=f4e978]
+                - generic "Conceição do Almeida · 15.401 hab. · 10 a 25 mil" [ref=f4e979]
+                - generic "Conceição do Coité · 70.202 hab. · 50 a 100 mil" [ref=f4e980]
+                - generic "Conceição do Jacuípe · 34.994 hab. · 25 a 50 mil" [ref=f4e981]
+                - generic "Conde · 24.433 hab. · 10 a 25 mil" [ref=f4e982]
+                - generic "Condeúba · 17.059 hab. · 10 a 25 mil" [ref=f4e983]
+                - generic "Contendas do Sincorá · 4.750 hab. · Menos de 10 mil" [ref=f4e984]
+                - generic "Coração de Maria · 28.340 hab. · 25 a 50 mil" [ref=f4e985]
+                - generic "Cordeiros · 7.555 hab. · Menos de 10 mil" [ref=f4e986]
+                - generic "Coribe · 14.158 hab. · 10 a 25 mil" [ref=f4e987]
+                - generic "Coronel João Sá · 17.000 hab. · 10 a 25 mil" [ref=f4e988]
+                - generic "Correntina · 32.709 hab. · 25 a 50 mil" [ref=f4e989]
+                - generic "Cotegipe · 13.059 hab. · 10 a 25 mil" [ref=f4e990]
+                - generic "Cravolândia · 4.445 hab. · Menos de 10 mil" [ref=f4e991]
+                - generic "Crisópolis · 19.720 hab. · 10 a 25 mil" [ref=f4e992]
+                - generic "Cristópolis · 14.002 hab. · 10 a 25 mil" [ref=f4e993]
+                - generic "Cruz das Almas · 60.633 hab. · 50 a 100 mil" [ref=f4e994]
+                - generic "Curaçá · 33.603 hab. · 25 a 50 mil" [ref=f4e995]
+                - generic "Dário Meira · 10.025 hab. · 10 a 25 mil" [ref=f4e996]
+                - generic "Dias d'Ávila · 69.211 hab. · 50 a 100 mil" [ref=f4e997]
+                - generic "Dom Basílio · 11.905 hab. · 10 a 25 mil" [ref=f4e998]
+                - generic "Dom Macedo Costa · 4.418 hab. · Menos de 10 mil" [ref=f4e999]
+                - generic "Elísio Medrado · 7.782 hab. · Menos de 10 mil" [ref=f4e1000]
+                - generic "Encruzilhada · 19.111 hab. · 10 a 25 mil" [ref=f4e1001]
+                - generic "Entre Rios · 38.880 hab. · 25 a 50 mil" [ref=f4e1002]
+                - generic "Esplanada · 34.033 hab. · 25 a 50 mil" [ref=f4e1003]
+                - generic "Euclides da Cunha · 65.187 hab. · 50 a 100 mil" [ref=f4e1004]
+                - generic "Eunápolis · 112.477 hab. · Mais de 100 mil" [ref=f4e1005]
+                - generic "Fátima · 17.899 hab. · 10 a 25 mil" [ref=f4e1006]
+                - generic "Feira da Mata · 5.618 hab. · Menos de 10 mil" [ref=f4e1007]
+                - generic "Feira de Santana · 652.592 hab. · Mais de 100 mil" [ref=f4e1008]
+                - generic "Filadélfia · 17.892 hab. · 10 a 25 mil" [ref=f4e1009]
+                - generic "Firmino Alves · 5.925 hab. · Menos de 10 mil" [ref=f4e1010]
+                - generic "Floresta Azul · 11.068 hab. · 10 a 25 mil" [ref=f4e1011]
+                - generic "Formosa do Rio Preto · 25.185 hab. · 25 a 50 mil" [ref=f4e1012]
+                - generic "Gandu · 29.776 hab. · 25 a 50 mil" [ref=f4e1013]
+                - generic "Gavião · 4.357 hab. · Menos de 10 mil" [ref=f4e1014]
+                - generic "Gentio do Ouro · 11.896 hab. · 10 a 25 mil" [ref=f4e1015]
+                - generic "Glória · 16.698 hab. · 10 a 25 mil" [ref=f4e1016]
+                - generic "Gongogi · 5.549 hab. · Menos de 10 mil" [ref=f4e1017]
+                - generic "Governador Mangabeira · 20.604 hab. · 10 a 25 mil" [ref=f4e1018]
+                - generic "Guajeru · 8.054 hab. · Menos de 10 mil" [ref=f4e1019]
+                - generic "Guanambi · 87.580 hab. · 50 a 100 mil" [ref=f4e1020]
+                - generic "Guaratinga · 20.338 hab. · 10 a 25 mil" [ref=f4e1021]
+                - generic "Heliópolis · 12.301 hab. · 10 a 25 mil" [ref=f4e1022]
+                - generic "Iaçu · 25.178 hab. · 25 a 50 mil" [ref=f4e1023]
+                - generic "Ibiassucê · 10.426 hab. · 10 a 25 mil" [ref=f4e1024]
+                - generic "Ibicaraí · 21.688 hab. · 10 a 25 mil" [ref=f4e1025]
+                - generic "Ibicoara · 20.874 hab. · 10 a 25 mil" [ref=f4e1026]
+                - generic "Ibicuí · 13.791 hab. · 10 a 25 mil" [ref=f4e1027]
+                - generic "Ibipeba · 18.540 hab. · 10 a 25 mil" [ref=f4e1028]
+                - generic "Ibipitanga · 13.905 hab. · 10 a 25 mil" [ref=f4e1029]
+                - generic "Ibiquera · 3.722 hab. · Menos de 10 mil" [ref=f4e1030]
+                - generic "Ibirapitanga · 27.341 hab. · 25 a 50 mil" [ref=f4e1031]
+                - generic "Ibirapuã · 8.331 hab. · Menos de 10 mil" [ref=f4e1032]
+                - generic "Ibirataia · 19.613 hab. · 10 a 25 mil" [ref=f4e1033]
+                - generic "Ibitiara · 14.622 hab. · 10 a 25 mil" [ref=f4e1034]
+                - generic "Ibititá · 17.954 hab. · 10 a 25 mil" [ref=f4e1035]
+                - generic "Ibotirama · 26.611 hab. · 25 a 50 mil" [ref=f4e1036]
+                - generic "Ichu · 6.192 hab. · Menos de 10 mil" [ref=f4e1037]
+                - generic "Igaporã · 17.022 hab. · 10 a 25 mil" [ref=f4e1038]
+                - generic "Igrapiúna · 13.077 hab. · 10 a 25 mil" [ref=f4e1039]
+                - generic "Iguaí · 25.114 hab. · 25 a 50 mil" [ref=f4e1040]
+                - generic "Ilhéus · 197.163 hab. · Mais de 100 mil" [ref=f4e1041]
+                - generic "Inhambupe · 33.771 hab. · 25 a 50 mil" [ref=f4e1042]
+                - generic "Ipecaetá · 16.230 hab. · 10 a 25 mil" [ref=f4e1043]
+                - generic "Ipiaú · 43.078 hab. · 25 a 50 mil" [ref=f4e1044]
+                - generic "Ipirá · 58.094 hab. · 50 a 100 mil" [ref=f4e1045]
+                - generic "Ipupiara · 9.925 hab. · Menos de 10 mil" [ref=f4e1046]
+                - generic "Irajuba · 6.100 hab. · Menos de 10 mil" [ref=f4e1047]
+                - generic "Iramaia · 10.755 hab. · 10 a 25 mil" [ref=f4e1048]
+                - generic "Iraquara · 25.590 hab. · 25 a 50 mil" [ref=f4e1049]
+                - generic "Irará · 27.984 hab. · 25 a 50 mil" [ref=f4e1050]
+                - generic "Irecê · 76.491 hab. · 50 a 100 mil" [ref=f4e1051]
+                - generic "Itabela · 27.691 hab. · 25 a 50 mil" [ref=f4e1052]
+                - generic "Itaberaba · 67.605 hab. · 50 a 100 mil" [ref=f4e1053]
+                - generic "Itabuna · 185.500 hab. · Mais de 100 mil" [ref=f4e1054]
+                - generic "Itacaré · 28.214 hab. · 25 a 50 mil" [ref=f4e1055]
+                - generic "Itaeté · 14.031 hab. · 10 a 25 mil" [ref=f4e1056]
+                - generic "Itagi · 13.925 hab. · 10 a 25 mil" [ref=f4e1057]
+                - generic "Itagibá · 15.556 hab. · 10 a 25 mil" [ref=f4e1058]
+                - generic "Itagimirim · 7.037 hab. · Menos de 10 mil" [ref=f4e1059]
+                - generic "Itaguaçu da Bahia · 13.116 hab. · 10 a 25 mil" [ref=f4e1060]
+                - generic "Itaju do Colônia · 6.033 hab. · Menos de 10 mil" [ref=f4e1061]
+                - generic "Itajuípe · 19.913 hab. · 10 a 25 mil" [ref=f4e1062]
+                - generic "Itamaraju · 60.831 hab. · 50 a 100 mil" [ref=f4e1063]
+                - generic "Itamari · 7.050 hab. · Menos de 10 mil" [ref=f4e1064]
+                - generic "Itambé · 26.420 hab. · 25 a 50 mil" [ref=f4e1065]
+                - generic "Itanagra · 5.814 hab. · Menos de 10 mil" [ref=f4e1066]
+                - generic "Itanhém · 19.025 hab. · 10 a 25 mil" [ref=f4e1067]
+                - generic "Itaparica · 19.738 hab. · 10 a 25 mil" [ref=f4e1068]
+                - generic "Itapé · 10.327 hab. · 10 a 25 mil" [ref=f4e1069]
+                - generic "Itapebi · 9.779 hab. · Menos de 10 mil" [ref=f4e1070]
+                - generic "Itapetinga · 68.704 hab. · 50 a 100 mil" [ref=f4e1071]
+                - generic "Itapicuru · 32.793 hab. · 25 a 50 mil" [ref=f4e1072]
+                - generic "Itapitanga · 10.320 hab. · 10 a 25 mil" [ref=f4e1073]
+                - generic "Itaquara · 8.175 hab. · Menos de 10 mil" [ref=f4e1074]
+                - generic "Itarantim · 17.035 hab. · 10 a 25 mil" [ref=f4e1075]
+                - generic "Itatim · 15.749 hab. · 10 a 25 mil" [ref=f4e1076]
+                - generic "Itiruçu · 11.016 hab. · 10 a 25 mil" [ref=f4e1077]
+                - generic "Itiúba · 33.671 hab. · 25 a 50 mil" [ref=f4e1078]
+                - generic "Itororó · 17.729 hab. · 10 a 25 mil" [ref=f4e1079]
+                - generic "Ituaçu · 18.992 hab. · 10 a 25 mil" [ref=f4e1080]
+                - generic "Ituberá · 21.974 hab. · 10 a 25 mil" [ref=f4e1081]
+                - generic "Iuiú · 11.101 hab. · 10 a 25 mil" [ref=f4e1082]
+                - generic "Jaborandi · 9.269 hab. · Menos de 10 mil" [ref=f4e1083]
+                - generic "Jacaraci · 14.625 hab. · 10 a 25 mil" [ref=f4e1084]
+                - generic "Jacobina · 88.296 hab. · 50 a 100 mil" [ref=f4e1085]
+                - generic "Jaguaquara · 46.026 hab. · 25 a 50 mil" [ref=f4e1086]
+                - generic "Jaguarari · 32.495 hab. · 25 a 50 mil" [ref=f4e1087]
+                - generic "Jaguaripe · 20.237 hab. · 10 a 25 mil" [ref=f4e1088]
+                - generic "Jandaíra · 9.112 hab. · Menos de 10 mil" [ref=f4e1089]
+                - generic "Jequié · 156.408 hab. · Mais de 100 mil" [ref=f4e1090]
+                - generic "Jeremoabo · 37.519 hab. · 25 a 50 mil" [ref=f4e1091]
+                - generic "Jiquiriçá · 13.623 hab. · 10 a 25 mil" [ref=f4e1092]
+                - generic "Jitaúna · 14.614 hab. · 10 a 25 mil" [ref=f4e1093]
+                - generic "João Dourado · 26.186 hab. · 25 a 50 mil" [ref=f4e1094]
+                - generic "Juazeiro · 244.406 hab. · Mais de 100 mil" [ref=f4e1095]
+                - generic "Jucuruçu · 9.971 hab. · Menos de 10 mil" [ref=f4e1096]
+                - generic "Jussara · 16.922 hab. · 10 a 25 mil" [ref=f4e1097]
+                - generic "Jussari · 5.902 hab. · Menos de 10 mil" [ref=f4e1098]
+                - generic "Jussiape · 7.381 hab. · Menos de 10 mil" [ref=f4e1099]
+                - generic "Lafaiete Coutinho · 4.044 hab. · Menos de 10 mil" [ref=f4e1100]
+                - generic "Lagoa Real · 13.990 hab. · 10 a 25 mil" [ref=f4e1101]
+                - generic "Laje · 23.198 hab. · 10 a 25 mil" [ref=f4e1102]
+                - generic "Lajedão · 4.550 hab. · Menos de 10 mil" [ref=f4e1103]
+                - generic "Lajedinho · 4.102 hab. · Menos de 10 mil" [ref=f4e1104]
+                - generic "Lajedo do Tabocal · 7.486 hab. · Menos de 10 mil" [ref=f4e1105]
+                - generic "Lamarão · 9.062 hab. · Menos de 10 mil" [ref=f4e1106]
+                - generic "Lapão · 25.713 hab. · 25 a 50 mil" [ref=f4e1107]
+                - generic "Lauro de Freitas · 220.437 hab. · Mais de 100 mil" [ref=f4e1108]
+                - generic "Lençóis · 11.022 hab. · 10 a 25 mil" [ref=f4e1109]
+                - generic "Licínio de Almeida · 11.848 hab. · 10 a 25 mil" [ref=f4e1110]
+                - generic "Livramento de Nossa Senhora · 43.898 hab. · 25 a 50 mil" [ref=f4e1111]
+                - generic "Luís Eduardo Magalhães · 108.271 hab. · Mais de 100 mil" [ref=f4e1112]
+                - generic "Macajuba · 10.463 hab. · 10 a 25 mil" [ref=f4e1113]
+                - generic "Macarani · 21.556 hab. · 10 a 25 mil" [ref=f4e1114]
+                - generic "Macaúbas · 41.631 hab. · 25 a 50 mil" [ref=f4e1115]
+                - generic "Macururé · 7.600 hab. · Menos de 10 mil" [ref=f4e1116]
+                - generic "Madre de Deus · 18.767 hab. · 10 a 25 mil" [ref=f4e1117]
+                - generic "Maetinga · 6.968 hab. · Menos de 10 mil" [ref=f4e1118]
+                - generic "Maiquinique · 9.452 hab. · Menos de 10 mil" [ref=f4e1119]
+                - generic "Mairi · 16.122 hab. · 10 a 25 mil" [ref=f4e1120]
+                - generic "Malhada · 15.426 hab. · 10 a 25 mil" [ref=f4e1121]
+                - generic "Malhada de Pedras · 8.673 hab. · Menos de 10 mil" [ref=f4e1122]
+                - generic "Manoel Vitorino · 13.327 hab. · 10 a 25 mil" [ref=f4e1123]
+                - generic "Mansidão · 13.902 hab. · 10 a 25 mil" [ref=f4e1124]
+                - generic "Maracás · 27.747 hab. · 25 a 50 mil" [ref=f4e1125]
+                - generic "Maragogipe · 38.394 hab. · 25 a 50 mil" [ref=f4e1126]
+                - generic "Maraú · 24.713 hab. · 10 a 25 mil" [ref=f4e1127]
+                - generic "Marcionílio Souza · 9.256 hab. · Menos de 10 mil" [ref=f4e1128]
+                - generic "Mascote · 11.991 hab. · 10 a 25 mil" [ref=f4e1129]
+                - generic "Mata de São João · 48.698 hab. · 25 a 50 mil" [ref=f4e1130]
+                - generic "Matina · 10.338 hab. · 10 a 25 mil" [ref=f4e1131]
+                - generic "Medeiros Neto · 23.096 hab. · 10 a 25 mil" [ref=f4e1132]
+                - generic "Miguel Calmon · 27.817 hab. · 25 a 50 mil" [ref=f4e1133]
+                - generic "Milagres · 11.076 hab. · 10 a 25 mil" [ref=f4e1134]
+                - generic "Mirangaba · 15.050 hab. · 10 a 25 mil" [ref=f4e1135]
+                - generic "Mirante · 10.072 hab. · 10 a 25 mil" [ref=f4e1136]
+                - generic "Monte Santo · 47.758 hab. · 25 a 50 mil" [ref=f4e1137]
+                - generic "Morpará · 8.303 hab. · Menos de 10 mil" [ref=f4e1138]
+                - generic "Morro do Chapéu · 33.389 hab. · 25 a 50 mil" [ref=f4e1139]
+                - generic "Mortugaba · 11.131 hab. · 10 a 25 mil" [ref=f4e1140]
+                - generic "Mucugê · 12.988 hab. · 10 a 25 mil" [ref=f4e1141]
+                - generic "Mucuri · 38.082 hab. · 25 a 50 mil" [ref=f4e1142]
+                - generic "Mulungu do Morro · 13.166 hab. · 10 a 25 mil" [ref=f4e1143]
+                - generic "Mundo Novo · 20.564 hab. · 10 a 25 mil" [ref=f4e1144]
+                - generic "Muniz Ferreira · 7.165 hab. · Menos de 10 mil" [ref=f4e1145]
+                - generic "Muquém de São Francisco · 11.029 hab. · 10 a 25 mil" [ref=f4e1146]
+                - generic "Muritiba · 28.558 hab. · 25 a 50 mil" [ref=f4e1147]
+                - generic "Mutuípe · 20.028 hab. · 10 a 25 mil" [ref=f4e1148]
+                - generic "Nazaré · 28.181 hab. · 25 a 50 mil" [ref=f4e1149]
+                - generic "Nilo Peçanha · 12.032 hab. · 10 a 25 mil" [ref=f4e1150]
+                - generic "Nordestina · 18.536 hab. · 10 a 25 mil" [ref=f4e1151]
+                - generic "Nova Canaã · 15.959 hab. · 10 a 25 mil" [ref=f4e1152]
+                - generic "Nova Fátima · 7.958 hab. · Menos de 10 mil" [ref=f4e1153]
+                - generic "Nova Ibiá · 8.325 hab. · Menos de 10 mil" [ref=f4e1154]
+                - generic "Nova Itarana · 7.820 hab. · Menos de 10 mil" [ref=f4e1155]
+                - generic "Nova Redenção · 7.525 hab. · Menos de 10 mil" [ref=f4e1156]
+                - generic "Nova Soure · 24.206 hab. · 10 a 25 mil" [ref=f4e1157]
+                - generic "Nova Viçosa · 41.089 hab. · 25 a 50 mil" [ref=f4e1158]
+                - generic "Novo Horizonte · 11.163 hab. · 10 a 25 mil" [ref=f4e1159]
+                - generic "Novo Triunfo · 10.666 hab. · 10 a 25 mil" [ref=f4e1160]
+                - generic "Olindina · 22.615 hab. · 10 a 25 mil" [ref=f4e1161]
+                - generic "Oliveira dos Brejinhos · 22.850 hab. · 10 a 25 mil" [ref=f4e1162]
+                - generic "Ouriçangas · 7.728 hab. · Menos de 10 mil" [ref=f4e1163]
+                - generic "Ourolândia · 19.322 hab. · 10 a 25 mil" [ref=f4e1164]
+                - generic "Palmas de Monte Alto · 20.091 hab. · 10 a 25 mil" [ref=f4e1165]
+                - generic "Palmeiras · 10.383 hab. · 10 a 25 mil" [ref=f4e1166]
+                - generic "Paramirim · 20.378 hab. · 10 a 25 mil" [ref=f4e1167]
+                - generic "Paratinga · 28.947 hab. · 25 a 50 mil" [ref=f4e1168]
+                - generic "Paripiranga · 26.609 hab. · 25 a 50 mil" [ref=f4e1169]
+                - generic "Pau Brasil · 10.669 hab. · 10 a 25 mil" [ref=f4e1170]
+                - generic "Paulo Afonso · 118.412 hab. · Mais de 100 mil" [ref=f4e1171]
+                - generic "Pé de Serra · 13.242 hab. · 10 a 25 mil" [ref=f4e1172]
+                - generic "Pedrão · 6.229 hab. · Menos de 10 mil" [ref=f4e1173]
+                - generic "Pedro Alexandre · 14.056 hab. · 10 a 25 mil" [ref=f4e1174]
+                - generic "Piatã · 20.098 hab. · 10 a 25 mil" [ref=f4e1175]
+                - generic "Pilão Arcado · 35.326 hab. · 25 a 50 mil" [ref=f4e1176]
+                - generic "Pindaí · 14.740 hab. · 10 a 25 mil" [ref=f4e1177]
+                - generic "Pindobaçu · 19.133 hab. · 10 a 25 mil" [ref=f4e1178]
+                - generic "Pintadas · 9.805 hab. · Menos de 10 mil" [ref=f4e1179]
+                - generic "Piraí do Norte · 10.200 hab. · 10 a 25 mil" [ref=f4e1180]
+                - generic "Piripá · 9.158 hab. · Menos de 10 mil" [ref=f4e1181]
+                - generic "Piritiba · 17.549 hab. · 10 a 25 mil" [ref=f4e1182]
+                - generic "Planaltino · 8.012 hab. · Menos de 10 mil" [ref=f4e1183]
+                - generic "Planalto · 23.290 hab. · 10 a 25 mil" [ref=f4e1184]
+                - generic "Poções · 48.197 hab. · 25 a 50 mil" [ref=f4e1185]
+                - generic "Pojuca · 33.079 hab. · 25 a 50 mil" [ref=f4e1186]
+                - generic "Ponto Novo · 17.941 hab. · 10 a 25 mil" [ref=f4e1187]
+                - generic "Porto Seguro · 158.736 hab. · Mais de 100 mil" [ref=f4e1188]
+                - generic "Potiraguá · 11.524 hab. · 10 a 25 mil" [ref=f4e1189]
+                - generic "Prado · 31.715 hab. · 25 a 50 mil" [ref=f4e1190]
+                - generic "Presidente Dutra · 15.133 hab. · 10 a 25 mil" [ref=f4e1191]
+                - generic "Presidente Jânio Quadros · 12.627 hab. · 10 a 25 mil" [ref=f4e1192]
+                - generic "Presidente Tancredo Neves · 27.662 hab. · 25 a 50 mil" [ref=f4e1193]
+                - generic "Queimadas · 26.027 hab. · 25 a 50 mil" [ref=f4e1194]
+                - generic "Quijingue · 27.317 hab. · 25 a 50 mil" [ref=f4e1195]
+                - generic "Quixabeira · 9.429 hab. · Menos de 10 mil" [ref=f4e1196]
+                - generic "Rafael Jambeiro · 20.242 hab. · 10 a 25 mil" [ref=f4e1197]
+                - generic "Remanso · 40.531 hab. · 25 a 50 mil" [ref=f4e1198]
+                - generic "Retirolândia · 13.654 hab. · 10 a 25 mil" [ref=f4e1199]
+                - generic "Riachão das Neves · 22.289 hab. · 10 a 25 mil" [ref=f4e1200]
+                - generic "Riachão do Jacuípe · 33.422 hab. · 25 a 50 mil" [ref=f4e1201]
+                - generic "Riacho de Santana · 39.127 hab. · 25 a 50 mil" [ref=f4e1202]
+                - generic "Ribeira do Amparo · 13.831 hab. · 10 a 25 mil" [ref=f4e1203]
+                - generic "Ribeira do Pombal · 53.997 hab. · 50 a 100 mil" [ref=f4e1204]
+                - generic "Ribeirão do Largo · 10.382 hab. · 10 a 25 mil" [ref=f4e1205]
+                - generic "Rio de Contas · 13.634 hab. · 10 a 25 mil" [ref=f4e1206]
+                - generic "Rio do Antônio · 13.098 hab. · 10 a 25 mil" [ref=f4e1207]
+                - generic "Rio do Pires · 9.585 hab. · Menos de 10 mil" [ref=f4e1208]
+                - generic "Rio Real · 35.378 hab. · 25 a 50 mil" [ref=f4e1209]
+                - generic "Rodelas · 10.303 hab. · 10 a 25 mil" [ref=f4e1210]
+                - generic "Ruy Barbosa · 30.172 hab. · 25 a 50 mil" [ref=f4e1211]
+                - generic "Salinas da Margarida · 14.989 hab. · 10 a 25 mil" [ref=f4e1212]
+                - generic "Salvador · 2.610.987 hab. · Mais de 100 mil" [ref=f4e1213]
+                - generic "Santa Bárbara · 22.446 hab. · 10 a 25 mil" [ref=f4e1214]
+                - generic "Santa Brígida · 14.979 hab. · 10 a 25 mil" [ref=f4e1215]
+                - generic "Santa Cruz Cabrália · 30.385 hab. · 25 a 50 mil" [ref=f4e1216]
+                - generic "Santa Cruz da Vitória · 4.672 hab. · Menos de 10 mil" [ref=f4e1217]
+                - generic "Santa Inês · 10.293 hab. · 10 a 25 mil" [ref=f4e1218]
+                - generic "Santaluz · 37.079 hab. · 25 a 50 mil" [ref=f4e1219]
+                - generic "Santa Luzia · 11.776 hab. · 10 a 25 mil" [ref=f4e1220]
+                - generic "Santa Maria da Vitória · 38.686 hab. · 25 a 50 mil" [ref=f4e1221]
+                - generic "Santana · 24.778 hab. · 10 a 25 mil" [ref=f4e1222]
+                - generic "Santanópolis · 9.831 hab. · Menos de 10 mil" [ref=f4e1223]
+                - generic "Santa Rita de Cássia · 28.084 hab. · 25 a 50 mil" [ref=f4e1224]
+                - generic "Santa Teresinha · 9.790 hab. · Menos de 10 mil" [ref=f4e1225]
+                - generic "Santo Amaro · 55.935 hab. · 50 a 100 mil" [ref=f4e1226]
+                - generic "Santo Antônio de Jesus · 103.055 hab. · Mais de 100 mil" [ref=f4e1227]
+                - generic "Santo Estêvão · 55.696 hab. · 50 a 100 mil" [ref=f4e1228]
+                - generic "São Desidério · 36.793 hab. · 25 a 50 mil" [ref=f4e1229]
+                - generic "São Domingos · 8.417 hab. · Menos de 10 mil" [ref=f4e1230]
+                - generic "São Félix · 10.946 hab. · 10 a 25 mil" [ref=f4e1231]
+                - generic "São Félix do Coribe · 15.704 hab. · 10 a 25 mil" [ref=f4e1232]
+                - generic "São Felipe · 20.286 hab. · 10 a 25 mil" [ref=f4e1233]
+                - generic "São Francisco do Conde · 37.892 hab. · 25 a 50 mil" [ref=f4e1234]
+                - generic "São Gabriel · 18.417 hab. · 10 a 25 mil" [ref=f4e1235]
+                - generic "São Gonçalo dos Campos · 39.570 hab. · 25 a 50 mil" [ref=f4e1236]
+                - generic "São José da Vitória · 5.321 hab. · Menos de 10 mil" [ref=f4e1237]
+                - generic "São José do Jacuípe · 10.195 hab. · 10 a 25 mil" [ref=f4e1238]
+                - generic "São Miguel das Matas · 10.334 hab. · 10 a 25 mil" [ref=f4e1239]
+                - generic "São Sebastião do Passé · 40.376 hab. · 25 a 50 mil" [ref=f4e1240]
+                - generic "Sapeaçu · 17.993 hab. · 10 a 25 mil" [ref=f4e1241]
+                - generic "Sátiro Dias · 16.021 hab. · 10 a 25 mil" [ref=f4e1242]
+                - generic "Saubara · 11.433 hab. · 10 a 25 mil" [ref=f4e1243]
+                - generic "Saúde · 10.482 hab. · 10 a 25 mil" [ref=f4e1244]
+                - generic "Seabra · 49.587 hab. · 25 a 50 mil" [ref=f4e1245]
+                - generic "Sebastião Laranjeiras · 9.373 hab. · Menos de 10 mil" [ref=f4e1246]
+                - generic "Senhor do Bonfim · 77.514 hab. · 50 a 100 mil" [ref=f4e1247]
+                - generic "Serra do Ramalho · 34.270 hab. · 25 a 50 mil" [ref=f4e1248]
+                - generic "Sento Sé · 37.389 hab. · 25 a 50 mil" [ref=f4e1249]
+                - generic "Serra Dourada · 16.691 hab. · 10 a 25 mil" [ref=f4e1250]
+                - generic "Serra Preta · 18.090 hab. · 10 a 25 mil" [ref=f4e1251]
+                - generic "Serrinha · 85.696 hab. · 50 a 100 mil" [ref=f4e1252]
+                - generic "Serrolândia · 13.320 hab. · 10 a 25 mil" [ref=f4e1253]
+                - generic "Simões Filho · 127.093 hab. · Mais de 100 mil" [ref=f4e1254]
+                - generic "Sítio do Mato · 13.408 hab. · 10 a 25 mil" [ref=f4e1255]
+                - generic "Sítio do Quinto · 14.778 hab. · 10 a 25 mil" [ref=f4e1256]
+                - generic "Sobradinho · 24.799 hab. · 10 a 25 mil" [ref=f4e1257]
+                - generic "Souto Soares · 16.904 hab. · 10 a 25 mil" [ref=f4e1258]
+                - generic "Tabocas do Brejo Velho · 11.990 hab. · 10 a 25 mil" [ref=f4e1259]
+                - generic "Tanhaçu · 21.407 hab. · 10 a 25 mil" [ref=f4e1260]
+                - generic "Tanque Novo · 18.459 hab. · 10 a 25 mil" [ref=f4e1261]
+                - generic "Tanquinho · 7.729 hab. · Menos de 10 mil" [ref=f4e1262]
+                - generic "Taperoá · 18.016 hab. · 10 a 25 mil" [ref=f4e1263]
+                - generic "Tapiramutá · 15.884 hab. · 10 a 25 mil" [ref=f4e1264]
+                - generic "Teixeira de Freitas · 147.454 hab. · Mais de 100 mil" [ref=f4e1265]
+                - generic "Teodoro Sampaio · 7.220 hab. · Menos de 10 mil" [ref=f4e1266]
+                - generic "Teofilândia · 21.811 hab. · 10 a 25 mil" [ref=f4e1267]
+                - generic "Teolândia · 15.892 hab. · 10 a 25 mil" [ref=f4e1268]
+                - generic "Terra Nova · 10.802 hab. · 10 a 25 mil" [ref=f4e1269]
+                - generic "Tremedal · 17.497 hab. · 10 a 25 mil" [ref=f4e1270]
+                - generic "Tucano · 48.062 hab. · 25 a 50 mil" [ref=f4e1271]
+                - generic "Uauá · 24.654 hab. · 10 a 25 mil" [ref=f4e1272]
+                - generic "Ubaíra · 18.605 hab. · 10 a 25 mil" [ref=f4e1273]
+                - generic "Ubaitaba · 17.626 hab. · 10 a 25 mil" [ref=f4e1274]
+                - generic "Ubatã · 18.161 hab. · 10 a 25 mil" [ref=f4e1275]
+                - generic "Uibaí · 14.844 hab. · 10 a 25 mil" [ref=f4e1276]
+                - generic "Umburanas · 13.511 hab. · 10 a 25 mil" [ref=f4e1277]
+                - generic "Una · 17.998 hab. · 10 a 25 mil" [ref=f4e1278]
+                - generic "Urandi · 15.365 hab. · 10 a 25 mil" [ref=f4e1279]
+                - generic "Uruçuca · 21.365 hab. · 10 a 25 mil" [ref=f4e1280]
+                - generic "Utinga · 16.285 hab. · 10 a 25 mil" [ref=f4e1281]
+                - generic "Valença · 96.226 hab. · 50 a 100 mil" [ref=f4e1282]
+                - generic "Valente · 23.683 hab. · 10 a 25 mil" [ref=f4e1283]
+                - generic "Várzea da Roça · 13.043 hab. · 10 a 25 mil" [ref=f4e1284]
+                - generic "Várzea do Poço · 8.115 hab. · Menos de 10 mil" [ref=f4e1285]
+                - generic "Várzea Nova · 13.369 hab. · 10 a 25 mil" [ref=f4e1286]
+                - generic "Varzedo · 9.913 hab. · Menos de 10 mil" [ref=f4e1287]
+                - generic "Vera Cruz · 40.915 hab. · 25 a 50 mil" [ref=f4e1288]
+                - generic "Vereda · 7.072 hab. · Menos de 10 mil" [ref=f4e1289]
+                - generic "Vitória da Conquista · 387.524 hab. · Mais de 100 mil" [ref=f4e1290]
+                - generic "Wagner · 8.861 hab. · Menos de 10 mil" [ref=f4e1291]
+                - generic "Wanderley · 13.071 hab. · 10 a 25 mil" [ref=f4e1292]
+                - generic "Wenceslau Guimarães · 26.279 hab. · 25 a 50 mil" [ref=f4e1293]
+                - generic "Xique-Xique · 46.328 hab. · 25 a 50 mil" [ref=f4e1294]
+                - generic [ref=f4e1295]:
+                  - generic "Ondina · Salvador · CSA Base" [ref=f4e1296]
+                  - generic "Imbuí de NA · Salvador · CSA Base" [ref=f4e1297]
+                  - generic "Periperi · Salvador · CSA Base" [ref=f4e1298]
+                  - generic "Bonfim · Salvador · CSA Base" [ref=f4e1299]
+                  - generic "Milagres · Salvador · CSA Base" [ref=f4e1300]
+                  - generic "Campo Santo · Salvador · CSA Base" [ref=f4e1301]
+                  - generic "Stiep de NA · Salvador · CSA Base" [ref=f4e1302]
+                  - generic "Stella Maris · Salvador · CSA Base" [ref=f4e1303]
+                  - generic "Esperança · Salvador · CSA Base" [ref=f4e1304]
+                  - generic "Brotas · Salvador · CSA Base" [ref=f4e1305]
+                  - generic "Penha · Salvador · CSA Base" [ref=f4e1306]
+                  - generic "Lapa de NA · Salvador · CSA Base" [ref=f4e1307]
+                  - generic "Pelourinho · Salvador · CSA Base" [ref=f4e1308]
+                  - generic "Boca do Rio · Salvador · CSA Base" [ref=f4e1309]
+                  - generic "Sabedoria e Paz · Feira de Santana · CSA Base" [ref=f4e1310]
+                  - generic "Mente Livre · Vitória da Conquista · CSA Base" [ref=f4e1311]
+                  - generic "Juntos Podemos de NA · Vitória da Conquista · CSA Base" [ref=f4e1312]
+                  - generic "Camaçari · Camaçari · CSA Litoral Norte Bahia" [ref=f4e1313]
+                  - generic "Tamos Juntos · Remanso · CSA Base" [ref=f4e1314]
+                  - generic "Luz do Cerrado · Luís Eduardo Magalhães · CSA Base" [ref=f4e1315]
+                  - generic "Retorno à Vida · Jequié · CSA Costa do Cacau" [ref=f4e1316]
+                  - generic "Pontal Ilhéus · Ilhéus · CSA S.O.S." [ref=f4e1317]
+                  - generic "Nova Era · Porto Seguro · CSA Extremo Sul da Bahia" [ref=f4e1318]
+                  - generic "Redescobrimento · Porto Seguro · CSA Extremo Sul da Bahia" [ref=f4e1319]
+                  - generic "Nova Maneira de Viver · Porto Seguro · CSA S.O.S." [ref=f4e1320]
+                  - generic "Só Por Hoje · Teixeira de Freitas · CSA Extremo Sul da Bahia" [ref=f4e1321]
+                  - generic "Lauro de Freitas · Lauro de Freitas · CSA Litoral Norte Bahia" [ref=f4e1322]
+                  - generic "Pituba Força · Salvador · CSA Salvador" [ref=f4e1323]
+                  - generic "Itapuã · Salvador · CSA Litoral Norte Bahia" [ref=f4e1324]
+                  - generic "Vilas do Atlântico · Lauro de Freitas · CSA Litoral Norte Bahia" [ref=f4e1325]
+                  - generic "Barreiras · Barreiras · CSA Base" [ref=f4e1326]
+                  - generic "Novo Despertar · Itabuna · CSA S.O.S." [ref=f4e1327]
+                  - generic "Rosas de NA · Salvador · CSA Salvador" [ref=f4e1328]
+                  - generic "Formosa do Rio Preto de NA · Formosa do Rio Preto · CSA Base" [ref=f4e1329]
+                  - generic "Guanambi de NA · Guanambi · CSA Salvador" [ref=f4e1330]
+                  - generic "Liberdade · Teixeira de Freitas · CSA S.O.S." [ref=f4e1331]
+                  - generic "Misericórdia · Juazeiro · CSA Mandacaru" [ref=f4e1332]
+                  - generic "◆ Brumado (localidade fechada)" [ref=f4e1333]
+                  - generic "◆ Dário Meira (localidade fechada)" [ref=f4e1334]
+                  - generic "◆ Eunápolis (localidade fechada)" [ref=f4e1335]
+                  - generic "◆ Nova Viçosa (localidade fechada)" [ref=f4e1336]
+                  - generic "◆ Poções (localidade fechada)" [ref=f4e1337]
+                  - generic "◆ Santo Amaro (localidade fechada)" [ref=f4e1338]
+                  - generic "◆ Sobradinho (localidade fechada)" [ref=f4e1339]
+                  - generic "◆ Valença (localidade fechada)" [ref=f4e1340]
+                  - generic "◆ Vera Cruz (localidade fechada)" [ref=f4e1341]
+              - generic [ref=f4e1342]:
+                - button "Aproximar" [ref=f4e1343] [cursor=pointer]: +
+                - button "Afastar" [ref=f4e1344] [cursor=pointer]: −
+                - button "Enquadrar o estado" [ref=f4e1345] [cursor=pointer]: ⌂
+            - generic [ref=f4e1346]:
+              - text: População (Censo 2022)
+              - button "Menos de 10 mil 77 mun." [ref=f4e1347] [cursor=pointer]:
+                - text: Menos de 10 mil
+                - generic [ref=f4e1349]: 77 mun.
+              - button "10 a 25 mil 216 mun." [ref=f4e1350] [cursor=pointer]:
+                - text: 10 a 25 mil
+                - generic [ref=f4e1352]: 216 mun.
+              - button "25 a 50 mil 81 mun. · 2 grupos" [ref=f4e1353] [cursor=pointer]:
+                - text: 25 a 50 mil
+                - generic [ref=f4e1355]: 81 mun. · 2 grupos
+              - button "50 a 100 mil 25 mun. · 1 grupos" [ref=f4e1356] [cursor=pointer]:
+                - text: 50 a 100 mil
+                - generic [ref=f4e1358]: 25 mun. · 1 grupos
+              - button "Mais de 100 mil 18 mun. · 34 grupos" [ref=f4e1359] [cursor=pointer]:
+                - text: Mais de 100 mil
+                - generic [ref=f4e1361]: 18 mun. · 34 grupos
+              - generic [ref=f4e1362]: Clique numa faixa para destacá-la
+          - generic [ref=f4e1363]: Passe o mouse sobre um município ou um ponto para ver o nome. Os pontos seguem os filtros do dashboard (CSA, escala populacional e acessibilidade) e o botão de localidades fechadas.
+        - paragraph [ref=f4e1364]: "Fontes: planilha INDICADORES_GEORREFERENCIADOS_BAHIA (aba “GRUPOS CSAs BA 3T26”, 3T26). A planilha traz 37 grupos: 36 do CSR Brasil e 1 do CSR Nordeste (Misericórdia, em Juazeiro, CSA Mandacaru); o filtro por CSR separa os dois. A população de cada município e a escala populacional vêm da planilha Escala_Populacional_UF_BA (rotulada Censo 2022 do IBGE, 417 municípios, total 14.659.023); todos os municípios do GeoJSON constam nela, com duas diferenças de grafia (Muquém de São Francisco / do São Francisco e Santa Teresinha / Terezinha). Acessibilidade: a coluna está em branco para todos os grupos, então todos aparecem como “Sem registro”. Retorno à Vida (Jequié) fica a cerca de 11 km fora do município indicado e Ondina (Salvador), a 0,4 km; mantive as coordenadas da planilha. Dois grupos compartilham a mesma coordenada, e o pino foi afastado alguns metros. Localidades fechadas: planilha LOCALIDADES_GRUPOS_FECHADOS_BA (aba GRPS FECHADOS 2026, 9 localidades); o grupo aberto mais próximo foi calculado em linha reta. As localidades não têm dado de acessibilidade, então o filtro de acessibilidade as oculta. Escala populacional: na pizza, “sem grupo” são os 401 municípios sem grupo aberto, inclusive as 9 localidades fechadas; 16 dos 417 municípios têm grupo aberto. Mapa de municípios: GeoJSON da Bahia, simplificado para a web."
+  - generic:
+    - generic:
+      - alert
+      - status
+  - status [ref=e35]
+  - status [ref=e36]
+  - status [ref=e37]
+  - status [ref=e38]
+  - status [ref=e39]
+  - status [ref=e40]
+  - status [ref=e41]
+  - status [ref=e42]
+  - status [ref=e43]
+  - status [ref=e44]

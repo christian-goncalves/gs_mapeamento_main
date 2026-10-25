@@ -1,4 +1,0 @@
-interface:
-  display_name: "GS Mapeamento Atas"
-  short_description: "Preserva contratos de atas e Google Sheets"
-  default_prompt: "Use $gs-mapeamento-atas para alterar formulários, sugestões ou validações de atas com segurança."
