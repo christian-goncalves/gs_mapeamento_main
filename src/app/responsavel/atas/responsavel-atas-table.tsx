@@ -1,7 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -14,6 +22,16 @@ import { AtaPdfDownloadButton } from "@/app/atas/ata-pdf-download-button";
 import { AtaDeleteAction } from "@/app/atas/ata-delete-action";
 import type { ConfigColumns } from "datatables.net";
 import type { ResponsavelAtaRow, ResponsavelAtaStatus } from "./responsavel-atas-data";
+import {
+  encodeResponsavelAtasOrder,
+  RESPONSAVEL_ATAS_INITIAL_ORDER,
+  RESPONSAVEL_ATAS_INITIAL_ORDER_QUERY,
+} from "./responsavel-atas-order";
+import {
+  parseResponsavelAtasFilters,
+  responsavelAtasFiltersSessionKey,
+  type ResponsavelAtasFilters,
+} from "./responsavel-atas-filters-session";
 
 type ResponsavelAtaDataTableRow = [
   number | null,
@@ -24,6 +42,19 @@ type ResponsavelAtaDataTableRow = [
   ResponsavelAtaRow,
 ];
 type DataTableComponent = typeof import("datatables.net-react").default;
+
+const filtersSessionEvent = "gs-mapeamento:responsavel-atas:filtros-alterados";
+const filtersSessionFallback = new Map<string, string>();
+
+const weekdays = [
+  "Domingo",
+  "Segunda",
+  "Terça",
+  "Quarta",
+  "Quinta",
+  "Sexta",
+  "Sábado",
+] as const;
 
 const activeStatusOptions: { value: "todos" | ResponsavelAtaStatus; label: string }[] = [
   { value: "todos", label: "Todos" },
@@ -47,6 +78,15 @@ function formatMobileDate(value: string) {
   const [, month, day] = value.split("-");
   if (!month || !day) return value;
   return `${day}/${month}`;
+}
+
+function weekdayForDate(value: string) {
+  const date = new Date(`${value}T00:00:00.000Z`);
+  return weekdays[date.getUTCDay()];
+}
+
+function displayedPreenchedor(row: ResponsavelAtaRow) {
+  return row.servidor || (row.status === "Não enviada" ? "-" : "Sem servidor");
 }
 
 function ResponsavelAtaActions({
@@ -253,21 +293,88 @@ const columns: ConfigColumns[] = [
 export function ResponsavelAtasTable({
   rows,
   historyMode,
+  groupId,
   defaultStartDate,
   defaultEndDate,
 }: {
   rows: ResponsavelAtaRow[];
   historyMode: boolean;
+  groupId: string;
   defaultStartDate: string;
   defaultEndDate: string;
 }) {
   const [DataTableComponent, setDataTableComponent] =
     useState<DataTableComponent | null>(null);
-  const [startDate, setStartDate] = useState(defaultStartDate);
-  const [endDate, setEndDate] = useState(defaultEndDate);
-  const [selectedTime, setSelectedTime] = useState("todos");
-  const [selectedStatus, setSelectedStatus] = useState<"todos" | ResponsavelAtaStatus>("todos");
-  const [tableOrder, setTableOrder] = useState("0.desc");
+  const defaultFilters = useMemo<ResponsavelAtasFilters>(() => ({
+    startDate: defaultStartDate,
+    endDate: defaultEndDate,
+    weekday: "todos",
+    time: "todos",
+    preenchidoPor: "todos",
+    status: "todos",
+  }), [defaultStartDate, defaultEndDate]);
+  const sessionKey = useMemo(
+    () => responsavelAtasFiltersSessionKey({ groupId, historyMode }),
+    [groupId, historyMode],
+  );
+  const subscribeToFilters = useCallback((onStoreChange: () => void) => {
+    function handleSessionChange(event: Event) {
+      if (event instanceof CustomEvent && event.detail !== sessionKey) return;
+      if (event instanceof StorageEvent && event.key !== sessionKey) return;
+      onStoreChange();
+    }
+
+    window.addEventListener(filtersSessionEvent, handleSessionChange);
+    window.addEventListener("storage", handleSessionChange);
+    return () => {
+      window.removeEventListener(filtersSessionEvent, handleSessionChange);
+      window.removeEventListener("storage", handleSessionChange);
+    };
+  }, [sessionKey]);
+  const readStoredFilters = useCallback(() => {
+    try {
+      return window.sessionStorage.getItem(sessionKey)
+        ?? filtersSessionFallback.get(sessionKey)
+        ?? null;
+    } catch {
+      return filtersSessionFallback.get(sessionKey) ?? null;
+    }
+  }, [sessionKey]);
+  const storedFilters = useSyncExternalStore(
+    subscribeToFilters,
+    readStoredFilters,
+    () => null,
+  );
+  const filters = useMemo(
+    () => parseResponsavelAtasFilters(storedFilters, defaultFilters),
+    [defaultFilters, storedFilters],
+  );
+  const setFilters = useCallback((
+    update: (current: ResponsavelAtasFilters) => ResponsavelAtasFilters,
+  ) => {
+    const currentFilters = parseResponsavelAtasFilters(
+      readStoredFilters(),
+      defaultFilters,
+    );
+    const serialized = JSON.stringify(update(currentFilters));
+    try {
+      window.sessionStorage.setItem(sessionKey, serialized);
+    } catch {
+      filtersSessionFallback.set(sessionKey, serialized);
+    }
+    window.dispatchEvent(new CustomEvent(filtersSessionEvent, { detail: sessionKey }));
+  }, [defaultFilters, readStoredFilters, sessionKey]);
+  const {
+    startDate,
+    endDate,
+    weekday: selectedWeekday,
+    time: selectedTime,
+    preenchidoPor: selectedPreenchedor,
+    status: selectedStatus,
+  } = filters;
+  const [tableOrder, setTableOrder] = useState(
+    RESPONSAVEL_ATAS_INITIAL_ORDER_QUERY,
+  );
   const statusOptions = historyMode ? historyStatusOptions : activeStatusOptions;
   const modeRows = useMemo(
     () => rows.filter((row) => historyMode
@@ -280,14 +387,22 @@ export function ResponsavelAtasTable({
     () => [...new Set(modeRows.map((row) => row.horario))].sort(),
     [modeRows],
   );
+  const preenchedorOptions = useMemo(
+    () => [...new Set(modeRows
+      .filter((row) => row.ataId !== null)
+      .map(displayedPreenchedor))].sort((first, second) => first.localeCompare(second, "pt-BR")),
+    [modeRows],
+  );
   const filteredRows = useMemo(
     () => modeRows.filter((row) =>
       row.data >= startDate
       && row.data <= endDate
+      && (selectedWeekday === "todos" || weekdayForDate(row.data) === selectedWeekday)
       && (selectedTime === "todos" || row.horario === selectedTime)
+      && (selectedPreenchedor === "todos" || displayedPreenchedor(row) === selectedPreenchedor)
       && (selectedStatus === "todos" || row.status === selectedStatus)
     ),
-    [modeRows, startDate, endDate, selectedTime, selectedStatus],
+    [modeRows, startDate, endDate, selectedWeekday, selectedTime, selectedPreenchedor, selectedStatus],
   );
 
   const tableRows = useMemo(
@@ -298,10 +413,12 @@ export function ResponsavelAtasTable({
     origem: historyMode ? "historico" : "responsavel",
     de: startDate,
     ate: endDate,
+    diaSemana: selectedWeekday,
     horario: selectedTime,
+    preenchidoPor: selectedPreenchedor,
     status: selectedStatus,
     ordem: tableOrder,
-  }).toString(), [historyMode, startDate, endDate, selectedTime, selectedStatus, tableOrder]);
+  }).toString(), [historyMode, startDate, endDate, selectedWeekday, selectedTime, selectedPreenchedor, selectedStatus, tableOrder]);
 
   useEffect(() => {
     let mounted = true;
@@ -323,13 +440,13 @@ export function ResponsavelAtasTable({
 
   return (
     <section className="card responsavel-atas-card">
-      <div className="responsavel-atas-filters" aria-label="Filtros das atas">
+      <div className="responsavel-atas-filters" aria-label="Filtros das Atas">
         <label>
           <span>De</span>
           <input
             type="date"
             value={startDate}
-            onChange={(event) => setStartDate(event.target.value)}
+            onChange={(event) => setFilters((current) => ({ ...current, startDate: event.target.value }))}
           />
         </label>
         <label>
@@ -337,21 +454,40 @@ export function ResponsavelAtasTable({
           <input
             type="date"
             value={endDate}
-            onChange={(event) => setEndDate(event.target.value)}
+            onChange={(event) => setFilters((current) => ({ ...current, endDate: event.target.value }))}
           />
         </label>
         <label>
+          <span>Dia da Semana</span>
+          <select value={selectedWeekday} onChange={(event) => setFilters((current) => ({ ...current, weekday: event.target.value }))}>
+            <option value="todos">Todos</option>
+            {weekdays.map((weekday) => <option key={weekday} value={weekday}>{weekday}</option>)}
+          </select>
+        </label>
+        <label>
           <span>Horário</span>
-          <select value={selectedTime} onChange={(event) => setSelectedTime(event.target.value)}>
+          <select value={selectedTime} onChange={(event) => setFilters((current) => ({ ...current, time: event.target.value }))}>
             <option value="todos">Todos</option>
             {timeOptions.map((time) => <option key={time} value={time}>{time}</option>)}
+          </select>
+        </label>
+        <label>
+          <span>Preenchido por</span>
+          <select value={selectedPreenchedor} onChange={(event) => setFilters((current) => ({ ...current, preenchidoPor: event.target.value }))}>
+            <option value="todos">Todos</option>
+            {preenchedorOptions.map((preenchedor) => (
+              <option key={preenchedor} value={preenchedor}>{preenchedor}</option>
+            ))}
           </select>
         </label>
         <label>
           <span>Status</span>
           <select
             value={selectedStatus}
-            onChange={(event) => setSelectedStatus(event.target.value as "todos" | ResponsavelAtaStatus)}
+            onChange={(event) => setFilters((current) => ({
+              ...current,
+              status: event.target.value as "todos" | ResponsavelAtaStatus,
+            }))}
           >
             {statusOptions.map((status) => (
               <option key={status.value} value={status.value}>{status.label}</option>
@@ -366,11 +502,11 @@ export function ResponsavelAtasTable({
             className="responsavel-atas-table"
             columns={columns}
             data={tableRows}
-            key={`${startDate}-${endDate}-${selectedTime}-${selectedStatus}`}
+            key={`${startDate}-${endDate}-${selectedWeekday}-${selectedTime}-${selectedPreenchedor}-${selectedStatus}`}
             options={{
               autoWidth: false,
               ordering: true,
-              order: [[0, "desc"]],
+              order: RESPONSAVEL_ATAS_INITIAL_ORDER,
               pageLength: 25,
               searching: false,
               lengthChange: false,
@@ -398,9 +534,7 @@ export function ResponsavelAtasTable({
             }}
             onOrder={(_event: Event, settings: unknown) => {
               const sorting = (settings as { aaSorting?: [number, number | string][] }).aaSorting ?? [];
-              const encoded = sorting
-                .map(([column, direction]) => `${column}.${direction === 1 || direction === "asc" ? "asc" : "desc"}`)
-                .join(",");
+              const encoded = encodeResponsavelAtasOrder(sorting);
               if (encoded) setTableOrder(encoded);
             }}
             slots={{

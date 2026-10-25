@@ -4,6 +4,7 @@ import type {
   Ata,
   Grupo,
   GrupoHorario,
+  GrupoPlataforma,
   GrupoServidorMesa,
   Ingresso,
   Participacao,
@@ -19,6 +20,7 @@ type ValidRow<T> = Extract<ParsedRow<T>, { valid: true }>;
 export type ParsedContractRows = {
   grupos: ParsedRow<Grupo>[];
   grupo_horarios: ParsedRow<GrupoHorario>[];
+  grupo_plataformas?: ParsedRow<GrupoPlataforma>[];
   grupo_servidores_mesa: ParsedRow<GrupoServidorMesa>[];
   atas: ParsedRow<Ata>[];
   servidores: ParsedRow<Servidor>[];
@@ -37,6 +39,7 @@ export type AggregatedAta = {
 export type AggregatedRead = {
   grupos: Grupo[];
   grupo_horarios: GrupoHorario[];
+  grupo_plataformas: GrupoPlataforma[];
   grupo_servidores_mesa: GrupoServidorMesa[];
   atas: AggregatedAta[];
   diagnostics: RowDiagnostic[];
@@ -107,6 +110,7 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
   const diagnostics = [
     ...rowDiagnostics(rows.grupos),
     ...rowDiagnostics(rows.grupo_horarios ?? []),
+    ...rowDiagnostics(rows.grupo_plataformas ?? []),
     ...rowDiagnostics(rows.grupo_servidores_mesa ?? []),
     ...rowDiagnostics(rows.atas),
     ...rowDiagnostics(rows.servidores),
@@ -118,6 +122,7 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
   const initiallyValid: ContractRows = {
     grupos: validRows(rows.grupos),
     grupo_horarios: validRows(rows.grupo_horarios ?? []),
+    grupo_plataformas: validRows(rows.grupo_plataformas ?? []),
     grupo_servidores_mesa: validRows(rows.grupo_servidores_mesa ?? []),
     atas: validRows(rows.atas),
     servidores: validRows(rows.servidores),
@@ -147,6 +152,14 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
         "grupo_id não referencia um grupo válido.",
       ),
     );
+    return false;
+  });
+  const grupoPlataformas = withoutDiagnosed(
+    initiallyValid.grupo_plataformas ?? [],
+    integrityDiagnostics,
+  ).filter((row) => {
+    if (grupoById.has(row.data.grupo_id)) return true;
+    diagnostics.push(referenceDiagnostic(row, "grupo_id", "grupo_id não referencia um grupo válido."));
     return false;
   });
   const grupoServidoresMesa = withoutDiagnosed(
@@ -271,6 +284,7 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
           weekDayOrder[first.dia_semana] - weekDayOrder[second.dia_semana] ||
           first.hora_inicio.localeCompare(second.hora_inicio),
       ),
+    grupo_plataformas: grupoPlataformas.map((row) => row.data),
     grupo_servidores_mesa: grupoServidoresMesa
       .map((row) => row.data)
       .sort(

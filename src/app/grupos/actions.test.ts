@@ -542,7 +542,7 @@ describe("Server Action de grupos", () => {
     expect(mocks.saveGrupo).not.toHaveBeenCalled();
   });
 
-  it("marca grupo e horarios ativos como inativos ao inativar", async () => {
+  it("inativa somente o grupo e preserva os horarios", async () => {
     await deactivateGrupoAction(groupIdForm());
 
     expect(mocks.saveGrupo).toHaveBeenCalledWith(
@@ -553,14 +553,7 @@ describe("Server Action de grupos", () => {
       undefined,
       { kind: "authenticated", email: "admin@example.com" },
     );
-    expect(mocks.saveGrupoHorario).toHaveBeenCalledWith(
-      expect.objectContaining({
-        horario_id: groupTwoSchedule.horario_id,
-        ativo: false,
-      }),
-      undefined,
-      { kind: "authenticated", email: "admin@example.com" },
-    );
+    expect(mocks.saveGrupoHorario).not.toHaveBeenCalled();
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/admin/grupos");
     expect(mocks.revalidatePath).toHaveBeenCalledWith(`/admin/grupos/${groupTwo.grupo_id}`);
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/meu-grupo");

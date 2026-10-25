@@ -27,12 +27,12 @@ describe("navigation config", () => {
     expect(responsavelNavigationItems("/grupos/grupo-1")).toEqual([
       {
         section: "configuracoes",
-        label: "Dados cadastrais",
+        label: "Configurações",
         href: "/grupos/grupo-1",
       },
       {
         section: "responsavel",
-        label: "Histórico de atas",
+        label: "Histórico de Atas",
         href: "/responsavel/atas",
       },
       {

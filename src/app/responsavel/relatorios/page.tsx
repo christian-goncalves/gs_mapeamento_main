@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChartSimple } from "@fortawesome/free-solid-svg-icons";
 import { redirect } from "next/navigation";
 import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
 import { MonthlyGroupDashboard } from "@/app/relatorios/monthly-group-dashboard";
@@ -73,6 +76,19 @@ export default async function ResponsavelRelatoriosPage({
         years={dashboardYears(result)}
         showGroupFilter={false}
         showFoundationMeetingCard
+        showResponsavelHeader
+        headerAction={
+          <Link
+            className="button-link secondary"
+            href="/responsavel/relatorios-azul"
+            aria-label="Abrir o painel azul de relatórios"
+          >
+            <span className="button-content">
+              <FontAwesomeIcon icon={faChartSimple} aria-hidden="true" />
+              <span>Abrir painel azul</span>
+            </span>
+          </Link>
+        }
       />
     </ResponsavelShell>
   );

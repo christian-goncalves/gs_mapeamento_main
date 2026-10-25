@@ -9,17 +9,16 @@ import { isMunicipioOption } from "./municipios";
 
 const requiredText = z.string().trim().min(1, "Campo obrigatório.");
 
-const optionalPersonNameSchema = z.object({
-  nome: z.string().trim().optional(),
-});
-
 export const hiddenParticipacaoSchema = z.object({
   localidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
   presencas: z.number().int().min(1),
 });
 
 export const hiddenMembroInternacionalSchema = z.object({
-  pais: requiredText,
+  pais: requiredText.refine(
+    (value) => value.localeCompare("Brasil", "pt-BR", { sensitivity: "accent" }) !== 0,
+    "Brasil deve ser cadastrado em Localidades nacionais.",
+  ),
   presencas: z.number().int().min(1),
 });
 
@@ -29,9 +28,8 @@ export const hiddenVisitanteSchema = z.object({
   como_chegou_a_na: z.enum(origemContatoMapping.codes),
 });
 
-export const hiddenIngressoSchema = optionalPersonNameSchema.extend({
-  cidade: requiredText.refine(isMunicipioOption, "Município inexistente.").optional(),
-  visitante_indice: z.number().int().min(0).optional(),
+export const hiddenIngressoSchema = z.object({
+  cidade: requiredText.refine(isMunicipioOption, "Município inexistente."),
 });
 
 export const hiddenTrocaChaveiroSchema = z.object({
@@ -69,6 +67,18 @@ export const hiddenAtaSubmissionSchema = z
           "Para registrar um ingresso, registre primeiro pelo menos um visitante.",
       });
     }
+    const visitorCities = new Set(
+      submission.visitantes.map((visitor) => normalizeCityKey(visitor.cidade)),
+    );
+    for (const [index, ingresso] of submission.ingressos.entries()) {
+      if (!visitorCities.has(normalizeCityKey(ingresso.cidade))) {
+        context.addIssue({
+          code: "custom",
+          path: ["ingressos", index, "cidade"],
+          message: "A cidade do ingresso deve estar entre as cidades dos visitantes.",
+        });
+      }
+    }
   });
 
 export type HiddenAtaSubmission = z.infer<typeof hiddenAtaSubmissionSchema>;
@@ -79,8 +89,12 @@ function municipioParts(value: string) {
   return { localidade: match[1], estado: match[2], pais: "Brasil" };
 }
 
-function personName(item: { nome?: string }) {
-  return item.nome?.trim() || "Anonimo";
+function normalizeCityKey(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLocaleLowerCase("pt-BR");
 }
 
 export function normalizeHiddenAtaSubmission(
@@ -109,11 +123,7 @@ export function normalizeHiddenAtaSubmission(
       descricao: item.descricao,
       como_chegou_a_na: item.como_chegou_a_na,
     })),
-    ingressos: submission.ingressos.map((item) => ({
-      ...(item.visitante_indice !== undefined
-        ? { visitante_indice: item.visitante_indice }
-        : { nome: personName(item), cidade: item.cidade ?? "" }),
-    })),
+    ingressos: submission.ingressos.map((item) => ({ cidade: item.cidade })),
     trocas_chaveiro: submission.trocas_chaveiro,
   };
 }

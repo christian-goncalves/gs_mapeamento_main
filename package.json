@@ -14,6 +14,7 @@
     "atas:simulate:plan": "tsx --env-file=.env.local .agents/skills/simular-atas-mensais/scripts/simulate-atas-month.ts plan",
     "atas:simulate:commit-dev": "tsx --env-file=.env.local .agents/skills/simular-atas-mensais/scripts/simulate-atas-month.ts commit-dev",
     "sheets:reconcile-contract": "tsx --env-file=.env.local scripts/reconcile-sheet-contract.ts",
+    "sheets:provision-ata-schema": "tsx --env-file=.env.local scripts/provision-ata-group-schema.ts",
     "sheets:reconcile-protections": "tsx --env-file=.env.local scripts/reconcile-sheet-protections.ts",
     "sheets:reset-ata-records:dry-run": "tsx --env-file=.env.local scripts/reset-ata-record-sheets.ts",
     "sheets:reset-ata-records": "tsx --env-file=.env.local scripts/reset-ata-record-sheets.ts --execute",

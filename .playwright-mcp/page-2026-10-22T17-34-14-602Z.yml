@@ -1,0 +1,185 @@
+- generic [ref=f59e1]:
+  - main [ref=f59e2]:
+    - complementary "Navegação do responsável" [ref=f59e3]:
+      - link "Página inicial do responsável" [ref=f59e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f59e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f59e7]:
+        - link "Configurações" [ref=f59e8] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - link "Histórico de atas" [ref=f59e12] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f59e16] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - button "Sair" [ref=f59e21] [cursor=pointer]
+    - generic [ref=f59e26]:
+      - generic [ref=f59e28]:
+        - paragraph [ref=f59e29]: Relatórios
+        - heading "DASHBOARD - USL" [level=1] [ref=f59e30]
+        - paragraph [ref=f59e31]: Visualize as informações por período.
+      - region "Dashboard do grupo" [ref=f59e32]:
+        - generic [ref=f59e33]:
+          - generic [ref=f59e34]:
+            - text: Mês
+            - combobox "Mês" [ref=f59e35]:
+              - option "Jan"
+              - option "Fev"
+              - option "Mar"
+              - option "Abr"
+              - option "Mai"
+              - option "Jun"
+              - option "Jul"
+              - option "Ago"
+              - option "Set"
+              - option "Out" [selected]
+              - option "Nov"
+              - option "Dez"
+          - generic [ref=f59e36]:
+            - text: Ano
+            - combobox "Ano" [ref=f59e37]:
+              - option "2026" [selected]
+          - button "PDF" [ref=f59e38] [cursor=pointer]
+        - generic [ref=f59e42]:
+          - heading "Servidores" [level=2] [ref=f59e44]
+          - table [ref=f59e46]:
+            - rowgroup [ref=f59e47]:
+              - row [ref=f59e48]:
+                - columnheader "Encargo" [ref=f59e49]
+                - columnheader "Nome" [ref=f59e50]
+                - columnheader "Desde" [ref=f59e51]
+            - rowgroup [ref=f59e52]:
+              - row [ref=f59e53]:
+                - rowheader "RSG" [ref=f59e54]
+                - cell "Christian" [ref=f59e55]
+                - cell "17/10/2026" [ref=f59e56]
+              - row [ref=f59e57]:
+                - rowheader "RSG suplente" [ref=f59e58]
+                - cell "Alisson" [ref=f59e59]
+                - cell "17/10/2026" [ref=f59e60]
+        - generic [ref=f59e61]:
+          - heading "Consolidado" [level=2] [ref=f59e63]
+          - generic [ref=f59e64]:
+            - article [ref=f59e65]:
+              - heading "Reuniões desde a fundação" [level=3] [ref=f59e66]
+              - strong [ref=f59e67]: "121"
+            - article [ref=f59e68]:
+              - heading "Reuniões" [level=3] [ref=f59e69]
+              - strong [ref=f59e70]: "115"
+            - article [ref=f59e71]:
+              - heading "Presenças" [level=3] [ref=f59e72]
+              - strong [ref=f59e73]: "73"
+            - article [ref=f59e74]:
+              - heading "Média de Presenças" [level=3] [ref=f59e75]
+              - strong [ref=f59e76]: "8"
+            - article [ref=f59e77]:
+              - heading "Conquistas" [level=3] [ref=f59e78]
+              - strong [ref=f59e79]: "1"
+            - article [ref=f59e80]:
+              - heading "Visitantes" [level=3] [ref=f59e81]
+              - strong [ref=f59e82]: "1"
+            - article [ref=f59e83]:
+              - heading "Ingressos" [level=3] [ref=f59e84]
+              - strong [ref=f59e85]: "1"
+            - article [ref=f59e86]:
+              - heading "Cidades" [level=3] [ref=f59e87]
+              - strong [ref=f59e88]: "1"
+            - article [ref=f59e89]:
+              - heading "Estados" [level=3] [ref=f59e90]
+              - strong [ref=f59e91]: "1"
+            - article [ref=f59e92]:
+              - heading "Outros Países" [level=3] [ref=f59e93]
+              - strong [ref=f59e94]: "1"
+        - generic [ref=f59e95]:
+          - generic [ref=f59e96]:
+            - heading "Consolidados por Reunião" [level=2] [ref=f59e98]
+            - group "Reuniões por página" [ref=f59e99]:
+              - button "10" [pressed] [ref=f59e100] [cursor=pointer]
+              - button "25" [ref=f59e101] [cursor=pointer]
+              - button "50" [ref=f59e102] [cursor=pointer]
+              - button "Todo o período" [ref=f59e103] [cursor=pointer]
+          - table [ref=f59e105]:
+            - rowgroup [ref=f59e106]:
+              - row [ref=f59e107]:
+                - columnheader "Data | Horário" [ref=f59e108]
+                - columnheader "Presenças" [ref=f59e109]
+                - columnheader "Ingressos" [ref=f59e110]
+                - columnheader "Conquistas" [ref=f59e111]
+            - rowgroup [ref=f59e112]:
+              - row [ref=f59e113]:
+                - cell "18 | 15:00" [ref=f59e114]
+                - cell "11" [ref=f59e115]
+                - cell "0" [ref=f59e116]
+                - cell "0" [ref=f59e117]
+              - row [ref=f59e118]:
+                - cell "18 | 10:00" [ref=f59e119]
+                - cell "10" [ref=f59e120]
+                - cell "0" [ref=f59e121]
+                - cell "0" [ref=f59e122]
+              - row [ref=f59e123]:
+                - cell "17 | 21:30" [ref=f59e124]
+                - cell "10" [ref=f59e125]
+                - cell "0" [ref=f59e126]
+                - cell "0" [ref=f59e127]
+              - row [ref=f59e128]:
+                - cell "17 | 18:00" [ref=f59e129]
+                - cell "10" [ref=f59e130]
+                - cell "0" [ref=f59e131]
+                - cell "0" [ref=f59e132]
+              - row [ref=f59e133]:
+                - cell "17 | 15:00" [ref=f59e134]
+                - cell "10" [ref=f59e135]
+                - cell "0" [ref=f59e136]
+                - cell "0" [ref=f59e137]
+              - row [ref=f59e138]:
+                - cell "17 | 10:00" [ref=f59e139]
+                - cell "10" [ref=f59e140]
+                - cell "1" [ref=f59e141]
+                - cell "1" [ref=f59e142]
+              - row [ref=f59e143]:
+                - cell "11 | 07:00" [ref=f59e144]
+                - cell "1" [ref=f59e145]
+                - cell "0" [ref=f59e146]
+                - cell "0" [ref=f59e147]
+              - row [ref=f59e148]:
+                - cell "10 | 07:00" [ref=f59e149]
+                - cell "10" [ref=f59e150]
+                - cell "0" [ref=f59e151]
+                - cell "0" [ref=f59e152]
+              - row [ref=f59e153]:
+                - cell "01 | 07:00" [ref=f59e154]
+                - cell "1" [ref=f59e155]
+                - cell "0" [ref=f59e156]
+                - cell "0" [ref=f59e157]
+          - paragraph [ref=f59e159]: Exibindo 1–9 de 9 reuniões
+        - generic [ref=f59e161]:
+          - heading "Conquistas" [level=2] [ref=f59e163]
+          - generic [ref=f59e164]:
+            - article [ref=f59e165]:
+              - heading "30 dias" [level=3] [ref=f59e166]
+              - strong [ref=f59e167]: "0"
+            - article [ref=f59e168]:
+              - heading "60 dias" [level=3] [ref=f59e169]
+              - strong [ref=f59e170]: "0"
+            - article [ref=f59e171]:
+              - heading "90 dias" [level=3] [ref=f59e172]
+              - strong [ref=f59e173]: "1"
+            - article [ref=f59e174]:
+              - heading "6 meses" [level=3] [ref=f59e175]
+              - strong [ref=f59e176]: "0"
+            - article [ref=f59e177]:
+              - heading "9 meses" [level=3] [ref=f59e178]
+              - strong [ref=f59e179]: "0"
+            - article [ref=f59e180]:
+              - heading "1 ano" [level=3] [ref=f59e181]
+              - strong [ref=f59e182]: "0"
+            - article [ref=f59e183]:
+              - heading "18 meses" [level=3] [ref=f59e184]
+              - strong [ref=f59e185]: "0"
+            - article [ref=f59e186]:
+              - heading "Múltiplos anos" [level=3] [ref=f59e187]
+              - strong [ref=f59e188]: "0"
+            - article [ref=f59e189]:
+              - heading "Total" [level=3] [ref=f59e190]
+              - strong [ref=f59e191]: "2"
+        - generic [ref=f59e192]: Dados consolidados do grupo USL referentes a Out/2026.
+  - button "Open Next.js Dev Tools" [ref=f59e201] [cursor=pointer]

@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { createPortal } from "react-dom";
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { approveAtasAction } from "./approval-actions";
 import type { AtaApprovalSelection } from "@/lib/sheets/approve-atas";
 
@@ -25,6 +28,7 @@ export function AtaApprovalPanel({ rows }: { rows: AtaApprovalRow[] }) {
   const [page, setPage] = useState(0);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [message, setMessage] = useState("");
+  const [confirmationSelection, setConfirmationSelection] = useState<AtaApprovalRow[] | null>(null);
   const [isPending, startTransition] = useTransition();
   const pageCount = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
   const visibleRows = useMemo(
@@ -40,14 +44,15 @@ export function AtaApprovalPanel({ rows }: { rows: AtaApprovalRow[] }) {
     setPage(nextPage);
   }
 
-  function approve(selection: AtaApprovalRow[]) {
+  function requestApproval(selection: AtaApprovalRow[]) {
     if (selection.length === 0) return;
-    const confirmation = selection
-      .map((row) => `Ata ${row.index} — ${dateLabel(row.date)} às ${row.time} — ${row.group}`)
-      .join("\n");
-    if (!window.confirm(`Aprovar ${selection.length} ${selection.length === 1 ? "ata" : "atas"}?\n\n${confirmation}`)) return;
+    setConfirmationSelection(selection);
+  }
 
-    const payload: AtaApprovalSelection[] = selection.map(({ ataId, updatedAt }) => ({ ataId, updatedAt }));
+  function confirmApproval() {
+    if (!confirmationSelection?.length) return;
+    const payload: AtaApprovalSelection[] = confirmationSelection.map(({ ataId, updatedAt }) => ({ ataId, updatedAt }));
+    setConfirmationSelection(null);
     startTransition(() => {
       void approveAtasAction(payload).then((result) => {
         if (result.error) {
@@ -77,7 +82,7 @@ export function AtaApprovalPanel({ rows }: { rows: AtaApprovalRow[] }) {
           className="button-primary"
           type="button"
           disabled={isPending || selectedRows.length === 0}
-          onClick={() => approve(selectedRows)}
+          onClick={() => requestApproval(selectedRows)}
         >
           {isPending ? "Aprovando…" : `Aprovar selecionadas (${selectedRows.length})`}
         </button>
@@ -114,7 +119,7 @@ export function AtaApprovalPanel({ rows }: { rows: AtaApprovalRow[] }) {
             </label>
             <div className="ata-approval-row-actions">
               <Link href={`/atas/${row.ataId}`}>Ver ata</Link>
-              <button type="button" disabled={isPending} onClick={() => approve([row])}>Aprovar</button>
+              <button type="button" disabled={isPending} onClick={() => requestApproval([row])}>Aprovar</button>
             </div>
           </article>
         ))}
@@ -125,6 +130,40 @@ export function AtaApprovalPanel({ rows }: { rows: AtaApprovalRow[] }) {
           <span>Página {page + 1} de {pageCount}</span>
           <button type="button" disabled={page + 1 >= pageCount || isPending} onClick={() => changePage(page + 1)}>Próxima</button>
         </nav>
+      )}
+      {confirmationSelection && createPortal(
+        <div className="modal-backdrop ata-approval-confirmation-backdrop" role="presentation" onMouseDown={(event) => {
+          if (event.target === event.currentTarget && !isPending) setConfirmationSelection(null);
+        }}>
+          <section
+            className="confirmation-modal ata-approval-confirmation-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ata-approval-confirmation-title"
+            aria-describedby="ata-approval-confirmation-description"
+          >
+            <h2 id="ata-approval-confirmation-title">
+              Aprovar {confirmationSelection.length} {confirmationSelection.length === 1 ? "ata" : "atas"}?
+            </h2>
+            <p id="ata-approval-confirmation-description">Confirme a aprovação dos seguintes registros:</p>
+            <ul>
+              {confirmationSelection.map((row) => (
+                <li key={row.ataId}>Ata {row.index} — {dateLabel(row.date)} às {row.time} — {row.group}</li>
+              ))}
+            </ul>
+            <div className="modal-actions">
+              <button type="button" className="secondary" disabled={isPending} onClick={() => setConfirmationSelection(null)}>
+                <FontAwesomeIcon icon={faXmark} aria-hidden="true" />
+                Cancelar
+              </button>
+              <button type="button" className="button-primary" disabled={isPending} onClick={confirmApproval}>
+                <FontAwesomeIcon icon={faCheck} aria-hidden="true" />
+                {isPending ? "Aprovando…" : `Aprovar ${confirmationSelection.length === 1 ? "ata" : "atas"}`}
+              </button>
+            </div>
+          </section>
+        </div>,
+        document.body,
       )}
     </section>
   );

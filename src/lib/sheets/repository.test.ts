@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { SHEET_HEADERS, type SheetName } from "./contract";
+import { compatibleHeaders, V2_NEW_SHEET_HEADERS } from "./contract-v2";
 
 const mocks = vi.hoisted(() => ({
   batchGet: vi.fn(),
@@ -21,18 +22,19 @@ vi.mock("server-only", () => ({}));
 
 import {
   getActiveGroupByAtaLink,
+  listRecentServerNamesByGroup,
   listVisitantes,
   readAggregatedAtas,
 } from "./repository";
 
-function sheetNameFromRange(range: string): SheetName {
+function sheetNameFromRange(range: string): string {
   const [name] = range.split("!");
   return name as SheetName;
 }
 
 function headerValueRanges(ranges: string[]) {
   return ranges.map((range) => ({
-    values: [[...SHEET_HEADERS[sheetNameFromRange(range)]]],
+    values: [[...(sheetNameFromRange(range) === "grupo_plataformas" ? V2_NEW_SHEET_HEADERS.grupo_plataformas : SHEET_HEADERS[sheetNameFromRange(range) as SheetName])]],
   }));
 }
 
@@ -145,7 +147,7 @@ describe("repositório Sheets", () => {
                   ],
                 };
               }
-              return { values: [[...SHEET_HEADERS[name]]] };
+              return { values: [[...(name === "grupo_plataformas" ? V2_NEW_SHEET_HEADERS.grupo_plataformas : SHEET_HEADERS[name])]] };
             }),
           },
         }),
@@ -220,5 +222,45 @@ describe("repositório Sheets", () => {
 
     expect(mocks.batchGet).not.toHaveBeenCalled();
     expect(mocks.get).not.toHaveBeenCalled();
+  });
+
+  it("retorna os últimos servidores das reuniões do grupo, sem servidores de mesa", async () => {
+    const grupoId = "fccced1d-92a5-4d24-b5af-da65cbbe467f";
+    const ataMaisRecente = "93ef9660-8c64-4b51-9bc5-09069ce629c1";
+    const ataAnterior = "2bed9d1b-7fea-4cf4-9497-f0ccbcead41c";
+    const headers = (name: SheetName) => name === "atas" ? compatibleHeaders("atas") : SHEET_HEADERS[name];
+    const row = (name: SheetName, values: Record<string, string | number | boolean>) =>
+      headers(name).map((header) => values[header] ?? "");
+    mocks.get.mockImplementation(({ range }: { range: string }) => {
+      if (range.startsWith("atas!")) {
+        return Promise.resolve({ data: { values: [
+          [...headers("atas")],
+          row("atas", {
+            ata_id: ataMaisRecente, numero_sequencial_grupo: 2, indice_personalizado_grupo: 2,
+            grupo_id: grupoId, data_reuniao: "2026-08-03", hora_inicio: "20:30", duracao: "",
+            formato_outros: "", preenchido_por: "Patricia", plataforma: "Zoom", tipo_reuniao: "Fechada",
+            formato_partilha: true, formato_estudo: false, formato_tematico: false, formato_literatura: false,
+            formato_passos: false, formato_tradicoes: false, formato_comemorativa: false, formato_servico: false,
+            total_membros_presentes: 1, total_partilhas: 1, created_at: "2026-08-03T22:00:00.000Z", updated_at: "2026-08-03T22:00:00.000Z",
+          }),
+          row("atas", {
+            ata_id: ataAnterior, numero_sequencial_grupo: 1, indice_personalizado_grupo: 1,
+            grupo_id: grupoId, data_reuniao: "2026-08-02", hora_inicio: "20:30", duracao: "",
+            formato_outros: "", preenchido_por: "Patricia", plataforma: "Zoom", tipo_reuniao: "Fechada",
+            formato_partilha: true, formato_estudo: false, formato_tematico: false, formato_literatura: false,
+            formato_passos: false, formato_tradicoes: false, formato_comemorativa: false, formato_servico: false,
+            total_membros_presentes: 1, total_partilhas: 1, created_at: "2026-08-02T22:00:00.000Z", updated_at: "2026-08-02T22:00:00.000Z",
+          }),
+        ] } });
+      }
+      return Promise.resolve({ data: { values: [
+        [...SHEET_HEADERS.servidores],
+        ["a4e54dd9-8e3f-4d56-a932-00ea5c13fc88", ataMaisRecente, "Zeta", "", 1, "2026-08-03T22:00:00.000Z", "2026-08-03T22:00:00.000Z"],
+        ["e7918765-a98d-46bf-86f8-e6deef3190a2", ataMaisRecente, "ALFA", "", 2, "2026-08-03T22:00:00.000Z", "2026-08-03T22:00:00.000Z"],
+        ["dbca5f07-744f-4e9f-9169-f7f66d4cbbcc", ataAnterior, "zeta", "", 1, "2026-08-02T22:00:00.000Z", "2026-08-02T22:00:00.000Z"],
+      ] } });
+    });
+
+    await expect(listRecentServerNamesByGroup(grupoId)).resolves.toEqual(["ALFA", "Zeta"]);
   });
 });

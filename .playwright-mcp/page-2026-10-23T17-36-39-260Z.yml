@@ -1,0 +1,49 @@
+- generic [active] [ref=f21e1]:
+  - main [ref=f21e2]:
+    - link "Voltar" [ref=f21e3] [cursor=pointer]:
+      - /url: /admin/grupos
+    - generic [ref=f21e7]:
+      - paragraph [ref=f21e8]: Grupo
+      - heading "USL" [level=1] [ref=f21e9]
+    - generic [ref=f21e10]:
+      - generic [ref=f21e11]:
+        - heading "Dados do grupo" [level=2] [ref=f21e12]
+        - generic [ref=f21e13]:
+          - generic [ref=f21e14]:
+            - text: Nome
+            - textbox "Nome" [ref=f21e15]: USL
+          - generic [ref=f21e16]:
+            - generic [ref=f21e17]:
+              - generic [ref=f21e18]: Revisão de Atas
+              - group [ref=f21e19]:
+                - generic "Informações sobre a revisão de atas" [ref=f21e20] [cursor=pointer]
+            - combobox "Revisão de Atas Informações sobre a revisão de atas" [ref=f21e23]:
+              - option "Aprovação ativada" [selected]
+              - option "Aprovação desativada (padrão)"
+          - generic [ref=f21e24]:
+            - text: Grupo ativo
+            - combobox "Grupo ativo" [ref=f21e25]:
+              - option "Ativo" [selected]
+              - option "Inativo"
+          - generic [ref=f21e26]:
+            - text: Última reunião antes do sistema
+            - spinbutton "Última reunião antes do sistema" [ref=f21e27]: "0"
+        - generic [ref=f21e28]:
+          - generic [ref=f21e30]:
+            - generic [ref=f21e31]: Link da ata
+            - generic [ref=f21e32]:
+              - textbox "Link da ata" [ref=f21e33]: http://localhost:3000/preencher/1218223fc61c1c375dacd2cab9f774dbdc9e114e61e0b53f17a3915c3a75329d
+              - button "Copiar link da ata" [ref=f21e34] [cursor=pointer]
+              - button "Rotacionar link de preenchimento" [ref=f21e37] [cursor=pointer]
+          - generic [ref=f21e41]:
+            - text: E-mail
+            - textbox "E-mail" [ref=f21e42]: codex.odonto@gmail.com
+        - button "Salvar dados do grupo" [ref=f21e44] [cursor=pointer]
+      - group [ref=f21e48]:
+        - generic "Servidores da Mesa" [ref=f21e49] [cursor=pointer]
+    - group [ref=f21e53]:
+      - generic "Plataformas" [ref=f21e54] [cursor=pointer]
+    - group [ref=f21e58]:
+      - generic "Horários de Reunião" [ref=f21e59] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f21e68] [cursor=pointer]
+  - alert [ref=f21e72]

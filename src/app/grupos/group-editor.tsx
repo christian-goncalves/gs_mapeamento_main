@@ -6,6 +6,7 @@ import { useActionState, useCallback, useEffect, useRef, useState } from "react"
 import {
   faArrowLeft,
   faCircleInfo,
+  faChevronDown,
   faFloppyDisk,
   faPenToSquare,
   faPlus,
@@ -13,7 +14,7 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { Grupo, GrupoHorario } from "@/domain/entities";
+import type { Grupo, GrupoHorario, GrupoPlataforma } from "@/domain/entities";
 import { plataformaMapping } from "@/domain/enums";
 import {
   KNOWN_MESA_OFFICES,
@@ -30,7 +31,9 @@ import {
 import { CopyableLink } from "./copyable-link";
 import { isSubmitFromAnotherForm } from "./group-editor-submit";
 import { GroupSchedulesEditor } from "./group-schedules-editor";
+import { GroupPlatformsEditor } from "./group-platforms-editor";
 import { MesaServersSummary } from "./mesa-servers-summary";
+import { EmailChangeDialog } from "./email-change-dialog";
 
 const emptyGroup: Grupo = {
   grupo_id: "",
@@ -52,30 +55,51 @@ const emptyGroup: Grupo = {
   updated_at: new Date(0).toISOString(),
 };
 
-function ScheduleSectionHeading() {
+function ScheduleTimeHelp() {
   return (
-    <div className="schedule-section-heading">
-      <h2>Horários de Reunião</h2>
-      <details
-        className="schedule-time-help"
-        onMouseEnter={(event) => { event.currentTarget.open = true; }}
-        onMouseLeave={(event) => {
-          if (!event.currentTarget.contains(document.activeElement)) {
-            event.currentTarget.open = false;
-          }
-        }}
-        onFocus={(event) => { event.currentTarget.open = true; }}
-        onBlur={(event) => {
-          if (!event.currentTarget.contains(event.relatedTarget)) {
-            event.currentTarget.open = false;
-          }
-        }}
-      >
-        <summary aria-label="Informações sobre o horário da agenda">
-          <FontAwesomeIcon icon={faCircleInfo} aria-hidden="true" />
-        </summary>
-        <p>Os horários desta agenda são informados no horário de Brasília (UTC−03:00).</p>
-      </details>
+    <span
+      className="schedule-time-help-icon"
+      role="img"
+      tabIndex={0}
+      aria-label="Informações sobre o horário da agenda"
+      title="Os horários desta agenda são informados no horário de Brasília (UTC−03:00)."
+    >
+      <FontAwesomeIcon icon={faCircleInfo} aria-hidden="true" />
+    </span>
+  );
+}
+
+function PlatformBadge({ tipo }: { tipo: (typeof plataformaMapping.codes)[number] }) {
+  return (
+    <li className={`platform-legend-badge platform-legend-badge--${tipo}`}>
+      <span className={`platform-color-dot platform-color-dot--${tipo}`} aria-hidden="true" />
+      {plataformaMapping.toSheet(tipo)}
+    </li>
+  );
+}
+
+function PlatformLegend() {
+  return (
+    <ul className="platform-legend" aria-label="Legenda de plataformas">
+      {plataformaMapping.codes.map((tipo) => (
+        <PlatformBadge tipo={tipo} key={tipo} />
+      ))}
+    </ul>
+  );
+}
+
+function GroupPlatformsSummary({ platforms }: { platforms: GrupoPlataforma[] }) {
+  const usedTypes = plataformaMapping.codes.filter((tipo) =>
+    platforms.some((platform) => platform.ativo && platform.tipo === tipo),
+  );
+  if (usedTypes.length === 0) return null;
+
+  return (
+    <div className="group-platforms-summary">
+      <span className="group-platforms-summary-label">Plataformas Utilizadas</span>
+      <ul className="platform-legend" aria-label="Plataformas Utilizadas">
+        {usedTypes.map((tipo) => <PlatformBadge tipo={tipo} key={tipo} />)}
+      </ul>
     </div>
   );
 }
@@ -212,6 +236,7 @@ function MesaServersEditor({
   informativeNotice = "",
   errorNotice = "",
   summaryMode = false,
+  hideSummaryHeading = false,
   startDisabled = false,
   onStartEditing,
 }: {
@@ -221,6 +246,7 @@ function MesaServersEditor({
   informativeNotice?: string;
   errorNotice?: string;
   summaryMode?: boolean;
+  hideSummaryHeading?: boolean;
   startDisabled?: boolean;
   onStartEditing?: () => void;
 }) {
@@ -235,6 +261,7 @@ function MesaServersEditor({
         servidores={servidores}
         disabled={startDisabled}
         informativeNotice={informativeNotice}
+        hideHeading={hideSummaryHeading}
       />
     );
   }
@@ -261,7 +288,7 @@ function MesaServersEditor({
       )}
       <div className="mesa-servers-header">
         <div>
-          <h2>Servidores da Mesa</h2>
+          <h2>Servidores</h2>
         </div>
         {editing && (
           <button
@@ -285,7 +312,7 @@ function MesaServersEditor({
           >
             <span className="button-content">
               <FontAwesomeIcon icon={faPlus} />
-              Adicionar servidores
+              Adicionar Servidores
             </span>
           </button>
         )}
@@ -394,7 +421,7 @@ function MesaServersEditor({
                     value={item.nome}
                     readOnly={disabled}
                     className={vacant ? "mesa-vacant-input" : undefined}
-                    aria-label={`Nome do servidor de ${rowName}`}
+                    aria-label={`Nome do Servidor de ${rowName}`}
                     onFocus={(event) => {
                       if (vacant) event.currentTarget.select();
                     }}
@@ -496,6 +523,7 @@ function TimedMessage({
 export function GroupEditor({
   group,
   horarios,
+  plataformas = [],
   servidoresMesa,
   canCreate,
   canManageAccess = canCreate,
@@ -503,10 +531,13 @@ export function GroupEditor({
   activationExpired = false,
   status,
   publicOrigin = "",
+  initialOpenSection = "",
+  keepNewGroupRoute = false,
   variant = "default",
 }: {
   group?: Grupo;
   horarios: GrupoHorario[];
+  plataformas?: GrupoPlataforma[];
   servidoresMesa?: GrupoServidorMesa[];
   canCreate: boolean;
   canManageAccess?: boolean;
@@ -514,6 +545,8 @@ export function GroupEditor({
   activationExpired?: boolean;
   status?: string;
   publicOrigin?: string;
+  initialOpenSection?: string;
+  keepNewGroupRoute?: boolean;
   variant?: "default" | "responsavel";
 }) {
   const [state, action, pending] = useActionState(saveGrupoAction, null);
@@ -530,6 +563,18 @@ export function GroupEditor({
   const router = useRouter();
   const pathname = usePathname();
   const current = group ?? emptyGroup;
+  const hasRegisteredPlatforms = plataformas.some(
+    (platform) => platform.grupo_id === current.grupo_id,
+  );
+  const hasActivePlatforms = plataformas.some(
+    (platform) => platform.grupo_id === current.grupo_id && platform.ativo,
+  );
+  const openPlatformsByDefault = Boolean(
+    group && !initialOpenSection && !hasRegisteredPlatforms,
+  );
+  const platformSetupMessage = hasRegisteredPlatforms
+    ? "Ative pelo menos uma plataforma para liberar o cadastro dos horários do grupo."
+    : "Cadastre pelo menos uma plataforma para depois cadastrar os horários do grupo.";
   const [active, setActive] = useState(current.ativo);
   const hasSecureAtaLink = isSecureAtaLinkToken(current.link_formulario_ata);
   const publicPath = hasSecureAtaLink
@@ -556,8 +601,16 @@ export function GroupEditor({
                   ? "Grupo criado."
                   : "";
   const dismissStatus = useCallback(() => {
-    if (status) router.replace(pathname, { scroll: false });
-  }, [pathname, router, status]);
+    if (!status) return;
+    const baseDestination =
+      keepNewGroupRoute && group
+        ? `${pathname}?grupoId=${encodeURIComponent(group.grupo_id)}`
+        : pathname;
+    const destination = initialOpenSection
+      ? `${baseDestination}${baseDestination.includes("?") ? "&" : "?"}settingsSection=${encodeURIComponent(initialOpenSection)}`
+      : baseDestination;
+    router.replace(destination, { scroll: false });
+  }, [group, initialOpenSection, keepNewGroupRoute, pathname, router, status]);
   const formId =
     variant === "responsavel" ? "responsavel-configuracoes-form" : undefined;
   function ataLinkControls() {
@@ -615,6 +668,7 @@ export function GroupEditor({
       acesso_plataforma: String(formData.get("acesso_plataforma") ?? "").trim(),
       plataforma: String(formData.get("plataforma") ?? ""),
       fuso_horario: String(formData.get("fuso_horario") ?? ""),
+      ultima_reuniao_anterior: Number(formData.get("ultima_reuniao_anterior") ?? 0),
     };
   }
 
@@ -624,6 +678,7 @@ export function GroupEditor({
       acesso_plataforma: current.acesso_plataforma.trim(),
       plataforma: current.plataforma,
       fuso_horario: current.fuso_horario,
+      ultima_reuniao_anterior: current.ultima_reuniao_anterior,
     };
   }
 
@@ -738,52 +793,62 @@ export function GroupEditor({
               {responsavelFormMessage && responsavelEditing && (
                 <p className="form-error" role="status">{responsavelFormMessage}</p>
               )}
-              <h2>Dados do grupo</h2>
+              <div className="responsavel-group-data-heading">
+                <h2>Dados do Grupo</h2>
+                {!responsavelEditing && (
+                  <button
+                    className="responsavel-edit-group-button"
+                    type="button"
+                    disabled={mesaEditing}
+                    onClick={startResponsavelEditing}
+                  >
+                    <span className="button-content">
+                      <FontAwesomeIcon icon={faPenToSquare} />
+                      Editar Dados do Grupo
+                    </span>
+                  </button>
+                )}
+              </div>
               <div className="form-grid responsavel-config-grid">
                 <ReviewSettingField
                   enabled={current.revisao_atas_ativa === true}
                   disabled={!responsavelEditing}
                 />
-                <label>
-                  Plataforma
-                  <input
-                    name="acesso_plataforma"
-                    required
-                    defaultValue={current.acesso_plataforma}
-                    readOnly={!responsavelEditing}
-                  />
-                </label>
-                <label>
-                  Plataforma
-                  <select name="plataforma" defaultValue={current.plataforma} disabled={!responsavelEditing}>
-                    {plataformaMapping.codes.map((code) => (
-                      <option key={code} value={code}>{plataformaMapping.toSheet(code)}</option>
-                    ))}
-                  </select>
-                  {!responsavelEditing && <input type="hidden" name="plataforma" value={current.plataforma} />}
-                </label>
+                <input type="hidden" name="acesso_plataforma" value={current.acesso_plataforma} />
+                <input type="hidden" name="plataforma" value={current.plataforma} />
                 <input type="hidden" name="fuso_horario" value={current.fuso_horario} />
-                <label>
-                  E-mail
-                  <input
-                    name="email_acesso_grupo"
-                    type="email"
-                    required={canManageAccess}
-                    defaultValue={current.email_acesso_grupo}
-                    readOnly={!responsavelEditing || !canManageAccess}
-                  />
-                </label>
+                <div className="responsavel-email-field">
+                  <label>
+                    E-mail
+                    <input
+                      name="email_acesso_grupo"
+                      type="email"
+                      required={canManageAccess}
+                      defaultValue={current.email_acesso_grupo}
+                      readOnly
+                    />
+                  </label>
+                  {group && current.grupo_id && (
+                    <EmailChangeDialog
+                      groupId={current.grupo_id}
+                      currentEmail={current.email_acesso_grupo}
+                    />
+                  )}
+                </div>
                 {ataLinkControls()}
                 <label>
                   Última reunião antes do sistema
                   <input
+                    name="ultima_reuniao_anterior"
                     type="number"
-                    value={current.ultima_reuniao_anterior}
-                    readOnly
-                    aria-readonly="true"
+                    min={0}
+                    step={1}
+                    defaultValue={current.ultima_reuniao_anterior}
+                    readOnly={!responsavelEditing}
                   />
                 </label>
               </div>
+              <GroupPlatformsSummary platforms={plataformas} />
             </section>
             {responsavelEditing ? (
               <div className="form-footer group-save-footer">
@@ -802,25 +867,17 @@ export function GroupEditor({
                   Cancelar
                 </button>
               </div>
-            ) : (
-              <div className="section-footer schedule-view-footer">
-                <button
-                  className="group-wide-action"
-                  type="button"
-                  disabled={mesaEditing}
-                  onClick={startResponsavelEditing}
-                >
-                  <span className="button-content">
-                    <FontAwesomeIcon icon={faPenToSquare} />
-                    Editar dados do grupo
-                  </span>
-                </button>
-              </div>
-            )}
+            ) : null}
           </section>
 
           {group && (
-            <section className="card responsavel-config-panel">
+            <details className="card responsavel-config-panel settings-accordion" open={initialOpenSection === "servers"}>
+              <summary className="settings-accordion-summary">
+                <span>Servidores da Mesa</span>
+                <FontAwesomeIcon className="settings-accordion-chevron" icon={faChevronDown} aria-hidden="true" />
+              </summary>
+              <div className="settings-accordion-content">
+              <input type="hidden" name="settings_section" value="servers" />
               <MesaServersEditor
                 key={`${status ?? ""}:${mesaEditorVersion}:${JSON.stringify(mesaPayloadFromPersisted(servidoresMesa ?? []))}`}
                 grupoId={current.grupo_id}
@@ -828,6 +885,7 @@ export function GroupEditor({
                 disabled={!mesaEditing || mesaPending}
                 errorNotice={mesaState?.error ?? mesaFormMessage}
                 summaryMode
+                hideSummaryHeading
                 startDisabled={responsavelEditing || mesaPending}
                 onStartEditing={startMesaEditing}
               />
@@ -855,7 +913,8 @@ export function GroupEditor({
                   </button>
                 </div>
               )}
-            </section>
+              </div>
+            </details>
           )}
 
           {!group && responsavelEditing && (
@@ -881,10 +940,41 @@ export function GroupEditor({
         </form>
 
         {group && (
-          <section className="card responsavel-config-panel responsavel-config-section responsavel-schedules-section">
-            <ScheduleSectionHeading />
-            <GroupSchedulesEditor grupoId={group.grupo_id} horarios={horarios} />
-          </section>
+          <>
+            <details className="card responsavel-config-panel settings-accordion" open={initialOpenSection === "platforms" || openPlatformsByDefault}>
+              <summary className="settings-accordion-summary">
+                <span>Plataformas</span>
+                <FontAwesomeIcon className="settings-accordion-chevron" icon={faChevronDown} aria-hidden="true" />
+              </summary>
+              <div className="settings-accordion-content">
+                {!hasActivePlatforms && (
+                  <p className="platforms-locked-message" role="status">
+                    {platformSetupMessage}
+                  </p>
+                )}
+                <GroupPlatformsEditor
+                  grupoId={group.grupo_id}
+                  platforms={plataformas}
+                  schedules={horarios}
+                  isAdmin={canCreate}
+                  embedded
+                />
+              </div>
+            </details>
+            <details className="card responsavel-config-panel responsavel-config-section responsavel-schedules-section settings-accordion" open={initialOpenSection === "schedules"}>
+              <summary className="settings-accordion-summary">
+                <span className="settings-accordion-title-with-help">
+                  <span>Horários de Reunião</span>
+                  <ScheduleTimeHelp />
+                </span>
+                <FontAwesomeIcon className="settings-accordion-chevron" icon={faChevronDown} aria-hidden="true" />
+              </summary>
+              <div className="settings-accordion-content">
+                <PlatformLegend />
+                <GroupSchedulesEditor grupoId={group.grupo_id} horarios={horarios} plataformas={plataformas} />
+              </div>
+            </details>
+          </>
         )}
       </div>
     );
@@ -905,6 +995,7 @@ export function GroupEditor({
 
       <form action={action} className="creation-form">
         <input type="hidden" name="grupo_id" value={current.grupo_id} />
+        {keepNewGroupRoute ? <input type="hidden" name="return_to_new_group_page" value="on" /> : null}
         <input type="hidden" name="ativo" value={active ? "on" : ""} />
         {state?.error && (
           <TimedMessage
@@ -924,29 +1015,13 @@ export function GroupEditor({
           />
         )}
         <section className="card form-section">
-          <h2>Dados do grupo</h2>
+          <h2>Dados do Grupo</h2>
           <div className="form-grid">
             <label>
               Nome
               <input name="grupo_nome" required defaultValue={current.grupo_nome} />
             </label>
             <ReviewSettingField enabled={current.revisao_atas_ativa === true} />
-            <label>
-              Plataforma
-              <input
-                name="acesso_plataforma"
-                required
-                defaultValue={current.acesso_plataforma}
-              />
-            </label>
-            <label>
-              Plataforma
-              <select name="plataforma" defaultValue={current.plataforma}>
-                {plataformaMapping.codes.map((code) => (
-                  <option key={code} value={code}>{plataformaMapping.toSheet(code)}</option>
-                ))}
-              </select>
-            </label>
             <input type="hidden" name="fuso_horario" value={current.fuso_horario} />
             {canManageAccess && (
               <label>
@@ -971,74 +1046,167 @@ export function GroupEditor({
               />
             </label>
           </div>
-          {canManageAccess && (
-            <div className="form-grid">
-              <label>
-                E-mail
-                <input
-                  name="email_acesso_grupo"
-                  type="email"
-                  required
-                  defaultValue={current.email_acesso_grupo}
-                />
-              </label>
-            </div>
-          )}
-          {group && ataLinkControls()}
-          {activationPath && canManageAccess && (
+          {group ? (
             <>
-              <CopyableLink
-                value={activationPath}
-                displayValue={`Ativar acesso ${current.grupo_nome}`}
-                label="Link de ativação do acesso do grupo"
-                trailingAction={
-                  <button
-                    type="submit"
-                    className="icon-button ata-link-rotate-button"
-                    formAction={rotateActivationInviteAction}
-                    formNoValidate
-                    value="rotate-activation-invite"
-                    disabled={pending}
-                    aria-label="Rotacionar convite de ativação"
-                    title="Rotacionar convite"
-                  >
-                    <FontAwesomeIcon icon={faRotateRight} />
-                  </button>
-                }
-              />
-              {activationExpired && (
-                <p className="field-hint">
-                  Este convite expirou. Rotacione-o para gerar um novo link válido.
-                </p>
+              <div className={canManageAccess ? "group-access-top-row" : "group-access-top-row group-access-top-row-single"}>
+                {ataLinkControls()}
+                {canManageAccess && (
+                  <label>
+                    E-mail
+                    <input
+                      name="email_acesso_grupo"
+                      type="email"
+                      required
+                      defaultValue={current.email_acesso_grupo}
+                    />
+                  </label>
+                )}
+              </div>
+              {canManageAccess ? (
+                <div className="group-access-bottom-section">
+                  {activationPath && (
+                    <div className="group-access-bottom-row">
+                      <div className="group-activation-link">
+                        <CopyableLink
+                          value={activationPath}
+                          displayValue={`Ativar acesso ${current.grupo_nome}`}
+                          label="Link de ativação do acesso do grupo"
+                          trailingAction={
+                            <button
+                              type="submit"
+                              className="icon-button ata-link-rotate-button"
+                              formAction={rotateActivationInviteAction}
+                              formNoValidate
+                              value="rotate-activation-invite"
+                              disabled={pending}
+                              aria-label="Rotacionar convite de ativação"
+                              title="Rotacionar convite"
+                            >
+                              <FontAwesomeIcon icon={faRotateRight} />
+                            </button>
+                          }
+                        />
+                        {activationExpired && (
+                          <p className="field-hint">
+                            Este convite expirou. Rotacione-o para gerar um novo link válido.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  <div className="group-data-save-platform-row">
+                    <GroupPlatformsSummary platforms={plataformas} />
+                    <button className="group-wide-action group-data-save-action" type="submit" disabled={pending}>
+                      <span className="button-content">
+                        <FontAwesomeIcon icon={faFloppyDisk} />
+                        Salvar dados do grupo
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <GroupPlatformsSummary platforms={plataformas} />
               )}
             </>
+          ) : (
+            canManageAccess && (
+              <div className="form-grid">
+                <label>
+                  E-mail
+                  <input
+                    name="email_acesso_grupo"
+                    type="email"
+                    required
+                    defaultValue={current.email_acesso_grupo}
+                  />
+                </label>
+              </div>
+            )
           )}
         </section>
 
         {group && (
-          <section className="card form-section">
+          <details className="card form-section settings-accordion" open={initialOpenSection === "servers"}>
+            <summary className="settings-accordion-summary">
+              <span>Servidores da Mesa</span>
+              <FontAwesomeIcon className="settings-accordion-chevron" icon={faChevronDown} aria-hidden="true" />
+            </summary>
+            <div className="settings-accordion-content">
             <MesaServersEditor
               grupoId={current.grupo_id}
               servidores={servidoresMesa ?? []}
               summaryMode
+              hideSummaryHeading
             />
-          </section>
+            </div>
+          </details>
         )}
 
-        <div className="form-footer group-save-footer">
-          <button className="group-wide-action" type="submit" disabled={pending}>
-            <span className="button-content">
-              <FontAwesomeIcon icon={faFloppyDisk} />
-              {group ? "Salvar alterações" : "Criar grupo"}
-            </span>
-          </button>
-        </div>
+        {!group && (
+          <div className="form-footer group-save-footer">
+            <button className="group-wide-action" type="submit" disabled={pending}>
+              <span className="button-content">
+                <FontAwesomeIcon icon={faFloppyDisk} />
+                Criar grupo
+              </span>
+            </button>
+          </div>
+        )}
       </form>
 
-      {group && (
-        <section className="card form-section">
-          <ScheduleSectionHeading />
-          <GroupSchedulesEditor grupoId={group.grupo_id} horarios={horarios} />
+      {group ? (
+        <>
+          <details className="card form-section settings-accordion" open={initialOpenSection === "platforms" || openPlatformsByDefault}>
+            <summary className="settings-accordion-summary">
+              <span>Plataformas</span>
+              <FontAwesomeIcon className="settings-accordion-chevron" icon={faChevronDown} aria-hidden="true" />
+            </summary>
+            <div className="settings-accordion-content">
+              {!hasActivePlatforms && (
+                <p className="platforms-locked-message" role="status">
+                  {platformSetupMessage}
+                </p>
+              )}
+              <GroupPlatformsEditor
+                grupoId={group.grupo_id}
+                platforms={plataformas}
+                schedules={horarios}
+                isAdmin={canCreate}
+                isGroupActive={active}
+                returnToNewGroupPage={keepNewGroupRoute}
+                embedded
+              />
+            </div>
+          </details>
+          <details className="card form-section settings-accordion" open={initialOpenSection === "schedules"}>
+            <summary className="settings-accordion-summary">
+              <span className="settings-accordion-title-with-help">
+                <span>Horários de Reunião</span>
+                <ScheduleTimeHelp />
+              </span>
+              <FontAwesomeIcon className="settings-accordion-chevron" icon={faChevronDown} aria-hidden="true" />
+            </summary>
+            <div className="settings-accordion-content">
+              <PlatformLegend />
+              {!active ? (
+                <p className="platforms-locked-message" role="status">Ative o grupo para cadastrar os horários.</p>
+              ) : hasActivePlatforms ? (
+                <GroupSchedulesEditor
+                  grupoId={group.grupo_id}
+                  horarios={horarios}
+                  plataformas={plataformas}
+                  returnToNewGroupPage={keepNewGroupRoute}
+                />
+              ) : (
+                <p className="platforms-locked-message" role="status">{platformSetupMessage}</p>
+              )}
+            </div>
+          </details>
+        </>
+      ) : (
+        <section className="card group-platforms-editor" aria-labelledby="group-platforms-title">
+          <h2 id="group-platforms-title">Plataformas</h2>
+          <p className="platforms-locked-message" role="status">Crie o grupo primeiro para depois cadastrar as plataformas.</p>
         </section>
       )}
     </main>

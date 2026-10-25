@@ -372,7 +372,7 @@ export function AdminAtasTable({
 
   return (
     <section className="card admin-atas-card">
-      <div className="admin-atas-filters" aria-label="Filtros das atas administrativas">
+      <div className="admin-atas-filters" aria-label="Filtros das Atas Administrativas">
         <label>
           De
           <input
@@ -406,7 +406,7 @@ export function AdminAtasTable({
             type="search"
             value={filledBy}
             onChange={(event) => setFilledBy(event.target.value)}
-            placeholder="Nome ou e-mail"
+            placeholder="Nome Ou E-Mail"
           />
         </label>
         <label>

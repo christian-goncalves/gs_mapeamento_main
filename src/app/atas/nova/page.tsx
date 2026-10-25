@@ -49,10 +49,13 @@ export default async function NewAtaPage() {
             id: group.grupo_id,
             name: group.grupo_nome,
             plataforma: group.plataforma,
+            fuso_horario: group.fuso_horario,
+            plataformas: result.grupo_plataformas.filter((item) => item.grupo_id === group.grupo_id && item.ativo).map((item) => item.tipo),
             horarios: group.horarios.map((horario) => ({
               dia_semana: horario.dia_semana,
               hora_inicio: horario.hora_inicio,
               link_reuniao: horario.link_reuniao,
+              plataformaTipo: result.grupo_plataformas.find((item) => item.plataforma_id === horario.plataforma_id && item.ativo)?.tipo,
             })),
           }))}
           today={today}

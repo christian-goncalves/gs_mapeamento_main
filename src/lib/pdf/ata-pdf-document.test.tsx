@@ -37,6 +37,12 @@ describe("PDF visual da ata", () => {
     expect(size.height).toBeCloseTo(841.89, 1);
   });
 
+  it("mantém uma ata típica com 16 localidades em uma única página", async () => {
+    const bytes = await renderAtaPdf(presentation(16), new Date("2026-10-25T15:16:12Z"));
+    const document = await PDFDocument.load(bytes);
+    expect(document.getPageCount()).toBe(1);
+  });
+
   it("pagina listas extensas sem criar página de altura variável", async () => {
     const bytes = await renderAtaPdf(presentation(120));
     const document = await PDFDocument.load(bytes);

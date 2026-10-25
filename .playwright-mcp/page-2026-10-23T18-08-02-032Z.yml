@@ -1,0 +1,119 @@
+- generic [ref=f5e1]:
+  - main [ref=f5e2]:
+    - link "Voltar" [ref=f5e3] [cursor=pointer]:
+      - /url: /admin/grupos
+    - generic [ref=f5e7]:
+      - paragraph [ref=f5e8]: Grupo
+      - heading "BOM DIA BRASIL" [level=1] [ref=f5e9]
+    - generic [ref=f5e10]:
+      - generic [ref=f5e11]:
+        - heading "Dados do grupo" [level=2] [ref=f5e12]
+        - generic [ref=f5e13]:
+          - generic [ref=f5e14]:
+            - text: Nome
+            - textbox "Nome" [ref=f5e15]: BOM DIA BRASIL
+          - generic [ref=f5e16]:
+            - generic [ref=f5e17]:
+              - generic [ref=f5e18]: Revisão de Atas
+              - group [ref=f5e19]:
+                - generic "Informações sobre a revisão de atas" [ref=f5e20] [cursor=pointer]
+            - combobox "Revisão de Atas Informações sobre a revisão de atas" [ref=f5e23]:
+              - option "Aprovação ativada" [selected]
+              - option "Aprovação desativada (padrão)"
+          - generic [ref=f5e24]:
+            - text: Grupo ativo
+            - combobox "Grupo ativo" [ref=f5e25]:
+              - option "Ativo" [selected]
+              - option "Inativo"
+          - generic [ref=f5e26]:
+            - text: Última reunião antes do sistema
+            - spinbutton "Última reunião antes do sistema" [ref=f5e27]: "10"
+        - generic [ref=f5e28]:
+          - generic [ref=f5e30]:
+            - generic [ref=f5e31]: Link da ata
+            - generic [ref=f5e32]:
+              - textbox "Link da ata" [ref=f5e33]: http://localhost:3000/preencher/1336a011bafc96864644f95d95ca492969fcb7e0223c19308e19ad297ad96be7
+              - button "Copiar link da ata" [ref=f5e34] [cursor=pointer]
+              - button "Rotacionar link de preenchimento" [ref=f5e37] [cursor=pointer]
+          - generic [ref=f5e41]:
+            - text: E-mail
+            - textbox "E-mail" [ref=f5e42]: chrisapppg@gmail.com
+        - generic [ref=f5e43]:
+          - generic [ref=f5e45]:
+            - generic [ref=f5e46]: Link de ativação do acesso do grupo
+            - generic [ref=f5e47]:
+              - textbox "Link de ativação do acesso do grupo" [ref=f5e48]: Ativar acesso BOM DIA BRASIL
+              - button "Copiar link de ativação do acesso do grupo" [ref=f5e49] [cursor=pointer]
+              - button "Rotacionar convite de ativação" [ref=f5e52] [cursor=pointer]
+          - button "Salvar dados do grupo" [ref=f5e56] [cursor=pointer]
+      - group [ref=f5e60]:
+        - generic "Servidores da Mesa" [ref=f5e61] [cursor=pointer]
+    - group [ref=f5e65]:
+      - generic "Plataformas" [ref=f5e66] [cursor=pointer]
+    - group [ref=f5e70]:
+      - generic "Horários de Reunião Informações sobre o horário da agenda" [active] [ref=f5e71] [cursor=pointer]:
+        - generic [ref=f5e72]:
+          - generic [ref=f5e73]: Horários de Reunião
+          - img "Informações sobre o horário da agenda" [ref=f5e74]
+      - option "Selecione" [selected]
+      - option "Domingo"
+      - option "Segunda"
+      - option "Terça"
+      - option "Quarta"
+      - option "Quinta"
+      - option "Sexta"
+      - option "Sábado"
+      - option "Selecione" [selected]
+      - option "00:00"
+      - option "00:30"
+      - option "01:00"
+      - option "01:30"
+      - option "02:00"
+      - option "02:30"
+      - option "03:00"
+      - option "03:30"
+      - option "04:00"
+      - option "04:30"
+      - option "05:00"
+      - option "05:30"
+      - option "06:00"
+      - option "06:30"
+      - option "07:00"
+      - option "07:30"
+      - option "08:00"
+      - option "08:30"
+      - option "09:00"
+      - option "09:30"
+      - option "10:00"
+      - option "10:30"
+      - option "11:00"
+      - option "11:30"
+      - option "12:00"
+      - option "12:30"
+      - option "13:00"
+      - option "13:30"
+      - option "14:00"
+      - option "14:30"
+      - option "15:00"
+      - option "15:30"
+      - option "16:00"
+      - option "16:30"
+      - option "17:00"
+      - option "17:30"
+      - option "18:00"
+      - option "18:30"
+      - option "19:00"
+      - option "19:30"
+      - option "20:00"
+      - option "20:30"
+      - option "21:00"
+      - option "21:30"
+      - option "22:00"
+      - option "22:30"
+      - option "23:00"
+      - option "23:30"
+      - option "Selecione e confirme" [selected]
+      - option "Zoom"
+      - option "Zello"
+  - button "Open Next.js Dev Tools" [ref=f5e84] [cursor=pointer]
+  - alert [ref=f5e88]

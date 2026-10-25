@@ -8,10 +8,12 @@ import {
   grupoHorarioFormSchema,
 } from "@/domain/form-schemas";
 import { isVacantMesaName } from "@/domain/grupo-servidores-mesa";
-import { diaSemanaOrder, diaSemanaSchema, horaInicioSchema } from "@/domain/schemas";
+import { diaSemanaOrder, diaSemanaSchema, grupoPlataformaSchema, horaInicioSchema } from "@/domain/schemas";
+import { plataformaMapping } from "@/domain/enums";
 import type { Grupo } from "@/domain/entities";
 import { canAccessGroup } from "@/lib/auth/access";
 import { sendActivationEmail } from "@/lib/email/activation-email";
+import { sendNewUserNotificationEmail } from "@/lib/email/new-user-notification-email";
 import {
   requireAdminSession,
   requireAuthorizedSession,
@@ -21,9 +23,12 @@ import { uniqueAtaLinkToken } from "@/lib/ata-link-token.server";
 import {
   GroupReviewColumnMissingError,
   deactivateGrupoServidorMesa,
-  deleteGrupoHorarios,
   saveGrupo,
   saveGrupoHorario,
+  saveGrupoPlataforma,
+  saveGrupoHorarioSet,
+  setGrupoHorarioPlataformas,
+  deactivateGrupoPlataforma,
   saveGrupoServidorMesa,
   saveGrupoServidoresMesa,
 } from "@/lib/sheets/group-admin";
@@ -44,6 +49,20 @@ function adminGroupPath(grupoId: string) {
 
 function groupDetailPath(grupoId: string, isAdmin: boolean) {
   return isAdmin ? adminGroupPath(grupoId) : `/grupos/${grupoId}`;
+}
+
+function groupReturnPath(grupoId: string, isAdmin: boolean, stayOnNewGroupPage: boolean) {
+  return isAdmin && stayOnNewGroupPage
+    ? `/admin/grupos/novo?grupoId=${encodeURIComponent(grupoId)}`
+    : groupDetailPath(grupoId, isAdmin);
+}
+
+function returnPathKeepingSettingsSectionOpen(path: string, formData: FormData) {
+  const section = text(formData, "settings_section");
+  if (!(["servers", "platforms", "schedules"] as const).includes(section as never)) {
+    return path;
+  }
+  return `${path}${path.includes("?") ? "&" : "?"}settingsSection=${section}`;
 }
 
 function revalidateGroupAdminPaths(grupoId: string) {
@@ -71,8 +90,10 @@ function int(formData: FormData, name: string) {
 const horariosPayloadSchema = z
   .array(
     z.object({
+      horario_id: z.string().uuid().optional(),
       dia_semana: diaSemanaSchema,
       hora_inicio: horaInicioSchema,
+      plataforma_id: z.string().uuid().optional(),
     }),
   )
   .min(1, "Informe pelo menos um horário.");
@@ -172,6 +193,7 @@ export async function saveGrupoAction(
     ? result.grupos.find((group) => group.grupo_id === existingGroupId)
     : undefined;
   const isAdmin = current.access.role === "administrador";
+  const stayOnNewGroupPage = isAdmin && (bool(formData, "return_to_new_group_page") || !existingGroupId);
   const responsavelGrupoNome =
     text(formData, "responsavel_grupo_nome") ||
     existingGroup?.responsavel_grupo_nome ||
@@ -181,11 +203,12 @@ export async function saveGrupoAction(
     existingGroup?.responsavel_grupo_email ||
     "";
   const raw = {
-    acesso_plataforma: text(formData, "acesso_plataforma"),
-    plataforma: text(formData, "plataforma"),
+    acesso_plataforma: text(formData, "acesso_plataforma") || existingGroup?.acesso_plataforma || "",
+    plataforma: text(formData, "plataforma") || existingGroup?.plataforma || "zoom",
     fuso_horario: text(formData, "fuso_horario"),
     grupo_nome: text(formData, "grupo_nome"),
     ativo: bool(formData, "ativo"),
+    plataforma_id: text(formData, "plataforma_id") || undefined,
     revisao_atas_ativa: bool(formData, "revisao_atas_ativa"),
     responsavel_grupo_nome: responsavelGrupoNome,
     responsavel_grupo_email: responsavelGrupoEmail,
@@ -241,7 +264,7 @@ export async function saveGrupoAction(
         email_acesso_grupo: existingGroup?.email_acesso_grupo ?? "",
         responsaveis_ata: existingGroup?.responsaveis_ata ?? "",
         link_formulario_ata: linkFormularioAta,
-        ultima_reuniao_anterior: existingGroup?.ultima_reuniao_anterior ?? 0,
+        ultima_reuniao_anterior: parsed.ultima_reuniao_anterior,
         fuso_horario: parsed.fuso_horario,
         plataforma: parsed.plataforma,
         acesso_plataforma: parsed.acesso_plataforma,
@@ -285,6 +308,11 @@ export async function saveGrupoAction(
       } catch (emailError) {
         console.error("Falha ao enviar e-mail de ativação para o grupo:", savedGroup.grupo_nome, emailError);
       }
+      try {
+        await sendNewUserNotificationEmail({ group: savedGroup, user });
+      } catch (emailError) {
+        console.error("Falha ao notificar sobre novo usuário:", savedGroup.grupo_nome, emailError);
+      }
     }
   }
   revalidateGroupAdminPaths(grupoId);
@@ -296,7 +324,8 @@ export async function saveGrupoAction(
       : existingGroup
         ? "saved"
         : "created";
-  redirect(`${groupDetailPath(grupoId, isAdmin)}?status=${status}`);
+  const returnPath = groupReturnPath(grupoId, isAdmin, stayOnNewGroupPage);
+  redirect(`${returnPath}${returnPath.includes("?") ? "&" : "?"}status=${status}`);
 }
 
 export async function saveGrupoServidoresMesaAction(
@@ -324,9 +353,10 @@ export async function saveGrupoServidoresMesaAction(
   revalidateGroupAdminPaths(grupoId);
   revalidatePath("/admin/relatorios");
   revalidatePath("/responsavel/relatorios");
-  redirect(
+  redirect(returnPathKeepingSettingsSectionOpen(
     `${groupDetailPath(grupoId, current.access.role === "administrador")}?status=saved`,
-  );
+    formData,
+  ));
 }
 
 export async function saveGrupoServidorMesaAction(
@@ -367,9 +397,10 @@ export async function saveGrupoServidorMesaAction(
   revalidateGroupAdminPaths(grupoId);
   revalidatePath("/admin/relatorios");
   revalidatePath("/responsavel/relatorios");
-  redirect(
+  redirect(returnPathKeepingSettingsSectionOpen(
     `${groupDetailPath(grupoId, current.access.role === "administrador")}?status=saved`,
-  );
+    formData,
+  ));
 }
 
 export async function deactivateGrupoServidorMesaAction(formData: FormData) {
@@ -382,9 +413,10 @@ export async function deactivateGrupoServidorMesaAction(formData: FormData) {
   revalidateGroupAdminPaths(grupoId);
   revalidatePath("/admin/relatorios");
   revalidatePath("/responsavel/relatorios");
-  redirect(
+  redirect(returnPathKeepingSettingsSectionOpen(
     `${groupDetailPath(grupoId, current.access.role === "administrador")}?status=saved`,
-  );
+    formData,
+  ));
 }
 
 export async function deactivateGrupoAction(formData: FormData) {
@@ -396,11 +428,6 @@ export async function deactivateGrupoAction(formData: FormData) {
   if (!group) throw new Error("Grupo não encontrado.");
 
   await saveGrupo({ ...group, ativo: false }, undefined, { kind: "authenticated", email: current.access.email });
-  for (const horario of result.grupo_horarios.filter(
-    (item) => item.grupo_id === grupoId && item.ativo,
-  )) {
-    await saveGrupoHorario({ ...horario, ativo: false }, undefined, { kind: "authenticated", email: current.access.email });
-  }
 
   revalidateGroupAdminPaths(grupoId);
   redirect(`${ADMIN_GROUPS_PATH}?status=deactivated`);
@@ -571,55 +598,18 @@ export async function saveHorariosGrupoAction(formData: FormData) {
     const dayDiff = diaSemanaOrder[a.dia_semana] - diaSemanaOrder[b.dia_semana];
     return dayDiff || a.hora_inicio.localeCompare(b.hora_inicio);
   });
-  const keys = sorted.map((item) => `${item.dia_semana}:${item.hora_inicio}`);
-  if (new Set(keys).size !== keys.length) {
-    throw new Error("Existem horários duplicados. Revise dia e hora antes de salvar.");
-  }
-
-  const result = await readAggregatedAtas();
-  const existing = result.grupo_horarios.filter(
-    (horario) => horario.grupo_id === grupoId,
+  await saveGrupoHorarioSet(
+    grupoId,
+    sorted,
+    undefined,
+    { kind: "authenticated", email: current.access.email },
   );
-  const existingByKey = new Map(
-    existing.map((horario) => [
-      `${horario.dia_semana}:${horario.hora_inicio}`,
-      horario,
-    ]),
-  );
-  const desiredKeys = new Set(keys);
-
-  const horarioIdsToDelete = existing
-    .filter((horario) => {
-      const key = `${horario.dia_semana}:${horario.hora_inicio}`;
-      return !desiredKeys.has(key);
-    })
-    .map((horario) => horario.horario_id);
-  await deleteGrupoHorarios(horarioIdsToDelete, grupoId, { kind: "authenticated", email: current.access.email });
-
-  for (const horario of existing) {
-    const key = `${horario.dia_semana}:${horario.hora_inicio}`;
-    if (!desiredKeys.has(key)) {
-      existingByKey.delete(key);
-    }
-  }
-
-  for (const horario of sorted) {
-    const existingHorario = existingByKey.get(
-      `${horario.dia_semana}:${horario.hora_inicio}`,
-    );
-    await saveGrupoHorario({
-      horario_id: existingHorario?.horario_id,
-      grupo_id: grupoId,
-      dia_semana: horario.dia_semana,
-      hora_inicio: horario.hora_inicio,
-      link_reuniao: existingHorario?.link_reuniao ?? "",
-      ativo: true,
-      created_at: existingHorario?.created_at,
-    }, undefined, { kind: "authenticated", email: current.access.email });
-  }
 
   revalidateGroupAdminPaths(grupoId);
-  redirect(groupDetailPath(grupoId, current.access.role === "administrador"));
+  redirect(returnPathKeepingSettingsSectionOpen(
+    groupReturnPath(grupoId, current.access.role === "administrador", bool(formData, "return_to_new_group_page")),
+    formData,
+  ));
 }
 
 export async function toggleHorarioAction(formData: FormData) {
@@ -636,5 +626,70 @@ export async function toggleHorarioAction(formData: FormData) {
   if (!horario) throw new Error("Horário não encontrado.");
   await saveGrupoHorario({ ...horario, ativo: active }, undefined, { kind: "authenticated", email: current.access.email });
   revalidateGroupAdminPaths(grupoId);
-  redirect(groupDetailPath(grupoId, current.access.role === "administrador"));
+  redirect(returnPathKeepingSettingsSectionOpen(
+    groupReturnPath(
+      grupoId,
+      current.access.role === "administrador",
+      bool(formData, "return_to_new_group_page"),
+    ),
+    formData,
+  ));
+}
+
+export async function saveGrupoPlataformaAction(formData: FormData) {
+  const grupoId = text(formData, "grupo_id");
+  const plataformaId = text(formData, "plataforma_id") || undefined;
+  const current = await requireAuthorizedSession();
+  if (!canAccessGroup(current.access, grupoId)) redirect("/");
+  const group = current.access.groups.find((item) => item.grupo_id === grupoId);
+  if (!group) redirect("/");
+  const isAdmin = current.access.role === "administrador";
+  const tipo = text(formData, "tipo");
+  if (!isAdmin && !plataformaMapping.codes.includes(tipo as never)) throw new Error("Apenas administradores podem cadastrar novos tipos de plataforma.");
+  const parsedPlatform = grupoPlataformaSchema.safeParse({
+    plataforma_id: plataformaId ?? randomUUID(),
+    grupo_id: grupoId,
+    tipo: tipo as Grupo["plataforma"],
+    link: text(formData, "link"),
+    id_acesso: text(formData, "id_acesso"),
+    senha_pin: text(formData, "senha_pin"),
+    ativo: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  });
+  if (!parsedPlatform.success) throw new Error(parsedPlatform.error.issues[0]?.message ?? "Dados da plataforma inválidos.");
+  await saveGrupoPlataforma({ ...parsedPlatform.data, plataforma_id: plataformaId }, undefined, { kind: "authenticated", email: current.access.email });
+  revalidateGroupAdminPaths(grupoId);
+  redirect(returnPathKeepingSettingsSectionOpen(
+    groupReturnPath(grupoId, isAdmin, bool(formData, "return_to_new_group_page")),
+    formData,
+  ));
+}
+
+export async function associateGrupoHorariosAction(formData: FormData) {
+  const grupoId = text(formData, "grupo_id");
+  const current = await requireAuthorizedSession();
+  if (!canAccessGroup(current.access, grupoId)) redirect("/");
+  const rawAssignments = formData.has("horario_id")
+    ? [{ horario_id: text(formData, "horario_id"), plataforma_id: text(formData, "plataforma_id") }]
+    : JSON.parse(text(formData, "assignments") || "[]");
+  const assignments = z.array(z.object({ horario_id: z.string().uuid(), plataforma_id: z.string().uuid() })).parse(rawAssignments);
+  await setGrupoHorarioPlataformas(grupoId, assignments, undefined, { kind: "authenticated", email: current.access.email });
+  revalidateGroupAdminPaths(grupoId);
+  redirect(returnPathKeepingSettingsSectionOpen(
+    groupReturnPath(grupoId, current.access.role === "administrador", bool(formData, "return_to_new_group_page")),
+    formData,
+  ));
+}
+
+export async function deactivateGrupoPlataformaAction(formData: FormData) {
+  const grupoId = text(formData, "grupo_id");
+  const current = await requireAuthorizedSession();
+  if (!canAccessGroup(current.access, grupoId)) redirect("/");
+  await deactivateGrupoPlataforma(grupoId, text(formData, "plataforma_id"), text(formData, "transfer_to") || undefined, undefined, { kind: "authenticated", email: current.access.email });
+  revalidateGroupAdminPaths(grupoId);
+  redirect(returnPathKeepingSettingsSectionOpen(
+    groupReturnPath(grupoId, current.access.role === "administrador", bool(formData, "return_to_new_group_page")),
+    formData,
+  ));
 }

@@ -13,10 +13,10 @@ export default async function GroupDetailPage({
   searchParams,
 }: {
   params: Promise<{ grupoId: string }>;
-  searchParams?: Promise<{ status?: string }>;
+  searchParams?: Promise<{ status?: string; settingsSection?: string }>;
 }) {
   const { grupoId } = await params;
-  const status = (await searchParams)?.status;
+  const { status, settingsSection } = (await searchParams) ?? {};
   const { access, result } = await requireGroupSessionWithAggregatedAtas(grupoId);
   if (access.role === "administrador") {
     redirect(
@@ -43,10 +43,12 @@ export default async function GroupDetailPage({
       <GroupEditor
         group={groupWithSecureAtaLink}
         horarios={horarios}
+        plataformas={result.grupo_plataformas.filter((platform) => platform.grupo_id === grupoId)}
         servidoresMesa={servidoresMesa}
         canCreate={false}
         canManageAccess={false}
         status={status}
+        initialOpenSection={settingsSection}
         publicOrigin={publicOrigin}
         variant="responsavel"
       />

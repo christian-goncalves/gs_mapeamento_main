@@ -6,12 +6,15 @@ import {
   faCircleCheck,
   faPenToSquare,
   faPlus,
+  faSpinner,
   faTrashCan,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { GrupoHorario } from "@/domain/entities";
-import { saveHorariosGrupoAction } from "./actions";
+import { useFormStatus } from "react-dom";
+import type { GrupoHorario, GrupoPlataforma } from "@/domain/entities";
+import { plataformaMapping } from "@/domain/enums";
+import { saveHorariosGrupoAction, toggleHorarioAction } from "./actions";
 
 const weekDays = [
   ["domingo", "Domingo"],
@@ -35,8 +38,10 @@ const timeOptions = Array.from({ length: 48 }, (_, index) => {
 
 type ScheduleDraft = {
   clientId: string;
+  horario_id?: string;
   dia_semana: string;
   hora_inicio: string;
+  plataforma_id?: string;
 };
 
 function blankRow(clientId = "blank-initial"): ScheduleDraft {
@@ -70,17 +75,114 @@ function scheduleKey(row: Pick<ScheduleDraft, "dia_semana" | "hora_inicio">) {
   return `${row.dia_semana}:${row.hora_inicio}`;
 }
 
+export function canReviewSchedules(
+  completeRowCount: number,
+  draft: Pick<ScheduleDraft, "dia_semana" | "hora_inicio">,
+  hasDuplicates: boolean,
+) {
+  const hasCompleteDraft = Boolean(draft.dia_semana && draft.hora_inicio);
+  return !hasDuplicates && (completeRowCount > 0 || hasCompleteDraft);
+}
+
 function newClientId() {
   return `new-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+function ScheduleReviewActions({
+  onBack,
+  onCancel,
+}: {
+  onBack: () => void;
+  onCancel: () => void;
+}) {
+  const { pending } = useFormStatus();
+
+  return (
+    <div className="modal-actions schedule-review-actions">
+      <button
+        type="button"
+        className="secondary"
+        disabled={pending}
+        onClick={onBack}
+      >
+        <span className="button-content">
+          <FontAwesomeIcon icon={faPenToSquare} />
+          Voltar para corrigir
+        </span>
+      </button>
+      <button
+        type="button"
+        className="secondary"
+        disabled={pending}
+        onClick={onCancel}
+      >
+        <span className="button-content">
+          <FontAwesomeIcon icon={faXmark} />
+          Cancelar
+        </span>
+      </button>
+      <button type="submit" disabled={pending} aria-live="polite">
+        <span className="button-content">
+          <FontAwesomeIcon icon={pending ? faSpinner : faCheck} spin={pending} />
+          {pending ? "Salvando horários…" : "CONFIRMAR"}
+        </span>
+      </button>
+    </div>
+  );
+}
+
+function ScheduleDeleteButton({ label }: { label: string }) {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      className="danger-icon-button"
+      aria-label={pending ? `Excluindo ${label}` : `Excluir ${label}`}
+      title={pending ? "Excluindo horário…" : "Excluir"}
+      disabled={pending}
+    >
+      <FontAwesomeIcon icon={pending ? faSpinner : faTrashCan} spin={pending} />
+    </button>
+  );
 }
 
 export function GroupSchedulesEditor({
   grupoId,
   horarios,
+  plataformas = [],
+  returnToNewGroupPage = false,
 }: {
   grupoId: string;
   horarios: GrupoHorario[];
+  plataformas?: GrupoPlataforma[];
+  returnToNewGroupPage?: boolean;
 }) {
+  const activePlatforms = plataformas.filter(
+    (item) => item.ativo && item.grupo_id === grupoId,
+  );
+  function platformForSchedule(row: Pick<ScheduleDraft, "plataforma_id">) {
+    return activePlatforms.find(
+      (platform) => platform.plataforma_id === row.plataforma_id,
+    ) ?? (activePlatforms.length === 1 ? activePlatforms[0] : undefined);
+  }
+  function platformLabelForSchedule(row: Pick<ScheduleDraft, "plataforma_id">) {
+    const platform = platformForSchedule(row);
+    return platform ? plataformaMapping.toSheet(platform.tipo) : "Plataforma não definida";
+  }
+  function platformDot(row: Pick<ScheduleDraft, "plataforma_id">) {
+    const platform = platformForSchedule(row);
+    if (!platform) return null;
+    const label = plataformaMapping.toSheet(platform.tipo);
+    return (
+      <span
+        className={`platform-color-dot platform-color-dot--${platform.tipo}`}
+        role="img"
+        aria-label={label}
+        title={label}
+      />
+    );
+  }
   const activeRows = useMemo(
     () =>
       sortSchedules(
@@ -88,8 +190,10 @@ export function GroupSchedulesEditor({
           .filter((horario) => horario.ativo)
           .map((horario) => ({
             clientId: horario.horario_id,
+            horario_id: horario.horario_id,
             dia_semana: horario.dia_semana,
             hora_inicio: horario.hora_inicio,
+            plataforma_id: horario.plataforma_id,
           })),
       ),
     [horarios],
@@ -121,7 +225,7 @@ export function GroupSchedulesEditor({
   const completeRows = sortSchedules(
     rows
       .filter((row) => row.dia_semana && row.hora_inicio)
-      .map(({ dia_semana, hora_inicio }) => ({ dia_semana, hora_inicio })),
+      .map(({ horario_id, dia_semana, hora_inicio, plataforma_id }) => ({ horario_id, dia_semana, hora_inicio, plataforma_id })),
   );
   const duplicateKeys = new Set<string>();
   const seenKeys = new Set<string>();
@@ -145,6 +249,42 @@ export function GroupSchedulesEditor({
   }
 
   function review() {
+    if (hasDuplicates) {
+      setAddError("Existem horários duplicados. Revise dia e hora antes de continuar.");
+      return;
+    }
+
+    const hasPartialAddDraft = Boolean(addDraft.dia_semana || addDraft.hora_inicio);
+    const hasCompleteAddDraft = Boolean(addDraft.dia_semana && addDraft.hora_inicio);
+
+    if (hasPartialAddDraft && !hasCompleteAddDraft) {
+      setAddError("Complete o dia e o horário antes de confirmar.");
+      return;
+    }
+
+    if (hasCompleteAddDraft) {
+      if (rows.some((row) => scheduleKey(row) === scheduleKey(addDraft))) {
+        setAddError("Este horário já está cadastrado para este dia.");
+        return;
+      }
+      if (activePlatforms.length > 1 && !addDraft.plataforma_id) {
+        setAddError("Selecione e confirme uma plataforma para este horário.");
+        return;
+      }
+
+      setRows((current) =>
+        sortSchedules([
+          ...current,
+          { ...addDraft, clientId: newClientId() },
+        ]),
+      );
+      setAddDraft(blankRow("new"));
+      setAdding(false);
+      setAddError("");
+      setReviewing(true);
+      return;
+    }
+
     if (completeRows.length > 0 && !hasDuplicates) setReviewing(true);
   }
 
@@ -160,6 +300,7 @@ export function GroupSchedulesEditor({
   }
 
   function startRowEdit(row: ScheduleDraft) {
+    if (row.plataforma_id && !window.confirm(`Confirma manter ${plataformaMapping.toSheet(plataformas.find((item) => item.plataforma_id === row.plataforma_id)?.tipo ?? "zoom")} ao alterar dia ou horário?`)) return;
     setEditingRowId(row.clientId);
     setRowBeforeEdit(row);
   }
@@ -212,6 +353,10 @@ export function GroupSchedulesEditor({
       setAddError("Este horário já está cadastrado para este dia.");
       return;
     }
+    if (plataformas.filter((item) => item.ativo && item.grupo_id === grupoId).length > 1 && !addDraft.plataforma_id) {
+      setAddError("Selecione e confirme uma plataforma para este horário.");
+      return;
+    }
     setRows((current) =>
       sortSchedules([
         ...current,
@@ -246,7 +391,15 @@ export function GroupSchedulesEditor({
                     <td>
                       {dayRows.length > 0 ? (
                         <span className="schedule-summary-times">
-                          {dayRows.map((row) => displayTime(row.hora_inicio)).join(", ")}
+                          {dayRows.map((row, rowIndex) => (
+                            <span className="schedule-summary-time" key={row.clientId}>
+                              {displayTime(row.hora_inicio)}
+                              {platformDot(row)}
+                              {rowIndex < dayRows.length - 1 ? (
+                                <span className="schedule-summary-separator" aria-hidden="true"> | </span>
+                              ) : null}
+                            </span>
+                          ))}
                         </span>
                       ) : (
                         <span className="muted">-</span>
@@ -267,7 +420,7 @@ export function GroupSchedulesEditor({
           >
             <span className="button-content">
               <FontAwesomeIcon icon={faPenToSquare} />
-              Editar horários
+              Editar Horários
             </span>
           </button>
         </div>
@@ -339,8 +492,12 @@ export function GroupSchedulesEditor({
                         ))}
                       </select>
                     ) : (
-                      displayTime(row.hora_inicio)
+                      <span className="schedule-time-platform">
+                        {displayTime(row.hora_inicio)}
+                        {platformDot(row)}
+                      </span>
                     )}
+                    {isEditingRow ? platformDot(row) : null}
                   </td>
                   <td>
                     <div className="row-actions schedule-actions">
@@ -374,15 +531,36 @@ export function GroupSchedulesEditor({
                           >
                             <FontAwesomeIcon icon={faPenToSquare} />
                           </button>
-                          <button
-                            type="button"
-                            className="danger-icon-button"
-                            aria-label={`Excluir ${dayLabel(row.dia_semana)} ${displayTime(row.hora_inicio)}`}
-                            title="Excluir"
-                            onClick={() => deleteRow(row)}
-                          >
-                            <FontAwesomeIcon icon={faTrashCan} />
-                          </button>
+                          {row.horario_id ? (
+                            <form
+                              className="schedule-delete-form"
+                              action={toggleHorarioAction}
+                              onSubmit={(event) => {
+                                if (!window.confirm(`Excluir ${dayLabel(row.dia_semana)} ${displayTime(row.hora_inicio)}?`)) {
+                                  event.preventDefault();
+                                }
+                              }}
+                            >
+                              <input type="hidden" name="grupo_id" value={grupoId} />
+                              <input type="hidden" name="horario_id" value={row.horario_id} />
+                              <input type="hidden" name="ativo" value="false" />
+                              <input type="hidden" name="settings_section" value="schedules" />
+                              {returnToNewGroupPage ? (
+                                <input type="hidden" name="return_to_new_group_page" value="on" />
+                              ) : null}
+                              <ScheduleDeleteButton label={`${dayLabel(row.dia_semana)} ${displayTime(row.hora_inicio)}`} />
+                            </form>
+                          ) : (
+                            <button
+                              type="button"
+                              className="danger-icon-button"
+                              aria-label={`Excluir ${dayLabel(row.dia_semana)} ${displayTime(row.hora_inicio)}`}
+                              title="Excluir horário não salvo"
+                              onClick={() => deleteRow(row)}
+                            >
+                              <FontAwesomeIcon icon={faTrashCan} />
+                            </button>
+                          )}
                         </>
                       )}
                     </div>
@@ -403,7 +581,7 @@ export function GroupSchedulesEditor({
       {addError && <p className="form-error">{addError}</p>}
 
       {adding ? (
-        <div className="schedule-add-row">
+        <div className={`schedule-add-row${activePlatforms.length > 1 ? " schedule-add-row-with-platform" : ""}`}>
           <label>
             Dia
             <select
@@ -428,6 +606,22 @@ export function GroupSchedulesEditor({
               ))}
             </select>
           </label>
+          {activePlatforms.length > 1 ? (
+            <label>
+              Plataforma
+              <select
+                value={addDraft.plataforma_id ?? ""}
+                onChange={(event) => setAddDraft((current) => ({ ...current, plataforma_id: event.target.value }))}
+              >
+                <option value="">Selecione e confirme</option>
+                {activePlatforms.map((item) => (
+                  <option key={item.plataforma_id} value={item.plataforma_id}>
+                    {plataformaMapping.toSheet(item.tipo)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ) : null}
           <div className="row-actions">
             <button type="button" onClick={addSchedule}>
               <span className="button-content">
@@ -467,7 +661,7 @@ export function GroupSchedulesEditor({
       <div className="section-footer">
         <button
           type="button"
-          disabled={completeRows.length === 0 || hasDuplicates}
+          disabled={!canReviewSchedules(completeRows.length, addDraft, hasDuplicates)}
           onClick={review}
         >
           <span className="button-content">
@@ -507,7 +701,7 @@ export function GroupSchedulesEditor({
                     <ul>
                       {dayRows.map((row) => (
                         <li key={`${row.dia_semana}:${row.hora_inicio}`}>
-                          {row.hora_inicio}
+                          {displayTime(row.hora_inicio)} | {platformLabelForSchedule(row)}
                         </li>
                       ))}
                     </ul>
@@ -517,39 +711,19 @@ export function GroupSchedulesEditor({
             </div>
             <form action={saveHorariosGrupoAction}>
               <input type="hidden" name="grupo_id" value={grupoId} />
+              <input type="hidden" name="settings_section" value="schedules" />
+              {returnToNewGroupPage ? (
+                <input type="hidden" name="return_to_new_group_page" value="on" />
+              ) : null}
               <input
                 type="hidden"
                 name="horarios"
                 value={JSON.stringify(completeRows)}
               />
-              <div className="modal-actions">
-                <button
-                  type="button"
-                  className="secondary"
-                  onClick={() => setReviewing(false)}
-                >
-                  <span className="button-content">
-                    <FontAwesomeIcon icon={faPenToSquare} />
-                    Voltar para corrigir
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className="secondary"
-                  onClick={() => setReviewing(false)}
-                >
-                  <span className="button-content">
-                    <FontAwesomeIcon icon={faXmark} />
-                    Cancelar
-                  </span>
-                </button>
-                <button type="submit">
-                  <span className="button-content">
-                    <FontAwesomeIcon icon={faCheck} />
-                    CONFIRMAR
-                  </span>
-                </button>
-              </div>
+              <ScheduleReviewActions
+                onBack={() => setReviewing(false)}
+                onCancel={() => setReviewing(false)}
+              />
             </form>
           </div>
         </div>

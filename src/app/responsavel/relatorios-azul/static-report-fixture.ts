@@ -1,0 +1,46 @@
+export const responsavelRelatoriosAzulFixture = {
+  group: {
+    id: "8806319f-dd2d-4b67-9416-ab42bb991870",
+    name: "USL",
+  },
+  period: {
+    month: "Out",
+    year: "2026",
+  },
+  metrics: [
+    { label: "Reuniões desde a Fundação", value: 124, icon: "calendar" },
+    { label: "Reuniões", value: 115, icon: "users" },
+    { label: "Presenças", value: 103, icon: "user" },
+    { label: "Média de Presenças", value: 9, icon: "user" },
+    { label: "Conquistas", value: 1, icon: "medal" },
+    { label: "Visitantes", value: 1, icon: "users" },
+    { label: "Ingressos", value: 1, icon: "door" },
+    { label: "Cidades", value: 1, icon: "location" },
+    { label: "Estados", value: 1, icon: "flag" },
+    { label: "Outros Países", value: 1, icon: "globe" },
+  ],
+  meetingsByWeekday: [
+    { weekday: "Domingo", presences: 52, averagePresences: 9, ingressos: 0 },
+    { weekday: "Segunda", presences: 0, averagePresences: 0, ingressos: 0 },
+    { weekday: "Terça", presences: 0, averagePresences: 0, ingressos: 0 },
+    { weekday: "Quarta", presences: 0, averagePresences: 0, ingressos: 0 },
+    { weekday: "Quinta", presences: 1, averagePresences: 1, ingressos: 0 },
+    { weekday: "Sexta", presences: 0, averagePresences: 0, ingressos: 0 },
+    { weekday: "Sábado", presences: 50, averagePresences: 10, ingressos: 1 },
+  ],
+  achievements: [
+    { label: "30 DIAS", value: 0 },
+    { label: "60 DIAS", value: 0 },
+    { label: "90 DIAS", value: 1 },
+    { label: "6 MESES", value: 0 },
+    { label: "9 MESES", value: 0 },
+    { label: "1 ANO", value: 0 },
+    { label: "18 MESES", value: 0 },
+    { label: "MÚLTIPLOS ANOS", value: 0 },
+    { label: "Total", value: 2 },
+  ],
+  servers: [
+    { role: "RSG", name: "Christian", since: "17/10/2026" },
+    { role: "Secretário", name: "Alisson", since: "17/10/2026" },
+  ],
+} as const;

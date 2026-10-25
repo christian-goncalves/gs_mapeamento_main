@@ -17,6 +17,9 @@ const group: Grupo = {
   grupo_nome: "USL",
   ordem: 1,
   ativo: true,
+  fuso_horario: "America/Sao_Paulo",
+  plataforma: "zoom",
+  acesso_plataforma: "",
   responsavel_grupo_nome: "",
   responsavel_grupo_email: "",
   email_acesso_grupo: "",
@@ -73,6 +76,7 @@ describe("admin atas data", () => {
       sentRows: [sent({ data: "2026-07-05", horario: "10:00" })],
       start: "2026-07-01",
       end: "2026-07-06",
+      now: new Date("2026-07-06T01:30:00.000Z"),
     });
 
     expect(missing).toEqual([

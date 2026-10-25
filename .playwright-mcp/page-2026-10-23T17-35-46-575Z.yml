@@ -1,0 +1,121 @@
+- generic [ref=f17e1]:
+  - main [ref=f17e2]:
+    - link "Voltar" [ref=f17e3] [cursor=pointer]:
+      - /url: /admin/grupos
+    - generic [ref=f17e7]:
+      - paragraph [ref=f17e8]: Grupo
+      - heading "USL" [level=1] [ref=f17e9]
+    - generic [ref=f17e10]:
+      - generic [ref=f17e11]:
+        - heading "Dados do grupo" [level=2] [ref=f17e12]
+        - generic [ref=f17e13]:
+          - generic [ref=f17e14]:
+            - text: Nome
+            - textbox "Nome" [ref=f17e15]: USL
+          - generic [ref=f17e16]:
+            - generic [ref=f17e17]:
+              - generic [ref=f17e18]: Revisão de Atas
+              - group [ref=f17e19]:
+                - generic "Informações sobre a revisão de atas" [ref=f17e20] [cursor=pointer]
+            - combobox "Revisão de Atas Informações sobre a revisão de atas" [ref=f17e23]:
+              - option "Aprovação ativada" [selected]
+              - option "Aprovação desativada (padrão)"
+          - generic [ref=f17e24]:
+            - text: Grupo ativo
+            - combobox "Grupo ativo" [ref=f17e25]:
+              - option "Ativo" [selected]
+              - option "Inativo"
+          - generic [ref=f17e26]:
+            - text: Última reunião antes do sistema
+            - spinbutton "Última reunião antes do sistema" [ref=f17e27]: "0"
+        - generic [ref=f17e28]:
+          - generic [ref=f17e30]:
+            - generic [ref=f17e31]: Link da ata
+            - generic [ref=f17e32]:
+              - textbox "Link da ata" [ref=f17e33]: http://localhost:3000/preencher/1218223fc61c1c375dacd2cab9f774dbdc9e114e61e0b53f17a3915c3a75329d
+              - button "Copiar link da ata" [ref=f17e34] [cursor=pointer]
+              - button "Rotacionar link de preenchimento" [ref=f17e37] [cursor=pointer]
+          - generic [ref=f17e41]:
+            - text: E-mail
+            - textbox "E-mail" [ref=f17e42]: codex.odonto@gmail.com
+        - button "Salvar dados do grupo" [ref=f17e44] [cursor=pointer]
+      - group [ref=f17e48]:
+        - generic "Servidores da Mesa" [ref=f17e49] [cursor=pointer]
+        - generic [ref=f17e74]:
+          - table [ref=f17e76]:
+            - rowgroup [ref=f17e77]:
+              - row [ref=f17e78]:
+                - columnheader "Encargo" [ref=f17e79]
+                - columnheader "Servidor" [ref=f17e80]
+                - columnheader "Desde" [ref=f17e81]
+                - columnheader "Ações" [ref=f17e82]
+            - rowgroup [ref=f17e83]:
+              - row [ref=f17e84]:
+                - rowheader "RSG" [ref=f17e85]
+                - cell "Christian" [ref=f17e86]
+                - cell "17/10/2026" [ref=f17e87]
+                - cell [ref=f17e88]:
+                  - button "Abrir ações de RSG" [ref=f17e89] [cursor=pointer]
+              - row [ref=f17e92]:
+                - rowheader "RSG suplente" [ref=f17e93]
+                - cell "Alisson" [ref=f17e94]
+                - cell "17/10/2026" [ref=f17e95]
+                - cell [ref=f17e96]:
+                  - button "Abrir ações de RSG suplente" [ref=f17e97] [cursor=pointer]
+          - button "Adicionar servidores" [ref=f17e101] [cursor=pointer]
+    - group [ref=f17e53]:
+      - generic "Plataformas" [active] [ref=f17e54] [cursor=pointer]
+      - region "Plataformas" [ref=f17e106]:
+        - generic [ref=f17e107]:
+          - article [ref=f17e108]:
+            - generic [ref=f17e109]:
+              - heading "Zoom" [level=3] [ref=f17e110]
+              - paragraph [ref=f17e112]: Ainda não cadastrada
+            - button "Cadastrar" [ref=f17e113] [cursor=pointer]
+          - article [ref=f17e114]:
+            - generic [ref=f17e115]:
+              - heading "Zello" [level=3] [ref=f17e116]
+              - paragraph [ref=f17e118]: Ainda não cadastrada
+            - button "Cadastrar" [ref=f17e119] [cursor=pointer]
+          - article [ref=f17e120]:
+            - generic [ref=f17e121]:
+              - heading "WhatsApp" [level=3] [ref=f17e122]
+              - paragraph [ref=f17e124]: Ainda não cadastrada
+            - button "Cadastrar" [ref=f17e125] [cursor=pointer]
+        - group [ref=f17e126]:
+          - generic "Associação de horários" [ref=f17e127] [cursor=pointer]
+          - generic [ref=f17e128]:
+            - heading "Horários associados" [level=3] [ref=f17e129]
+            - heading "Horários sem plataforma" [level=3] [ref=f17e130]
+            - list [ref=f17e131]:
+              - listitem [ref=f17e132]: Domingo às 10:00
+              - listitem [ref=f17e133]: Domingo às 18:00
+              - listitem [ref=f17e134]: Domingo às 21:30
+              - listitem [ref=f17e135]: Segunda às 07:00
+              - listitem [ref=f17e136]: Segunda às 10:00
+              - listitem [ref=f17e137]: Segunda às 15:00
+              - listitem [ref=f17e138]: Segunda às 21:30
+              - listitem [ref=f17e139]: Terça às 07:00
+              - listitem [ref=f17e140]: Terça às 10:00
+              - listitem [ref=f17e141]: Terça às 15:00
+              - listitem [ref=f17e142]: Terça às 21:30
+              - listitem [ref=f17e143]: Quarta às 07:00
+              - listitem [ref=f17e144]: Quarta às 10:00
+              - listitem [ref=f17e145]: Quarta às 15:00
+              - listitem [ref=f17e146]: Quarta às 21:30
+              - listitem [ref=f17e147]: Quinta às 07:00
+              - listitem [ref=f17e148]: Quinta às 10:00
+              - listitem [ref=f17e149]: Quinta às 15:00
+              - listitem [ref=f17e150]: Quinta às 21:30
+              - listitem [ref=f17e151]: Sexta às 10:00
+              - listitem [ref=f17e152]: Sexta às 15:00
+              - listitem [ref=f17e153]: Sexta às 21:30
+              - listitem [ref=f17e154]: Sábado às 07:00
+              - listitem [ref=f17e155]: Sábado às 10:00
+              - listitem [ref=f17e156]: Sábado às 15:00
+              - listitem [ref=f17e157]: Sábado às 21:30
+        - paragraph [ref=f17e158]: "Tipos disponíveis: Zoom, WhatsApp e Zello."
+    - group [ref=f17e58]:
+      - generic "Horários de Reunião" [ref=f17e59] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f17e68] [cursor=pointer]
+  - alert [ref=f17e72]

@@ -2,6 +2,7 @@ import type {
   Ata,
   Grupo,
   GrupoHorario,
+  GrupoPlataforma,
   GrupoServidorMesa,
   Ingresso,
   Participacao,
@@ -16,6 +17,7 @@ type ValidRow<T> = Extract<ParsedRow<T>, { valid: true }>;
 export type ContractRows = {
   grupos: ValidRow<Grupo>[];
   grupo_horarios: ValidRow<GrupoHorario>[];
+  grupo_plataformas?: ValidRow<GrupoPlataforma>[];
   grupo_servidores_mesa: ValidRow<GrupoServidorMesa>[];
   atas: ValidRow<Ata>[];
   servidores: ValidRow<Servidor>[];
@@ -49,21 +51,21 @@ function duplicateDiagnostics<T>(
 }
 
 export function validateContractIntegrity(rows: ContractRows) {
-  const visitorsById = new Map(rows.visitantes.map((row) => [row.data.visitante_id, row.data]));
-  const linkedIngresoDiagnostics = rows.ingressos.flatMap((row) => {
-    const visitorId = row.data.visitante_id;
-    if (!visitorId) return [];
-    const visitor = visitorsById.get(visitorId);
-    if (visitor && visitor.ata_id === row.data.ata_id) return [];
-    return [{
+  const platformsById = new Map((rows.grupo_plataformas ?? []).map((row) => [row.data.plataforma_id, row.data]));
+  const platformLinkDiagnostics = (rows.grupo_horarios ?? []).flatMap((row) => {
+    const platformId = row.data.plataforma_id;
+    if (!platformId) return [];
+    const platform = platformsById.get(platformId);
+    if (!platform || !platform.ativo || platform.grupo_id !== row.data.grupo_id) return [{
       sheet: row.sheet,
       rowNumber: row.rowNumber,
-      field: "visitante_id",
-      message: "visitante_id não referencia um visitante da mesma ata.",
+      field: "plataforma_id",
+      message: !platform ? "plataforma_id não referencia uma plataforma existente." : !platform.ativo ? "plataforma_id referencia uma plataforma inativa." : "A plataforma pertence a outro grupo.",
     }];
+    return [];
   });
   return [
-    ...linkedIngresoDiagnostics,
+    ...platformLinkDiagnostics,
     ...duplicateDiagnostics(
       rows.grupos,
       "grupo_id",
@@ -141,6 +143,18 @@ export function validateContractIntegrity(rows: ContractRows) {
       "horario_id",
       (item) => item.horario_id,
       "horario_id duplicado.",
+    ),
+    ...duplicateDiagnostics(
+      rows.grupo_plataformas ?? [],
+      "plataforma_id",
+      (item) => item.plataforma_id,
+      "plataforma_id duplicado.",
+    ),
+    ...duplicateDiagnostics(
+      (rows.grupo_plataformas ?? []).filter((row) => row.data.ativo),
+      "tipo",
+      (item) => `${item.grupo_id}|${item.tipo}`,
+      "Já existe uma plataforma ativa deste tipo para o grupo.",
     ),
     ...duplicateDiagnostics(
       (rows.grupo_horarios ?? []).filter((row) => row.data.ativo),

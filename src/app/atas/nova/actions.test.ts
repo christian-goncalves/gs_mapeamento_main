@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { DuplicateAtaError } from "@/domain/creation";
+import { AtaPlatformResolutionError } from "@/domain/ata-platform";
+import { SheetsOperationError } from "@/domain/sheets-operation-error";
 
 const mocks = vi.hoisted(() => ({
   createAtaInSheets: vi.fn(),
@@ -8,6 +10,7 @@ const mocks = vi.hoisted(() => ({
   requireAuthorizedSession: vi.fn(),
   getActiveGroupByAtaLink: vi.fn(),
   readAggregatedAtas: vi.fn(),
+  headers: vi.fn(),
 }));
 
 vi.mock("@/lib/sheets/create-ata", () => ({
@@ -27,8 +30,9 @@ vi.mock("@/lib/sheets/repository", () => ({
 vi.mock("server-only", () => ({}));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
+vi.mock("next/headers", () => ({ headers: mocks.headers }));
 
-import { createAtaAction } from "./actions";
+import { createAtaAction, createAtaByLinkAction } from "./actions";
 
 const payload = JSON.stringify({
   ata: {
@@ -68,7 +72,7 @@ const hiddenPayload = JSON.stringify({
   servidores: [],
   participacao: [{ localidade: "Itajaí - SC", presencas: 8 }],
   visitantes: [{ cidade: "Itajaí - SC", descricao: "outro", como_chegou_a_na: "outro" }],
-  ingressos: [{ nome: "", cidade: "Brusque - SC" }],
+  ingressos: [{ cidade: "Itajaí - SC" }],
   trocas_chaveiro: [{ tempo_limpo: "dias_30", quantidade: 1 }],
 });
 
@@ -86,12 +90,19 @@ function hiddenFormData() {
   return data;
 }
 
+function publicFormData() {
+  const data = formData(true);
+  data.set("link_formulario_ata", "public-token");
+  return data;
+}
+
 describe("Server Action de criação", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.requireAuthorizedSession.mockResolvedValue({
       access: { role: "administrador", email: "allowed@example.com", groups: [] },
     });
+    mocks.headers.mockResolvedValue(new Headers({ "x-vercel-id": "request-correlation-test" }));
   });
 
   it("revalida autorização antes de qualquer envio", async () => {
@@ -145,7 +156,7 @@ describe("Server Action de criação", () => {
             como_chegou_a_na: "outro",
           }),
         ],
-        ingressos: [expect.objectContaining({ nome: "Anonimo", cidade: "Brusque - SC" })],
+        ingressos: [expect.objectContaining({ cidade: "Itajaí - SC" })],
       }),
       "allowed@example.com",
       undefined,
@@ -191,5 +202,39 @@ describe("Server Action de criação", () => {
       error: "Já existe uma ata para este grupo, data e horário.",
     });
     expect(mocks.redirect).not.toHaveBeenCalled();
+  });
+
+  it("mostra no envio autenticado a orientação segura para plataforma recorrente ausente", async () => {
+    mocks.createAtaInSheets.mockRejectedValue(new AtaPlatformResolutionError("recurring_platform_unavailable"));
+    await expect(createAtaAction({}, formData(true))).resolves.toEqual({
+      error: "Este horário recorrente ainda não tem uma plataforma configurada. Peça ao administrador do grupo para concluir a associação antes de enviar a ata.",
+    });
+    expect(mocks.createAtaInSheets).toHaveBeenCalledOnce();
+  });
+
+  it("mostra a mesma orientação segura no link público", async () => {
+    mocks.getActiveGroupByAtaLink.mockResolvedValue({ group: { grupo_id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa" } });
+    mocks.createAtaInSheets.mockRejectedValue(new AtaPlatformResolutionError("recurring_platform_unavailable"));
+    await expect(createAtaByLinkAction({}, publicFormData())).resolves.toEqual({
+      error: "Este horário recorrente ainda não tem uma plataforma configurada. Peça ao administrador do grupo para concluir a associação antes de enviar a ata.",
+    });
+    expect(mocks.createAtaInSheets).toHaveBeenCalledWith(expect.any(Object), undefined, "public-token");
+  });
+
+  it("distingue falha operacional do Sheets sem afirmar que nada foi gravado", async () => {
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    mocks.getActiveGroupByAtaLink.mockResolvedValue({ group: { grupo_id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa" } });
+    mocks.createAtaInSheets.mockRejectedValue(new SheetsOperationError("write", { cause: new Error("credential-secret") }));
+
+    await expect(createAtaByLinkAction({}, publicFormData())).resolves.toEqual({
+      error: "Falha operacional ao consultar ou gravar no Sheets. Não foi possível confirmar o resultado do envio. Confira o histórico antes de tentar novamente.",
+    });
+    const serializedLog = consoleError.mock.calls.map((call) => String(call[0])).join(" ");
+    expect(serializedLog).toContain('"event":"ata_submission_sheets_failure"');
+    expect(serializedLog).toContain('"correlationId"');
+    expect(serializedLog).toContain('"requestId":"request-correlation-test"');
+    expect(serializedLog).toContain('"context":"publico"');
+    expect(serializedLog).not.toContain("credential-secret");
+    consoleError.mockRestore();
   });
 });

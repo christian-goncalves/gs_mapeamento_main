@@ -3,9 +3,9 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChartSimple,
+  faClockRotateLeft,
   faGear,
   faRightFromBracket,
-  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { signOut } from "@/auth";
 import { AppShell } from "@/app/app-shell";
@@ -18,7 +18,7 @@ const responsavelIcons: Record<
   ResponsavelSection,
   Parameters<typeof FontAwesomeIcon>[0]["icon"]
 > = {
-  responsavel: faUser,
+  responsavel: faClockRotateLeft,
   relatorios: faChartSimple,
   configuracoes: faGear,
 };

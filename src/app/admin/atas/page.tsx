@@ -15,12 +15,15 @@ import {
 } from "./admin-atas-data";
 import { AdminAtasTable } from "./admin-atas-table";
 import { AtaApprovalPanel } from "@/app/atas/ata-approval-panel";
+import { AtaHistoryRefresh } from "@/app/atas/ata-history-refresh";
+import { nextMissingAtaRefreshAt } from "@/domain/missing-ata-occurrences";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminAtasPage() {
   const { result } = await requireAdminSessionWithAggregatedAtas();
-  const monthPeriod = currentMonthPeriod();
+  const now = new Date();
+  const monthPeriod = currentMonthPeriod(now);
   const sentRows = buildSentAtaRows(result.atas);
   const missingRows = buildMissingAtaRows({
     grupos: result.grupos,
@@ -28,6 +31,17 @@ export default async function AdminAtasPage() {
     sentRows,
     start: monthPeriod.start,
     end: monthPeriod.end,
+    now,
+  });
+  const nextRefreshAt = nextMissingAtaRefreshAt({
+    groups: result.grupos,
+    schedules: result.grupo_horarios,
+    receivedMeetings: sentRows.map((row) => ({
+      groupId: row.grupoId,
+      date: row.data,
+      time: row.horario,
+    })),
+    now,
   });
   const rows = [...sentRows, ...missingRows];
   const approvedRows = sentRows.filter((row) => row.status === "Enviada");
@@ -48,6 +62,7 @@ export default async function AdminAtasPage() {
 
   return (
     <AdminShell activeSection="atas">
+      <AtaHistoryRefresh at={nextRefreshAt} />
       <header className="admin-page-header">
         <div>
           <p className="eyebrow">Administração</p>
@@ -61,7 +76,7 @@ export default async function AdminAtasPage() {
             <FontAwesomeIcon icon={faFileLines} />
           </span>
           <div>
-            <dt>Total de atas</dt>
+            <dt>Total de Atas</dt>
             <dd>{approvedRows.length}</dd>
           </div>
         </dl>
@@ -70,7 +85,7 @@ export default async function AdminAtasPage() {
             <FontAwesomeIcon icon={faCalendarDays} />
           </span>
           <div>
-            <dt>Atas no mês</dt>
+            <dt>Atas no Mês</dt>
             <dd>{monthAtasCount}</dd>
           </div>
         </dl>
@@ -79,7 +94,7 @@ export default async function AdminAtasPage() {
             <FontAwesomeIcon icon={faLayerGroup} />
           </span>
           <div>
-            <dt>Total de grupos</dt>
+            <dt>Total de Grupos</dt>
             <dd>{result.grupos.length}</dd>
           </div>
         </dl>
@@ -88,7 +103,7 @@ export default async function AdminAtasPage() {
             <FontAwesomeIcon icon={faFileCircleExclamation} />
           </span>
           <div>
-            <dt>Atas pendentes de revisão</dt>
+            <dt>Atas Pendentes de Revisão</dt>
             <dd>{pendingReviewCount}</dd>
           </div>
         </dl>

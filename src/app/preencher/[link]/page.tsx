@@ -40,10 +40,13 @@ export default async function PublicAtaPage({
             id: group.group.grupo_id,
             name: group.group.grupo_nome,
             plataforma: group.group.plataforma,
+            fuso_horario: group.group.fuso_horario,
+            plataformas: group.plataformas.map((platform) => platform.tipo),
             horarios: group.horarios.map((horario) => ({
               dia_semana: horario.dia_semana,
               hora_inicio: horario.hora_inicio,
               link_reuniao: horario.link_reuniao,
+              plataformaTipo: group.plataformas.find((platform) => platform.plataforma_id === horario.plataforma_id)?.tipo,
             })),
           },
         ]}

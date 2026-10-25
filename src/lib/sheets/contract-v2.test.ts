@@ -3,6 +3,7 @@ import { SHEET_HEADERS } from "./contract";
 import {
   ataStatuses,
   compatibleHeaders,
+  groupPlatformRowsToObjects,
   rowsToVersionedObjects,
   sheetColumnName,
   sheetReadRange,
@@ -82,6 +83,19 @@ describe("V2 Sheets contract compatibility", () => {
     expect(current[0].value.status_registro).toBe("substituida");
     expect(current[0].value.status_aprovacao).toBe("pendente_revisao");
     expect(current[0].value.revisao_de_ata_id).toBe("");
+  });
+
+  it("keeps legacy group schedules readable with an empty pending platform association", () => {
+    const v1 = rowsToVersionedObjects("grupo_horarios", [
+      [...SHEET_HEADERS.grupo_horarios],
+      ["33333333-3333-4333-8333-333333333333", "11111111-1111-4111-8111-111111111111", "segunda", "20:00", "", true, "2026-10-01T00:00:00.000Z", "2026-10-01T00:00:00.000Z"],
+    ]);
+    expect(v1[0].value.plataforma_id).toBe("");
+  });
+
+  it("parses the isolated platform catalog contract", () => {
+    const headers = ["plataforma_id", "grupo_id", "tipo", "link", "id_acesso", "senha_pin", "ativo", "created_at", "updated_at"];
+    expect(groupPlatformRowsToObjects([headers, ["p", "g", "zoom", "https://example.org", "", "", true, "now", "now"]])).toHaveLength(1);
   });
 
   it("normalizes historical visitor header aliases", () => {

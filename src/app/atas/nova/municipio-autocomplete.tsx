@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type KeyboardEvent } from "react";
+import { nextAutocompleteIndex, selectedAutocompleteIndex } from "./text-autocomplete";
 
 type Suggestion = { id: number; nome: string; uf: string; label: string };
 
@@ -19,6 +20,8 @@ export function MunicipioAutocomplete({
 }) {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
 
   useEffect(() => {
     if (value.trim().length < 2) {
@@ -49,7 +52,38 @@ export function MunicipioAutocomplete({
   }, [value]);
 
   const visibleSuggestions =
-    value.trim().length >= 2 ? suggestions : [];
+    focused && value.trim().length >= 2 ? suggestions : [];
+
+  function selectSuggestion(index: number) {
+    const suggestion = visibleSuggestions[index];
+    if (!suggestion) return;
+    onChange(suggestion.label);
+    setSuggestions([]);
+    setFocused(false);
+    setActiveIndex(-1);
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (visibleSuggestions.length === 0) return;
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setActiveIndex((current) => nextAutocompleteIndex(current, "ArrowDown", visibleSuggestions.length));
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setActiveIndex((current) => nextAutocompleteIndex(current, "ArrowUp", visibleSuggestions.length));
+      return;
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      selectSuggestion(selectedAutocompleteIndex(activeIndex, visibleSuggestions.length));
+      return;
+    }
+    if (event.key === "Tab") {
+      selectSuggestion(selectedAutocompleteIndex(activeIndex, visibleSuggestions.length));
+    }
+  }
 
   return (
     <div className="autocomplete">
@@ -58,28 +92,43 @@ export function MunicipioAutocomplete({
         aria-label={ariaLabel}
         required
         value={value}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={(event) => {
+          setActiveIndex(-1);
+          onChange(event.target.value);
+        }}
         autoComplete="off"
         role="combobox"
         aria-autocomplete="list"
         aria-expanded={visibleSuggestions.length > 0}
         aria-controls={`${id}-options`}
+        aria-activedescendant={
+          activeIndex >= 0 ? `${id}-option-${activeIndex}` : undefined
+        }
         placeholder={placeholder}
+        onFocus={() => {
+          setActiveIndex(-1);
+          setFocused(true);
+        }}
+        onBlur={() => setFocused(false)}
+        onKeyDown={handleKeyDown}
       />
       {value.trim().length >= 2 && loading && (
         <span className="field-hint">Buscando...</span>
       )}
       {visibleSuggestions.length > 0 && (
         <ul id={`${id}-options`} className="autocomplete-options" role="listbox">
-          {visibleSuggestions.map((suggestion) => (
-            <li key={suggestion.id} role="option" aria-selected={value === suggestion.label}>
+          {visibleSuggestions.map((suggestion, index) => (
+            <li
+              key={suggestion.id}
+              id={`${id}-option-${index}`}
+              role="option"
+              aria-selected={activeIndex === index || value === suggestion.label}
+              className={activeIndex === index ? "is-active" : undefined}
+            >
               <button
                 type="button"
                 onMouseDown={(event) => event.preventDefault()}
-                onClick={() => {
-                  onChange(suggestion.label);
-                  setSuggestions([]);
-                }}
+                onClick={() => selectSuggestion(index)}
               >
                 {suggestion.label}
               </button>

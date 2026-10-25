@@ -208,7 +208,7 @@ export async function reviseAtaInSheets({
       && key.data.data_reuniao === submission.ata.data_reuniao
       && key.data.hora_inicio === submission.ata.hora_inicio;
   });
-  if (duplicate) throw new Error("Já existe uma ata ativa para este grupo, data e horário.");
+  if (duplicate) throw new Error("A ata com esta data e horário já está preenchida. Escolha outra data e outro horário.");
 
   const identifiers: AtaIdentifier[] = validAtaRows(snapshot).map(({ data }) => ({
     ata_id: data.ata_id,
