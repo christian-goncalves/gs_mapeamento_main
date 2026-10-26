@@ -3,7 +3,7 @@ import { rowsToObjects, type LocatedObject, type SheetCell } from "./rows";
 
 const SHEET_V2_EXTENSIONS: Partial<Record<SheetName, readonly string[]>> = {
   grupos: ["revisao_atas_ativa"],
-  grupo_horarios: ["plataforma_id"],
+  grupo_horarios: ["plataforma_id", "hora_termino"],
   atas: [
     "status_registro",
     "status_aprovacao",

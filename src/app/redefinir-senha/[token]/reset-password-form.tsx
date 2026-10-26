@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { resetPasswordAction } from "../actions";
+import { PasswordVisibilityInput } from "../../password-visibility-input";
 
 export function ResetPasswordForm({ token }: { token: string }) {
   const [state, action, pending] = useActionState(resetPasswordAction, null);
@@ -11,11 +12,15 @@ export function ResetPasswordForm({ token }: { token: string }) {
       <input name="token" type="hidden" value={token} />
       <label>
         Nova senha
-        <input name="password" type="password" minLength={8} required />
+        <PasswordVisibilityInput name="password" minLength={8} required />
       </label>
       <label>
         Confirmar senha
-        <input name="confirmPassword" type="password" minLength={8} required />
+        <PasswordVisibilityInput
+          name="confirmPassword"
+          minLength={8}
+          required
+        />
       </label>
       {state?.error && <p className="form-error">{state.error}</p>}
       <button type="submit" disabled={pending}>

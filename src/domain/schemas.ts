@@ -74,6 +74,10 @@ export const grupoHorarioSchema = z.object({
   grupo_id: uuid,
   dia_semana: diaSemanaSchema,
   hora_inicio: horaInicioSchema,
+  hora_termino: z.preprocess(
+    (value) => (value === "" || value == null ? undefined : value),
+    horaInicioSchema.optional(),
+  ).optional(),
   link_reuniao: optionalText,
   plataforma_id: z.preprocess((value) => value === "" || value == null ? undefined : value, uuid.optional()),
   ativo: z.boolean(),

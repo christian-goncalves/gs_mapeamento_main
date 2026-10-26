@@ -360,7 +360,7 @@ function MesaServersEditor({
             >
               <span className="button-content">
                 <FontAwesomeIcon icon={faPenToSquare} />
-                Editar servidores da mesa
+                Editar servidores
               </span>
             </button>
           </div>
@@ -389,7 +389,7 @@ function MesaServersEditor({
                         : "outro"
                     }
                     disabled={disabled}
-                    aria-label={`Encargo da mesa ${index + 1}`}
+                    aria-label={`Encargo ${index + 1}`}
                     onChange={(event) => {
                       const choice = event.target.value;
                       updateDraft(item.clientId, {
@@ -873,7 +873,7 @@ export function GroupEditor({
           {group && (
             <details className="card responsavel-config-panel settings-accordion" open={initialOpenSection === "servers"}>
               <summary className="settings-accordion-summary">
-                <span>Servidores da Mesa</span>
+                <span>Servidores</span>
                 <FontAwesomeIcon className="settings-accordion-chevron" icon={faChevronDown} aria-hidden="true" />
               </summary>
               <div className="settings-accordion-content">
@@ -1128,7 +1128,7 @@ export function GroupEditor({
         {group && (
           <details className="card form-section settings-accordion" open={initialOpenSection === "servers"}>
             <summary className="settings-accordion-summary">
-              <span>Servidores da Mesa</span>
+              <span>Servidores</span>
               <FontAwesomeIcon className="settings-accordion-chevron" icon={faChevronDown} aria-hidden="true" />
             </summary>
             <div className="settings-accordion-content">

@@ -93,6 +93,10 @@ const horariosPayloadSchema = z
       horario_id: z.string().uuid().optional(),
       dia_semana: diaSemanaSchema,
       hora_inicio: horaInicioSchema,
+      hora_termino: z.preprocess(
+        (value) => (value === "" || value == null ? undefined : value),
+        horaInicioSchema.optional(),
+      ),
       plataforma_id: z.string().uuid().optional(),
     }),
   )
@@ -546,6 +550,7 @@ export async function duplicateGrupoAction(formData: FormData) {
       grupo_id: savedGroup.grupo_id,
       dia_semana: horario.dia_semana,
       hora_inicio: horario.hora_inicio,
+      hora_termino: horario.hora_termino,
       link_reuniao: horario.link_reuniao,
       ativo: true,
     }, undefined, { kind: "authenticated", email: current.access.email });
@@ -574,6 +579,7 @@ export async function saveHorarioAction(formData: FormData) {
     grupo_id: grupoId,
     dia_semana: text(formData, "dia_semana"),
     hora_inicio: text(formData, "hora_inicio"),
+    hora_termino: text(formData, "hora_termino"),
     link_reuniao: linkReuniao,
     ativo: bool(formData, "ativo"),
   };

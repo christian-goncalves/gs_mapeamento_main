@@ -1,10 +1,9 @@
 "use client";
 
-import { useActionState, useEffect, useId, useRef, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faEllipsisVertical,
   faFloppyDisk,
   faPenToSquare,
   faPlus,
@@ -216,130 +215,47 @@ function MesaServerActions({
   disabled: boolean;
   onEdit: () => void;
 }) {
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const menuId = useId();
-  const [open, setOpen] = useState(false);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
-
-  function updatePosition() {
-    const button = buttonRef.current;
-    if (!button) return;
-    const rect = button.getBoundingClientRect();
-    const menuWidth = Math.min(224, window.innerWidth - 16);
-    const menuHeight = menuRef.current?.offsetHeight ?? 150;
-    const left = Math.min(
-      window.innerWidth - menuWidth - 8,
-      Math.max(8, rect.right - menuWidth),
-    );
-    const top =
-      window.innerHeight - rect.bottom >= menuHeight + 8
-        ? rect.bottom + 8
-        : Math.max(8, rect.top - menuHeight - 8);
-    setPosition({ top, left });
-  }
-
-  useEffect(() => {
-    if (!open) return;
-    updatePosition();
-    function closeOnPointerDown(event: PointerEvent) {
-      const target = event.target as Node;
-      if (
-        !buttonRef.current?.contains(target) &&
-        !menuRef.current?.contains(target)
-      ) {
-        setOpen(false);
-      }
-    }
-    function closeOnEscape(event: KeyboardEvent) {
-      if (event.key !== "Escape") return;
-      setOpen(false);
-      buttonRef.current?.focus();
-    }
-    document.addEventListener("pointerdown", closeOnPointerDown);
-    document.addEventListener("keydown", closeOnEscape);
-    window.addEventListener("resize", updatePosition);
-    window.addEventListener("scroll", updatePosition, true);
-    return () => {
-      document.removeEventListener("pointerdown", closeOnPointerDown);
-      document.removeEventListener("keydown", closeOnEscape);
-      window.removeEventListener("resize", updatePosition);
-      window.removeEventListener("scroll", updatePosition, true);
-    };
-  }, [open]);
-
   return (
-    <>
+    <div className="row-actions schedule-actions">
       <button
-        ref={buttonRef}
         type="button"
-        className="responsavel-action-menu-trigger"
-        aria-label={`Abrir ações de ${item.encargo}`}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-controls={menuId}
-        title="Ações"
+        className="icon-button"
+        aria-label={`Editar ${item.encargo}`}
+        title="Editar"
         disabled={disabled}
-        onClick={() => {
-          if (!open) updatePosition();
-          setOpen((current) => !current);
-        }}
+        onClick={onEdit}
       >
-        <FontAwesomeIcon icon={faEllipsisVertical} />
+        <FontAwesomeIcon icon={faPenToSquare} />
       </button>
-      {open
-        ? createPortal(
-            <div
-              ref={menuRef}
-              id={menuId}
-              className="responsavel-action-menu mesa-server-action-menu"
-              role="menu"
-              aria-label={`Ações de ${item.encargo}`}
-              style={{ top: position.top, left: position.left }}
-            >
-              <button
-                type="button"
-                className="responsavel-action-menu-item"
-                role="menuitem"
-                onClick={() => {
-                  setOpen(false);
-                  onEdit();
-                }}
-              >
-                <FontAwesomeIcon icon={faPenToSquare} />
-                <span>Editar encargo</span>
-              </button>
-              {item.grupo_servidor_mesa_id && (
-                <form
-                  action={deactivateGrupoServidorMesaAction}
-                  onSubmit={(event) => {
-                    if (!window.confirm(`Remover o encargo ${item.encargo}?`)) {
-                      event.preventDefault();
-                    }
-                  }}
-                >
-                  <input type="hidden" name="grupo_id" value={grupoId} />
-                  <input type="hidden" name="settings_section" value="servers" />
-                  <input
-                    type="hidden"
-                    name="grupo_servidor_mesa_id"
-                    value={item.grupo_servidor_mesa_id}
-                  />
-                  <button
-                    type="submit"
-                    className="responsavel-action-menu-item responsavel-action-menu-item-danger"
-                    role="menuitem"
-                  >
-                    <FontAwesomeIcon icon={faTrashCan} />
-                    <span>Remover encargo</span>
-                  </button>
-                </form>
-              )}
-            </div>,
-            document.body,
-          )
-        : null}
-    </>
+      {item.grupo_servidor_mesa_id && (
+        <form
+          className="schedule-delete-form"
+          action={deactivateGrupoServidorMesaAction}
+          onSubmit={(event) => {
+            if (!window.confirm(`Remover o encargo ${item.encargo}?`)) {
+              event.preventDefault();
+            }
+          }}
+        >
+          <input type="hidden" name="grupo_id" value={grupoId} />
+          <input type="hidden" name="settings_section" value="servers" />
+          <input
+            type="hidden"
+            name="grupo_servidor_mesa_id"
+            value={item.grupo_servidor_mesa_id}
+          />
+          <button
+            type="submit"
+            className="danger-icon-button"
+            aria-label={`Remover ${item.encargo}`}
+            title="Remover"
+            disabled={disabled}
+          >
+            <FontAwesomeIcon icon={faTrashCan} />
+          </button>
+        </form>
+      )}
+    </div>
   );
 }
 
@@ -367,7 +283,7 @@ export function MesaServersSummary({
       {!hideHeading && (
         <div className="mesa-servers-header">
           <div>
-            <h2>Servidores da Mesa</h2>
+            <h2>Servidores</h2>
           </div>
         </div>
       )}

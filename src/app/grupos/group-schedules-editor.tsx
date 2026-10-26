@@ -18,11 +18,11 @@ import { saveHorariosGrupoAction, toggleHorarioAction } from "./actions";
 
 const weekDays = [
   ["domingo", "Domingo"],
-  ["segunda", "Segunda"],
-  ["terca", "Terça"],
-  ["quarta", "Quarta"],
-  ["quinta", "Quinta"],
-  ["sexta", "Sexta"],
+  ["segunda", "Segunda-feira"],
+  ["terca", "Terça-feira"],
+  ["quarta", "Quarta-feira"],
+  ["quinta", "Quinta-feira"],
+  ["sexta", "Sexta-feira"],
   ["sabado", "Sábado"],
 ] as const;
 
@@ -41,6 +41,7 @@ type ScheduleDraft = {
   horario_id?: string;
   dia_semana: string;
   hora_inicio: string;
+  hora_termino: string;
   plataforma_id?: string;
 };
 
@@ -49,6 +50,7 @@ function blankRow(clientId = "blank-initial"): ScheduleDraft {
     clientId,
     dia_semana: "",
     hora_inicio: "",
+    hora_termino: "",
   };
 }
 
@@ -193,6 +195,7 @@ export function GroupSchedulesEditor({
             horario_id: horario.horario_id,
             dia_semana: horario.dia_semana,
             hora_inicio: horario.hora_inicio,
+            hora_termino: horario.hora_termino ?? "",
             plataforma_id: horario.plataforma_id,
           })),
       ),
@@ -225,7 +228,7 @@ export function GroupSchedulesEditor({
   const completeRows = sortSchedules(
     rows
       .filter((row) => row.dia_semana && row.hora_inicio)
-      .map(({ horario_id, dia_semana, hora_inicio, plataforma_id }) => ({ horario_id, dia_semana, hora_inicio, plataforma_id })),
+      .map(({ horario_id, dia_semana, hora_inicio, hora_termino, plataforma_id }) => ({ horario_id, dia_semana, hora_inicio, hora_termino, plataforma_id })),
   );
   const duplicateKeys = new Set<string>();
   const seenKeys = new Set<string>();
@@ -238,7 +241,7 @@ export function GroupSchedulesEditor({
 
   function updateRow(
     clientId: string,
-    field: "dia_semana" | "hora_inicio",
+    field: "dia_semana" | "hora_inicio" | "hora_termino",
     value: string,
   ) {
     setRows((current) =>
@@ -254,11 +257,11 @@ export function GroupSchedulesEditor({
       return;
     }
 
-    const hasPartialAddDraft = Boolean(addDraft.dia_semana || addDraft.hora_inicio);
+    const hasPartialAddDraft = Boolean(addDraft.dia_semana || addDraft.hora_inicio || addDraft.hora_termino);
     const hasCompleteAddDraft = Boolean(addDraft.dia_semana && addDraft.hora_inicio);
 
     if (hasPartialAddDraft && !hasCompleteAddDraft) {
-      setAddError("Complete o dia e o horário antes de confirmar.");
+      setAddError("Complete o dia e a hora de início antes de confirmar.");
       return;
     }
 
@@ -337,7 +340,7 @@ export function GroupSchedulesEditor({
   }
 
   function updateAddDraft(
-    field: "dia_semana" | "hora_inicio",
+    field: "dia_semana" | "hora_inicio" | "hora_termino",
     value: string,
   ) {
     setAddDraft((current) => ({ ...current, [field]: value }));
@@ -346,7 +349,7 @@ export function GroupSchedulesEditor({
 
   function addSchedule() {
     if (!addDraft.dia_semana || !addDraft.hora_inicio) {
-      setAddError("Informe dia e horário antes de adicionar.");
+      setAddError("Informe dia e hora de início antes de adicionar.");
       return;
     }
     if (rows.some((row) => scheduleKey(row) === scheduleKey(addDraft))) {
@@ -369,6 +372,9 @@ export function GroupSchedulesEditor({
     scrollToScheduleEnd();
   }
 
+  const selectedAddPlatformId =
+    addDraft.plataforma_id ?? (activePlatforms.length === 1 ? activePlatforms[0]?.plataforma_id ?? "" : "");
+
   if (!editing) {
     return (
       <div className="schedule-editor">
@@ -377,7 +383,8 @@ export function GroupSchedulesEditor({
             <thead>
               <tr>
                 <th>Dia</th>
-                <th>Horários*</th>
+                <th>Hora de Início*</th>
+                <th>Hora de Término</th>
               </tr>
             </thead>
             <tbody>
@@ -395,6 +402,22 @@ export function GroupSchedulesEditor({
                             <span className="schedule-summary-time" key={row.clientId}>
                               {displayTime(row.hora_inicio)}
                               {platformDot(row)}
+                              {rowIndex < dayRows.length - 1 ? (
+                                <span className="schedule-summary-separator" aria-hidden="true"> | </span>
+                              ) : null}
+                            </span>
+                          ))}
+                        </span>
+                      ) : (
+                        <span className="muted">-</span>
+                      )}
+                    </td>
+                    <td>
+                      {dayRows.length > 0 ? (
+                        <span className="schedule-summary-times">
+                          {dayRows.map((row, rowIndex) => (
+                            <span className="schedule-summary-time" key={row.clientId}>
+                              {row.hora_termino ? displayTime(row.hora_termino) : "-"}
                               {rowIndex < dayRows.length - 1 ? (
                                 <span className="schedule-summary-separator" aria-hidden="true"> | </span>
                               ) : null}
@@ -435,14 +458,15 @@ export function GroupSchedulesEditor({
           <thead>
             <tr>
               <th>Dia</th>
-              <th>Horário</th>
+              <th>Hora de Início</th>
+              <th>Hora de Término</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td colSpan={3}>
+                <td colSpan={4}>
                   <span className="muted">Nenhum horário cadastrado.</span>
                 </td>
               </tr>
@@ -481,7 +505,7 @@ export function GroupSchedulesEditor({
                   <td>
                     {isEditingRow ? (
                       <select
-                        aria-label="Horário"
+                        aria-label="Hora de Início"
                         value={row.hora_inicio}
                         onChange={(event) =>
                           updateRow(row.clientId, "hora_inicio", event.target.value)
@@ -498,6 +522,24 @@ export function GroupSchedulesEditor({
                       </span>
                     )}
                     {isEditingRow ? platformDot(row) : null}
+                  </td>
+                  <td>
+                    {isEditingRow ? (
+                      <select
+                        aria-label="Hora de Término"
+                        value={row.hora_termino}
+                        onChange={(event) =>
+                          updateRow(row.clientId, "hora_termino", event.target.value)
+                        }
+                      >
+                        <option value="">Não informar</option>
+                        {timeOptions.map((time) => (
+                          <option key={time} value={time}>{time}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      row.hora_termino ? displayTime(row.hora_termino) : <span className="muted">-</span>
+                    )}
                   </td>
                   <td>
                     <div className="row-actions schedule-actions">
@@ -581,7 +623,7 @@ export function GroupSchedulesEditor({
       {addError && <p className="form-error">{addError}</p>}
 
       {adding ? (
-        <div className={`schedule-add-row${activePlatforms.length > 1 ? " schedule-add-row-with-platform" : ""}`}>
+        <div className="schedule-add-row">
           <label>
             Dia
             <select
@@ -595,7 +637,7 @@ export function GroupSchedulesEditor({
             </select>
           </label>
           <label>
-            Hora
+            Hora de Início
             <select
               value={addDraft.hora_inicio}
               onChange={(event) => updateAddDraft("hora_inicio", event.target.value)}
@@ -606,22 +648,33 @@ export function GroupSchedulesEditor({
               ))}
             </select>
           </label>
-          {activePlatforms.length > 1 ? (
-            <label>
-              Plataforma
-              <select
-                value={addDraft.plataforma_id ?? ""}
-                onChange={(event) => setAddDraft((current) => ({ ...current, plataforma_id: event.target.value }))}
-              >
-                <option value="">Selecione e confirme</option>
-                {activePlatforms.map((item) => (
-                  <option key={item.plataforma_id} value={item.plataforma_id}>
-                    {plataformaMapping.toSheet(item.tipo)}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ) : null}
+          <label>
+            Hora de Término
+            <select
+              value={addDraft.hora_termino}
+              onChange={(event) => updateAddDraft("hora_termino", event.target.value)}
+            >
+              <option value="">Opcional</option>
+              {timeOptions.map((time) => (
+                <option key={time} value={time}>{time}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Plataforma
+            <select
+              value={selectedAddPlatformId}
+              disabled={activePlatforms.length === 1}
+              onChange={(event) => setAddDraft((current) => ({ ...current, plataforma_id: event.target.value }))}
+            >
+              <option value="">Selecione e confirme</option>
+              {activePlatforms.map((item) => (
+                <option key={item.plataforma_id} value={item.plataforma_id}>
+                  {plataformaMapping.toSheet(item.tipo)}
+                </option>
+              ))}
+            </select>
+          </label>
           <div className="row-actions">
             <button type="button" onClick={addSchedule}>
               <span className="button-content">

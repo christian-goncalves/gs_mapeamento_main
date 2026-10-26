@@ -51,6 +51,10 @@ export const grupoHorarioFormSchema = z.object({
     "sabado",
   ]),
   hora_inicio: horaInicioSchema,
+  hora_termino: z.preprocess(
+    (value) => (value === "" || value == null ? undefined : value),
+    horaInicioSchema.optional(),
+  ).optional(),
   link_reuniao: optionalText,
   ativo: z.boolean(),
 });

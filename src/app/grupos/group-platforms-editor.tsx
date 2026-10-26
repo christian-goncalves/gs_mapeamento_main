@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import type { GrupoHorario, GrupoPlataforma } from "@/domain/entities";
 import { plataformaMapping } from "@/domain/enums";
 import { associateGrupoHorariosAction, deactivateGrupoPlataformaAction, saveGrupoPlataformaAction } from "./actions";
+import { PasswordVisibilityInput } from "../password-visibility-input";
 
 type Assignment = { horario_id: string; plataforma_id: string };
 type PlatformDraft = Pick<GrupoPlataforma, "tipo" | "link" | "id_acesso" | "senha_pin"> & { plataforma_id?: string };
 
-const dayLabels: Record<string, string> = { domingo: "Domingo", segunda: "Segunda", terca: "Terça", quarta: "Quarta", quinta: "Quinta", sexta: "Sexta", sabado: "Sábado" };
+const dayLabels: Record<string, string> = { domingo: "Domingo", segunda: "Segunda-feira", terca: "Terça-feira", quarta: "Quarta-feira", quinta: "Quinta-feira", sexta: "Sexta-feira", sabado: "Sábado" };
 
 export function GroupPlatformsEditor({
   grupoId,
@@ -171,7 +172,12 @@ export function GroupPlatformsEditor({
                 <input name="id_acesso" defaultValue={platformDraft.id_acesso} />
               </label>
               <label>Senha/PIN (opcional)
-                <input name="senha_pin" type="text" autoComplete="off" defaultValue={platformDraft.senha_pin} />
+                <PasswordVisibilityInput
+                  name="senha_pin"
+                  secretLabel="senha/PIN"
+                  autoComplete="off"
+                  defaultValue={platformDraft.senha_pin}
+                />
               </label>
               <div className="platform-modal-actions">
                 <button type="button" className="secondary" onClick={() => setPlatformDraft(null)}>Cancelar</button>

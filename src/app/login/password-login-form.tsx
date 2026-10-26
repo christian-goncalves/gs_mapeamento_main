@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { signInWithPasswordAction } from "./actions";
+import { PasswordVisibilityInput } from "../password-visibility-input";
 
 export function PasswordLoginForm() {
   const [state, action, pending] = useActionState(
@@ -17,7 +18,11 @@ export function PasswordLoginForm() {
       </label>
       <label>
         Senha
-        <input name="password" type="password" autoComplete="current-password" required />
+        <PasswordVisibilityInput
+          name="password"
+          autoComplete="current-password"
+          required
+        />
       </label>
       {state?.error && <p className="form-error">{state.error}</p>}
       <button type="submit" disabled={pending}>

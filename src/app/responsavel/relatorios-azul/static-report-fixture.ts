@@ -4,7 +4,7 @@ export const responsavelRelatoriosAzulFixture = {
     name: "USL",
   },
   period: {
-    month: "Out",
+    month: "Outubro",
     year: "2026",
   },
   metrics: [
@@ -21,11 +21,11 @@ export const responsavelRelatoriosAzulFixture = {
   ],
   meetingsByWeekday: [
     { weekday: "Domingo", presences: 52, averagePresences: 9, ingressos: 0 },
-    { weekday: "Segunda", presences: 0, averagePresences: 0, ingressos: 0 },
-    { weekday: "Terça", presences: 0, averagePresences: 0, ingressos: 0 },
-    { weekday: "Quarta", presences: 0, averagePresences: 0, ingressos: 0 },
-    { weekday: "Quinta", presences: 1, averagePresences: 1, ingressos: 0 },
-    { weekday: "Sexta", presences: 0, averagePresences: 0, ingressos: 0 },
+    { weekday: "Segunda-feira", presences: 0, averagePresences: 0, ingressos: 0 },
+    { weekday: "Terça-feira", presences: 0, averagePresences: 0, ingressos: 0 },
+    { weekday: "Quarta-feira", presences: 0, averagePresences: 0, ingressos: 0 },
+    { weekday: "Quinta-feira", presences: 1, averagePresences: 1, ingressos: 0 },
+    { weekday: "Sexta-feira", presences: 0, averagePresences: 0, ingressos: 0 },
     { weekday: "Sábado", presences: 50, averagePresences: 10, ingressos: 1 },
   ],
   achievements: [

@@ -420,6 +420,10 @@ export async function saveGrupoHorario(
   const existing = input.horario_id
     ? validHorarios.find((row) => row.data.horario_id === input.horario_id)
     : undefined;
+  const scheduleHeaders = snapshot[0]?.map(String) ?? SHEET_HEADERS.grupo_horarios;
+  if (input.hora_termino && !scheduleHeaders.includes("hora_termino")) {
+    throw new Error("A coluna hora_termino ainda não existe em grupo_horarios.");
+  }
   const timestamp = identity.now();
   if (input.plataforma_id) {
     const platformSnapshot = await readSheetValues("grupo_plataformas");
@@ -436,7 +440,7 @@ export async function saveGrupoHorario(
   const values = rowValues(
     "grupo_horarios",
     domainGrupoHorarioToSheet(horario),
-    snapshot[0]?.map(String) ?? SHEET_HEADERS.grupo_horarios,
+    scheduleHeaders,
   );
   await commitGroupRows({
     writes: [{
@@ -454,6 +458,7 @@ export async function saveGrupoHorarioSet(
     horario_id?: string;
     dia_semana: GrupoHorario["dia_semana"];
     hora_inicio: GrupoHorario["hora_inicio"];
+    hora_termino?: GrupoHorario["hora_termino"];
     plataforma_id?: string;
   }[],
   identity: Identity = defaultIdentity,
@@ -472,6 +477,9 @@ export async function saveGrupoHorarioSet(
     readSheetValues("grupo_plataformas"),
   ]);
   const scheduleHeaders = scheduleSnapshot[0]?.map(String) ?? SHEET_HEADERS.grupo_horarios;
+  if (inputs.some((input) => input.hora_termino) && !scheduleHeaders.includes("hora_termino")) {
+    throw new Error("A coluna hora_termino ainda não existe em grupo_horarios.");
+  }
   const schedules = parseRows(
     "grupo_horarios",
     sheetGrupoHorarioSchema,
@@ -523,6 +531,7 @@ export async function saveGrupoHorarioSet(
       grupo_id: grupoId,
       dia_semana: input.dia_semana,
       hora_inicio: input.hora_inicio,
+      hora_termino: input.hora_termino,
       link_reuniao: existing?.data.link_reuniao ?? "",
       plataforma_id: plataformaId,
       ativo: true,

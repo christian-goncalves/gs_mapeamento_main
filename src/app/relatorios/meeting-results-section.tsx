@@ -44,11 +44,11 @@ export function MeetingResultsSection({
     : Math.min(currentPage * pageSize, meetings.length);
   const weekdays = [
     "Domingo",
-    "Segunda",
-    "Terça",
-    "Quarta",
-    "Quinta",
-    "Sexta",
+    "Segunda-feira",
+    "Terça-feira",
+    "Quarta-feira",
+    "Quinta-feira",
+    "Sexta-feira",
     "Sábado",
   ];
   const weekdayResults = weekdays.map((weekday, dayOfWeek) => {

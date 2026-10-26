@@ -8,7 +8,7 @@ Este contexto descreve os termos de negócio usados para cadastrar grupos, seus 
 Unidade que mantém horários recorrentes e registra atas das reuniões.
 
 **Horário recorrente**:
-Dia da semana e hora em que um grupo realiza uma reunião regular. Cada horário é associado a uma plataforma do próprio grupo.
+Dia da semana, hora de início e, opcionalmente, hora de término em que um grupo realiza uma reunião regular. Cada horário é associado a uma plataforma do próprio grupo.
 
 **Plataforma do grupo**:
 Provedor de reunião habilitado para um grupo, como Zoom, WhatsApp ou Zello, com seu link e dados opcionais de acesso. Cada grupo mantém no máximo uma plataforma ativa de cada tipo.

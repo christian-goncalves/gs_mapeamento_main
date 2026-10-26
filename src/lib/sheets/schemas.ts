@@ -116,6 +116,11 @@ const sheetTime = z.preprocess((value) => {
   return value;
 }, z.string().regex(/^(?:[01]\d|2[0-3]):(?:00|30)$/, "Horário inválido."));
 
+const sheetOptionalTime = z.preprocess(
+  (value) => (value === "" || value === false || value == null ? "" : value),
+  z.union([z.literal(""), sheetTime]),
+);
+
 export const sheetDiaSemanaSchema = z.enum([
   "domingo",
   "segunda",
@@ -169,6 +174,7 @@ export const sheetGrupoHorarioSchema = z.object({
   grupo_id: uuid,
   dia_semana: sheetDiaSemanaSchema,
   hora_inicio: sheetTime,
+  hora_termino: sheetOptionalTime.optional(),
   link_reuniao: optionalText,
   plataforma_id: z.preprocess((value) => value === "" || value == null ? undefined : value, uuid.optional()),
   ativo: sheetBoolean,

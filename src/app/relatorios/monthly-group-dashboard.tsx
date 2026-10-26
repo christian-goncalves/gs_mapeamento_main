@@ -16,18 +16,18 @@ import { DashboardFilters } from "./dashboard-filters";
 import { MeetingResultsSection } from "./meeting-results-section";
 
 const monthLabels = [
-  "Jan",
-  "Fev",
-  "Mar",
-  "Abr",
-  "Mai",
-  "Jun",
-  "Jul",
-  "Ago",
-  "Set",
-  "Out",
-  "Nov",
-  "Dez",
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro",
 ] as const;
 
 function formatNumber(value: number) {
