@@ -217,6 +217,7 @@ export function MonthlyGroupDashboard({
         {showResponsavelHeader ? (
           <MeetingResultsSection
             meetings={data.meetingResults}
+            weekdayResults={data.responsavelMeetingResults}
             groupByWeekday={showResponsavelHeader}
           />
         ) : (

@@ -168,17 +168,21 @@ export function GroupPlatformsEditor({
               <label>Link
                 <input type="url" name="link" required autoFocus defaultValue={platformDraft.link} placeholder="https://..." />
               </label>
-              <label>ID de acesso (opcional)
-                <input name="id_acesso" defaultValue={platformDraft.id_acesso} />
-              </label>
-              <label>Senha/PIN (opcional)
-                <PasswordVisibilityInput
-                  name="senha_pin"
-                  secretLabel="senha/PIN"
-                  autoComplete="off"
-                  defaultValue={platformDraft.senha_pin}
-                />
-              </label>
+              {platformDraft.tipo === "zoom" ? (
+                <>
+                  <label>ID de acesso (opcional)
+                    <input name="id_acesso" defaultValue={platformDraft.id_acesso} />
+                  </label>
+                  <label>Senha/PIN (opcional)
+                    <PasswordVisibilityInput
+                      name="senha_pin"
+                      secretLabel="senha/PIN"
+                      autoComplete="off"
+                      defaultValue={platformDraft.senha_pin}
+                    />
+                  </label>
+                </>
+              ) : null}
               <div className="platform-modal-actions">
                 <button type="button" className="secondary" onClick={() => setPlatformDraft(null)}>Cancelar</button>
                 <button type="submit">Salvar plataforma</button>

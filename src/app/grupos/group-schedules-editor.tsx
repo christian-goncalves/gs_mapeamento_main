@@ -384,7 +384,6 @@ export function GroupSchedulesEditor({
               <tr>
                 <th>Dia</th>
                 <th>Hora de Início*</th>
-                <th>Hora de Término</th>
               </tr>
             </thead>
             <tbody>
@@ -402,22 +401,6 @@ export function GroupSchedulesEditor({
                             <span className="schedule-summary-time" key={row.clientId}>
                               {displayTime(row.hora_inicio)}
                               {platformDot(row)}
-                              {rowIndex < dayRows.length - 1 ? (
-                                <span className="schedule-summary-separator" aria-hidden="true"> | </span>
-                              ) : null}
-                            </span>
-                          ))}
-                        </span>
-                      ) : (
-                        <span className="muted">-</span>
-                      )}
-                    </td>
-                    <td>
-                      {dayRows.length > 0 ? (
-                        <span className="schedule-summary-times">
-                          {dayRows.map((row, rowIndex) => (
-                            <span className="schedule-summary-time" key={row.clientId}>
-                              {row.hora_termino ? displayTime(row.hora_termino) : "-"}
                               {rowIndex < dayRows.length - 1 ? (
                                 <span className="schedule-summary-separator" aria-hidden="true"> | </span>
                               ) : null}

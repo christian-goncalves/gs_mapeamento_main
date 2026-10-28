@@ -15,6 +15,20 @@ export type MonthlyDashboardFilters = {
 
 export type MonthlyDashboardData = ReturnType<typeof buildMonthlyDashboardData>;
 
+export type ResponsavelMeetingSchedule = {
+  time: string;
+  presences: number;
+  ingressos: number;
+};
+
+export type ResponsavelMeetingWeekday = {
+  weekday: string;
+  presences: number;
+  averagePresences: number;
+  ingressos: number;
+  schedules: ResponsavelMeetingSchedule[];
+};
+
 const weekDayByIndex = [
   "domingo",
   "segunda",
@@ -67,6 +81,11 @@ function dateRange(start: string, end: string) {
     current.setUTCDate(current.getUTCDate() + 1);
   }
   return dates;
+}
+
+function weekdayIndex(date: string) {
+  const [year, month, day] = date.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, day)).getUTCDay();
 }
 
 function meetingKey(grupoId: string, data: string, horario: string) {
@@ -212,6 +231,11 @@ export function buildMonthlyDashboardData(
   const sentAtas = receivedAtas.filter(
     (item) => item.registro.ata.status_aprovacao === "aprovada",
   );
+  const responsavelAtas = receivedAtas.filter(
+    (item) =>
+      item.registro.ata.status_aprovacao === "aprovada" ||
+      item.registro.ata.status_aprovacao === "pendente_revisao",
+  );
   const approvedHistoricalMeetings = new Set(
     result.atas
       .filter(
@@ -272,6 +296,53 @@ export function buildMonthlyDashboardData(
       ),
     }));
 
+  const responsavelMeetingResults: ResponsavelMeetingWeekday[] = weekDayByIndex.map(
+    (weekday, index) => {
+      const weekdayAtas = responsavelAtas.filter(
+        (item) => weekdayIndex(item.registro.ata.data_reuniao) === index,
+      );
+      const dayTimes = [
+        ...new Set(
+          schedules
+            .filter((schedule) => schedule.dia_semana === weekday)
+            .map((schedule) => schedule.hora_inicio),
+        ),
+      ].sort();
+      const scheduleResults = dayTimes.map((time) => {
+        const timeAtas = weekdayAtas.filter(
+          (item) => item.registro.ata.hora_inicio === time,
+        );
+        return {
+          time,
+          presences: timeAtas.reduce(
+            (total, item) => total + item.registro.ata.total_membros_presentes,
+            0,
+          ),
+          ingressos: timeAtas.reduce(
+            (total, item) => total + item.registro.ingressos.length,
+            0,
+          ),
+        };
+      });
+      const presences = weekdayAtas.reduce(
+        (total, item) => total + item.registro.ata.total_membros_presentes,
+        0,
+      );
+      return {
+        weekday,
+        presences,
+        averagePresences: weekdayAtas.length
+          ? Math.round(presences / weekdayAtas.length)
+          : 0,
+        ingressos: weekdayAtas.reduce(
+          (total, item) => total + item.registro.ingressos.length,
+          0,
+        ),
+        schedules: scheduleResults,
+      };
+    },
+  );
+
   return {
     group,
     filters,
@@ -321,6 +392,7 @@ export function buildMonthlyDashboardData(
       totalIngressos,
     },
     meetingResults,
+    responsavelMeetingResults,
     achievements: achievements(sentAtas, totalIngressos),
     mesa: mesaRows(result.grupo_servidores_mesa, filters.grupoId),
   };

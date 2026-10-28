@@ -804,7 +804,7 @@ export function GroupEditor({
                   >
                     <span className="button-content">
                       <FontAwesomeIcon icon={faPenToSquare} />
-                      Editar Dados do Grupo
+                      Editar
                     </span>
                   </button>
                 )}

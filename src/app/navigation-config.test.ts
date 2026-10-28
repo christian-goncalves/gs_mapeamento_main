@@ -26,11 +26,6 @@ describe("navigation config", () => {
   it("preserva as rotas do responsável e o destino dinâmico de configurações", () => {
     expect(responsavelNavigationItems("/grupos/grupo-1")).toEqual([
       {
-        section: "configuracoes",
-        label: "Configurações",
-        href: "/grupos/grupo-1",
-      },
-      {
         section: "responsavel",
         label: "Histórico de Atas",
         href: "/responsavel/atas",
@@ -39,6 +34,11 @@ describe("navigation config", () => {
         section: "relatorios",
         label: "Relatórios",
         href: "/responsavel/relatorios",
+      },
+      {
+        section: "configuracoes",
+        label: "Configurações",
+        href: "/grupos/grupo-1",
       },
     ]);
   });

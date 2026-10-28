@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import type { MonthlyDashboardData } from "./monthly-group-dashboard-data";
-import { roundPresenceAverage } from "./presence-average";
 
 const pageSizeOptions = [
   { label: "10", value: 10 },
@@ -20,11 +19,94 @@ function formatDay(value: string) {
   return value.split("-")[2] ?? "";
 }
 
+const weekdayLabels: Record<string, string> = {
+  domingo: "Domingo",
+  segunda: "Segunda-feira",
+  terca: "Terça-feira",
+  quarta: "Quarta-feira",
+  quinta: "Quinta-feira",
+  sexta: "Sexta-feira",
+  sabado: "Sábado",
+};
+
+function ResponsavelMeetingResults({
+  weekdays,
+}: {
+  weekdays: MonthlyDashboardData["responsavelMeetingResults"];
+}) {
+  const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set());
+
+  function toggleDay(weekday: string) {
+    setExpandedDays((current) => {
+      const next = new Set(current);
+      if (next.has(weekday)) next.delete(weekday);
+      else next.add(weekday);
+      return next;
+    });
+  }
+
+  return (
+    <div className="dashboard-table-wrap">
+      <table className="dashboard-table meeting-results-table meeting-results-table-weekday">
+        <thead>
+          <tr>
+            <th scope="col">Dia da Semana</th>
+            <th scope="col">Presenças</th>
+            <th scope="col">Presenças<br />(média)</th>
+            <th scope="col">Ingressos</th>
+          </tr>
+        </thead>
+        <tbody>
+          {weekdays.map((day) => {
+            const isExpanded = expandedDays.has(day.weekday);
+            const hasSchedules = day.schedules.length > 0;
+            const averageRowSpan = hasSchedules && isExpanded
+              ? day.schedules.length + 1
+              : undefined;
+            return (
+              <Fragment key={day.weekday}>
+                <tr className={isExpanded ? "meeting-weekday-summary-row is-expanded" : "meeting-weekday-summary-row"}>
+                  <th scope="row">
+                    <button
+                      type="button"
+                      className="meeting-weekday-toggle"
+                      disabled={!hasSchedules}
+                      aria-expanded={hasSchedules ? isExpanded : undefined}
+                      onClick={() => toggleDay(day.weekday)}
+                    >
+                      <span className="meeting-weekday-chevron" aria-hidden="true">
+                        {hasSchedules ? (isExpanded ? "▾" : "▸") : ""}
+                      </span>
+                      {weekdayLabels[day.weekday] ?? day.weekday}
+                    </button>
+                  </th>
+                  <td>{formatNumber(day.presences)}</td>
+                  <td rowSpan={averageRowSpan}>{formatNumber(day.averagePresences)}</td>
+                  <td>{formatNumber(day.ingressos)}</td>
+                </tr>
+                {isExpanded ? day.schedules.map((schedule) => (
+                  <tr className="meeting-weekday-schedule-row" key={`${day.weekday}-${schedule.time}`}>
+                    <th scope="row">{schedule.time}</th>
+                    <td>{formatNumber(schedule.presences)}</td>
+                    <td>{formatNumber(schedule.ingressos)}</td>
+                  </tr>
+                )) : null}
+              </Fragment>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export function MeetingResultsSection({
   meetings,
+  weekdayResults,
   groupByWeekday = false,
 }: {
   meetings: MonthlyDashboardData["meetingResults"];
+  weekdayResults?: MonthlyDashboardData["responsavelMeetingResults"];
   groupByWeekday?: boolean;
 }) {
   const [pageSize, setPageSize] = useState<number>(10);
@@ -42,36 +124,27 @@ export function MeetingResultsSection({
   const lastVisible = pageSize === 0
     ? meetings.length
     : Math.min(currentPage * pageSize, meetings.length);
-  const weekdays = [
-    "Domingo",
-    "Segunda-feira",
-    "Terça-feira",
-    "Quarta-feira",
-    "Quinta-feira",
-    "Sexta-feira",
-    "Sábado",
-  ];
-  const weekdayResults = weekdays.map((weekday, dayOfWeek) => {
-    const dayMeetings = meetings.filter((meeting) => {
-      const [year, month, day] = meeting.date.split("-").map(Number);
-      return new Date(Date.UTC(year, month - 1, day)).getUTCDay() === dayOfWeek;
-    });
-    const presences = dayMeetings.reduce((total, meeting) => total + meeting.presences, 0);
-    return {
-      weekday,
-      presences,
-      averagePresences: roundPresenceAverage(presences, dayMeetings.length),
-      ingressos: dayMeetings.reduce((total, meeting) => total + meeting.ingressos, 0),
-    };
-  });
+
+  if (groupByWeekday) {
+    return (
+      <section className="dashboard-section dashboard-responsavel-meeting-results">
+        <div className="meeting-results-header">
+          <div className="dashboard-section-title">
+            <h2>Consolidados por Reunião</h2>
+          </div>
+        </div>
+        <ResponsavelMeetingResults weekdays={weekdayResults ?? []} />
+      </section>
+    );
+  }
 
   return (
-    <section className={`dashboard-section${groupByWeekday ? " dashboard-responsavel-meeting-results" : ""}`}>
+    <section className="dashboard-section">
       <div className="meeting-results-header">
         <div className="dashboard-section-title">
           <h2>Consolidados por Reunião</h2>
         </div>
-        {!groupByWeekday ? <div className="meeting-page-sizes" role="group" aria-label="Reuniões por página">
+        <div className="meeting-page-sizes" role="group" aria-label="Reuniões por página">
           {pageSizeOptions.map((option) => (
             <button
               key={option.value}
@@ -86,39 +159,21 @@ export function MeetingResultsSection({
               {option.label}
             </button>
           ))}
-        </div> : null}
+        </div>
       </div>
 
       <div className="dashboard-table-wrap">
         <table className={`dashboard-table meeting-results-table${groupByWeekday ? " meeting-results-table-weekday" : ""}`}>
           <thead>
             <tr>
-              {groupByWeekday ? (
-                <>
-                  <th>Dia da Semana</th>
-                  <th>Presenças</th>
-                  <th>Presenças<br />(média)</th>
-                  <th>Ingressos</th>
-                </>
-              ) : (
-                <>
-                  <th>Data  |  Horário</th>
-                  <th>Presenças</th>
-                  <th>Ingressos</th>
-                  <th>Conquistas</th>
-                </>
-              )}
+              <th>Data  |  Horário</th>
+              <th>Presenças</th>
+              <th>Ingressos</th>
+              <th>Conquistas</th>
             </tr>
           </thead>
           <tbody>
-            {groupByWeekday ? weekdayResults.map((result) => (
-              <tr key={result.weekday}>
-                <td>{result.weekday}</td>
-                <td>{formatNumber(result.presences)}</td>
-                <td>{formatNumber(result.averagePresences)}</td>
-                <td>{formatNumber(result.ingressos)}</td>
-              </tr>
-            )) : visibleMeetings.length > 0 ? visibleMeetings.map((meeting) => (
+            {visibleMeetings.length > 0 ? visibleMeetings.map((meeting) => (
               <tr key={meeting.id}>
                 <td>{formatDay(meeting.date)}  |  {meeting.time}</td>
                 <td>{formatNumber(meeting.presences)}</td>
@@ -134,7 +189,7 @@ export function MeetingResultsSection({
         </table>
       </div>
 
-      {!groupByWeekday ? <div className="meeting-pagination-footer">
+      <div className="meeting-pagination-footer">
         <p className="meeting-pagination-summary" aria-live="polite">
           {meetings.length > 0
             ? `Exibindo ${formatNumber(firstVisible)}–${formatNumber(lastVisible)} de ${formatNumber(meetings.length)} reuniões`
@@ -161,7 +216,7 @@ export function MeetingResultsSection({
             </button>
           </nav>
         ) : null}
-      </div> : null}
+      </div>
     </section>
   );
 }

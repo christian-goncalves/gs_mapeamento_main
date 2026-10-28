@@ -14,6 +14,8 @@ const audit = {
 function ata({
   id,
   date,
+  time = "09:00",
+  approval = "aprovada",
   present,
   localidades,
   estados,
@@ -22,6 +24,8 @@ function ata({
 }: {
   id: string;
   date: string;
+  time?: string;
+  approval?: "aprovada" | "pendente_revisao";
   present: number;
   localidades: number;
   estados: string[];
@@ -53,7 +57,7 @@ function ata({
         indice_personalizado_grupo: 1,
         grupo_id: groupId,
         data_reuniao: date,
-        hora_inicio: "09:00",
+        hora_inicio: time,
         duracao: "",
         formato_outros: "",
         preenchido_por: "Ana",
@@ -63,7 +67,7 @@ function ata({
         total_membros_presentes: present,
         total_partilhas: 1,
         status_registro: "ativa" as const,
-        status_aprovacao: "aprovada" as const,
+        status_aprovacao: approval,
         ...audit,
       },
       servidores: [],
@@ -195,5 +199,109 @@ describe("dashboard mensal do grupo", () => {
     expect(dashboard.consolidated.ingressos).toBe(3);
     expect(dashboard.achievements.subtotal).toBe(3);
     expect(dashboard.achievements.total).toBe(6);
+  });
+
+  it("consolida o responsável por dia e horário, incluindo atas pendentes", () => {
+    const result: AggregatedRead = {
+      grupos: [
+        {
+          grupo_id: groupId,
+          zoom_id: "001",
+          grupo_nome: "USL",
+          ordem: 1,
+          ativo: true,
+          responsavel_grupo_nome: "",
+          responsavel_grupo_email: "",
+          email_acesso_grupo: "grupo@example.com",
+          responsaveis_ata: "",
+          link_formulario_ata: "grupo-usl",
+          ultima_reuniao_anterior: 0,
+          fuso_horario: "America/Sao_Paulo",
+          plataforma: "zoom",
+          acesso_plataforma: "001",
+          ...audit,
+        },
+      ],
+      grupo_horarios: [
+        {
+          horario_id: "domingo-10",
+          grupo_id: groupId,
+          dia_semana: "domingo",
+          hora_inicio: "10:00",
+          link_reuniao: "",
+          ativo: true,
+          ...audit,
+        },
+        {
+          horario_id: "domingo-15",
+          grupo_id: groupId,
+          dia_semana: "domingo",
+          hora_inicio: "15:00",
+          link_reuniao: "",
+          ativo: true,
+          ...audit,
+        },
+      ],
+      grupo_servidores_mesa: [],
+      atas: [
+        ata({
+          id: "domingo-10-aprovada",
+          date: "2026-08-02",
+          time: "10:00",
+          present: 30,
+          localidades: 1,
+          estados: ["SP"],
+          ingressos: 2,
+          conquistas: 0,
+        }),
+        ata({
+          id: "domingo-10-pendente",
+          date: "2026-08-09",
+          time: "10:00",
+          approval: "pendente_revisao",
+          present: 40,
+          localidades: 1,
+          estados: ["SP"],
+          ingressos: 1,
+          conquistas: 0,
+        }),
+        ata({
+          id: "domingo-15-aprovada",
+          date: "2026-08-02",
+          time: "15:00",
+          present: 30,
+          localidades: 1,
+          estados: ["SP"],
+          ingressos: 3,
+          conquistas: 0,
+        }),
+      ],
+      diagnostics: [],
+    };
+
+    const dashboard = buildMonthlyDashboardData(result, {
+      grupoId: groupId,
+      month: 8,
+      year: 2026,
+    });
+
+    expect(dashboard.consolidated.totalPresencas).toBe(60);
+    expect(dashboard.responsavelMeetingResults[0]).toMatchObject({
+      weekday: "domingo",
+      presences: 100,
+      averagePresences: 33,
+      ingressos: 6,
+      schedules: [
+        { time: "10:00", presences: 70, ingressos: 3 },
+        { time: "15:00", presences: 30, ingressos: 3 },
+      ],
+    });
+    expect(dashboard.responsavelMeetingResults[1]).toMatchObject({
+      weekday: "segunda",
+      presences: 0,
+      averagePresences: 0,
+      ingressos: 0,
+      schedules: [],
+    });
   });
 });
