@@ -1,0 +1,77 @@
+- generic [ref=f7e1]:
+  - main [ref=f7e2]:
+    - complementary "Navegação do responsável" [ref=f7e3]:
+      - link "Página inicial do responsável" [ref=f7e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f7e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f7e7]:
+        - link "Histórico de Atas" [ref=f7e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f7e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f7e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=f7e21] [cursor=pointer]
+    - generic [ref=f7e25]:
+      - generic [ref=f7e26]:
+        - generic [ref=f7e27]:
+          - paragraph [ref=f7e28]: Histórico de Atas
+          - heading "Grupo USL" [level=1] [ref=f7e29]
+        - generic [ref=f7e30]:
+          - link "Histórico" [ref=f7e31] [cursor=pointer]:
+            - /url: /responsavel/atas?historico=1
+          - link "Nova Ata" [ref=f7e35] [cursor=pointer]:
+            - /url: /atas/nova
+      - generic [ref=f7e39]:
+        - generic "Filtros das Atas" [ref=f7e40]:
+          - generic [ref=f7e41]:
+            - generic [ref=f7e42]: De
+            - textbox "De" [ref=f7e43]: 2026-10-01
+          - generic [ref=f7e44]:
+            - generic [ref=f7e45]: Até
+            - textbox "Até" [ref=f7e46]: 2026-10-29
+          - generic [ref=f7e47]:
+            - generic [ref=f7e48]: Dia da Semana
+            - combobox "Dia da Semana" [ref=f7e49]:
+              - option "Todos" [selected]
+              - option "Domingo"
+              - option "Segunda"
+              - option "Terça"
+              - option "Quarta"
+              - option "Quinta"
+              - option "Sexta"
+              - option "Sábado"
+          - generic [ref=f7e50]:
+            - generic [ref=f7e51]: Horário
+            - combobox "Horário" [ref=f7e52]:
+              - option "Todos" [selected]
+              - option "07:00"
+              - option "10:00"
+              - option "10:30"
+              - option "15:00"
+              - option "18:00"
+              - option "21:30"
+          - generic [ref=f7e53]:
+            - generic [ref=f7e54]: Preenchido por
+            - combobox "Preenchido por" [ref=f7e55]:
+              - option "Todos" [selected]
+              - option "Bianca Ramos"
+              - option "Caio Ferreira"
+              - option "Camila Andrade"
+              - option "Davi Azevedo"
+              - option "Iago Teixeira"
+              - option "Lívia Monteiro"
+              - option "Maya Duarte"
+              - option "Não informado"
+              - option "Rafael Nunes"
+              - option "Sofia Barros"
+              - option "Theo Carvalho"
+          - generic [ref=f7e56]:
+            - generic [ref=f7e57]: Status
+            - combobox "Status" [ref=f7e58]:
+              - option "Todos" [selected]
+              - option "Enviadas"
+              - option "Não enviadas"
+              - option "Pendentes de revisão"
+        - status [ref=f7e60]: Carregando tabela...
+  - button "Open Next.js Dev Tools" [ref=f7e66] [cursor=pointer]

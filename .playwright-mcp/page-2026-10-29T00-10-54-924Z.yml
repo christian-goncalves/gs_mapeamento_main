@@ -1,0 +1,31 @@
+- generic [ref=f7e1]:
+  - main [ref=f7e2]:
+    - complementary "Navegação do responsável" [ref=f7e3]:
+      - link "Página inicial do responsável" [ref=f7e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f7e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f7e7]:
+        - link "Histórico de Atas" [ref=f7e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f7e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f7e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=f7e21] [cursor=pointer]
+    - generic [ref=f7e26]:
+      - generic [ref=f7e28]:
+        - paragraph [ref=f7e29]: Nova ata
+        - heading "Grupo USL" [level=1] [ref=f7e30]
+        - paragraph [ref=f7e31]: Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
+      - generic [ref=f7e33]:
+        - heading "Informações Gerais" [level=2] [ref=f7e34]
+        - generic [ref=f7e35]:
+          - generic [ref=f7e36]:
+            - text: Data
+            - textbox "Data" [ref=f7e37]: 2026-10-28
+          - generic [ref=f7e38]:
+            - text: Horário
+            - combobox "Horário" [disabled] [ref=f7e39]:
+              - option "Selecione..." [selected]
+        - status [ref=f7e40]: Verificando disponibilidade de horário…
+  - button "Open Next.js Dev Tools" [ref=f7e46] [cursor=pointer]

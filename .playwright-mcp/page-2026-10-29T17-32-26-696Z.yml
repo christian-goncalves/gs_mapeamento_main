@@ -1,0 +1,96 @@
+- generic [ref=f3e2]:
+  - generic [ref=f3e3]:
+    - generic [ref=f3e4]:
+      - heading "Painel de NA no Brasil - Dashboard do desenvolvimento nacional" [level=1] [ref=f3e5]
+      - paragraph [ref=f3e6]: Visão por Estados do Brasil(Referência extrator do BMLT NA Brasil – Setembro 2026 – GS Mapeamento)
+      - paragraph [ref=f3e7]: Clique em um estado para abrir o dashboard executivo dele em outra aba. Em cada dashboard, o botão “← Mapa do Brasil” traz você de volta aqui.
+    - img "GS Mapeamento" [ref=f3e8]
+  - generic [ref=f3e9]:
+    - img "Mapa do Brasil por estado" [ref=f3e11]:
+      - link "Rondônia" [ref=f3e12] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/Aii5Mj5Ki4Z1hhXypUfFVr
+      - link "Acre" [ref=f3e14] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/GgPj6Lv5EyTHzYLxEogf4Y
+      - link "Amazonas" [ref=f3e16] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/NTzPh1kuRWPJ5wwdfetKak
+      - link "Roraima" [ref=f3e18] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/1oqdHLgcFcmUNxsofbvEWz
+      - link "Pará" [ref=f3e20] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/Q5rEKABfoMGCToxiGTibwo
+      - link "Amapá" [ref=f3e22] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/SnrCSkod5QXHbcw32UAwtd
+      - link "Tocantins" [ref=f3e24] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/KCWukYP7R5UorV5pDyq1Di
+      - link "Maranhão" [ref=f3e26] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/QtJ94cF4TvbdDd7GzrkGkq
+      - link "Piauí" [ref=f3e28] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/6BeiYbbigCZkDbk9A6FoiQ
+      - link "Ceará" [ref=f3e30] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/SvvZyBkhizVHGBVdwEnwXv
+      - link "Rio Grande do Norte" [ref=f3e32] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/1TrtFznnBARkiFGnSCENJu
+      - link "Paraíba" [ref=f3e34] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/RH98xocyGSjQnqktWVDnG6
+      - link "Pernambuco" [ref=f3e36] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/V1g6vfmyChWLJ2z4qcBhi1
+      - link "Alagoas" [ref=f3e38] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/WgdbzkZZuzmGLY6frWszH6
+      - link "Sergipe" [ref=f3e40] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/BbAdt52JhKKkDznEPfuiFG
+      - link "Bahia" [ref=f3e42] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/2hcUaswzM73J8sCqsNSxwi
+      - link "Minas Gerais" [ref=f3e44] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/SdAmPQGRugYKQwPC8YGw8k
+      - link "Espírito Santo" [ref=f3e46] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/PSx9hWvVCRqqT6ZzRgtxyA
+      - link "Rio de Janeiro" [ref=f3e48] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/VewmRLgXpMDqac7kXzxobx
+      - link "São Paulo" [ref=f3e50] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/QLBn8EXj7ecjRAcGTVPQdz
+      - link "Paraná" [ref=f3e52] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/RySoZJWndrCHMhRbWxEZpT
+      - link "Santa Catarina" [ref=f3e54] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/341wLrtQZyEubcBmrc8o9K
+      - link "Rio Grande do Sul" [ref=f3e56] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/DYVEwRin1MfmsQfhS9ZP7u
+      - link "Mato Grosso do Sul" [ref=f3e58] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/XHc5qy9CPnvbsoVdk2ozu6
+      - link "Mato Grosso" [ref=f3e60] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/CRm9Nq1ss53PDaEBNsXNVj
+      - link "Goiás" [ref=f3e62] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/Xf8r4aj5265JykVvJLDfeG
+      - link "Distrito Federal" [ref=f3e64] [cursor=pointer]:
+        - /url: https://claude.ai/artifact/Q21uEi5Bka8teS6TwqrqYG
+    - generic [ref=f3e66]:
+      - heading "Brasil" [level=2] [ref=f3e67]
+      - paragraph [ref=f3e68]: Passe o mouse ou toque em um estado.
+      - generic [ref=f3e69]: Cada estado abre a última versão publicada do seu dashboard. Em cada um há também o mapa de grupos e o mapa de escala populacional.
+      - generic [ref=f3e70]:
+        - button "Brasil" [ref=f3e71] [cursor=pointer]
+        - button "AC" [ref=f3e72] [cursor=pointer]
+        - button "AL" [ref=f3e73] [cursor=pointer]
+        - button "AP" [ref=f3e74] [cursor=pointer]
+        - button "AM" [ref=f3e75] [cursor=pointer]
+        - button "BA" [ref=f3e76] [cursor=pointer]
+        - button "CE" [ref=f3e77] [cursor=pointer]
+        - button "DF" [ref=f3e78] [cursor=pointer]
+        - button "ES" [ref=f3e79] [cursor=pointer]
+        - button "GO" [ref=f3e80] [cursor=pointer]
+        - button "MA" [ref=f3e81] [cursor=pointer]
+        - button "MT" [ref=f3e82] [cursor=pointer]
+        - button "MS" [ref=f3e83] [cursor=pointer]
+        - button "MG" [ref=f3e84] [cursor=pointer]
+        - button "PA" [ref=f3e85] [cursor=pointer]
+        - button "PB" [ref=f3e86] [cursor=pointer]
+        - button "PR" [ref=f3e87] [cursor=pointer]
+        - button "PE" [ref=f3e88] [cursor=pointer]
+        - button "PI" [ref=f3e89] [cursor=pointer]
+        - button "RJ" [ref=f3e90] [cursor=pointer]
+        - button "RN" [ref=f3e91] [cursor=pointer]
+        - button "RS" [ref=f3e92] [cursor=pointer]
+        - button "RO" [ref=f3e93] [cursor=pointer]
+        - button "RR" [ref=f3e94] [cursor=pointer]
+        - button "SC" [ref=f3e95] [cursor=pointer]
+        - button "SP" [ref=f3e96] [cursor=pointer]
+        - button "SE" [ref=f3e97] [cursor=pointer]
+        - button "TO" [ref=f3e98] [cursor=pointer]

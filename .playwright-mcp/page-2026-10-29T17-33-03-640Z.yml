@@ -1,0 +1,79 @@
+- generic [ref=f7e1]:
+  - main [ref=f7e2]:
+    - complementary "Navegação administrativa" [ref=f7e3]:
+      - generic [ref=f7e4]:
+        - link "Página inicial administrativa" [ref=f7e5] [cursor=pointer]:
+          - /url: /admin/grupos
+          - generic [ref=f7e6]: GS Mapeamento
+        - button "Abrir menu" [ref=f7e7] [cursor=pointer]
+    - generic [ref=f7e10]:
+      - generic [ref=f7e11]:
+        - generic [ref=f7e12]:
+          - paragraph [ref=f7e13]: Administração
+          - heading "GRUPOS" [level=1] [ref=f7e14]
+        - link "Novo grupo" [ref=f7e15] [cursor=pointer]:
+          - /url: /admin/grupos/novo
+      - generic [ref=f7e16]:
+        - region "Resumo dos Grupos" [ref=f7e17]:
+          - generic [ref=f7e22]:
+            - term [ref=f7e23]: Ativos
+            - definition [ref=f7e24]: "3"
+          - generic [ref=f7e29]:
+            - term [ref=f7e30]: Inativos
+            - definition [ref=f7e31]: "0"
+          - generic [ref=f7e36]:
+            - term [ref=f7e37]: Total
+            - definition [ref=f7e38]: "3"
+        - generic [ref=f7e39]:
+          - tablist "Filtrar grupos por status" [ref=f7e40]:
+            - tab "Ativos" [selected] [ref=f7e41] [cursor=pointer]
+            - tab "Inativos" [ref=f7e42] [cursor=pointer]
+            - tab "Todos" [ref=f7e43] [cursor=pointer]
+          - generic [ref=f7e44]:
+            - generic [ref=f7e45]: Buscar grupos
+            - searchbox "Buscar grupos" [ref=f7e49]
+          - tabpanel "Ativos" [ref=f7e50]:
+            - list "Grupos Administrativos" [ref=f7e51]:
+              - listitem [ref=f7e52]:
+                - generic [ref=f7e53]:
+                  - heading "CHRISAPPPG" [level=2] [ref=f7e55]
+                  - paragraph [ref=f7e56]:
+                    - generic [ref=f7e57]: Criado em 26/10/2026
+                    - generic [aria-hidden] [ref=f7e58]: •
+                    - generic [ref=f7e59]: 2 horários ativos
+                - generic [ref=f7e61]:
+                  - link "Visualizar CHRISAPPPG" [ref=f7e62] [cursor=pointer]:
+                    - /url: /admin/grupos/ceea1688-3b18-41ea-ba38-36de0696d63f
+                  - link "Editar CHRISAPPPG" [ref=f7e65] [cursor=pointer]:
+                    - /url: /admin/grupos/ceea1688-3b18-41ea-ba38-36de0696d63f
+                  - button "Duplicar CHRISAPPPG" [ref=f7e69] [cursor=pointer]
+                  - button "Inativar CHRISAPPPG" [ref=f7e73] [cursor=pointer]
+              - listitem [ref=f7e76]:
+                - generic [ref=f7e77]:
+                  - heading "Unidade & Propósito Roraima" [level=2] [ref=f7e79]
+                  - paragraph [ref=f7e80]:
+                    - generic [ref=f7e81]: Criado em 05/08/2026
+                    - generic [aria-hidden] [ref=f7e82]: •
+                    - generic [ref=f7e83]: 3 horários ativos
+                - generic [ref=f7e85]:
+                  - link "Visualizar Unidade & Propósito Roraima" [ref=f7e86] [cursor=pointer]:
+                    - /url: /admin/grupos/505ba5ab-850a-42a1-bf26-612ea4869dc0
+                  - link "Editar Unidade & Propósito Roraima" [ref=f7e89] [cursor=pointer]:
+                    - /url: /admin/grupos/505ba5ab-850a-42a1-bf26-612ea4869dc0
+                  - button "Duplicar Unidade & Propósito Roraima" [ref=f7e93] [cursor=pointer]
+                  - button "Inativar Unidade & Propósito Roraima" [ref=f7e97] [cursor=pointer]
+              - listitem [ref=f7e100]:
+                - generic [ref=f7e101]:
+                  - heading "USL" [level=2] [ref=f7e103]
+                  - paragraph [ref=f7e104]:
+                    - generic [ref=f7e105]: Criado em 14/07/2026
+                    - generic [aria-hidden] [ref=f7e106]: •
+                    - generic [ref=f7e107]: 26 horários ativos
+                - generic [ref=f7e109]:
+                  - link "Visualizar USL" [ref=f7e110] [cursor=pointer]:
+                    - /url: /admin/grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+                  - link "Editar USL" [ref=f7e113] [cursor=pointer]:
+                    - /url: /admin/grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+                  - button "Duplicar USL" [ref=f7e117] [cursor=pointer]
+                  - button "Inativar USL" [ref=f7e121] [cursor=pointer]
+  - alert [ref=f7e124]

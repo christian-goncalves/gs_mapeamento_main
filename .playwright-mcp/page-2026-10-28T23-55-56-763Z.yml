@@ -1,0 +1,18 @@
+- generic [ref=f13e1]:
+  - main [ref=f13e2]:
+    - generic [ref=f13e4]:
+      - paragraph [ref=f13e5]: Nova ata
+      - heading "Grupo USL" [level=1] [ref=f13e6]
+      - paragraph [ref=f13e7]: Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
+    - generic [ref=f13e9]:
+      - heading "Informações Gerais" [level=2] [ref=f13e10]
+      - generic [ref=f13e11]:
+        - generic [ref=f13e12]:
+          - text: Data
+          - textbox "Data" [ref=f13e13]: 2026-10-28
+        - generic [ref=f13e14]:
+          - text: Horário
+          - combobox "Horário" [disabled] [ref=f13e15]:
+            - option "Selecione..." [selected]
+      - status [ref=f13e16]: Verificando disponibilidade de horário…
+  - button "Open Next.js Dev Tools" [ref=f13e22] [cursor=pointer]

@@ -1,0 +1,2 @@
+- [Roteiro de refatoração do front-end](refatoracao-front-end/roteiro-de-refatoracao.md)
+- [Especificação da Fase 1: relatório verde](refatoracao-front-end/especificacao/fase-1-relatorio-verde.md)

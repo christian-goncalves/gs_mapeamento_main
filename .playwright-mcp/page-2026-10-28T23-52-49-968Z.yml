@@ -1,0 +1,8 @@
+- generic [ref=f7e1]:
+  - main "Carregando painel administrativo" [ref=f7e2]:
+    - complementary [aria-hidden] [ref=f7e3]
+    - generic [ref=f7e13]:
+      - region "Carregando resumo" [ref=f7e19]
+      - region "Carregando grupos" [ref=f7e35]
+  - button "Open Next.js Dev Tools" [ref=f7e46] [cursor=pointer]
+  - alert [ref=f7e50]

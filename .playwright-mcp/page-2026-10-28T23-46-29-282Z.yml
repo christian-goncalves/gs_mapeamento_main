@@ -1,0 +1,23 @@
+- main [ref=f11e2]:
+  - complementary "Navegação do responsável" [ref=f11e3]:
+    - generic [ref=f11e4]:
+      - link "Página inicial do responsável" [ref=f11e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f11e6]: GS Mapeamento
+      - button "Abrir menu" [ref=f11e7] [cursor=pointer]
+  - generic [ref=f11e9]:
+    - generic [ref=f11e10]:
+      - paragraph [ref=f11e11]: Nova ata
+      - heading "Grupo USL" [level=1] [ref=f11e12]
+      - paragraph [ref=f11e13]: Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
+    - generic [ref=f11e15]:
+      - heading "Informações Gerais" [level=2] [ref=f11e16]
+      - generic [ref=f11e17]:
+        - generic [ref=f11e18]:
+          - text: Data
+          - textbox "Data" [ref=f11e19]: 2026-10-28
+        - generic [ref=f11e20]:
+          - text: Horário
+          - combobox "Horário" [disabled] [ref=f11e21]:
+            - option "Selecione..." [selected]
+      - status [ref=f11e22]: Verificando disponibilidade de horário…
