@@ -122,7 +122,6 @@ export const servidorFuncoesSimulacao = [
 
 export const servidorFuncoes = [
   ...servidorFuncoesSimulacao,
-  "Outros",
 ] as const;
 
 export type Plataforma = (typeof plataformaMapping.codes)[number];

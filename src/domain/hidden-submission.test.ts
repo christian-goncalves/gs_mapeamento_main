@@ -134,6 +134,22 @@ describe("normalização do formulário hidden", () => {
     }
   });
 
+  it("não permite mais ingressos hidden do que visitantes", () => {
+    const payload = hiddenPayload();
+    const result = hiddenAtaSubmissionSchema.safeParse({
+      ...payload,
+      visitantes: [payload.visitantes[0]],
+      ingressos: [{ cidade: "Itajaí - SC" }, { cidade: "Itajaí - SC" }],
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues).toContainEqual(expect.objectContaining({
+        path: ["ingressos"],
+        message: "A quantidade de ingressos não pode ser maior que a quantidade de visitantes.",
+      }));
+    }
+  });
+
   it("rejeita ingresso hidden fora das cidades dos visitantes", () => {
     const payload = hiddenPayload();
     const result = hiddenAtaSubmissionSchema.safeParse({

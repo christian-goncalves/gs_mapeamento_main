@@ -5,6 +5,13 @@ import { randomUUID } from "node:crypto";
 import type { AtaCompleta } from "@/domain/rules";
 import type { AtaSubmission } from "@/domain/form-schemas";
 import type { Ata } from "@/domain/entities";
+import { servidorFuncoes } from "@/domain/enums";
+import {
+  GroupFunctionCatalogUnavailableError,
+  normalizeServerFunctionName,
+  SERVER_FUNCTION_MAX_LENGTH,
+  serverFunctionComparisonKey,
+} from "@/domain/server-functions";
 import { canAccessGroup, resolveAccessByEmailFromAggregated } from "@/lib/auth/access";
 import { materializeAtaSubmission } from "@/domain/submission";
 import {
@@ -14,15 +21,17 @@ import {
 } from "@/domain/ata-identifiers";
 import { readAggregatedAtas } from "./repository";
 import { getSheetsClient, getSpreadsheetId } from "./client";
-import { rowsToVersionedObjects, sheetReadRange } from "./contract-v2";
+import { rowsToVersionedObjects, sheetReadRange, V2_NEW_SHEET_HEADERS } from "./contract-v2";
 import { parseRows, type ParsedRow, type SheetCell } from "./rows";
 import {
   sheetAtaSchema,
   sheetAtaToDomain,
   sheetAtaBusinessKeySchema,
+  sheetGrupoFuncaoServidorToDomain,
 } from "./schemas";
 import {
   buildAtomicWriteRequests,
+  buildCellUpdateRequest,
   executeAtomicBatch,
   firstEmptyDataRowNumber,
 } from "./write";
@@ -93,7 +102,7 @@ async function readLifecycleSnapshot(): Promise<LifecycleSnapshot> {
   };
 }
 
-function sheetIdFor(snapshot: LifecycleSnapshot, name: SheetName) {
+function sheetIdFor(snapshot: LifecycleSnapshot, name: string) {
   const sheetId = snapshot.metadata.sheets?.find(
     (sheet) => sheet.properties?.title === name,
   )?.properties?.sheetId;
@@ -192,21 +201,49 @@ export async function reviseAtaInSheets({
   const oldRow = currentAta(snapshot, ataId);
   const oldAta = oldRow.data;
   const access = await assertActorCanAccess(actorEmail, oldAta.grupo_id, aggregate);
+  const fixedFunctionByKey = new Map(
+    servidorFuncoes.map((funcao) => [serverFunctionComparisonKey(funcao), funcao]),
+  );
+  const existingFunctionByKey = new Map(
+    (aggregate.grupo_funcoes_servidor ?? [])
+      .filter((funcao) => funcao.grupo_id === oldAta.grupo_id)
+      .map((funcao) => [funcao.nome_normalizado, funcao.nome]),
+  );
+  const canonicalSubmission: AtaSubmission = {
+    ...submission,
+    servidores: submission.servidores.map((servidor) => {
+      if (servidor.funcao.trim().length > SERVER_FUNCTION_MAX_LENGTH) {
+        throw new Error(`O nome da função deve ter no máximo ${SERVER_FUNCTION_MAX_LENGTH} caracteres.`);
+      }
+      const normalized = normalizeServerFunctionName(servidor.funcao);
+      const key = serverFunctionComparisonKey(normalized);
+      return {
+        ...servidor,
+        funcao: fixedFunctionByKey.get(key) ?? existingFunctionByKey.get(key) ?? normalized,
+      };
+    }),
+  };
+  const newFunctionNames = [...new Set(
+    canonicalSubmission.servidores
+      .map((servidor) => servidor.funcao)
+      .filter((funcao) => funcao && !fixedFunctionByKey.has(serverFunctionComparisonKey(funcao)))
+      .filter((funcao) => !existingFunctionByKey.has(serverFunctionComparisonKey(funcao))),
+  )];
   assertExpectedUpdatedAt(oldAta.updated_at, expectedUpdatedAt);
   if (oldAta.status_registro !== "ativa") throw new Error("Somente atas ativas podem ser editadas.");
   if (!["aprovada", "pendente_revisao"].includes(oldAta.status_aprovacao ?? "aprovada")) {
     throw new Error("Estado de aprovação inválido para edição.");
   }
-  if (submission.ata.grupo_id !== oldAta.grupo_id) throw new Error("A edição não pode mudar o grupo da ata.");
+  if (canonicalSubmission.ata.grupo_id !== oldAta.grupo_id) throw new Error("A edição não pode mudar o grupo da ata.");
   if (!motivo.trim()) throw new Error("Informe o motivo da alteração.");
 
   const duplicate = validAtaRows(snapshot).some((row) => {
     if (row.data.ata_id === ataId || row.data.status_registro !== "ativa") return false;
     const key = sheetAtaBusinessKeySchema.safeParse(row.data);
     return key.success
-      && key.data.grupo_id === submission.ata.grupo_id
-      && key.data.data_reuniao === submission.ata.data_reuniao
-      && key.data.hora_inicio === submission.ata.hora_inicio;
+      && key.data.grupo_id === canonicalSubmission.ata.grupo_id
+      && key.data.data_reuniao === canonicalSubmission.ata.data_reuniao
+      && key.data.hora_inicio === canonicalSubmission.ata.hora_inicio;
   });
   if (duplicate) throw new Error("A ata com esta data e horário já está preenchida. Escolha outra data e outro horário.");
 
@@ -221,7 +258,7 @@ export async function reviseAtaInSheets({
   const now = new Date().toISOString();
   const originalApproval = oldAta.status_aprovacao ?? "aprovada";
   const created = materializeAtaSubmission(
-    submission,
+    canonicalSubmission,
     { now: () => now, uuid: randomUUID },
     {
       numero_sequencial_grupo: sequence,
@@ -255,6 +292,25 @@ export async function reviseAtaInSheets({
     updated_at: now,
   };
 
+  let groupFunctionValues: SheetCell[][] = [];
+  if (newFunctionNames.length > 0) {
+    try {
+      const response = await snapshot.sheets.spreadsheets.values.get({
+        spreadsheetId: snapshot.spreadsheetId,
+        range: "grupo_funcoes_servidor!A:G",
+        valueRenderOption: "UNFORMATTED_VALUE",
+        dateTimeRenderOption: "SERIAL_NUMBER",
+      });
+      groupFunctionValues = (response.data.values as SheetCell[][] | undefined) ?? [];
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (message.includes("Unable to parse range: grupo_funcoes_servidor!")) {
+        throw new GroupFunctionCatalogUnavailableError();
+      }
+      throw error;
+    }
+  }
+
   const nextRows = Object.fromEntries(recordSheets.map((name) => [
     name,
     firstEmptyDataRowNumber(snapshot.rows[name]),
@@ -265,6 +321,28 @@ export async function reviseAtaInSheets({
     sheetIds,
     nextRows,
   );
+  const newFunctionRows = newFunctionNames.map((nome) => ({
+    grupo_funcao_servidor_id: randomUUID(),
+    grupo_id: canonicalSubmission.ata.grupo_id,
+    nome,
+    nome_normalizado: serverFunctionComparisonKey(nome),
+    ativo: true,
+    created_at: now,
+    updated_at: now,
+  }));
+  const customFunctionRequests = newFunctionRows.length > 0
+    ? newFunctionRows.map((funcao, index) => {
+      const values = {
+        ...sheetGrupoFuncaoServidorToDomain(funcao),
+      };
+      return buildCellUpdateRequest(
+        sheetIdFor(snapshot, "grupo_funcoes_servidor"),
+        firstEmptyDataRowNumber(groupFunctionValues) + index,
+        V2_NEW_SHEET_HEADERS.grupo_funcoes_servidor.map((header) => values[header as keyof typeof values] ?? ""),
+      );
+    })
+    : [];
+  const allWriteRequests = [...writeRequests, ...customFunctionRequests];
   const oldSheetId = sheetIdFor(snapshot, "atas");
   const oldFieldUpdates = [
     updateAtaField(oldSheetId, oldRow.rowNumber, snapshot.ataHeaders, "status_registro", "substituida"),
@@ -273,11 +351,11 @@ export async function reviseAtaInSheets({
     updateAtaField(oldSheetId, oldRow.rowNumber, snapshot.ataHeaders, "alterado_em", oldUpdated.alterado_em ?? ""),
     updateAtaField(oldSheetId, oldRow.rowNumber, snapshot.ataHeaders, "updated_at", oldUpdated.updated_at),
   ];
-  const expand = prepareRows(snapshot, writeRequests);
+  const expand = prepareRows(snapshot, allWriteRequests);
   await executeAtomicBatch(snapshot.sheets, snapshot.spreadsheetId, [
     ...expand,
     ...oldFieldUpdates,
-    ...writeRequests,
+    ...allWriteRequests,
   ]);
   return { ataId: newRecord.ata.ata_id, statusAprovacao: originalApproval };
 }

@@ -51,15 +51,11 @@ function formatTabletDate(value: string) {
   return `${day}/${month}/${year}`;
 }
 
-function normalize(value: string) {
-  return value.trim().replace(/\s+/g, " ").toLocaleLowerCase("pt-BR");
-}
-
 export function toAdminAtaDataTableRows(
   rows: AdminAtaRow[],
 ): AdminAtaDataTableRow[] {
   return rows.map((row) => [
-    row.indicePersonalizadoGrupo ? `#${row.indicePersonalizadoGrupo}` : "-",
+    row.numeroAta ? `#${row.numeroAta}` : "-",
     row.data,
     row.horario,
     row.grupo,
@@ -187,10 +183,6 @@ function AdminAtaActions({ ata, navigationQuery }: { ata: AdminAtaRow; navigatio
                 <span>Status</span>
                 <AdminAtaStatus status={ata.status} />
               </div>
-              <div className="admin-ata-action-context" role="note">
-                <span>Preenchido por</span>
-                <strong>{ata.preenchidoPor || "Não informado"}</strong>
-              </div>
               {ata.ataId ? (
                 <Link
                   className="responsavel-action-menu-item"
@@ -301,7 +293,6 @@ export function AdminAtasTable({
   const [startDate, setStartDate] = useState(monthStart);
   const [endDate, setEndDate] = useState(monthEnd);
   const [groupId, setGroupId] = useState("todos");
-  const [filledBy, setFilledBy] = useState("");
   const [status, setStatus] = useState<"todos" | AdminAtaStatus>(
     DEFAULT_ADMIN_ATA_STATUS_FILTER,
   );
@@ -314,8 +305,6 @@ export function AdminAtasTable({
         .sort((first, second) => first.name.localeCompare(second.name, "pt-BR")),
     [rows],
   );
-  const normalizedFilledBy = normalize(filledBy);
-
   const filteredRows = useMemo(
     () =>
       rows
@@ -324,9 +313,6 @@ export function AdminAtasTable({
           if (endDate && row.data > endDate) return false;
           if (groupId !== "todos" && row.grupoId !== groupId) return false;
           if (status !== "todos" && row.status !== status) return false;
-          if (normalizedFilledBy && !normalize(row.preenchidoPor).includes(normalizedFilledBy)) {
-            return false;
-          }
           return true;
         })
         .sort(
@@ -335,7 +321,7 @@ export function AdminAtasTable({
             first.horario.localeCompare(second.horario) ||
             first.grupo.localeCompare(second.grupo, "pt-BR"),
         ),
-    [endDate, groupId, normalizedFilledBy, rows, startDate, status],
+    [endDate, groupId, rows, startDate, status],
   );
 
   const tableRows = useMemo(
@@ -347,10 +333,9 @@ export function AdminAtasTable({
     de: startDate,
     ate: endDate,
     grupo: groupId,
-    preenchido: filledBy,
     status,
     ordem: tableOrder,
-  }).toString(), [startDate, endDate, groupId, filledBy, status, tableOrder]);
+  }).toString(), [startDate, endDate, groupId, status, tableOrder]);
 
   useEffect(() => {
     let mounted = true;
@@ -401,15 +386,6 @@ export function AdminAtasTable({
           </select>
         </label>
         <label>
-          Preenchido por
-          <input
-            type="search"
-            value={filledBy}
-            onChange={(event) => setFilledBy(event.target.value)}
-            placeholder="Nome Ou E-Mail"
-          />
-        </label>
-        <label>
           Status
           <select
             value={status}
@@ -427,7 +403,7 @@ export function AdminAtasTable({
       <div className="responsavel-table-wrap admin-atas-table-wrap">
         {DataTableComponent ? (
         <DataTableComponent
-          key={`${startDate}-${endDate}-${groupId}-${filledBy}-${status}`}
+          key={`${startDate}-${endDate}-${groupId}-${status}`}
           className="responsavel-atas-table admin-atas-table"
           columns={columns}
           data={tableRows}

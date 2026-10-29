@@ -33,7 +33,7 @@ export default async function AtaDetailPage({
 
   const { grupo, registro } = item;
   const { ata } = registro;
-  const presentation = buildAtaPresentation(item);
+  const presentation = buildAtaPresentation(item, result.atas);
   const navigation = getAtaNavigation({
     currentAtaId: ata.ata_id,
     currentGroupId: grupo.grupo_id,

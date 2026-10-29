@@ -22,13 +22,15 @@ export default async function PublicAtaPage({
   }).format(now);
 
   return (
-    <main className="shell form-shell">
-      <header>
-        <p className="eyebrow">Nova ata</p>
-        <h1>{group.group.grupo_nome}</h1>
-        <p className="muted">
-          Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
-        </p>
+    <main className="shell form-shell public-ata-page">
+      <header className="responsavel-page-header">
+        <div>
+          <p className="eyebrow">Nova ata</p>
+          <h1>Grupo {group.group.grupo_nome}</h1>
+          <p className="responsavel-page-description">
+            Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
+          </p>
+        </div>
       </header>
       <AtaForm
         action={createAtaByLinkAction}
@@ -42,6 +44,7 @@ export default async function PublicAtaPage({
             plataforma: group.group.plataforma,
             fuso_horario: group.group.fuso_horario,
             plataformas: group.plataformas.map((platform) => platform.tipo),
+            funcoesServidor: group.funcoesServidor.map((funcao) => funcao.nome),
             horarios: group.horarios.map((horario) => ({
               dia_semana: horario.dia_semana,
               hora_inicio: horario.hora_inicio,

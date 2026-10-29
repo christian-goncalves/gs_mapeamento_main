@@ -22,7 +22,7 @@ export async function GET(
     );
   }
 
-  const presentation = buildAtaPresentation(item);
+  const presentation = buildAtaPresentation(item, result.atas);
   const bytes = await renderAtaPdf(presentation);
   const disposition = new URL(request.url).searchParams.get("download") === "1"
     ? "attachment"

@@ -1,4 +1,5 @@
 import type { AggregatedAta } from "@/domain/aggregate";
+import { deriveAtaNumbers } from "@/domain/ata-numbering";
 import type { Grupo, GrupoHorario } from "@/domain/entities";
 import { buildMissingAtaOccurrences, nextMissingAtaRefreshAt } from "@/domain/missing-ata-occurrences";
 import { convertLocalMeetingToBrasilia } from "@/domain/time-zones";
@@ -8,7 +9,7 @@ export type ResponsavelAtaRegistroStatus = "ativa" | "substituida" | "excluida";
 
 export type ResponsavelAtaRow = {
   ataId: string | null;
-  indicePersonalizadoGrupo: number | null;
+  numeroAta: number | null;
   data: string;
   horario: string;
   servidor: string;
@@ -42,6 +43,7 @@ export function buildResponsavelAtaRows({
   horarios: GrupoHorario[];
   now?: Date;
 }): ResponsavelAtaRow[] {
+  const ataNumbers = deriveAtaNumbers(atas);
   const groupAtas = atas.filter(
     (item) => item.grupo.grupo_id === group.grupo_id,
   );
@@ -58,7 +60,7 @@ export function buildResponsavelAtaRows({
           : "Enviada";
     return {
       ataId: ata.ata_id,
-      indicePersonalizadoGrupo: ata.indice_personalizado_grupo,
+      numeroAta: ataNumbers.get(ata.ata_id) ?? null,
       data: ata.data_reuniao,
       horario: ata.hora_inicio,
       servidor: ata.preenchido_por || primaryServerName(item.registro.servidores),
@@ -81,7 +83,7 @@ export function buildResponsavelAtaRows({
   });
   rows.push(...missingOccurrences.map((occurrence) => ({
     ataId: null,
-    indicePersonalizadoGrupo: null,
+    numeroAta: null,
     data: occurrence.date,
     horario: occurrence.time,
     servidor: "",
@@ -95,7 +97,7 @@ export function buildResponsavelAtaRows({
   return rows.sort(
     (first, second) => second.data.localeCompare(first.data)
       || second.horario.localeCompare(first.horario)
-      || (second.indicePersonalizadoGrupo ?? 0) - (first.indicePersonalizadoGrupo ?? 0),
+      || (second.numeroAta ?? 0) - (first.numeroAta ?? 0),
   );
 }
 

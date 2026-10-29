@@ -103,6 +103,30 @@ describe("schemas de formulário", () => {
     ).toBe(false);
   });
 
+  it("não permite mais partilhas do que membros presentes", () => {
+    const result = ataFormSchema.safeParse({
+      grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
+      data_reuniao: "2026-06-21",
+      hora_inicio: "20:30",
+      duracao: "",
+      formato_outros: "",
+      preenchido_por: "Patricia",
+      plataforma: "zoom",
+      tipo_reuniao: "fechada",
+      formatos: ["partilha"],
+      total_membros_presentes: 2,
+      total_partilhas: 3,
+    });
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues).toContainEqual(expect.objectContaining({
+        path: ["total_partilhas"],
+        message: "A quantidade de partilhas não pode ser maior que o total de membros presentes.",
+      }));
+    }
+  });
+
   it("valida visitante com a mesma base municipal do runtime", () => {
     expect(
       visitanteFormSchema.safeParse({
@@ -147,6 +171,38 @@ describe("schemas de formulário", () => {
       expect(result.error.issues[0]?.message).toBe(
         "Para registrar um ingresso, registre primeiro pelo menos um visitante.",
       );
+    }
+  });
+
+  it("não permite mais ingressos do que visitantes", () => {
+    const base = {
+      ata: {
+        grupo_id: "fccced1d-92a5-4d24-b5af-da65cbbe467f",
+        data_reuniao: "2026-06-22",
+        hora_inicio: "20:30",
+        duracao: "",
+        formato_outros: "",
+        preenchido_por: "Patricia",
+        plataforma: "zoom" as const,
+        tipo_reuniao: "aberta" as const,
+        formatos: ["partilha" as const],
+        total_membros_presentes: 1,
+        total_partilhas: 1,
+      },
+      servidores: [],
+      participacao: [],
+      visitantes: [{ cidade: "Itajaí - SC", descricao: "outro" as const, como_chegou_a_na: "outro" as const }],
+      ingressos: [{ cidade: "Itajaí - SC" }, { cidade: "Itajaí - SC" }],
+      trocas_chaveiro: [],
+    };
+    const result = ataSubmissionSchema.safeParse(base);
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues).toContainEqual(expect.objectContaining({
+        path: ["ingressos"],
+        message: "A quantidade de ingressos não pode ser maior que a quantidade de visitantes.",
+      }));
     }
   });
 

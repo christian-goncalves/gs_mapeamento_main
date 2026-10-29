@@ -1,4 +1,5 @@
 import type { AggregatedAta } from "@/domain/aggregate";
+import { deriveAtaNumber } from "@/domain/ata-numbering";
 import {
   categoriaVisitanteMapping,
   formatoMapping,
@@ -36,7 +37,10 @@ function safeFilename(value: string) {
     .replace(/^-|-$/g, "");
 }
 
-export function buildAtaPresentation(item: AggregatedAta): AtaPresentation {
+export function buildAtaPresentation(
+  item: AggregatedAta,
+  atas: readonly AggregatedAta[] = [item],
+): AtaPresentation {
   const { grupo, registro, indicadores } = item;
   const { ata } = registro;
   const participacaoBrasil = registro.participacao.filter(
@@ -51,16 +55,18 @@ export function buildAtaPresentation(item: AggregatedAta): AtaPresentation {
       time: tempoLimpoMapping.toSheet(entry.tempo_limpo),
     })),
   );
-  const displayIndex = String(ata.indice_personalizado_grupo).padStart(2, "0");
+  const ataNumber = deriveAtaNumber(atas, ata.ata_id);
+  const displayIndex = ataNumber === null ? "—" : String(ataNumber).padStart(2, "0");
+  const filenameIndex = ataNumber === null ? "sem-numero" : String(ataNumber);
 
   return {
     ataId: ata.ata_id,
     title: `Ata de reunião nº ${displayIndex}`,
-    filename: `ata-${safeFilename(grupo.grupo_nome)}-${ata.data_reuniao}-${ata.indice_personalizado_grupo}.pdf`,
+    filename: `ata-${safeFilename(grupo.grupo_nome)}-${ata.data_reuniao}-${filenameIndex}.pdf`,
     groupEmail: grupo.email_acesso_grupo,
     groupActive: grupo.ativo,
     groupReference: displayIndex,
-    sequential: ata.numero_sequencial_grupo,
+    sequential: ataNumber ?? 0,
     reviewData: {
       group: grupo.grupo_nome,
       date: ata.data_reuniao,

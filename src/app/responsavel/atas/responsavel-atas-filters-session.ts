@@ -5,7 +5,6 @@ export type ResponsavelAtasFilters = {
   endDate: string;
   weekday: string;
   time: string;
-  preenchidoPor: string;
   status: "todos" | ResponsavelAtaStatus;
 };
 
@@ -54,7 +53,6 @@ export function parseResponsavelAtasFilters(
       endDate: isIsoDate(parsed.endDate) ? parsed.endDate : defaults.endDate,
       weekday: stringOrDefault(parsed.weekday, defaults.weekday),
       time: stringOrDefault(parsed.time, defaults.time),
-      preenchidoPor: stringOrDefault(parsed.preenchidoPor, defaults.preenchidoPor),
       status,
     };
   } catch {

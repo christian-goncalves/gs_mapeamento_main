@@ -67,6 +67,13 @@ export const hiddenAtaSubmissionSchema = z
           "Para registrar um ingresso, registre primeiro pelo menos um visitante.",
       });
     }
+    if (submission.visitantes.length > 0 && submission.ingressos.length > submission.visitantes.length) {
+      context.addIssue({
+        code: "custom",
+        path: ["ingressos"],
+        message: "A quantidade de ingressos não pode ser maior que a quantidade de visitantes.",
+      });
+    }
     const visitorCities = new Set(
       submission.visitantes.map((visitor) => normalizeCityKey(visitor.cidade)),
     );

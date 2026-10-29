@@ -10,7 +10,6 @@ import {
   faLocationDot,
   faTableCellsLarge,
   faTicket,
-  faUser,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -362,7 +361,6 @@ export function AtaPdfDocument({ presentation, generatedAt }: { presentation: At
           <InfoCard icon={faUsers} label="Grupo" value={data.group} group />
           <InfoCard icon={faCalendarDays} label="Data" value={formatReviewDate(data.date)} />
           <InfoCard icon={faClock} label="Horário" value={data.time} />
-          <InfoCard icon={faUser} label="Preenchido por" value={data.filledBy.trim() || "Não informado"} />
           <InfoCard icon={faFolder} label="Tipo" value={data.meetingType} />
           <InfoCard icon={faDesktop} label="Plataforma" value={data.platform} />
           <InfoCard icon={faTableCellsLarge} label="Formatos" value={data.formats} />
@@ -399,7 +397,7 @@ export function AtaPdfDocument({ presentation, generatedAt }: { presentation: At
             </View>
 
             <View style={styles.sectionColumn}>
-              <Section icon={faGlobe} title="Localidades internacionais" count={data.internationalMembers.length}>
+              <Section icon={faGlobe} title="Localidades Internacionais" count={data.internationalMembers.length}>
                 {data.internationalMembers.length ? data.internationalMembers.map((item, index) => (
                   <View key={item.id} style={[styles.row, ...(index === data.internationalMembers.length - 1 ? [styles.rowLast] : [])]} wrap={false}>
                     <Text style={styles.rowText}>{index + 1}. {item.country}</Text>

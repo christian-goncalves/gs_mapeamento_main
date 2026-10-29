@@ -28,6 +28,11 @@ import { TextAutocomplete } from "./text-autocomplete";
 import { convertLocalMeetingToBrasilia } from "@/domain/time-zones";
 import { ataPlatformErrorMessage, findRecurringAtaSchedules, getAtaPlatformPreflightError } from "@/domain/ata-platform";
 import type { GrupoHorario } from "@/domain/schemas";
+import {
+  normalizeServerFunctionName,
+  SERVER_FUNCTION_MAX_LENGTH,
+  serverFunctionComparisonKey,
+} from "@/domain/server-functions";
 
 type ClientRow = { clientId: string };
 type VisitorSubmission = HiddenAtaSubmission["visitantes"][number];
@@ -67,6 +72,7 @@ type AtaFormGroup = {
   plataforma: Plataforma;
   fuso_horario?: FusoHorario;
   plataformas?: Plataforma[];
+  funcoesServidor?: string[];
   horarios?: { dia_semana: GrupoHorario["dia_semana"]; hora_inicio: string; link_reuniao: string; plataformaTipo?: Plataforma }[];
 };
 
@@ -86,6 +92,7 @@ function nextRecurringOccurrence(group: AtaFormGroup | undefined, today: string)
   return matches.sort((first, second) => `${first.date}|${first.time}`.localeCompare(`${second.date}|${second.time}`))[0] ?? { date: today, time: "20:00" };
 }
 const servidorFuncaoOptions = servidorFuncoes;
+const personalizeFunctionOption = "__personalizar__";
 
 function addRowOnEnter(event: KeyboardEvent<HTMLDivElement>, addRow: () => void) {
   if (event.key !== "Enter" || event.nativeEvent.isComposing) return;
@@ -108,14 +115,6 @@ function cidadeEstado(value: string) {
   const match = value.match(/^(.*)\s+-\s+([A-Z]{2})$/);
   if (!match) return { cidade: value, estado: "-" };
   return { cidade: match[1], estado: match[2] };
-}
-
-function cidadeKey(value: string) {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLocaleLowerCase("pt-BR");
 }
 
 function NumberStepper({
@@ -209,7 +208,9 @@ function submissionFromDraft(draft: Draft) {
         como_chegou_a_na,
       }),
     ),
-    ingressos: draft.ingressos.map(({ cidade }) => ({ cidade })),
+    ingressos: draft.ingressos.map((item, index) => ({
+      cidade: draft.visitantes[index]?.cidade ?? item.cidade,
+    })),
     trocas_chaveiro: draft.trocas_chaveiro.map(({ tempo_limpo, quantidade }) => ({
       tempo_limpo,
       quantidade,
@@ -227,7 +228,9 @@ function draftFromSubmission(submission: HiddenAtaSubmission): Draft {
       ...item,
       clientId: clientId(),
     })),
-    ingressos: submission.ingressos.map((item) => ({ ...item, clientId: clientId() })),
+    ingressos: submission.ingressos
+      .slice(0, submission.visitantes.length)
+      .map((item) => ({ ...item, clientId: clientId() })),
     trocas_chaveiro: submission.trocas_chaveiro.map((item) => ({ ...item, clientId: clientId() })),
   };
 }
@@ -247,6 +250,7 @@ export function AtaForm({
     plataforma: Plataforma;
     fuso_horario?: FusoHorario;
     plataformas?: Plataforma[];
+    funcoesServidor?: string[];
     horarios?: { dia_semana: GrupoHorario["dia_semana"]; hora_inicio: string; link_reuniao: string; plataformaTipo?: Plataforma }[];
   }[];
   today: string;
@@ -263,6 +267,12 @@ export function AtaForm({
   const formRef = useRef<HTMLFormElement>(null);
   const [reviewing, setReviewing] = useState(false);
   const [clientError, setClientError] = useState<string>();
+  const [groupFunctions, setGroupFunctions] = useState<Record<string, string[]>>(() =>
+    Object.fromEntries(groups.map((group) => [group.id, group.funcoesServidor ?? []])),
+  );
+  const [functionModal, setFunctionModal] = useState<{ serverId: string; previousValue: string }>();
+  const [functionModalValue, setFunctionModalValue] = useState("");
+  const [functionModalError, setFunctionModalError] = useState<string>();
   const [nameSuggestions, setNameSuggestions] = useState<AtaNameSuggestions>({
     servidores: [],
   });
@@ -339,11 +349,6 @@ export function AtaForm({
   const paisSuggestions = paises
     .map((pais) => pais.nome)
     .filter((pais) => pais.localeCompare("Brasil", "pt-BR", { sensitivity: "accent" }) !== 0);
-  const visitorCityOptions = [...new Map(
-    draft.visitantes
-      .filter((item) => item.cidade.trim())
-      .map((item) => [cidadeKey(item.cidade), item.cidade] as const),
-  ).values()].sort((first, second) => first.localeCompare(second, "pt-BR", { sensitivity: "base" }));
   const hasBrazilAsInternational = draft.membros_internacionais.some((item) =>
     item.pais.trim().localeCompare("Brasil", "pt-BR", { sensitivity: "accent" }) === 0,
   );
@@ -392,8 +397,8 @@ export function AtaForm({
         ? origemContatoMapping.toSheet(item.como_chegou_a_na)
         : "Não informada",
     })),
-    admissions: draft.ingressos.map((item) => {
-      const location = cidadeEstado(item.cidade);
+    admissions: draft.ingressos.map((item, index) => {
+      const location = cidadeEstado(draft.visitantes[index]?.cidade ?? item.cidade);
       return {
         id: item.clientId,
         label: "Ingresso",
@@ -520,6 +525,7 @@ export function AtaForm({
       visitantes: current.visitantes.filter(
         (item) => item.clientId !== clientIdToRemove,
       ),
+      ingressos: current.ingressos.slice(0, Math.max(0, current.visitantes.length - 1)),
     }));
   }
 
@@ -534,6 +540,55 @@ export function AtaForm({
       servidores: [...current.servidores, { clientId: id, nome: "", funcao: "" }],
     }));
     focusAddedField(`server-name-${id}`);
+  }
+
+  function openFunctionModal(serverId: string, previousValue: string) {
+    setFunctionModal({ serverId, previousValue });
+    setFunctionModalValue("");
+    setFunctionModalError(undefined);
+  }
+
+  function closeFunctionModal() {
+    setFunctionModal(undefined);
+    setFunctionModalValue("");
+    setFunctionModalError(undefined);
+  }
+
+  function confirmFunctionModal() {
+    if (!functionModal) return;
+    const rawValue = functionModalValue.trim();
+    if (!rawValue) {
+      setFunctionModalError("Informe o nome da função.");
+      return;
+    }
+    if (rawValue.length > SERVER_FUNCTION_MAX_LENGTH) {
+      setFunctionModalError(`O nome deve ter no máximo ${SERVER_FUNCTION_MAX_LENGTH} caracteres.`);
+      return;
+    }
+    const normalized = normalizeServerFunctionName(rawValue);
+    const fixedFunction = servidorFuncaoOptions.find(
+      (option) => serverFunctionComparisonKey(option) === serverFunctionComparisonKey(normalized),
+    );
+    const currentGroupFunctions = groupFunctions[draft.ata.grupo_id] ?? [];
+    const existingFunction = currentGroupFunctions.find(
+      (option) => serverFunctionComparisonKey(option) === serverFunctionComparisonKey(normalized),
+    );
+    const selectedFunction = fixedFunction ?? existingFunction ?? normalized;
+    if (!fixedFunction && !existingFunction) {
+      setGroupFunctions((current) => ({
+        ...current,
+        [draft.ata.grupo_id]: [...(current[draft.ata.grupo_id] ?? []), normalized],
+      }));
+    }
+    setDraft((current) => ({
+      ...current,
+      servidores: current.servidores.map((server) =>
+        server.clientId === functionModal.serverId
+          ? { ...server, funcao: selectedFunction }
+          : server,
+      ),
+    }));
+    closeFunctionModal();
   }
 
   function addNationalLocation() {
@@ -563,13 +618,19 @@ export function AtaForm({
     focusAddedField(`city-${id}`);
   }
 
-  function addIngresso() {
-    const id = clientId();
-    setDraft((current) => ({
-      ...current,
-      ingressos: [...current.ingressos, { clientId: id, cidade: "" }],
-    }));
-    focusAddedField(`ingresso-city-${id}`);
+  function updateIngressoCount(value: number) {
+    setDraft((current) => {
+      const count = Number.isFinite(value)
+        ? Math.max(0, Math.min(Math.trunc(value), current.visitantes.length))
+        : 0;
+      return {
+        ...current,
+        ingressos: Array.from({ length: count }, (_, index) => ({
+          clientId: current.ingressos[index]?.clientId ?? clientId(),
+          cidade: current.visitantes[index]?.cidade ?? current.ingressos[index]?.cidade ?? "",
+        })),
+      };
+    });
   }
 
   function addAchievement() {
@@ -608,11 +669,8 @@ export function AtaForm({
       setClientError("A soma das presenças por localidade supera o total de membros presentes.");
       return;
     }
-    const visitorCities = new Set(
-      draft.visitantes.map((visitor) => cidadeKey(visitor.cidade)),
-    );
-    if (draft.ingressos.some((ingresso) => !visitorCities.has(cidadeKey(ingresso.cidade)))) {
-      setClientError("Cada ingresso deve usar uma cidade cadastrada em Visitantes. Remova ou corrija o ingresso antes de salvar.");
+    if (draft.ingressos.length > draft.visitantes.length) {
+      setClientError("A quantidade de ingressos não pode ser maior que a quantidade de visitantes.");
       return;
     }
     setReviewing(true);
@@ -640,7 +698,7 @@ export function AtaForm({
       )}
 
       <section className="card form-section">
-        <h2>Informações gerais</h2>
+        <h2>Informações Gerais</h2>
         <div className="form-grid ata-general-info-grid">
           {!fixedGroupId && (
             <label className="ata-group-field">
@@ -788,24 +846,39 @@ export function AtaForm({
         <div className="section-heading">
           <h2>Servidores</h2>
         </div>
-        {draft.servidores.map((item, index) => (
+        {draft.servidores.map((item, index) => {
+          const customFunctions = groupFunctions[draft.ata.grupo_id] ?? [];
+          const functionOptions = [...new Set([
+            ...servidorFuncaoOptions,
+            ...customFunctions,
+            ...(item.funcao && item.funcao !== personalizeFunctionOption ? [item.funcao] : []),
+          ])];
+          return (
           <div className="repeat-row repeat-row--double repeat-row--server repeat-row--unseparated" key={item.clientId} onKeyDown={(event) => addRowOnEnter(event, addServer)}>
             <label>{index === 0 && <span>Nome</span>}<TextAutocomplete id={`server-name-${item.clientId}`} ariaLabel={index === 0 ? undefined : "Nome do Servidor"} required value={item.nome} placeholder="Nome..." suggestions={nameSuggestions.servidores} onChange={(value) => setDraft((current) => ({
               ...current,
               servidores: current.servidores.map((server) => server.clientId === item.clientId ? { ...server, nome: value } : server),
             }))} /></label>
-            <label>{index === 0 && <span>Função</span>}<select aria-label={index === 0 ? undefined : "Função do Servidor"} value={item.funcao ?? ""} onChange={(event) => setDraft((current) => ({
-              ...current,
-              servidores: current.servidores.map((server) => server.clientId === item.clientId ? { ...server, funcao: event.target.value } : server),
-            }))}>
+            <label>{index === 0 && <span>Função</span>}<select aria-label={index === 0 ? undefined : "Função do Servidor"} value={item.funcao ?? ""} onChange={(event) => {
+              if (event.target.value === personalizeFunctionOption) {
+                openFunctionModal(item.clientId, item.funcao ?? "");
+                return;
+              }
+              setDraft((current) => ({
+                ...current,
+                servidores: current.servidores.map((server) => server.clientId === item.clientId ? { ...server, funcao: event.target.value } : server),
+              }));
+            }}>
               <option value="">Selecione...</option>
-              {servidorFuncaoOptions.map((option) => (
+              {functionOptions.map((option) => (
                 <option key={option} value={option}>{option}</option>
               ))}
+              <option value={personalizeFunctionOption}>Personalizar</option>
             </select></label>
             <button type="button" className="danger-icon-button" aria-label="Remover servidor" title="Remover servidor" onClick={() => setDraft((current) => ({ ...current, servidores: current.servidores.filter((server) => server.clientId !== item.clientId) }))}><FontAwesomeIcon icon={faTrashCan} /></button>
           </div>
-        ))}
+          );
+        })}
         <div className="section-footer">
           <button
             type="button"
@@ -814,6 +887,37 @@ export function AtaForm({
           ><span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span></button>
         </div>
       </section>
+
+      {functionModal && (
+        <div className="modal-backdrop server-function-modal-backdrop">
+          <section className="confirmation-modal server-function-modal" role="dialog" aria-modal="true" aria-labelledby="server-function-modal-title">
+            <h2 id="server-function-modal-title">Personalizar</h2>
+            <label>
+              <span>Nome</span>
+              <input
+                autoFocus
+                maxLength={SERVER_FUNCTION_MAX_LENGTH}
+                value={functionModalValue}
+                onChange={(event) => {
+                  setFunctionModalValue(event.target.value);
+                  setFunctionModalError(undefined);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    confirmFunctionModal();
+                  }
+                }}
+              />
+            </label>
+            {functionModalError && <p className="form-error" role="alert">{functionModalError}</p>}
+            <div className="modal-actions">
+              <button type="button" onClick={confirmFunctionModal}>Confirmar</button>
+              <button type="button" className="secondary" onClick={closeFunctionModal}>Cancelar</button>
+            </div>
+          </section>
+        </div>
+      )}
 
       <section className="card form-section">
         <div className="section-heading">
@@ -828,7 +932,11 @@ export function AtaForm({
             max={100}
             onChange={(value) => setDraft((current) => ({
               ...current,
-              ata: { ...current.ata, total_membros_presentes: value },
+              ata: {
+                ...current.ata,
+                total_membros_presentes: value,
+                total_partilhas: Math.min(current.ata.total_partilhas, value),
+              },
             }))}
           />
           <NumberStepper
@@ -836,7 +944,7 @@ export function AtaForm({
             label="Partilhas"
             value={draft.ata.total_partilhas}
             min={1}
-            max={30}
+            max={Math.min(30, draft.ata.total_membros_presentes)}
             onChange={(value) => setDraft((current) => ({
               ...current,
               ata: { ...current.ata, total_partilhas: value },
@@ -871,7 +979,7 @@ export function AtaForm({
 
       <section className="card form-section">
         <div className="section-heading">
-          <h2>Localidades internacionais</h2>
+          <h2>Localidades Internacionais</h2>
         </div>
         {draft.membros_internacionais.map((item, index) => (
           <div className="repeat-row repeat-row--international repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId} onKeyDown={(event) => addRowOnEnter(event, addInternationalLocation)}>
@@ -919,44 +1027,15 @@ export function AtaForm({
         <div className="section-heading">
           <h2>Ingressos</h2>
         </div>
-        {draft.ingressos.map((item, index) => (
-          <div className="repeat-row repeat-row--visitor repeat-row--unseparated" key={item.clientId}>
-            <label htmlFor={`ingresso-city-${item.clientId}`}>
-              {index === 0 && <span>Cidade</span>}
-              <select
-                id={`ingresso-city-${item.clientId}`}
-                required
-                aria-label={index === 0 ? undefined : "Cidade do ingresso"}
-                value={item.cidade}
-                onChange={(event) => setDraft((current) => ({
-                  ...current,
-                  ingressos: current.ingressos.map((entry) => entry.clientId === item.clientId
-                    ? { ...entry, cidade: event.target.value }
-                    : entry),
-                }))}
-              >
-                <option value="" disabled>Selecione a cidade do visitante...</option>
-                {visitorCityOptions.map((city) => <option key={cidadeKey(city)} value={city}>{city}</option>)}
-              </select>
-            </label>
-            <button
-              type="button"
-              className="danger-icon-button"
-              aria-label="Remover ingresso"
-              title="Remover ingresso"
-              onClick={() => setDraft((current) => ({
-                ...current,
-                ingressos: current.ingressos.filter((entry) => entry.clientId !== item.clientId),
-              }))}
-            >
-              <FontAwesomeIcon icon={faTrashCan} />
-            </button>
-          </div>
-        ))}
-        <div className="section-footer">
-          <button type="button" className="secondary" onClick={addIngresso} disabled={visitorCityOptions.length === 0}>
-            <span className="button-content"><FontAwesomeIcon icon={faPlus} />Adicionar</span>
-          </button>
+        <div className="form-grid ata-participation-grid">
+          <NumberStepper
+            id="total-ingressos"
+            label="Quantidade"
+            value={draft.ingressos.length}
+            min={0}
+            max={draft.visitantes.length}
+            onChange={updateIngressoCount}
+          />
         </div>
       </section>
 
@@ -1024,7 +1103,6 @@ export function AtaForm({
               title={revision ? "Resumo da revisão" : "Resumo da ata"}
               titleId="confirmation-title"
               data={reviewLayoutData}
-              showFilledBy={false}
               footer={(
                 <>
                   {actionState.error && <p className="form-error" role="alert">{actionState.error}</p>}

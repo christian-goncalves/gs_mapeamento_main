@@ -245,6 +245,17 @@ export const trocaChaveiroSchema = z.object({
 export type Grupo = z.infer<typeof grupoSchema>;
 export type GrupoHorario = z.infer<typeof grupoHorarioSchema>;
 export type GrupoServidorMesa = z.infer<typeof grupoServidorMesaSchema>;
+
+export const grupoFuncaoServidorSchema = z.object({
+  grupo_funcao_servidor_id: uuid,
+  grupo_id: uuid,
+  nome: requiredText.max(80),
+  nome_normalizado: requiredText.max(80),
+  ativo: z.boolean(),
+  ...auditFields,
+});
+
+export type GrupoFuncaoServidor = z.infer<typeof grupoFuncaoServidorSchema>;
 export type UsuarioGrupo = z.infer<typeof usuarioGrupoSchema>;
 export type Ata = z.infer<typeof ataSchema>;
 export type Servidor = z.infer<typeof servidorSchema>;

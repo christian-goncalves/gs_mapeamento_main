@@ -1,4 +1,5 @@
 import type { AggregatedAta } from "@/domain/aggregate";
+import { deriveAtaNumbers } from "@/domain/ata-numbering";
 import type { Grupo, GrupoHorario } from "@/domain/entities";
 import { buildMissingAtaOccurrences } from "@/domain/missing-ata-occurrences";
 
@@ -6,7 +7,7 @@ export type AdminAtaStatus = "Enviada" | "Não enviada" | "Pendente de revisão"
 
 export type AdminAtaRow = {
   ataId: string;
-  indicePersonalizadoGrupo: number | null;
+  numeroAta: number | null;
   data: string;
   horario: string;
   grupoId: string;
@@ -43,13 +44,14 @@ export function primaryServerName(servers: { nome: string; ordem: number }[]) {
 }
 
 export function buildSentAtaRows(atas: AggregatedAta[]): AdminAtaRow[] {
+  const ataNumbers = deriveAtaNumbers(atas);
   return atas
     .filter((item) => item.registro.ata.status_registro === "ativa")
     .map((item) => {
       const { ata } = item.registro;
       return {
         ataId: ata.ata_id,
-        indicePersonalizadoGrupo: ata.indice_personalizado_grupo,
+        numeroAta: ataNumbers.get(ata.ata_id) ?? null,
         data: ata.data_reuniao,
         horario: ata.hora_inicio,
         grupoId: item.grupo.grupo_id,
@@ -96,7 +98,7 @@ export function buildMissingAtaRows({
       const group = groupsById.get(occurrence.groupId);
       return group ? [{
         ataId: "",
-        indicePersonalizadoGrupo: null,
+        numeroAta: null,
         data: occurrence.date,
         horario: occurrence.time,
         grupoId: group.grupo_id,

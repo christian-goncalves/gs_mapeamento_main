@@ -757,7 +757,7 @@ export function GroupEditor({
         <header className="responsavel-page-header">
           <div>
             <p className="eyebrow">Configurações</p>
-            <h1>GRUPO {current.grupo_nome.toLocaleUpperCase("pt-BR")}</h1>
+            <h1>Grupo {current.grupo_nome}</h1>
             <p className="responsavel-page-description">
               Gerencie os dados, acessos e horários do grupo.
             </p>
@@ -990,7 +990,7 @@ export function GroupEditor({
       </Link>
       <header>
         <p className="eyebrow">Grupo</p>
-        <h1>{group ? current.grupo_nome : "Novo grupo"}</h1>
+        <h1>{group ? `Grupo ${current.grupo_nome}` : "Novo grupo"}</h1>
       </header>
 
       <form action={action} className="creation-form">

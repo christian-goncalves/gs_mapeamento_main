@@ -42,33 +42,22 @@ describe("layout compartilhado da ata", () => {
     expect(html).toContain("<dt>Horário</dt><dd>21:30</dd>");
     expect(html).not.toContain("Data e hora");
     expect(html).toContain("31/07/2026");
-    expect(html).toContain("Localidades internacionais");
-    expect(html).toContain("Outros países");
+    expect(html).toContain("Localidades Internacionais");
+    expect(html).toContain("Outros Países");
     expect(html).toContain("Coordenador");
   });
 
-  it("mantém Preenchido por no layout com fallback e permite ocultá-lo na prévia", () => {
-    const missingFilledBy = { ...data, filledBy: "" };
-    const detailHtml = renderToStaticMarkup(
+  it("não renderiza o campo removido do layout", () => {
+    const html = renderToStaticMarkup(
       <AtaReviewLayout
         title="Ata de reunião nº 19 - USL"
         titleId="ata-title"
         headingLevel="h1"
-        data={missingFilledBy}
-      />,
-    );
-    const previewHtml = renderToStaticMarkup(
-      <AtaReviewLayout
-        title="Ata de reunião nº 19 - USL"
-        titleId="ata-title"
-        headingLevel="h1"
-        data={missingFilledBy}
-        showFilledBy={false}
+        data={data}
       />,
     );
 
-    expect(detailHtml).toContain("<dt>Preenchido por</dt><dd>Não informado</dd>");
-    expect(previewHtml).not.toContain("<dt>Preenchido por</dt>");
+    expect(html).not.toContain("Preenchido por");
   });
 
   it("oculta Formato outros sem remover as demais informações adicionais", () => {
@@ -103,7 +92,6 @@ describe("layout compartilhado da ata", () => {
     expect(primaryDetails).not.toContain("Membros presentes");
     expect(primaryDetails).not.toContain("<dt>Partilhas</dt>");
     expect(primaryDetails.indexOf("<dt>Data</dt>")).toBeLessThan(primaryDetails.indexOf("<dt>Horário</dt>"));
-    expect(primaryDetails.indexOf("<dt>Horário</dt>")).toBeLessThan(primaryDetails.indexOf("<dt>Preenchido por</dt>"));
     expect(html).toContain("<dt>Membros</dt><dd>50</dd>");
     expect(html).toContain("<dt>Partilhas</dt><dd>15</dd>");
   });

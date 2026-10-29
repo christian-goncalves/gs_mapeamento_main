@@ -16,7 +16,6 @@ import {
   faLocationDot,
   faTableCellsLarge,
   faTicket,
-  faUser,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { formatReviewDate } from "./nova/ata-review";
@@ -115,7 +114,6 @@ export function AtaReviewLayout({
   titleId,
   headingLevel = "h2",
   data,
-  showFilledBy = true,
   headerAction,
   headerBadge,
   identification,
@@ -127,7 +125,6 @@ export function AtaReviewLayout({
   titleId: string;
   headingLevel?: "h1" | "h2";
   data: AtaReviewLayoutData;
-  showFilledBy?: boolean;
   headerAction?: ReactNode;
   headerBadge?: ReactNode;
   identification?: AtaReviewIdentification;
@@ -181,12 +178,6 @@ export function AtaReviewLayout({
           <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faClock} /></span>
           <div><dt>Horário</dt><dd>{data.time}</dd></div>
         </div>
-        {showFilledBy && (
-          <div className="review-info-card">
-            <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faUser} /></span>
-            <div><dt>Preenchido por</dt><dd>{data.filledBy.trim() || "Não informado"}</dd></div>
-          </div>
-        )}
         <div className="review-info-card">
           <span className="review-info-icon" aria-hidden="true"><FontAwesomeIcon icon={faFolder} /></span>
           <div><dt>Tipo</dt><dd>{data.meetingType}</dd></div>
@@ -277,7 +268,7 @@ export function AtaReviewLayout({
               ) : <ReviewEmptyState icon={faUsers}>Nenhum servidor registrado.</ReviewEmptyState>}
             </ReviewSection>
 
-            <ReviewSection className="review-section--international" icon={faGlobe} title="Localidades internacionais" count={data.internationalMembers.length} desktop={desktop}>
+            <ReviewSection className="review-section--international" icon={faGlobe} title="Localidades Internacionais" count={data.internationalMembers.length} desktop={desktop}>
               {data.internationalMembers.length ? (
                 <ul className="review-item-list">
                   {data.internationalMembers.map((item, index) => (

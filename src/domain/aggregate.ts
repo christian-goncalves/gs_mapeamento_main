@@ -3,6 +3,7 @@ import { validateContractIntegrity, type ContractRows } from "./integrity";
 import type {
   Ata,
   Grupo,
+  GrupoFuncaoServidor,
   GrupoHorario,
   GrupoPlataforma,
   GrupoServidorMesa,
@@ -22,6 +23,7 @@ export type ParsedContractRows = {
   grupo_horarios: ParsedRow<GrupoHorario>[];
   grupo_plataformas?: ParsedRow<GrupoPlataforma>[];
   grupo_servidores_mesa: ParsedRow<GrupoServidorMesa>[];
+  grupo_funcoes_servidor?: ParsedRow<GrupoFuncaoServidor>[];
   atas: ParsedRow<Ata>[];
   servidores: ParsedRow<Servidor>[];
   participacao: ParsedRow<Participacao>[];
@@ -41,6 +43,7 @@ export type AggregatedRead = {
   grupo_horarios: GrupoHorario[];
   grupo_plataformas: GrupoPlataforma[];
   grupo_servidores_mesa: GrupoServidorMesa[];
+  grupo_funcoes_servidor?: GrupoFuncaoServidor[];
   atas: AggregatedAta[];
   diagnostics: RowDiagnostic[];
 };
@@ -112,6 +115,7 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
     ...rowDiagnostics(rows.grupo_horarios ?? []),
     ...rowDiagnostics(rows.grupo_plataformas ?? []),
     ...rowDiagnostics(rows.grupo_servidores_mesa ?? []),
+    ...rowDiagnostics(rows.grupo_funcoes_servidor ?? []),
     ...rowDiagnostics(rows.atas),
     ...rowDiagnostics(rows.servidores),
     ...rowDiagnostics(rows.participacao),
@@ -124,6 +128,7 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
     grupo_horarios: validRows(rows.grupo_horarios ?? []),
     grupo_plataformas: validRows(rows.grupo_plataformas ?? []),
     grupo_servidores_mesa: validRows(rows.grupo_servidores_mesa ?? []),
+    grupo_funcoes_servidor: validRows(rows.grupo_funcoes_servidor ?? []),
     atas: validRows(rows.atas),
     servidores: validRows(rows.servidores),
     participacao: validRows(rows.participacao),
@@ -164,6 +169,20 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
   });
   const grupoServidoresMesa = withoutDiagnosed(
     initiallyValid.grupo_servidores_mesa,
+    integrityDiagnostics,
+  ).filter((row) => {
+    if (grupoById.has(row.data.grupo_id)) return true;
+    diagnostics.push(
+      referenceDiagnostic(
+        row,
+        "grupo_id",
+        "grupo_id não referencia um grupo válido.",
+      ),
+    );
+    return false;
+  });
+  const grupoFuncoesServidor = withoutDiagnosed(
+    initiallyValid.grupo_funcoes_servidor ?? [],
     integrityDiagnostics,
   ).filter((row) => {
     if (grupoById.has(row.data.grupo_id)) return true;
@@ -292,6 +311,13 @@ export function aggregateContractRows(rows: ParsedContractRows): AggregatedRead 
           first.grupo_id.localeCompare(second.grupo_id) ||
           first.ordem - second.ordem ||
           first.encargo.localeCompare(second.encargo, "pt-BR"),
+      ),
+    grupo_funcoes_servidor: grupoFuncoesServidor
+      .map((row) => row.data)
+      .sort(
+        (first, second) =>
+          first.grupo_id.localeCompare(second.grupo_id) ||
+          first.nome.localeCompare(second.nome, "pt-BR"),
       ),
     atas: aggregatedAtas.sort(
       (first, second) =>

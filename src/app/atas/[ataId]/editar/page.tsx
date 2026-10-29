@@ -73,7 +73,7 @@ export default async function EditAtaPage({
         <Link className="button-link" href={`/atas/${ata.ata_id}`}>
           <span className="button-content">
             <FontAwesomeIcon icon={faArrowLeft} />
-            Cancelar e voltar à ata
+            Cancelar e Voltar à Ata
           </span>
         </Link>
       </header>
@@ -84,6 +84,9 @@ export default async function EditAtaPage({
           plataforma: item.grupo.plataforma,
           fuso_horario: item.grupo.fuso_horario,
           plataformas: result.grupo_plataformas.filter((platform) => platform.grupo_id === item.grupo.grupo_id && platform.ativo).map((platform) => platform.tipo),
+          funcoesServidor: (result.grupo_funcoes_servidor ?? [])
+            .filter((funcao) => funcao.grupo_id === item.grupo.grupo_id && funcao.ativo)
+            .map((funcao) => funcao.nome),
           horarios: result.grupo_horarios
             .filter((horario) => horario.grupo_id === item.grupo.grupo_id && horario.ativo)
             .map((horario) => ({ dia_semana: horario.dia_semana, hora_inicio: horario.hora_inicio, link_reuniao: horario.link_reuniao, plataformaTipo: result.grupo_plataformas.find((platform) => platform.plataforma_id === horario.plataforma_id && platform.ativo)?.tipo })),

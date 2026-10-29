@@ -18,6 +18,7 @@ export type MonthlyDashboardData = ReturnType<typeof buildMonthlyDashboardData>;
 export type ResponsavelMeetingSchedule = {
   time: string;
   presences: number;
+  averagePresences: number;
   ingressos: number;
 };
 
@@ -52,14 +53,14 @@ const achievementOrder: TempoLimpo[] = [
 
 export const achievementColors: Record<TempoLimpo | "ingresso", string> = {
   ingresso: "#FFFFFF",
-  dias_30: "#FAA514",
-  dias_60: "#77D46C",
-  dias_90: "#F24449",
-  meses_6: "#5F8DDD",
-  meses_9: "#F7F838",
-  ano_1: "#DFDEDF",
-  meses_18: "#A1A0A0",
-  multiplos_anos: "#272727",
+  dias_30: "#FF9900",
+  dias_60: "#00B050",
+  dias_90: "#FF0000",
+  meses_6: "#2F75B5",
+  meses_9: "#FFFF00",
+  ano_1: "#F2F2F2",
+  meses_18: "#A6A6A6",
+  multiplos_anos: "#0D0D0D",
 };
 
 function isoDate(date: Date) {
@@ -312,12 +313,14 @@ export function buildMonthlyDashboardData(
         const timeAtas = weekdayAtas.filter(
           (item) => item.registro.ata.hora_inicio === time,
         );
+        const presences = timeAtas.reduce(
+          (total, item) => total + item.registro.ata.total_membros_presentes,
+          0,
+        );
         return {
           time,
-          presences: timeAtas.reduce(
-            (total, item) => total + item.registro.ata.total_membros_presentes,
-            0,
-          ),
+          presences,
+          averagePresences: roundAverage(presences, timeAtas.length),
           ingressos: timeAtas.reduce(
             (total, item) => total + item.registro.ingressos.length,
             0,

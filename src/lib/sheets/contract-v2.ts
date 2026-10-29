@@ -31,6 +31,15 @@ export const V2_NEW_SHEET_HEADERS = {
     "created_at",
     "updated_at",
   ],
+  grupo_funcoes_servidor: [
+    "grupo_funcao_servidor_id",
+    "grupo_id",
+    "nome",
+    "nome_normalizado",
+    "ativo",
+    "created_at",
+    "updated_at",
+  ],
   operacoes: [
     "operacao_id",
     "hash_solicitacao",
@@ -43,7 +52,7 @@ export const V2_NEW_SHEET_HEADERS = {
   ],
 } as const;
 
-export const V2_OPTIONAL_SHEETS = ["grupo_plataformas"] as const;
+export const V2_OPTIONAL_SHEETS = ["grupo_plataformas", "grupo_funcoes_servidor"] as const;
 
 export type AtaRegistroStatus = "ativa" | "substituida" | "excluida";
 export type AtaApprovalStatus = "aprovada" | "pendente_revisao";

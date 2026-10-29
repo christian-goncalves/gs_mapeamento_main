@@ -6,6 +6,7 @@ import { isSecureAtaLinkToken } from "@/lib/ata-link-token";
 import type {
   Ata,
   Grupo,
+  GrupoFuncaoServidor,
   GrupoHorario,
   GrupoPlataforma,
   GrupoServidorMesa,
@@ -17,9 +18,15 @@ import type {
 } from "@/domain/entities";
 import { getSheetsClient, getSpreadsheetId } from "./client";
 import { SHEET_HEADERS, type SheetName } from "./contract";
-import { groupPlatformRowsToObjects, rowsToVersionedObjects, sheetReadRange } from "./contract-v2";
+import {
+  groupPlatformRowsToObjects,
+  rowsToVersionedObjects,
+  sheetReadRange,
+  V2_NEW_SHEET_HEADERS,
+} from "./contract-v2";
 import {
   parseRows,
+  rowsToObjects,
   type LocatedObject,
   type ParsedRow,
   type RowDiagnostic,
@@ -31,6 +38,8 @@ import {
   sheetGrupoSchema,
   sheetGrupoHorarioSchema,
   sheetGrupoHorarioToDomain,
+  sheetGrupoFuncaoServidorSchema,
+  sheetGrupoFuncaoServidorToDomain,
   sheetGrupoPlataformaSchema,
   sheetGrupoPlataformaToDomain,
   sheetGrupoServidorMesaSchema,
@@ -49,6 +58,7 @@ import {
 } from "./schemas";
 
 type SheetValue = string | number | boolean;
+const groupFunctionSheet = "grupo_funcoes_servidor" as const;
 
 function normalizeHeaderAliases(name: SheetName, values: SheetValue[][]) {
   if (name !== "visitantes" || values.length === 0) return values;
@@ -125,14 +135,19 @@ async function readContractSheets() {
     },
     {} as Record<SheetName, LocatedObject[]>,
   );
-  let pendingNames: string[] = [...names, "grupo_plataformas"];
+  let pendingNames: string[] = [...names, "grupo_plataformas", groupFunctionSheet];
   let groupPlatformValues: LocatedObject[] = [];
+  let groupFunctionValues: LocatedObject[] = [];
 
   while (pendingNames.length > 0) {
     try {
       const response = await sheets.spreadsheets.values.batchGet({
         spreadsheetId: getSpreadsheetId(),
-          ranges: pendingNames.map((name) => name === "grupo_plataformas" ? "grupo_plataformas!A:I" : sheetReadRange(name as SheetName)),
+          ranges: pendingNames.map((name) => {
+            if (name === "grupo_plataformas") return "grupo_plataformas!A:I";
+            if (name === groupFunctionSheet) return "grupo_funcoes_servidor!A:G";
+            return sheetReadRange(name as SheetName);
+          }),
         valueRenderOption: "UNFORMATTED_VALUE",
         dateTimeRenderOption: "SERIAL_NUMBER",
       });
@@ -140,6 +155,10 @@ async function readContractSheets() {
         const sheetValues = (response.data.valueRanges?.[index]?.values as SheetValue[][] | undefined) ?? [];
         if (name === "grupo_plataformas") {
           groupPlatformValues = groupPlatformRowsToObjects(sheetValues);
+          return;
+        }
+        if (name === groupFunctionSheet) {
+          groupFunctionValues = rowsToObjects(V2_NEW_SHEET_HEADERS.grupo_funcoes_servidor, sheetValues);
           return;
         }
         values[name as SheetName] = rowsToVersionedObjects(
@@ -172,6 +191,7 @@ async function readContractSheets() {
     diagnostics,
     values,
     groupPlatformValues,
+    groupFunctionValues,
   };
 }
 
@@ -219,6 +239,26 @@ export async function listGrupoServidoresMesa(): Promise<
   );
 }
 
+export async function listGrupoFuncoesServidor(): Promise<
+  ParsedRow<GrupoFuncaoServidor>[]
+> {
+  const response = await getSheetsClient().spreadsheets.values.get({
+    spreadsheetId: getSpreadsheetId(),
+    range: "grupo_funcoes_servidor!A:G",
+    valueRenderOption: "UNFORMATTED_VALUE",
+    dateTimeRenderOption: "SERIAL_NUMBER",
+  });
+  return parseRows(
+    "grupo_funcoes_servidor",
+    sheetGrupoFuncaoServidorSchema,
+    rowsToObjects(
+      V2_NEW_SHEET_HEADERS.grupo_funcoes_servidor,
+      (response.data.values as SheetValue[][] | undefined) ?? [],
+    ),
+    sheetGrupoFuncaoServidorToDomain,
+  );
+}
+
 export async function listActiveGroups() {
   const rows = await listGroups();
   return rows
@@ -255,6 +295,9 @@ export async function getActiveGroupByAtaLink(link: string) {
       (horario) => horario.grupo_id === group.grupo_id && horario.ativo,
     ),
     plataformas: result.grupo_plataformas.filter((platform) => platform.grupo_id === group.grupo_id && platform.ativo),
+    funcoesServidor: (result.grupo_funcoes_servidor ?? []).filter(
+      (funcao) => funcao.grupo_id === group.grupo_id && funcao.ativo,
+    ),
   };
 }
 
@@ -375,7 +418,7 @@ export async function listTrocasChaveiro(): Promise<
 }
 
 export async function readAggregatedAtas() {
-  const { diagnostics, values, groupPlatformValues } = await readContractSheets();
+  const { diagnostics, values, groupPlatformValues, groupFunctionValues } = await readContractSheets();
 
   const grupos = parseRows(
     "grupos",
@@ -394,6 +437,12 @@ export async function readAggregatedAtas() {
     sheetGrupoServidorMesaSchema,
     values.grupo_servidores_mesa,
     sheetGrupoServidorMesaToDomain,
+  );
+  const grupo_funcoes_servidor = parseRows(
+    "grupo_funcoes_servidor",
+    sheetGrupoFuncaoServidorSchema,
+    groupFunctionValues,
+    sheetGrupoFuncaoServidorToDomain,
   );
   const atas = parseRows(
     "atas",
@@ -437,6 +486,7 @@ export async function readAggregatedAtas() {
     grupo_horarios,
     grupo_plataformas,
     grupo_servidores_mesa,
+    grupo_funcoes_servidor,
     atas,
     servidores,
     participacao,

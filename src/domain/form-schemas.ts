@@ -107,6 +107,13 @@ export const ataFormSchema = z.object({
       message: "Descreva o formato outros.",
     });
   }
+  if (ata.total_partilhas > ata.total_membros_presentes) {
+    context.addIssue({
+      code: "custom",
+      path: ["total_partilhas"],
+      message: "A quantidade de partilhas não pode ser maior que o total de membros presentes.",
+    });
+  }
 });
 
 export const servidorFormSchema = z.object({
@@ -183,6 +190,13 @@ export const ataSubmissionSchema = z
         path: ["ingressos"],
         message:
           "Para registrar um ingresso, registre primeiro pelo menos um visitante.",
+      });
+    }
+    if (submission.visitantes.length > 0 && submission.ingressos.length > submission.visitantes.length) {
+      context.addIssue({
+        code: "custom",
+        path: ["ingressos"],
+        message: "A quantidade de ingressos não pode ser maior que a quantidade de visitantes.",
       });
     }
     const visitorCities = new Set(

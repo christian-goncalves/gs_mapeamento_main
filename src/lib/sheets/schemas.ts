@@ -10,6 +10,7 @@ import {
 import type {
   Ata,
   Grupo,
+  GrupoFuncaoServidor,
   GrupoHorario,
   GrupoServidorMesa,
   Ingresso,
@@ -214,6 +215,15 @@ export const sheetGrupoServidorMesaSchema = z
     }
   });
 
+export const sheetGrupoFuncaoServidorSchema = z.object({
+  grupo_funcao_servidor_id: uuid,
+  grupo_id: uuid,
+  nome: requiredText.max(80),
+  nome_normalizado: requiredText.max(80),
+  ativo: sheetBoolean,
+  ...auditFields,
+});
+
 export const sheetUsuarioGrupoSchema = z.object({
   usuario_id: uuid,
   grupo_id: uuid,
@@ -372,6 +382,7 @@ export type SheetGrupo = z.infer<typeof sheetGrupoSchema>;
 export type SheetGrupoHorario = z.infer<typeof sheetGrupoHorarioSchema>;
 export type SheetGrupoPlataforma = z.infer<typeof sheetGrupoPlataformaSchema>;
 export type SheetGrupoServidorMesa = z.infer<typeof sheetGrupoServidorMesaSchema>;
+export type SheetGrupoFuncaoServidor = z.infer<typeof sheetGrupoFuncaoServidorSchema>;
 export type SheetUsuarioGrupo = z.infer<typeof sheetUsuarioGrupoSchema>;
 export type SheetAta = z.infer<typeof sheetAtaSchema>;
 export type SheetServidor = z.infer<typeof sheetServidorSchema>;
@@ -410,6 +421,12 @@ export const sheetGrupoServidorMesaToDomain = (
 export const domainGrupoServidorMesaToSheet = (
   item: GrupoServidorMesa,
 ): SheetGrupoServidorMesa => item;
+export const sheetGrupoFuncaoServidorToDomain = (
+  row: SheetGrupoFuncaoServidor,
+): GrupoFuncaoServidor => row;
+export const domainGrupoFuncaoServidorToSheet = (
+  item: GrupoFuncaoServidor,
+): SheetGrupoFuncaoServidor => item;
 export const sheetUsuarioGrupoToDomain = (
   row: SheetUsuarioGrupo,
 ): UsuarioGrupo => row;

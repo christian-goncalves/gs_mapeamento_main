@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { AggregatedAta } from "@/domain/aggregate";
+import { deriveAtaNumbers } from "@/domain/ata-numbering";
 import type { AppAccess } from "@/lib/auth/access";
 import { canAccessGroup } from "@/lib/auth/access";
 import { buildResponsavelAtaRows } from "@/app/responsavel/atas/responsavel-atas-data";
@@ -153,6 +154,7 @@ export function getAtaNavigation({
   const status = queryValue(searchParams, "status");
   const filledBy = queryValue(searchParams, "preenchido") ?? "";
   const order = parseOrder(queryValue(searchParams, "ordem"), source);
+  const ataNumbers = deriveAtaNumbers(atas);
   const responsiblePositions = new Map<string, number>();
   if (source === "responsavel" || source === "historico") {
     const group = atas.find((item) => item.grupo.grupo_id === currentGroupId)?.grupo;
@@ -188,7 +190,7 @@ export function getAtaNavigation({
       groupName: item.grupo.grupo_nome,
       date: ata.data_reuniao,
       time: ata.hora_inicio,
-      index: ata.indice_personalizado_grupo,
+      index: ataNumbers.get(ata.ata_id) ?? null,
       server,
       status: currentStatus,
       sourcePosition: responsiblePositions.get(ata.ata_id) ?? sourcePosition,

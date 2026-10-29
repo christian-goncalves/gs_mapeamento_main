@@ -70,17 +70,32 @@ describe("criação de ata no Sheets", () => {
     vi.clearAllMocks();
     mocks.get.mockResolvedValue({
       data: {
-        sheets: (Object.keys(SHEET_HEADERS) as SheetName[]).map((name, index) => ({
+        sheets: [
+          ...(Object.keys(SHEET_HEADERS) as SheetName[]).map((name, index) => ({
           properties: {
             title: name,
             sheetId: index + 1,
             gridProperties: { rowCount: 1000, columnCount: compatibleHeaders(name).length },
           },
-        })),
+          })),
+          {
+            properties: {
+              title: "grupo_funcoes_servidor",
+              sheetId: 99,
+              gridProperties: { rowCount: 1000, columnCount: V2_NEW_SHEET_HEADERS.grupo_funcoes_servidor.length },
+            },
+          },
+        ],
       },
     });
     mocks.updateAtaNameSuggestionsFromSubmission.mockResolvedValue({});
-    mocks.valuesGet.mockResolvedValue({ data: { values: [[...V2_NEW_SHEET_HEADERS.grupo_plataformas], ["22222222-2222-4222-8222-222222222222", groupId, "zoom", "https://zoom.example.org", "secret-access-id", "secret-pin", true, audit.created_at, audit.updated_at]] } });
+    mocks.valuesGet.mockImplementation(({ range }: { range: string }) => Promise.resolve({
+      data: {
+        values: range.startsWith("grupo_funcoes_servidor!")
+          ? [[...V2_NEW_SHEET_HEADERS.grupo_funcoes_servidor]]
+          : [[...V2_NEW_SHEET_HEADERS.grupo_plataformas], ["22222222-2222-4222-8222-222222222222", groupId, "zoom", "https://zoom.example.org", "secret-access-id", "secret-pin", true, audit.created_at, audit.updated_at]],
+      },
+    }));
   });
 
   it("aborta quando uma ata existente tem identificadores inválidos", async () => {
@@ -167,6 +182,44 @@ describe("criação de ata no Sheets", () => {
         servidores: [{ nome: "Hércules", funcao: "Coordenador" }],
       }),
     );
+  });
+
+  it("grava uma função personalizada no mesmo lote da ata", async () => {
+    mocks.batchGet.mockResolvedValue({
+      data: {
+        valueRanges: values({
+          grupos: [
+            [...SHEET_HEADERS.grupos],
+            row("grupos", {
+              grupo_id: groupId,
+              grupo_nome: "Grupo",
+              ordem: 1,
+              ativo: true,
+              ultima_reuniao_anterior: 0,
+              ...audit,
+            }),
+          ],
+        }),
+      },
+    });
+
+    await createAtaInSheets({
+      ...submission,
+      servidores: [{ nome: "Hércules", funcao: "  apoio   técnico " }],
+    }, "responsavel@example.com");
+
+    const requests = mocks.batchUpdate.mock.calls[0][0].requestBody.requests;
+    const functionRequest = requests.find((request: { updateCells?: { range?: { sheetId?: number } } }) => request.updateCells?.range?.sheetId === 99);
+    expect(functionRequest.updateCells.range.startRowIndex).toBe(1);
+    expect(functionRequest.updateCells.rows[0].values.map((cell: { userEnteredValue?: { stringValue?: string; boolValue?: boolean } }) => cell.userEnteredValue?.stringValue ?? cell.userEnteredValue?.boolValue)).toEqual([
+      expect.any(String),
+      groupId,
+      "Apoio técnico",
+      "apoio técnico",
+      true,
+      expect.any(String),
+      expect.any(String),
+    ]);
   });
 
   it("resolve a plataforma pela associação do horário recorrente, ignorando a plataforma legada do grupo", async () => {

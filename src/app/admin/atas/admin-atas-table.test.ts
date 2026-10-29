@@ -9,7 +9,7 @@ describe("admin atas table", () => {
   it("mantém o status nos dados visuais e leva os dados completos para ações", () => {
     const ata: AdminAtaRow = {
       ataId: "ata-1",
-      indicePersonalizadoGrupo: 12,
+      numeroAta: 12,
       data: "2026-07-31",
       horario: "09:00",
       grupoId: "grupo-1",

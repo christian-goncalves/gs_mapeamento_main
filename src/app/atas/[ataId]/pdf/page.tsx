@@ -21,7 +21,7 @@ export default async function AtaPdfPreviewPage({
   );
   if (!item || !canAccessGroup(access, item.grupo.grupo_id)) notFound();
 
-  const presentation = buildAtaPresentation(item);
+  const presentation = buildAtaPresentation(item, result.atas);
 
   return (
     <main className="shell ata-pdf-preview-shell">

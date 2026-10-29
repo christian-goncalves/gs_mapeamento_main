@@ -33,34 +33,41 @@ export default async function NewAtaPage() {
 
   return (
     <ResponsavelShell activeSection="responsavel" settingsHref={`/grupos/${primaryGroup.grupo_id}`}>
-      <header className="ata-new-page-header">
-        <p className="eyebrow">Nova ata</p>
-        <h1>{groups.length === 1 ? `Grupo ${groups[0].grupo_nome}` : "Selecione o grupo"}</h1>
-        <p className="muted">
-          Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
-        </p>
-      </header>
-      {groups.length === 0 ? (
-        <section className="card"><p>Nenhum grupo ativo disponível.</p></section>
-      ) : (
-        <AtaForm
-          fixedGroupId={groups.length === 1 ? groups[0].grupo_id : undefined}
-          groups={groups.map((group) => ({
-            id: group.grupo_id,
-            name: group.grupo_nome,
-            plataforma: group.plataforma,
-            fuso_horario: group.fuso_horario,
-            plataformas: result.grupo_plataformas.filter((item) => item.grupo_id === group.grupo_id && item.ativo).map((item) => item.tipo),
-            horarios: group.horarios.map((horario) => ({
-              dia_semana: horario.dia_semana,
-              hora_inicio: horario.hora_inicio,
-              link_reuniao: horario.link_reuniao,
-              plataformaTipo: result.grupo_plataformas.find((item) => item.plataforma_id === horario.plataforma_id && item.ativo)?.tipo,
-            })),
-          }))}
-          today={today}
-        />
-      )}
+      <div className="responsavel-config-page">
+        <header className="responsavel-page-header">
+          <div>
+            <p className="eyebrow">Nova ata</p>
+            <h1>{groups.length === 1 ? `Grupo ${groups[0].grupo_nome}` : "Selecione o grupo"}</h1>
+            <p className="responsavel-page-description">
+              Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
+            </p>
+          </div>
+        </header>
+        {groups.length === 0 ? (
+          <section className="card"><p>Nenhum grupo ativo disponível.</p></section>
+        ) : (
+          <AtaForm
+            fixedGroupId={groups.length === 1 ? groups[0].grupo_id : undefined}
+            groups={groups.map((group) => ({
+              id: group.grupo_id,
+              name: group.grupo_nome,
+              plataforma: group.plataforma,
+              fuso_horario: group.fuso_horario,
+              plataformas: result.grupo_plataformas.filter((item) => item.grupo_id === group.grupo_id && item.ativo).map((item) => item.tipo),
+              funcoesServidor: (result.grupo_funcoes_servidor ?? [])
+                .filter((item) => item.grupo_id === group.grupo_id && item.ativo)
+                .map((item) => item.nome),
+              horarios: group.horarios.map((horario) => ({
+                dia_semana: horario.dia_semana,
+                hora_inicio: horario.hora_inicio,
+                link_reuniao: horario.link_reuniao,
+                plataformaTipo: result.grupo_plataformas.find((item) => item.plataforma_id === horario.plataforma_id && item.ativo)?.tipo,
+              })),
+            }))}
+            today={today}
+          />
+        )}
+      </div>
     </ResponsavelShell>
   );
 }

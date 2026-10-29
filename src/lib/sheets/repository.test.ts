@@ -34,7 +34,11 @@ function sheetNameFromRange(range: string): string {
 
 function headerValueRanges(ranges: string[]) {
   return ranges.map((range) => ({
-    values: [[...(sheetNameFromRange(range) === "grupo_plataformas" ? V2_NEW_SHEET_HEADERS.grupo_plataformas : SHEET_HEADERS[sheetNameFromRange(range) as SheetName])]],
+    values: [[...(sheetNameFromRange(range) === "grupo_plataformas"
+      ? V2_NEW_SHEET_HEADERS.grupo_plataformas
+      : sheetNameFromRange(range) === "grupo_funcoes_servidor"
+        ? V2_NEW_SHEET_HEADERS.grupo_funcoes_servidor
+        : SHEET_HEADERS[sheetNameFromRange(range) as SheetName])]],
   }));
 }
 
@@ -147,7 +151,11 @@ describe("repositório Sheets", () => {
                   ],
                 };
               }
-              return { values: [[...(name === "grupo_plataformas" ? V2_NEW_SHEET_HEADERS.grupo_plataformas : SHEET_HEADERS[name])]] };
+              return { values: [[...(name === "grupo_plataformas"
+                ? V2_NEW_SHEET_HEADERS.grupo_plataformas
+                : name === "grupo_funcoes_servidor"
+                  ? V2_NEW_SHEET_HEADERS.grupo_funcoes_servidor
+                  : SHEET_HEADERS[name])]] };
             }),
           },
         }),

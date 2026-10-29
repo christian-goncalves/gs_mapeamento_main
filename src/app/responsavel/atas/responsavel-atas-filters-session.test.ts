@@ -10,7 +10,6 @@ const defaults: ResponsavelAtasFilters = {
   endDate: "2026-10-25",
   weekday: "todos",
   time: "todos",
-  preenchidoPor: "todos",
   status: "todos",
 };
 
@@ -28,7 +27,6 @@ describe("sessão dos filtros de atas do responsável", () => {
       endDate: "2026-09-30",
       weekday: "Quarta",
       time: "21:30",
-      preenchidoPor: "Maria",
       status: "Enviada",
     };
 

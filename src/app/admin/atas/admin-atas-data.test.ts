@@ -45,7 +45,7 @@ function schedule(overrides: Partial<GrupoHorario>): GrupoHorario {
 function sent(overrides: Partial<AdminAtaRow>): AdminAtaRow {
   return {
     ataId: "835af8b6-06e8-4e51-99e8-9e6106bbde7f",
-    indicePersonalizadoGrupo: 1,
+    numeroAta: 1,
     data: "2026-07-05",
     horario: "10:00",
     grupoId: group.grupo_id,

@@ -37,7 +37,6 @@ type ResponsavelAtaDataTableRow = [
   number | null,
   string,
   string,
-  string,
   ResponsavelAtaStatus,
   ResponsavelAtaRow,
 ];
@@ -83,10 +82,6 @@ function formatMobileDate(value: string) {
 function weekdayForDate(value: string) {
   const date = new Date(`${value}T00:00:00.000Z`);
   return weekdays[date.getUTCDay()];
-}
-
-function displayedPreenchedor(row: ResponsavelAtaRow) {
-  return row.servidor || (row.status === "Não enviada" ? "-" : "Sem servidor");
 }
 
 function ResponsavelAtaActions({
@@ -244,10 +239,9 @@ function ResponsavelAtaActions({
 
 function toDataTableRows(rows: ResponsavelAtaRow[]): ResponsavelAtaDataTableRow[] {
   return rows.map((row) => [
-    row.indicePersonalizadoGrupo,
+    row.numeroAta,
     row.data,
     row.horario,
-    row.servidor || (row.status === "Não enviada" ? "-" : "Sem servidor"),
     row.status,
     row,
   ]);
@@ -273,10 +267,6 @@ const columns: ConfigColumns[] = [
   {
     title: "Horário",
     className: "responsavel-centered-column responsavel-time-column",
-  },
-  {
-    title: "Preenchido por",
-    className: "responsavel-centered-column responsavel-server-column",
   },
   {
     title: "Status",
@@ -310,7 +300,6 @@ export function ResponsavelAtasTable({
     endDate: defaultEndDate,
     weekday: "todos",
     time: "todos",
-    preenchidoPor: "todos",
     status: "todos",
   }), [defaultStartDate, defaultEndDate]);
   const sessionKey = useMemo(
@@ -369,7 +358,6 @@ export function ResponsavelAtasTable({
     endDate,
     weekday: selectedWeekday,
     time: selectedTime,
-    preenchidoPor: selectedPreenchedor,
     status: selectedStatus,
   } = filters;
   const [tableOrder, setTableOrder] = useState(
@@ -387,22 +375,15 @@ export function ResponsavelAtasTable({
     () => [...new Set(modeRows.map((row) => row.horario))].sort(),
     [modeRows],
   );
-  const preenchedorOptions = useMemo(
-    () => [...new Set(modeRows
-      .filter((row) => row.ataId !== null)
-      .map(displayedPreenchedor))].sort((first, second) => first.localeCompare(second, "pt-BR")),
-    [modeRows],
-  );
   const filteredRows = useMemo(
     () => modeRows.filter((row) =>
       row.data >= startDate
       && row.data <= endDate
       && (selectedWeekday === "todos" || weekdayForDate(row.data) === selectedWeekday)
       && (selectedTime === "todos" || row.horario === selectedTime)
-      && (selectedPreenchedor === "todos" || displayedPreenchedor(row) === selectedPreenchedor)
       && (selectedStatus === "todos" || row.status === selectedStatus)
     ),
-    [modeRows, startDate, endDate, selectedWeekday, selectedTime, selectedPreenchedor, selectedStatus],
+    [modeRows, startDate, endDate, selectedWeekday, selectedTime, selectedStatus],
   );
 
   const tableRows = useMemo(
@@ -415,10 +396,9 @@ export function ResponsavelAtasTable({
     ate: endDate,
     diaSemana: selectedWeekday,
     horario: selectedTime,
-    preenchidoPor: selectedPreenchedor,
     status: selectedStatus,
     ordem: tableOrder,
-  }).toString(), [historyMode, startDate, endDate, selectedWeekday, selectedTime, selectedPreenchedor, selectedStatus, tableOrder]);
+  }).toString(), [historyMode, startDate, endDate, selectedWeekday, selectedTime, selectedStatus, tableOrder]);
 
   useEffect(() => {
     let mounted = true;
@@ -472,15 +452,6 @@ export function ResponsavelAtasTable({
           </select>
         </label>
         <label>
-          <span>Preenchido por</span>
-          <select value={selectedPreenchedor} onChange={(event) => setFilters((current) => ({ ...current, preenchidoPor: event.target.value }))}>
-            <option value="todos">Todos</option>
-            {preenchedorOptions.map((preenchedor) => (
-              <option key={preenchedor} value={preenchedor}>{preenchedor}</option>
-            ))}
-          </select>
-        </label>
-        <label>
           <span>Status</span>
           <select
             value={selectedStatus}
@@ -502,7 +473,7 @@ export function ResponsavelAtasTable({
             className="responsavel-atas-table"
             columns={columns}
             data={tableRows}
-            key={`${startDate}-${endDate}-${selectedWeekday}-${selectedTime}-${selectedPreenchedor}-${selectedStatus}`}
+            key={`${startDate}-${endDate}-${selectedWeekday}-${selectedTime}-${selectedStatus}`}
             options={{
               autoWidth: false,
               ordering: true,
@@ -553,12 +524,7 @@ export function ResponsavelAtasTable({
                   </span>
                 </>
               ),
-              3: (data: string) => (
-                <span className="responsavel-server-name" title={data}>
-                  {data}
-                </span>
-              ),
-              4: (data: ResponsavelAtaStatus) => {
+              3: (data: ResponsavelAtaStatus) => {
                 if (historyMode) return <span className={`responsavel-history-status ${data === "Substituída" ? "is-substituted" : "is-deleted"}`}>{data}</span>;
                 return (
                   <span
@@ -569,8 +535,8 @@ export function ResponsavelAtasTable({
                   />
                 );
               },
-              5: (_data: ResponsavelAtaRow, row: ResponsavelAtaDataTableRow) => {
-                const ata = row[5];
+              4: (_data: ResponsavelAtaRow, row: ResponsavelAtaDataTableRow) => {
+                const ata = row[4];
                 if (!ata.ataId) return <span aria-hidden="true" />;
 
                 return (
@@ -591,7 +557,6 @@ export function ResponsavelAtasTable({
                 <th>Ata</th>
                 <th>Data</th>
                 <th>Horário</th>
-                <th>Preenchido por</th>
                 <th>Status</th>
                 <th>Ações</th>
               </tr>

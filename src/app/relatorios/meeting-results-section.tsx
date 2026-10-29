@@ -1,6 +1,8 @@
 "use client";
 
 import { Fragment, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import type { MonthlyDashboardData } from "./monthly-group-dashboard-data";
 
 const pageSizeOptions = [
@@ -21,11 +23,11 @@ function formatDay(value: string) {
 
 const weekdayLabels: Record<string, string> = {
   domingo: "Domingo",
-  segunda: "Segunda-feira",
-  terca: "Terça-feira",
-  quarta: "Quarta-feira",
-  quinta: "Quinta-feira",
-  sexta: "Sexta-feira",
+  segunda: "Segunda",
+  terca: "Terça",
+  quarta: "Quarta",
+  quinta: "Quinta",
+  sexta: "Sexta",
   sabado: "Sábado",
 };
 
@@ -60,9 +62,6 @@ function ResponsavelMeetingResults({
           {weekdays.map((day) => {
             const isExpanded = expandedDays.has(day.weekday);
             const hasSchedules = day.schedules.length > 0;
-            const averageRowSpan = hasSchedules && isExpanded
-              ? day.schedules.length + 1
-              : undefined;
             return (
               <Fragment key={day.weekday}>
                 <tr className={isExpanded ? "meeting-weekday-summary-row is-expanded" : "meeting-weekday-summary-row"}>
@@ -75,19 +74,22 @@ function ResponsavelMeetingResults({
                       onClick={() => toggleDay(day.weekday)}
                     >
                       <span className="meeting-weekday-chevron" aria-hidden="true">
-                        {hasSchedules ? (isExpanded ? "▾" : "▸") : ""}
+                        {hasSchedules ? (
+                          <FontAwesomeIcon icon={isExpanded ? faChevronDown : faChevronRight} />
+                        ) : null}
                       </span>
                       {weekdayLabels[day.weekday] ?? day.weekday}
                     </button>
                   </th>
                   <td>{formatNumber(day.presences)}</td>
-                  <td rowSpan={averageRowSpan}>{formatNumber(day.averagePresences)}</td>
+                  <td>{formatNumber(day.averagePresences)}</td>
                   <td>{formatNumber(day.ingressos)}</td>
                 </tr>
                 {isExpanded ? day.schedules.map((schedule) => (
                   <tr className="meeting-weekday-schedule-row" key={`${day.weekday}-${schedule.time}`}>
                     <th scope="row">{schedule.time}</th>
                     <td>{formatNumber(schedule.presences)}</td>
+                    <td>{formatNumber(schedule.averagePresences)}</td>
                     <td>{formatNumber(schedule.ingressos)}</td>
                   </tr>
                 )) : null}

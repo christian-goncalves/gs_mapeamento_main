@@ -13,6 +13,7 @@ import { AtaPlatformResolutionError } from "@/domain/ata-platform";
 import { DuplicateAtaError } from "@/domain/creation";
 import { ataSubmissionSchema, type AtaSubmission } from "@/domain/form-schemas";
 import { SheetsOperationError } from "@/domain/sheets-operation-error";
+import { GroupFunctionCatalogUnavailableError } from "@/domain/server-functions";
 import {
   hiddenAtaSubmissionSchema,
   normalizeHiddenAtaSubmission,
@@ -111,6 +112,9 @@ async function persistSubmission(
       return { error: error.message };
     }
     if (error instanceof AtaPlatformResolutionError) {
+      return { error: error.message };
+    }
+    if (error instanceof GroupFunctionCatalogUnavailableError) {
       return { error: error.message };
     }
     if (error instanceof Error && /Grupo (inexistente|inativo)/.test(error.message)) {

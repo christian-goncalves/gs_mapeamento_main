@@ -17,6 +17,7 @@ import { AdminAtasTable } from "./admin-atas-table";
 import { AtaApprovalPanel } from "@/app/atas/ata-approval-panel";
 import { AtaHistoryRefresh } from "@/app/atas/ata-history-refresh";
 import { nextMissingAtaRefreshAt } from "@/domain/missing-ata-occurrences";
+import { deriveAtaNumbers } from "@/domain/ata-numbering";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,7 @@ export default async function AdminAtasPage() {
   const now = new Date();
   const monthPeriod = currentMonthPeriod(now);
   const sentRows = buildSentAtaRows(result.atas);
+  const ataNumbers = deriveAtaNumbers(result.atas);
   const missingRows = buildMissingAtaRows({
     grupos: result.grupos,
     horarios: result.grupo_horarios,
@@ -54,7 +56,7 @@ export default async function AdminAtasPage() {
     .map(({ grupo, registro }) => ({
       ataId: registro.ata.ata_id,
       updatedAt: registro.ata.updated_at,
-      index: registro.ata.indice_personalizado_grupo,
+      index: ataNumbers.get(registro.ata.ata_id) ?? 0,
       date: registro.ata.data_reuniao,
       time: registro.ata.hora_inicio,
       group: grupo.grupo_nome,

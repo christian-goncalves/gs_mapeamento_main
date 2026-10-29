@@ -1,6 +1,7 @@
 import type {
   Ata,
   Grupo,
+  GrupoFuncaoServidor,
   GrupoHorario,
   GrupoPlataforma,
   GrupoServidorMesa,
@@ -19,6 +20,7 @@ export type ContractRows = {
   grupo_horarios: ValidRow<GrupoHorario>[];
   grupo_plataformas?: ValidRow<GrupoPlataforma>[];
   grupo_servidores_mesa: ValidRow<GrupoServidorMesa>[];
+  grupo_funcoes_servidor?: ValidRow<GrupoFuncaoServidor>[];
   atas: ValidRow<Ata>[];
   servidores: ValidRow<Servidor>[];
   participacao: ValidRow<Participacao>[];

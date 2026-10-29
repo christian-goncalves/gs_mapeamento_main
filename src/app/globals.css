@@ -62,7 +62,8 @@ dd { margin: .2rem 0 0; overflow-wrap: anywhere; font-weight: 700; }
 .ata-index-form-row .icon-button { min-width: 7.5rem; }
 .form-shell { display: grid; gap: 1rem; }
 .form-shell header h1, .form-shell header p { margin: 0; }
-.ata-new-page-header h1 { margin: 0; color: #102033; text-transform: uppercase; line-height: 1.05; overflow-wrap: anywhere; }
+.public-ata-page .responsavel-page-description { margin: .55rem 0 0; }
+.ata-new-page-header h1 { margin: 0; color: #102033; line-height: 1.05; overflow-wrap: anywhere; }
 .creation-form { display: grid; gap: 1rem; }
 .form-section { display: grid; gap: 1.25rem; }
 .settings-accordion { display: block; }
@@ -249,10 +250,13 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .dashboard-metrics-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; }
 .dashboard-metrics-grid-responsavel { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .dashboard-metric-card-full-row { grid-column: 1 / -1; }
-.dashboard-metrics-grid-responsavel .dashboard-metric-card { min-height: 6rem; align-content: start; justify-items: start; padding: .85rem .65rem; text-align: left; }
+.dashboard-metrics-grid-responsavel .dashboard-metric-card,
+.dashboard-achievements-cards .dashboard-achievement-card { min-height: 4.5rem; align-content: start; justify-items: start; gap: .3rem; padding: .85rem .65rem; text-align: left; }
 .dashboard-metrics-grid-responsavel .dashboard-metric-icon { display: none; }
-.dashboard-metrics-grid-responsavel .dashboard-metric-card h3 { width: 100%; max-width: none; color: #b8c0ca; font-size: calc(.882rem - 3.6px); font-weight: 700; text-align: left; text-transform: uppercase; }
-.dashboard-metrics-grid-responsavel .dashboard-metric-card strong { justify-self: start; text-align: left; }
+.dashboard-metrics-grid-responsavel .dashboard-metric-card h3,
+.dashboard-achievements-cards .dashboard-achievement-label { width: 100%; max-width: none; color: #b8c0ca; font-size: calc(.882rem - 3.6px); font-weight: 700; text-align: left; text-transform: uppercase; }
+.dashboard-metrics-grid-responsavel .dashboard-metric-card strong,
+.dashboard-achievements-cards .dashboard-achievement-card strong { justify-self: start; text-align: left; }
 .dashboard-metric-card { display: grid; min-height: 11rem; align-content: center; justify-items: center; gap: .55rem; border: 1px solid #e3e7e4; border-radius: 8px; padding: 1rem; text-align: center; background: #fff; }
 .dashboard-responsavel-consolidated .dashboard-metrics-grid .dashboard-metric-card { border-color: #def1e6; }
 .dashboard-responsavel-consolidated .dashboard-metrics-grid .dashboard-metric-card h3 { color: #999; }
@@ -279,14 +283,16 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .meeting-results-table th:first-child, .meeting-results-table td:first-child { width: 42%; }
 .meeting-results-table-weekday th:first-child, .meeting-results-table-weekday td:first-child { width: calc(8.05em + 2rem); }
 .meeting-results-table tbody td { padding-block: .36rem; line-height: 1.2; }
-.meeting-weekday-toggle { display: inline-flex; width: 100%; align-items: center; justify-content: flex-start; gap: .45rem; min-height: 0; padding: 0; border-radius: 0; background: transparent; color: inherit; font-weight: 800; text-align: left; }
+.meeting-weekday-toggle { position: relative; display: inline-flex; width: 100%; align-items: center; justify-content: center; gap: .45rem; min-height: 0; padding: 0; border-radius: 0; background: transparent; color: inherit; font-weight: 800; text-align: center; }
 .meeting-weekday-toggle:disabled { color: inherit; opacity: 1; cursor: default; }
 .meeting-weekday-toggle:not(:disabled):hover, .meeting-weekday-toggle:not(:disabled):focus-visible { background: transparent; color: var(--brand); }
 .meeting-weekday-toggle:focus-visible { outline: 2px solid color-mix(in srgb, var(--brand) 50%, transparent); outline-offset: 3px; }
-.meeting-weekday-chevron { display: inline-block; width: .85rem; color: var(--brand); font-size: 1rem; line-height: 1; }
+.meeting-weekday-chevron { position: absolute; left: 0; display: inline-flex; width: .85rem; align-items: center; justify-content: center; color: var(--brand); font-size: 1rem; line-height: 1; }
+.meeting-weekday-chevron svg { display: block; width: .7rem; height: .7rem; }
 .meeting-weekday-summary-row > *, .meeting-weekday-schedule-row > * { vertical-align: middle; }
-.meeting-weekday-schedule-row th { padding-left: 2.25rem; font-weight: 700; }
-.meeting-weekday-summary-row.is-expanded > * { background: #f8fbf9; }
+.meeting-results-table-weekday .meeting-weekday-schedule-row th { padding-block: .55rem; padding-inline: 1rem; font-weight: 400; text-align: center; }
+.meeting-results-table-weekday .meeting-weekday-schedule-row td { padding-block: calc(.36rem * .8); }
+.meeting-weekday-summary-row.is-expanded > * { background: #eaf4ee; color: #111827; }
 .meeting-pagination-footer { display: flex; align-items: center; justify-content: space-between; gap: .75rem; color: var(--muted); font-size: .85rem; }
 .meeting-pagination-summary { margin: 0; }
 .meeting-pagination-nav { display: flex; align-items: center; justify-content: flex-end; gap: .5rem; }
@@ -302,7 +308,8 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .dashboard-achievements-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
 .dashboard-achievement-card { display: grid; min-height: 6rem; align-content: start; justify-items: start; gap: .3rem; border: 1px solid #d5e0ec; border-radius: 8px; padding: .85rem .65rem; text-align: left; background: #fff; }
 .dashboard-achievements-cards .dashboard-achievement-card { border-color: #def1e6; }
-.dashboard-achievement-label { width: 100%; margin: 0; color: #5b6f86; font-size: .8rem; line-height: 1.2; font-weight: 700; text-align: left; text-transform: uppercase; }
+.dashboard-achievement-label { display: flex; width: 100%; align-items: center; gap: .35rem; margin: 0; color: #5b6f86; font-size: .8rem; line-height: 1.2; font-weight: 700; text-align: left; text-transform: uppercase; }
+.dashboard-achievement-dot { display: inline-block; flex: 0 0 .385rem; width: .385rem; height: .385rem; border-radius: 50%; }
 .dashboard-achievements-cards .dashboard-achievement-label { color: #999; font-size: calc(.882rem - 3.6px); }
 .dashboard-achievement-card strong { display: block; color: #1d4ed8; font-size: 2rem; line-height: 1; text-align: left; }
 .dashboard-achievements-cards .dashboard-achievement-card strong { color: #102033; }
@@ -315,6 +322,8 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .dashboard-responsavel-mesa-table thead th { color: #6b7280; font-size: calc(.98rem - 4px + 1pt); text-transform: uppercase; }
 .dashboard-responsavel-mesa-table tbody th { font-size: calc(.85rem + 1pt); }
 .dashboard-responsavel-mesa-table tbody td { font-size: calc(1rem + 1pt); }
+.dashboard-responsavel-mesa-table thead th,
+.meeting-results-table-weekday thead th { background: #007a55; color: #fff; }
 .dashboard-footer { display: flex; align-items: center; justify-content: center; gap: .65rem; color: var(--muted); font-size: .95rem; }
 .dashboard-footer svg { color: #008a5b; }
 
@@ -479,6 +488,12 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .message-close:hover { background: rgb(0 0 0 / 6%); }
 .modal-backdrop { position: fixed; z-index: 20; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgb(16 28 21 / 65%); }
 .confirmation-modal { width: min(1040px, 100%); max-height: calc(100vh - 2rem); overflow-y: auto; border-radius: 16px; padding: 1.5rem; background: var(--surface); box-shadow: 0 20px 60px rgb(0 0 0 / 25%); scrollbar-gutter: stable; }
+.server-function-modal-backdrop { z-index: 40; }
+.server-function-modal { width: min(26rem, calc(100vw - 2rem)); scrollbar-gutter: auto; }
+.server-function-modal h2 { margin: 0 0 1rem; color: var(--brand); }
+.server-function-modal > label { display: grid; gap: .4rem; }
+.server-function-modal .modal-actions { position: static; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 1.25rem 0 0; padding: 1rem 0 0; box-shadow: none; }
+.server-function-modal .modal-actions button { width: 100%; min-width: 0; }
 .ata-delete-backdrop { z-index: 120; }
 .ata-delete-modal { width: min(34rem, 100%); }
 .ata-delete-modal form { display: grid; gap: 1rem; }
@@ -1032,6 +1047,8 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .meeting-results-table-weekday th:first-child,
   .meeting-results-table-weekday td:first-child { width: calc(8.05em + .5rem); white-space: nowrap; }
   .meeting-results-table-weekday th:not(:first-child) { overflow-wrap: anywhere; }
+  .meeting-results-table-weekday .meeting-weekday-schedule-row th { padding-block: .28rem; padding-inline: .25rem; font-weight: 400; text-align: center; }
+  .meeting-results-table-weekday .meeting-weekday-schedule-row td { padding-block: .08rem; }
   .meeting-pagination-footer { display: grid; justify-content: stretch; }
   .meeting-pagination-nav { justify-content: space-between; }
   .meeting-page-nav-button { padding-inline: .55rem; }
@@ -1197,10 +1214,13 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .dashboard-metric-card:nth-child(n + 7) { grid-column: span 2; }
   .dashboard-metrics-grid-responsavel { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .dashboard-metrics-grid-responsavel .dashboard-metric-card { grid-column: auto; }
-  .dashboard-metrics-grid-responsavel .dashboard-metric-card { min-height: 4.8rem; gap: .3rem; padding: .4rem .3rem; }
+  .dashboard-metrics-grid-responsavel .dashboard-metric-card,
+  .dashboard-achievements-cards .dashboard-achievement-card { min-height: 3.6rem; gap: .3rem; padding: .4rem .3rem; }
   .dashboard-metrics-grid-responsavel .dashboard-metric-card { font-size: 1.5rem; }
-  .dashboard-metrics-grid-responsavel .dashboard-metric-card h3 { font-size: .3285em; }
-  .dashboard-metrics-grid-responsavel .dashboard-metric-card strong { font-size: 1em; }
+  .dashboard-metrics-grid-responsavel .dashboard-metric-card h3,
+  .dashboard-achievements-cards .dashboard-achievement-label { font-size: .3285em; line-height: 1.25; }
+  .dashboard-metrics-grid-responsavel .dashboard-metric-card strong,
+  .dashboard-achievements-cards .dashboard-achievement-card strong { font-size: 1em; }
   .dashboard-metrics-grid-responsavel .dashboard-metric-card-full-row { grid-column: 1 / -1; }
   .dashboard-metric-icon { width: 1.75rem; height: 1.75rem; font-size: .825rem; }
   .dashboard-metric-card h3 { font-size: .8rem; line-height: 1.25; }
@@ -1213,12 +1233,9 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .dashboard-achievements .achievement-total-row th,
   .dashboard-achievements .achievement-total-row td { font-size: .9rem; }
   .dashboard-achievements-grid { gap: .5rem; }
-  .dashboard-achievement-card { min-height: 4.8rem; gap: .25rem; padding: .55rem .3rem; }
   .dashboard-achievement-label { gap: .25rem; font-size: .65rem; }
   .dashboard-achievement-card strong { font-size: 1.5rem; }
   .dashboard-achievements-cards .dashboard-achievement-card { font-size: 1.5rem; }
-  .dashboard-achievements-cards .dashboard-achievement-label { font-size: .3285em; }
-  .dashboard-achievements-cards .dashboard-achievement-card strong { font-size: 1em; }
   .dashboard-mesa-table th,
   .dashboard-mesa-table td { height: 2rem; padding-block: .25rem; vertical-align: middle; }
   .mesa-summary-table-actions th:first-child { width: 32%; }
@@ -1274,10 +1291,14 @@ legend { padding: 0 .35rem; font-weight: 700; }
 @media (max-width: 500px) {
   .meeting-results-table thead th,
   .dashboard-responsavel-mesa-table thead th { font-size: .6507rem; }
+  .meeting-results-table-weekday tbody th { font-size: .6rem; }
   .meeting-results-table tbody td,
   .dashboard-responsavel-mesa-table tbody th,
   .dashboard-responsavel-mesa-table tbody td { font-size: .6rem; }
   .dashboard-filters-responsavel .dashboard-filter-period-label { font-size: .6507rem; }
   .dashboard-filters-responsavel select[name="mes"],
   .dashboard-filters-responsavel select[name="ano"] { font-size: .6rem; }
+  .dashboard-filters-responsavel select[name="mes"],
+  .dashboard-filters-responsavel select[name="ano"] { min-height: 2.25rem; padding-block: .45rem; }
+  .dashboard-filters-responsavel .dashboard-pdf-button { min-height: 2.25rem; padding-block: .45rem; }
 }

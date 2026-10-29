@@ -39,7 +39,7 @@ export async function POST(
   }
 
   try {
-    const presentation = buildAtaPresentation(item);
+    const presentation = buildAtaPresentation(item, result.atas);
     const pdf = await renderAtaPdf(presentation);
     await sendAtaPdfEmail({
       presentation,

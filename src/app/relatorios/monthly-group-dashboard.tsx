@@ -130,7 +130,7 @@ export function MonthlyGroupDashboard({
           <div>
             <p className="eyebrow">Relatórios</p>
             <h1>
-              GRUPO {data.group.grupo_nome.toLocaleUpperCase("pt-BR")}
+              Grupo {data.group.grupo_nome}
             </h1>
             <p className="responsavel-page-description">
               Visualize as informações por período.
@@ -271,6 +271,11 @@ export function MonthlyGroupDashboard({
                 {data.achievements.rows.map((row) => (
                   <article className="dashboard-achievement-card" key={row.code}>
                     <h3 className="dashboard-achievement-label">
+                      <span
+                        className="dashboard-achievement-dot"
+                        style={{ backgroundColor: row.color }}
+                        aria-hidden="true"
+                      />
                       {row.label}
                     </h3>
                     <strong>{formatNumber(row.value)}</strong>
