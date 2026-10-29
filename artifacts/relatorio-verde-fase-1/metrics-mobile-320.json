@@ -1,0 +1,25 @@
+{
+  "url": "http://localhost:3000/responsavel/relatorios",
+  "viewport": {
+    "width": 213,
+    "height": 800
+  },
+  "overflow": {
+    "documentScrollWidth": 203,
+    "bodyScrollWidth": 203,
+    "viewportWidth": 213
+  },
+  "pagination": false,
+  "weekdaySummaryRows": 7,
+  "expandedScheduleRows": 0,
+  "pdf": {
+    "x": 215.3854217529297,
+    "y": 321.72918701171875,
+    "width": 36,
+    "height": 36,
+    "top": 321.72918701171875,
+    "right": 251.3854217529297,
+    "bottom": 357.72918701171875,
+    "left": 215.3854217529297
+  }
+}

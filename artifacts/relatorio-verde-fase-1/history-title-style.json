@@ -1,0 +1,15 @@
+{
+  "text": "Grupo USL",
+  "fontFamily": "Arial, sans-serif",
+  "fontSize": "32px",
+  "fontWeight": "700",
+  "lineHeight": "35.2px",
+  "color": "rgb(16, 32, 51)",
+  "rect": {
+    "x": 16,
+    "y": 111.86458587646484,
+    "width": 248.05209350585938,
+    "height": 35.19791793823242
+  },
+  "url": "http://localhost:3000/responsavel/atas"
+}

@@ -1,0 +1,13 @@
+{
+  "url": "http://localhost:3000/responsavel/relatorios?mes=9&ano=2026",
+  "month": "9",
+  "year": "2026",
+  "footer": "Dados consolidados do grupo USL referentes a Setembro/2026.",
+  "heading": "Grupo USL",
+  "overflow": {
+    "documentScrollWidth": 502,
+    "bodyScrollWidth": 502,
+    "viewportWidth": 512
+  },
+  "pagination": false
+}

@@ -1,0 +1,262 @@
+{
+  "url": "http://localhost:3000/responsavel/relatorios",
+  "viewport": {
+    "width": 960,
+    "height": 667
+  },
+  "overflow": {
+    "documentScrollWidth": 950,
+    "bodyScrollWidth": 950,
+    "viewportWidth": 960
+  },
+  "heading": "Grupo USL",
+  "group": "Grupo USL",
+  "month": "10",
+  "year": "2026",
+  "footer": "Dados consolidados do grupo USL referentes a Outubro/2026.",
+  "pagination": false,
+  "weekdaySummaryRows": 7,
+  "expandedScheduleRows": 0,
+  "selectors": {
+    "page": {
+      "rect": {
+        "x": 20,
+        "y": 104.66667175292969,
+        "width": 910,
+        "height": 1534.2083740234375
+      },
+      "fontFamily": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "24px",
+      "color": "rgb(28, 36, 48)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderColor": "rgb(28, 36, 48)",
+      "borderWidth": "0px",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "gap": "normal"
+    },
+    "header": {
+      "rect": {
+        "x": 20,
+        "y": 104.66667175292969,
+        "width": 910,
+        "height": 76.13542175292969
+      },
+      "fontFamily": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "24px",
+      "color": "rgb(28, 36, 48)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderColor": "rgb(28, 36, 48)",
+      "borderWidth": "0px",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "gap": "16px"
+    },
+    "filters": {
+      "rect": {
+        "x": 20,
+        "y": 204.80209350585938,
+        "width": 910,
+        "height": 84.92708587646484
+      },
+      "fontFamily": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "24px",
+      "color": "rgb(28, 36, 48)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(223, 227, 232)",
+      "borderWidth": "0.666667px",
+      "borderRadius": "12px",
+      "padding": "12px",
+      "gap": "12px"
+    },
+    "servers": {
+      "rect": {
+        "x": 20,
+        "y": 301.72918701171875,
+        "width": 910,
+        "height": 178.08334350585938
+      },
+      "fontFamily": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "24px",
+      "color": "rgb(28, 36, 48)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(223, 227, 232)",
+      "borderWidth": "0.666667px",
+      "borderRadius": "12px",
+      "padding": "12px",
+      "gap": "12px"
+    },
+    "consolidated": {
+      "rect": {
+        "x": 20,
+        "y": 491.8125,
+        "width": 910,
+        "height": 388.21875
+      },
+      "fontFamily": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "24px",
+      "color": "rgb(28, 36, 48)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(223, 227, 232)",
+      "borderWidth": "0.666667px",
+      "borderRadius": "12px",
+      "padding": "12px",
+      "gap": "12px"
+    },
+    "meetings": {
+      "rect": {
+        "x": 20,
+        "y": 892.03125,
+        "width": 910,
+        "height": 401.94793701171875
+      },
+      "fontFamily": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "24px",
+      "color": "rgb(28, 36, 48)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(223, 227, 232)",
+      "borderWidth": "0.666667px",
+      "borderRadius": "12px",
+      "padding": "12px",
+      "gap": "12px"
+    },
+    "metrics": {
+      "rect": {
+        "x": 32.66666793823242,
+        "y": 538.0729370117188,
+        "width": 884.6666870117188,
+        "height": 329.29168701171875
+      },
+      "fontFamily": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "24px",
+      "color": "rgb(28, 36, 48)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderColor": "rgb(28, 36, 48)",
+      "borderWidth": "0px",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "gap": "12px"
+    },
+    "achievements": {
+      "rect": {
+        "x": 20,
+        "y": 1305.979248046875,
+        "width": 910,
+        "height": 302.8958435058594
+      },
+      "fontFamily": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "24px",
+      "color": "rgb(28, 36, 48)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(223, 227, 232)",
+      "borderWidth": "0.666667px",
+      "borderRadius": "12px",
+      "padding": "12px",
+      "gap": "12px"
+    },
+    "footer": {
+      "rect": {
+        "x": 20,
+        "y": 1620.875,
+        "width": 910,
+        "height": 18
+      },
+      "fontFamily": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "12px",
+      "fontWeight": "400",
+      "lineHeight": "18px",
+      "color": "rgb(91, 102, 117)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderColor": "rgb(91, 102, 117)",
+      "borderWidth": "0px",
+      "borderRadius": "0px",
+      "padding": "0px",
+      "gap": "10.4px"
+    },
+    "mesaTable": {
+      "rect": {
+        "x": 32.66666793823242,
+        "y": 347.9895935058594,
+        "width": 884.6666870117188,
+        "height": 119.15625
+      },
+      "fontFamily": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "24px",
+      "color": "rgb(28, 36, 48)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderColor": "rgb(228, 237, 246)",
+      "borderWidth": "0.666667px",
+      "borderRadius": "8px",
+      "padding": "0px",
+      "gap": "normal"
+    },
+    "meetingTable": {
+      "rect": {
+        "x": 32.66666793823242,
+        "y": 938.2916870117188,
+        "width": 884.6666870117188,
+        "height": 343.0208435058594
+      },
+      "fontFamily": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "lineHeight": "24px",
+      "color": "rgb(28, 36, 48)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderColor": "rgb(228, 237, 246)",
+      "borderWidth": "0.666667px",
+      "borderRadius": "8px",
+      "padding": "0px",
+      "gap": "normal"
+    },
+    "pdf": {
+      "rect": {
+        "x": 829.3333740234375,
+        "y": 240.27084350585938,
+        "width": 88,
+        "height": 36.79166793823242
+      },
+      "fontFamily": "system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "14px",
+      "fontWeight": "600",
+      "lineHeight": "16.8px",
+      "color": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(43, 108, 176)",
+      "borderColor": "rgb(255, 255, 255)",
+      "borderWidth": "0px",
+      "borderRadius": "8px",
+      "padding": "10px 12px",
+      "gap": "normal"
+    }
+  },
+  "sheetRect": {
+    "x": 20,
+    "y": 204.80209350585938,
+    "width": 910,
+    "height": 1434.072998046875
+  },
+  "pageRect": {
+    "x": 20,
+    "y": 104.66667175292969,
+    "width": 910,
+    "height": 1534.2083740234375
+  }
+}

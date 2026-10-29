@@ -1,0 +1,10 @@
+{
+  "ariaExpanded": "true",
+  "expandedScheduleRows": 3,
+  "firstScheduleText": "10:30000",
+  "overflow": {
+    "documentScrollWidth": 502,
+    "bodyScrollWidth": 502,
+    "viewportWidth": 512
+  }
+}

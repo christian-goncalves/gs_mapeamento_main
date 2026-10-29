@@ -1,0 +1,97 @@
+{
+  "url": "http://localhost:3000/responsavel/relatorios",
+  "viewport": {
+    "width": 250,
+    "height": 800
+  },
+  "overflow": {
+    "documentScrollWidth": 240,
+    "bodyScrollWidth": 240,
+    "viewportWidth": 250
+  },
+  "month": "10",
+  "year": "2026",
+  "pagination": false,
+  "weekdaySummaryRows": 7,
+  "expandedScheduleRows": 0,
+  "rects": {
+    "page": {
+      "x": 16,
+      "y": 92.66667175292969,
+      "width": 248.05209350585938,
+      "height": 2247.916748046875
+    },
+    "filters": {
+      "x": 16,
+      "y": 285.46875,
+      "width": 248.05209350585938,
+      "height": 84.92708587646484
+    },
+    "pdf": {
+      "x": 215.3854217529297,
+      "y": 321.72918701171875,
+      "width": 36,
+      "height": 36
+    },
+    "metrics": {
+      "x": 28.666667938232422,
+      "y": 678.3333740234375,
+      "width": 222.71875,
+      "height": 526.3333740234375
+    },
+    "meetingTable": {
+      "x": 28.666667938232422,
+      "y": 1275.59375,
+      "width": 222.71875,
+      "height": 505.5833435058594
+    },
+    "footer": {
+      "x": 16,
+      "y": 2304.58349609375,
+      "width": 248.05209350585938,
+      "height": 36
+    }
+  },
+  "styles": {
+    "filters": {
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(28, 36, 48)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(223, 227, 232)",
+      "borderRadius": "12px",
+      "padding": "12px",
+      "gap": "12px"
+    },
+    "pdf": {
+      "fontSize": "14px",
+      "fontWeight": "600",
+      "color": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(43, 108, 176)",
+      "borderColor": "rgb(255, 255, 255)",
+      "borderRadius": "8px",
+      "padding": "10px 12px",
+      "gap": "normal"
+    },
+    "metric": {
+      "fontSize": "24px",
+      "fontWeight": "400",
+      "color": "rgb(28, 36, 48)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(223, 227, 232)",
+      "borderRadius": "12px",
+      "padding": "12px",
+      "gap": "4.8px"
+    },
+    "meetingTable": {
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(28, 36, 48)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderColor": "rgb(228, 237, 246)",
+      "borderRadius": "8px",
+      "padding": "0px",
+      "gap": "normal"
+    }
+  }
+}

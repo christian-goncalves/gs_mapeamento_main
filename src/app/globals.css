@@ -1264,6 +1264,9 @@ legend { padding: 0 .35rem; font-weight: 700; }
     background: white;
     break-inside: avoid;
   }
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .monthly-dashboard-sheet-responsavel {
+    break-inside: auto;
+  }
   .monthly-dashboard-hero { grid-template-columns: 3.5rem minmax(0, 1fr); gap: .8rem; }
   .monthly-dashboard-hero-icon { width: 3.5rem; height: 3.5rem; font-size: 1.35rem; }
   .monthly-dashboard-hero h1 { font-size: 24pt; }
@@ -1365,70 +1368,183 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .responsavel-atas-page-header .responsavel-page-header-actions .button-content { gap: .5rem; }
 }
 
-/* Keep the green responsible report at the blue report's readable scale.
-   The green palette and type family remain unchanged. */
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .responsavel-page-description {
-  font-size: .875rem;
+/* Fase 1: tipologia do relatório real, isolada do shell e dos consumidores
+   compartilhados do dashboard. */
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) {
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel .dashboard-filter-period-label {
-  font-size: .75rem;
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-title h1 {
+  color: #0b3a7a;
+  font-size: 32px;
+  line-height: 1.1;
 }
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel select[name="mes"],
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel select[name="ano"] {
-  font-size: .875rem;
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-title .eyebrow {
+  color: #1d4ed8;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .responsavel-page-description {
+  color: #5b6675;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-title .button-link {
+  border: 1px solid #dfe3e8;
+  background: #fff;
+  color: #2b6cb0;
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 0;
+  padding: 10px 12px;
+  box-shadow: none;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .monthly-dashboard-sheet-responsavel {
+  gap: 12px;
+  background: transparent;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel {
+  gap: 12px;
+  border: 1px solid #dfe3e8;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel .dashboard-filter-period-label {
+  color: #5b6675;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel select[name="mes"],
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel select[name="ano"] {
+  border-color: #dfe3e8;
+  font-size: 14px;
+  font-weight: 600;
   min-height: 2.25rem;
   padding-block: .45rem;
 }
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel .dashboard-pdf-button {
-  font-size: .8rem;
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel .dashboard-pdf-button {
+  border-radius: 8px;
+  background: #2b6cb0;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 600;
   min-height: 2.25rem;
-  padding-block: .45rem;
+  padding: 10px 12px;
 }
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel {
-  gap: .625rem;
-  padding: .75rem;
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-consolidated,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-meeting-results,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-cards {
+  gap: 12px;
+  border: 1px solid #dfe3e8;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
 }
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel,
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-grid {
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa .dashboard-section-title h2,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-consolidated .dashboard-section-title h2,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-meeting-results .dashboard-section-title h2,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-cards .dashboard-section-title h2 {
+  color: #1c2430;
+  font-size: 18px;
+  line-height: 1.2;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-grid {
+  gap: 12px;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel .dashboard-metric-card h3,
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-cards .dashboard-achievement-label {
-  font-size: .6875rem;
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel .dashboard-metric-card,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-cards .dashboard-achievement-card {
+  border: 1px solid #dfe3e8;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
 }
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel .dashboard-metric-card strong,
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-cards .dashboard-achievement-card strong {
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel .dashboard-metric-card h3,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-cards .dashboard-achievement-label {
+  color: #5b6675;
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel .dashboard-metric-card strong,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-cards .dashboard-achievement-card strong {
+  color: #1d4ed8;
   font-size: 1.875rem;
 }
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table th,
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table td {
-  font-size: .8125rem;
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-table-wrap {
+  min-width: 0;
 }
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody th,
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody td {
-  font-size: .8125rem;
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday {
+  border-color: #e4edf6;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table th,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table td,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday th,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday td {
+  border-color: #e4edf6;
+  color: #1c2430;
+  padding: .6rem .55rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  vertical-align: middle;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table thead th,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday thead th {
+  background: #f8fbff;
+  color: #4f76a0;
+  font-size: calc(.98rem - 4px + 1pt);
+  text-transform: uppercase;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody th,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday tbody th {
+  font-size: calc(.85rem + 1pt);
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody td,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday tbody td {
+  font-size: calc(1rem + 1pt);
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-weekday-summary-row.is-expanded > * {
+  background: #f8fbff;
+  color: #1c2430;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-footer {
+  color: #5b6675;
+  font-size: .75rem;
+  text-align: center;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-footer svg {
+  color: #2b6cb0;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-weekday-toggle:not(:disabled):hover,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-weekday-toggle:not(:disabled):focus-visible,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-weekday-chevron {
+  color: #0b3a7a;
 }
 
 @media (max-width: 600px) {
-  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel,
-  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-grid {
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel,
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table th,
-  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table td {
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table th,
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table td {
     font-size: .7rem;
   }
-  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody th,
-  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody td {
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody th,
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody td {
     font-size: .7rem;
   }
 }
 
 @media (max-width: 599px) {
-  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel {
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel {
     grid-template-columns: repeat(2, minmax(0, 1fr)) 2.25rem;
   }
-  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-pdf-button {
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-pdf-button {
     width: 2.25rem;
     min-width: 2.25rem;
     height: 2.25rem;
@@ -1436,20 +1552,20 @@ legend { padding: 0 .35rem; font-weight: 700; }
     padding-inline: 0;
     justify-self: end;
   }
-  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-pdf-button .button-content {
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-pdf-button .button-content {
     gap: 0;
   }
-  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-pdf-button-label {
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-pdf-button-label {
     display: none;
   }
 }
 
 /* Table body values follow the blue report's stable scale at every width. */
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody th,
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table tbody th {
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody th,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table tbody th {
   font-size: calc(.85rem + 1pt);
 }
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody td,
-.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table tbody td {
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody td,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table tbody td {
   font-size: calc(1rem + 1pt);
 }

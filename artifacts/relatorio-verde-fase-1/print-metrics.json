@@ -1,0 +1,58 @@
+{
+  "media": true,
+  "filters": {
+    "display": "none",
+    "visibility": "visible",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    }
+  },
+  "sidebar": {
+    "display": "none",
+    "visibility": "visible",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    }
+  },
+  "menu": {
+    "display": "none",
+    "visibility": "visible",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 0,
+      "height": 0
+    }
+  },
+  "main": {
+    "display": "block",
+    "visibility": "visible",
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "width": 502,
+      "height": 1845.8958740234375
+    }
+  },
+  "sheet": {
+    "display": "grid",
+    "visibility": "visible",
+    "rect": {
+      "x": 0,
+      "y": 154.2604217529297,
+      "width": 502,
+      "height": 1691.635498046875
+    }
+  },
+  "overflow": {
+    "documentScrollWidth": 502,
+    "bodyScrollWidth": 502,
+    "viewportWidth": 512
+  }
+}

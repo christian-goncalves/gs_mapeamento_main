@@ -1,0 +1,24 @@
+{
+  "url": "http://localhost:3000/responsavel/relatorios?mes=10&ano=2026",
+  "heading": "Grupo USL",
+  "eyebrow": "Relatórios",
+  "headingStyle": {
+    "fontSize": "32px",
+    "fontWeight": "700",
+    "lineHeight": "35.2px",
+    "color": "rgb(11, 58, 122)"
+  },
+  "eyebrowStyle": {
+    "fontSize": "12.8px",
+    "fontWeight": "700",
+    "color": "rgb(11, 58, 122)"
+  },
+  "hoverActive": false,
+  "dayColor": "rgb(28, 36, 48)",
+  "chevronColor": "rgb(11, 58, 122)",
+  "overflow": {
+    "documentScrollWidth": 450,
+    "bodyScrollWidth": 450,
+    "viewportWidth": 468
+  }
+}

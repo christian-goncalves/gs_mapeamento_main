@@ -1,0 +1,7 @@
+{
+  "buttonHover": true,
+  "buttonColor": "rgb(11, 58, 122)",
+  "chevronColor": "rgb(11, 58, 122)",
+  "expected": "#0b3a7a",
+  "url": "http://localhost:3000/responsavel/relatorios?mes=9&ano=2026"
+}

@@ -1,0 +1,37 @@
+- generic [ref=f1e1] [box=0,0,828,1671]:
+  - main [ref=f1e2] [box=0,0,828,1671]:
+    - complementary "Navegação do responsável" [ref=f1e3] [box=0,0,828,73]:
+      - generic [ref=f1e4] [box=16,12,796,48]:
+        - link "Página inicial do responsável" [ref=f1e5] [cursor=pointer] [box=16,12,188,48]:
+          - /url: /responsavel/atas
+          - generic [ref=f1e6] [box=60,26,144,20]: GS Mapeamento
+        - button "Abrir menu" [ref=f1e7] [cursor=pointer] [box=768,14,44,44]
+    - generic [ref=f1e10] [box=20,105,788,1534]:
+      - generic [ref=f1e11] [box=20,105,788,76]:
+        - generic [ref=f1e12] [box=20,105,250,76]:
+          - paragraph [ref=f1e13] [box=20,105,250,19]: Relatórios
+          - heading "Grupo USL" [level=1] [ref=f1e14] [box=20,124,250,26]
+          - paragraph [ref=f1e15] [box=20,159,250,22]: Visualize as informações por período.
+        - link "Abrir o painel azul de relatórios" [ref=f1e17] [cursor=pointer] [box=655,124,153,38]:
+          - /url: /responsavel/relatorios-azul
+          - generic [ref=f1e18] [box=668,134,128,17]: Abrir painel azul
+      - region "Dashboard do grupo" [ref=f1e22] [box=20,205,788,1434]:
+        - generic [ref=f1e23] [box=20,205,788,85]:
+          - generic [ref=f1e24] [box=33,217,325,60]
+          - generic [ref=f1e26] [box=370,217,325,60]
+          - button "Exportar PDF" [ref=f1e28] [cursor=pointer] [box=707,240,88,37]
+        - generic [ref=f1e33] [box=20,302,788,178]:
+          - heading "Servidores" [level=2] [ref=f1e35] [box=33,314,91,22]
+          - table [ref=f1e37] [box=33,348,763,119]
+        - generic [ref=f1e52] [box=20,492,788,388]:
+          - heading "Consolidado" [level=2] [ref=f1e54] [box=33,504,105,22]
+          - generic [ref=f1e55] [box=33,538,763,329]
+        - generic [ref=f1e86] [box=20,892,788,402]:
+          - heading "Consolidados por Reunião" [level=2] [ref=f1e89] [box=33,905,219,22]
+          - table [ref=f1e91] [box=33,938,763,343]
+        - generic [ref=f1e163] [box=20,1306,788,303]:
+          - heading "Conquistas" [level=2] [ref=f1e165] [box=33,1319,93,22]
+          - generic [ref=f1e166] [box=33,1352,763,244]
+        - generic [ref=f1e202] [box=20,1621,788,18]: Dados consolidados do grupo USL referentes a Outubro/2026.
+  - button "Open Next.js Dev Tools" [ref=f1e211] [cursor=pointer] [box=22,771,32,32]
+  - alert [ref=f1e216] [box=-1,1670,1,1]

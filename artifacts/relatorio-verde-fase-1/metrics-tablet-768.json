@@ -1,0 +1,37 @@
+{
+  "url": "http://localhost:3000/responsavel/relatorios",
+  "viewport": {
+    "width": 512,
+    "height": 667
+  },
+  "overflow": {
+    "documentScrollWidth": 502,
+    "bodyScrollWidth": 502,
+    "viewportWidth": 512
+  },
+  "month": "10",
+  "year": "2026",
+  "pagination": false,
+  "weekdaySummaryRows": 7,
+  "expandedScheduleRows": 0,
+  "pdf": {
+    "x": 437.3333435058594,
+    "y": 283.1875,
+    "width": 36,
+    "height": 36,
+    "top": 283.1875,
+    "right": 473.3333435058594,
+    "bottom": 319.1875,
+    "left": 437.3333435058594
+  },
+  "filters": {
+    "x": 16,
+    "y": 246.92709350585938,
+    "width": 470,
+    "height": 84.92708587646484,
+    "top": 246.92709350585938,
+    "right": 486,
+    "bottom": 331.8541793823242,
+    "left": 16
+  }
+}
