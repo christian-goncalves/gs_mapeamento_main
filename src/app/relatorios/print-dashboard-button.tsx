@@ -8,11 +8,13 @@ export function PrintDashboardButton() {
     <button
       type="button"
       className="dashboard-pdf-button"
+      aria-label="Exportar PDF"
+      title="Exportar PDF"
       onClick={() => window.print()}
     >
       <span className="button-content">
         <FontAwesomeIcon icon={faFilePdf} />
-        PDF
+        <span className="dashboard-pdf-button-label">PDF</span>
       </span>
     </button>
   );

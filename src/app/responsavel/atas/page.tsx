@@ -64,7 +64,7 @@ export default async function ResponsavelAtasPage({
   return (
     <ResponsavelShell activeSection="responsavel" settingsHref={`/grupos/${group.grupo_id}`}>
       <AtaHistoryRefresh at={nextMissingAtaRefreshAt} />
-      <header className="responsavel-page-header">
+      <header className="responsavel-page-header responsavel-atas-page-header">
         <div>
           <p className="eyebrow">Histórico de Atas</p>
           <h1>Grupo {group.grupo_nome}</h1>
@@ -73,16 +73,23 @@ export default async function ResponsavelAtasPage({
           <Link
             className="button-link responsavel-history-button"
             href={historyMode ? "/responsavel/atas" : "/responsavel/atas?historico=1"}
+            aria-label={historyMode ? "Atas atuais" : "Histórico"}
+            title={historyMode ? "Atas atuais" : "Histórico"}
           >
             <span className="button-content">
               <FontAwesomeIcon icon={historyMode ? faArrowLeft : faClockRotateLeft} />
-              {historyMode ? "Atas atuais" : "Histórico"}
+              <span className="responsavel-atas-header-button-label">{historyMode ? "Atas atuais" : "Histórico"}</span>
             </span>
           </Link>
-          <Link className="button-link responsavel-new-ata-button" href="/atas/nova">
+          <Link
+            className="button-link responsavel-new-ata-button"
+            href="/atas/nova"
+            aria-label="Nova Ata"
+            title="Nova Ata"
+          >
             <span className="button-content">
               <FontAwesomeIcon icon={faPlus} />
-              Nova Ata
+              <span className="responsavel-atas-header-button-label">Nova Ata</span>
             </span>
           </Link>
         </div>

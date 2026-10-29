@@ -1302,3 +1302,154 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .dashboard-filters-responsavel select[name="ano"] { min-height: 2.25rem; padding-block: .45rem; }
   .dashboard-filters-responsavel .dashboard-pdf-button { min-height: 2.25rem; padding-block: .45rem; }
 }
+
+/* The ata history header adapts to the available header width without changing
+   the shared header behavior used by reports, settings, and forms. */
+.responsavel-atas-page-header {
+  container-type: inline-size;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.responsavel-atas-page-header > div:first-child {
+  min-width: 0;
+  flex: 1 1 26rem;
+}
+.responsavel-atas-page-header h1 { overflow-wrap: anywhere; }
+.responsavel-atas-page-header .responsavel-page-header-actions {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  width: auto;
+  margin-left: auto;
+  gap: .5rem;
+}
+.responsavel-atas-page-header .responsavel-page-header-actions .button-link {
+  width: auto;
+  min-width: 0;
+  text-align: center;
+}
+.responsavel-atas-header-button-label { white-space: nowrap; }
+
+@container (max-width: 700px) {
+  .responsavel-atas-page-header .responsavel-atas-header-button-label { display: none; }
+  .responsavel-atas-page-header .responsavel-page-header-actions .button-link {
+    width: 2.75rem;
+    min-width: 2.75rem;
+    padding-inline: 0;
+  }
+  .responsavel-atas-page-header .responsavel-page-header-actions .button-content { gap: 0; }
+}
+
+@media (max-width: 720px) {
+  .responsavel-atas-page-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .responsavel-atas-page-header .responsavel-page-header-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    margin-left: 0;
+  }
+  .responsavel-atas-page-header .responsavel-atas-header-button-label { display: inline; }
+  .responsavel-atas-page-header .responsavel-page-header-actions .button-link {
+    width: 100%;
+    min-width: 0;
+    padding-inline: .9rem;
+  }
+  .responsavel-atas-page-header .responsavel-page-header-actions .button-content { gap: .5rem; }
+}
+
+/* Keep the green responsible report at the blue report's readable scale.
+   The green palette and type family remain unchanged. */
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .responsavel-page-description {
+  font-size: .875rem;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel .dashboard-filter-period-label {
+  font-size: .75rem;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel select[name="mes"],
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel select[name="ano"] {
+  font-size: .875rem;
+  min-height: 2.25rem;
+  padding-block: .45rem;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel .dashboard-pdf-button {
+  font-size: .8rem;
+  min-height: 2.25rem;
+  padding-block: .45rem;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel {
+  gap: .625rem;
+  padding: .75rem;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel,
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel .dashboard-metric-card h3,
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-cards .dashboard-achievement-label {
+  font-size: .6875rem;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel .dashboard-metric-card strong,
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-cards .dashboard-achievement-card strong {
+  font-size: 1.875rem;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table th,
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table td {
+  font-size: .8125rem;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody th,
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody td {
+  font-size: .8125rem;
+}
+
+@media (max-width: 600px) {
+  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel,
+  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table th,
+  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table td {
+    font-size: .7rem;
+  }
+  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody th,
+  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody td {
+    font-size: .7rem;
+  }
+}
+
+@media (max-width: 599px) {
+  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) 2.25rem;
+  }
+  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-pdf-button {
+    width: 2.25rem;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    min-height: 2.25rem;
+    padding-inline: 0;
+    justify-self: end;
+  }
+  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-pdf-button .button-content {
+    gap: 0;
+  }
+  .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-pdf-button-label {
+    display: none;
+  }
+}
+
+/* Table body values follow the blue report's stable scale at every width. */
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody th,
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table tbody th {
+  font-size: calc(.85rem + 1pt);
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody td,
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table tbody td {
+  font-size: calc(1rem + 1pt);
+}
