@@ -1371,13 +1371,17 @@ legend { padding: 0 .35rem; font-weight: 700; }
 /* Fase 1: tipologia do relatório real, isolada do shell e dos consumidores
    compartilhados do dashboard. */
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) {
+  --responsavel-label-color: #6e849a;
   color: #1c2430;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-title h1 {
   color: #0b3a7a;
-  font-size: 32px;
+  font-size: 41.6px;
   line-height: 1.1;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-title {
+  margin-bottom: 18px;
 }
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-title .eyebrow {
   color: #1d4ed8;
@@ -1399,7 +1403,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
   box-shadow: none;
 }
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .monthly-dashboard-sheet-responsavel {
-  gap: 12px;
+  gap: 24px;
   background: transparent;
 }
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel {
@@ -1410,7 +1414,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
   background: #fff;
 }
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel .dashboard-filter-period-label {
-  color: #5b6675;
+  color: var(--responsavel-label-color);
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
@@ -1425,12 +1429,59 @@ legend { padding: 0 .35rem; font-weight: 700; }
 }
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel .dashboard-pdf-button {
   border-radius: 8px;
-  background: #2b6cb0;
+  background: #1d4ed8;
   box-shadow: none;
   font-size: 14px;
   font-weight: 600;
   min-height: 2.25rem;
   padding: 10px 12px;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .responsavel-sidebar {
+  background: #f8fbff;
+  border-color: #e4edf6;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) {
+  background: #fcfdff;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .responsavel-nav {
+  background: #f8fbff;
+  border-color: #e4edf6;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-nav-item {
+  color: #111827;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-nav-item:hover,
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-nav-item:focus-visible {
+  background: #e6f1fa;
+  color: #0b3a7a;
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-nav-item-active,
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-nav-item-active:hover {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-signout-button {
+  background: transparent;
+  color: var(--danger);
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-signout-button:hover,
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-signout-button:focus-visible {
+  background: #f5e7e7;
+  color: var(--danger);
+  outline: 2px solid color-mix(in srgb, var(--danger) 55%, transparent);
+  outline-offset: 2px;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-menu-trigger {
+  background: #e6f1fa;
+  color: #1d4ed8;
+}
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-menu-trigger:hover,
+.responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-menu-trigger:focus-visible {
+  background: #e6f1fa;
+  color: #0b3a7a;
+  outline-color: #1d4ed8;
 }
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa,
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-consolidated,
@@ -1447,7 +1498,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-meeting-results .dashboard-section-title h2,
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-cards .dashboard-section-title h2 {
   color: #1c2430;
-  font-size: 18px;
+  font-size: 25.92px;
   line-height: 1.2;
 }
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel,
@@ -1464,7 +1515,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 }
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-metrics-grid-responsavel .dashboard-metric-card h3,
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-achievements-cards .dashboard-achievement-label {
-  color: #5b6675;
+  color: var(--responsavel-label-color);
   font-size: 11px;
   line-height: 1.2;
   font-weight: 600;
@@ -1492,12 +1543,23 @@ legend { padding: 0 .35rem; font-weight: 700; }
   overflow-wrap: anywhere;
   vertical-align: middle;
 }
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday .meeting-weekday-schedule-row th,
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday .meeting-weekday-schedule-row td {
+  padding-block: 0.2rem;
+  color: rgb(28 36 48 / 60%);
+}
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table thead th,
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday thead th {
-  background: #f8fbff;
-  color: #4f76a0;
+  background: #1d4ed8;
+  color: #fff;
   font-size: calc(.98rem - 4px + 1pt);
   text-transform: uppercase;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday thead th:first-child {
+  text-align: center;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday thead .meeting-results-header-detail {
+  text-transform: none;
 }
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody th,
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday tbody th {

@@ -53,8 +53,8 @@ function ResponsavelMeetingResults({
         <thead>
           <tr>
             <th scope="col">Dia da Semana</th>
-            <th scope="col">Presenças</th>
-            <th scope="col">Presenças<br />(média)</th>
+            <th scope="col">Presenças<br /><span className="meeting-results-header-detail">(total)</span></th>
+            <th scope="col">Presenças<br /><span className="meeting-results-header-detail">(média)</span></th>
             <th scope="col">Ingressos</th>
           </tr>
         </thead>

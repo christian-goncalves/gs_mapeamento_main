@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { ReactNode } from "react";
 import {
   faCalendarDays,
   faDoorClosed,
@@ -75,7 +74,6 @@ export function MonthlyGroupDashboard({
   showGroupFilter,
   showFoundationMeetingCard = false,
   showResponsavelHeader = false,
-  headerAction,
 }: {
   data: MonthlyDashboardData;
   groups: Grupo[];
@@ -83,7 +81,6 @@ export function MonthlyGroupDashboard({
   showGroupFilter: boolean;
   showFoundationMeetingCard?: boolean;
   showResponsavelHeader?: boolean;
-  headerAction?: ReactNode;
 }) {
   const selectedMonth = String(data.filters.month);
   const selectedYear = String(data.filters.year);
@@ -132,13 +129,7 @@ export function MonthlyGroupDashboard({
             <h1>
               Grupo {data.group.grupo_nome}
             </h1>
-            <p className="responsavel-page-description">
-              Visualize as informações por período.
-            </p>
           </div>
-          {headerAction ? (
-            <div className="responsavel-page-header-actions">{headerAction}</div>
-          ) : null}
         </header>
       ) : null}
       <section
