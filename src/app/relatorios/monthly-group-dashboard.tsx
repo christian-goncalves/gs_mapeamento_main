@@ -283,7 +283,7 @@ export function MonthlyGroupDashboard({
                 ))}
                 <article className="dashboard-achievement-card">
                   <h3 className="dashboard-achievement-label">Total</h3>
-                  <strong>{formatNumber(data.achievements.total)}</strong>
+                  <strong>{formatNumber(data.achievements.subtotal)}</strong>
                 </article>
               </div>
             ) : (
