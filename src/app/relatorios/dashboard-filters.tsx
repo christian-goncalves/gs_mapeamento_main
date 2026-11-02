@@ -80,7 +80,11 @@ export function DashboardFilters({
     const form = document.querySelector<HTMLFormElement>(".dashboard-filters-responsavel");
     const monthSelect = form?.elements.namedItem("mes");
     const yearSelect = form?.elements.namedItem("ano");
-    if (!(monthSelect instanceof HTMLSelectElement) || !(yearSelect instanceof HTMLSelectElement)) return;
+    if (
+      !(form instanceof HTMLFormElement) ||
+      !(monthSelect instanceof HTMLSelectElement) ||
+      !(yearSelect instanceof HTMLSelectElement)
+    ) return;
 
     const params = new URLSearchParams(window.location.search);
     if (params.has("mes") || params.has("ano")) {
