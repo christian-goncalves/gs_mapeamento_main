@@ -51,11 +51,38 @@ function ResponsavelMeetingResults({
     <div className="dashboard-table-wrap">
       <table className="dashboard-table meeting-results-table meeting-results-table-weekday">
         <thead>
-          <tr>
+          <tr className="meeting-results-weekday-head-desktop">
             <th scope="col">Dia da Semana</th>
             <th scope="col">Presenças<br /><span className="meeting-results-header-detail">(total)</span></th>
             <th scope="col">Presenças<br /><span className="meeting-results-header-detail">(média)</span></th>
             <th scope="col">Ingressos</th>
+          </tr>
+          <tr className="meeting-results-weekday-head-mobile">
+            <th scope="col" rowSpan={2}>
+              Dia da Semana
+            </th>
+            <th
+              className="meeting-results-header-group"
+              scope="colgroup"
+              colSpan={2}
+            >
+              Presenças
+            </th>
+            <th
+              className="meeting-results-header-ingressos"
+              scope="col"
+              rowSpan={2}
+            >
+              Ingressos
+            </th>
+          </tr>
+          <tr className="meeting-results-weekday-head-mobile">
+            <th className="meeting-results-header-subcolumn" scope="col">
+              Total
+            </th>
+            <th className="meeting-results-header-subcolumn" scope="col">
+              Média
+            </th>
           </tr>
         </thead>
         <tbody>

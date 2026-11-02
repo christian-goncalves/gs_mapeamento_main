@@ -38,6 +38,8 @@ const colors = {
   white: "#FFFFFF",
 };
 
+const recordRowMinHeight = 13.5;
+
 const styles = StyleSheet.create({
   page: {
     paddingTop: 18,
@@ -190,17 +192,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   row: {
-    minHeight: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     borderBottomWidth: 1,
     borderBottomColor: colors.rowLine,
-    paddingVertical: 1.5,
+    paddingVertical: 1.75,
     paddingHorizontal: 5,
   },
   rowLast: { borderBottomWidth: 0 },
-  rowText: { flexGrow: 1, flexBasis: 0, paddingRight: 5, lineHeight: 1.15 },
+  rowText: { flexGrow: 1, flexBasis: 0, paddingRight: 5, fontSize: 6.4, lineHeight: 1.15 },
   rowDetail: { marginTop: 1, color: colors.muted, fontSize: 5.3 },
   badge: {
     borderRadius: 4,
@@ -226,7 +227,12 @@ const styles = StyleSheet.create({
     fontSize: 5.1,
     fontWeight: 700,
   },
-  tableRow: { flexDirection: "row", borderTopWidth: 1, borderTopColor: colors.rowLine },
+  tableRow: {
+    minHeight: recordRowMinHeight,
+    flexDirection: "row",
+    borderTopWidth: 1,
+    borderTopColor: colors.rowLine,
+  },
   tableCell: { paddingVertical: 3, paddingHorizontal: 3, fontSize: 5.6, lineHeight: 1.15 },
 });
 

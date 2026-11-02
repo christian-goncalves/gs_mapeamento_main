@@ -1631,3 +1631,112 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table tbody td {
   font-size: calc(1rem + 1pt);
 }
+
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-weekday-head-mobile {
+  display: none;
+}
+
+@media (max-width: 500px) {
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday th:first-child,
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday td:first-child {
+    width: 113px;
+    white-space: nowrap;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday .meeting-results-header-ingressos,
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday tbody td:last-child {
+    width: 84px;
+    white-space: nowrap;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-weekday-head-desktop {
+    display: none;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-weekday-head-mobile {
+    display: table-row;
+    height: 1.575rem;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday .meeting-results-weekday-head-mobile th {
+    padding-inline: .2rem;
+    padding-block: .28rem;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday .meeting-results-weekday-head-mobile th[rowspan="2"] {
+    height: 3.15rem;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-weekday-head-mobile .meeting-results-header-group {
+    border-bottom: 0;
+    border-right: 1px solid #fff;
+    box-shadow: inset 0 -1px #fff;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday .meeting-results-weekday-head-mobile .meeting-results-header-subcolumn {
+    text-transform: none;
+    border-bottom: 1px solid #e4edf6;
+    padding-block: calc(.28rem - .5px);
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-weekday-head-mobile .meeting-results-header-subcolumn:last-child {
+    border-right: 1px solid #fff;
+  }
+}
+
+@media (max-width: 360px) {
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday .meeting-results-weekday-head-mobile th {
+    font-size: .7rem;
+    padding-inline: .25rem;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday th:first-child,
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday td:first-child {
+    width: 98px;
+    padding-inline: .25rem;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday .meeting-results-header-ingressos,
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday tbody td:last-child {
+    width: 72px;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .meeting-results-table-weekday .meeting-results-weekday-head-mobile .meeting-results-header-subcolumn {
+    font-size: .65rem;
+    padding-inline: .1rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table th:nth-child(1),
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table td:nth-child(1) {
+    width: 34%;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table th:nth-child(2),
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table td:nth-child(2) {
+    width: 29%;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table th:nth-child(3),
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table td:nth-child(3) {
+    width: 37%;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table th,
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table td {
+    padding-inline: .4rem;
+  }
+
+  .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody td:nth-child(3) {
+    white-space: nowrap;
+  }
+}
