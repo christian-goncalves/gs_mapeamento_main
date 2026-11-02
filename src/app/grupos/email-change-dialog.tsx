@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
-import { faPenToSquare, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faKey, faPenToSquare, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { requestResponsibleEmailChangeAction } from "./email-change-actions";
 
@@ -36,10 +36,10 @@ function EmailChangeForm({
       >
         <header className="email-change-modal-header">
           <div>
-            <h2 id="email-change-title">Acesso da conta</h2>
+            <h2 id="email-change-title">Acesso da Conta</h2>
             <p>Altere seu e-mail ou redefina sua senha.</p>
           </div>
-          <button className="icon-button" type="button" aria-label="Fechar" onClick={onClose}>
+          <button className="icon-button email-change-close-button" type="button" aria-label="Fechar" onClick={onClose}>
             <FontAwesomeIcon icon={faXmark} aria-hidden="true" />
           </button>
         </header>
@@ -47,7 +47,7 @@ function EmailChangeForm({
         <form action={action} className="email-change-form">
           <input type="hidden" name="groupId" value={groupId} />
           <label>
-            E-mail atual
+            E-mail Atual
             <input type="email" value={currentEmail} readOnly />
           </label>
           <label>
@@ -68,9 +68,17 @@ function EmailChangeForm({
           {state?.success && <p className="form-success" role="status">{state.success}</p>}
           <div className="email-change-modal-actions">
             <button type="submit" disabled={pending}>
-              {pending ? "Enviando…" : "Enviar confirmação"}
+              <span className="button-content">
+                <FontAwesomeIcon icon={faEnvelope} aria-hidden="true" />
+                {pending ? "Enviando…" : "Enviar Confirmação"}
+              </span>
             </button>
-            <Link className="secondary" href="/esqueci-senha">Alterar senha</Link>
+            <Link className="secondary" href="/esqueci-senha">
+              <span className="button-content">
+                <FontAwesomeIcon icon={faKey} aria-hidden="true" />
+                Alterar Senha
+              </span>
+            </Link>
           </div>
         </form>
       </section>

@@ -84,7 +84,7 @@ export function AtaApprovalPanel({ rows }: { rows: AtaApprovalRow[] }) {
           disabled={isPending || selectedRows.length === 0}
           onClick={() => requestApproval(selectedRows)}
         >
-          {isPending ? "Aprovando…" : `Aprovar selecionadas (${selectedRows.length})`}
+          {isPending ? "Aprovando…" : `Aprovar Selecionadas (${selectedRows.length})`}
         </button>
       </header>
       {message && <p className="ata-approval-feedback" role="status">{message}</p>}
@@ -99,7 +99,7 @@ export function AtaApprovalPanel({ rows }: { rows: AtaApprovalRow[] }) {
             />
             Selecionar página
           </label>
-          <span>{selectedRows.length} selecionada(s)</span>
+          <span>{selectedRows.length} Selecionada(s)</span>
         </div>
         {visibleRows.map((row) => (
           <article className="ata-approval-row" key={row.ataId}>

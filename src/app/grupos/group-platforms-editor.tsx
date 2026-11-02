@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFloppyDisk, faPenToSquare, faPlus, faRightLeft, faXmark } from "@fortawesome/free-solid-svg-icons";
 import type { GrupoHorario, GrupoPlataforma } from "@/domain/entities";
 import { plataformaMapping } from "@/domain/enums";
 import { associateGrupoHorariosAction, deactivateGrupoPlataformaAction, saveGrupoPlataformaAction } from "./actions";
@@ -122,7 +124,10 @@ export function GroupPlatformsEditor({
                 disabled={!isGroupActive}
                 onClick={() => openPlatformForm(tipo, active)}
               >
-                {active ? "Editar Dados" : "Cadastrar"}
+                <span className="button-content">
+                  <FontAwesomeIcon icon={active ? faPenToSquare : faPlus} aria-hidden="true" />
+                  {active ? "Editar Dados" : "Cadastrar"}
+                </span>
               </button>
               {active && schedules.some((schedule) => schedule.ativo && schedule.plataforma_id === active.plataforma_id) ? (
                 <details className="platform-deactivation-details">
@@ -138,7 +143,12 @@ export function GroupPlatformsEditor({
                         {activePlatforms.filter((candidate) => candidate.plataforma_id !== active.plataforma_id).map((candidate) => <option key={candidate.plataforma_id} value={candidate.plataforma_id}>{label(candidate.tipo)}</option>)}
                       </select>
                     </label>
-                    <button type="submit" disabled={activePlatforms.length < 2}>Transferir Horários e desativar</button>
+                    <button type="submit" disabled={activePlatforms.length < 2}>
+                      <span className="button-content">
+                        <FontAwesomeIcon icon={faRightLeft} aria-hidden="true" />
+                        Transferir Horários e Desativar
+                      </span>
+                    </button>
                   </form>
                 </details>
               ) : null}
@@ -154,7 +164,7 @@ export function GroupPlatformsEditor({
           <section className="confirmation-modal platform-modal" role="dialog" aria-modal="true" aria-labelledby="platform-modal-title">
             <div className="platform-modal-header">
               <div>
-                <h2 id="platform-modal-title">{platformDraft.plataforma_id ? "Editar plataforma" : "Cadastrar plataforma"}</h2>
+                <h2 id="platform-modal-title">{platformDraft.plataforma_id ? "Editar Plataforma" : "Cadastrar plataforma"}</h2>
                 <p>{label(platformDraft.tipo)}</p>
               </div>
               <button type="button" className="secondary" aria-label="Fechar cadastro da plataforma" onClick={() => setPlatformDraft(null)}>Fechar</button>
@@ -184,8 +194,18 @@ export function GroupPlatformsEditor({
                 </>
               ) : null}
               <div className="platform-modal-actions">
-                <button type="button" className="secondary" onClick={() => setPlatformDraft(null)}>Cancelar</button>
-                <button type="submit">Salvar plataforma</button>
+                <button type="button" className="secondary" onClick={() => setPlatformDraft(null)}>
+                  <span className="button-content">
+                    <FontAwesomeIcon icon={faXmark} aria-hidden="true" />
+                    Cancelar
+                  </span>
+                </button>
+                <button type="submit">
+                  <span className="button-content">
+                    <FontAwesomeIcon icon={faFloppyDisk} aria-hidden="true" />
+                    Salvar
+                  </span>
+                </button>
               </div>
             </form>
           </section>

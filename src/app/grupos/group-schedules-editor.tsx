@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   faCheck,
-  faCircleCheck,
   faPenToSquare,
   faPlus,
   faSpinner,
@@ -73,6 +73,10 @@ function dayLabel(day: string) {
   return weekDays.find(([value]) => value === day)?.[1] ?? day;
 }
 
+function responsiveDayLabel(label: string, compact: boolean) {
+  return compact ? label.replace(/-feira$/, "") : label;
+}
+
 function scheduleKey(row: Pick<ScheduleDraft, "dia_semana" | "hora_inicio">) {
   return `${row.dia_semana}:${row.hora_inicio}`;
 }
@@ -109,7 +113,7 @@ function ScheduleReviewActions({
       >
         <span className="button-content">
           <FontAwesomeIcon icon={faPenToSquare} />
-          Voltar para corrigir
+          Voltar para Corrigir
         </span>
       </button>
       <button
@@ -126,25 +130,22 @@ function ScheduleReviewActions({
       <button type="submit" disabled={pending} aria-live="polite">
         <span className="button-content">
           <FontAwesomeIcon icon={pending ? faSpinner : faCheck} spin={pending} />
-          {pending ? "Salvando horários…" : "CONFIRMAR"}
+          {pending ? "Salvando horários…" : "Confirmar"}
         </span>
       </button>
     </div>
   );
 }
 
-function ScheduleDeleteButton({ label }: { label: string }) {
+function ScheduleDeleteSubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button
-      type="submit"
-      className="danger-icon-button"
-      aria-label={pending ? `Excluindo ${label}` : `Excluir ${label}`}
-      title={pending ? "Excluindo horário…" : "Excluir"}
-      disabled={pending}
-    >
-      <FontAwesomeIcon icon={pending ? faSpinner : faTrashCan} spin={pending} />
+    <button type="submit" className="danger-button" disabled={pending}>
+      <span className="button-content">
+        <FontAwesomeIcon icon={pending ? faSpinner : faTrashCan} spin={pending} />
+        {pending ? "Excluindo…" : "Excluir horário"}
+      </span>
     </button>
   );
 }
@@ -203,14 +204,25 @@ export function GroupSchedulesEditor({
   );
   const initialRows = useMemo(() => activeRows, [activeRows]);
   const [rows, setRows] = useState<ScheduleDraft[]>(initialRows);
+  const [compactDayLabels, setCompactDayLabels] = useState(false);
   const [editing, setEditing] = useState(activeRows.length === 0);
   const [reviewing, setReviewing] = useState(false);
   const [editingRowId, setEditingRowId] = useState<string | null>(null);
   const [rowBeforeEdit, setRowBeforeEdit] = useState<ScheduleDraft | null>(null);
+  const [deletingRow, setDeletingRow] = useState<ScheduleDraft | null>(null);
   const [adding, setAdding] = useState(activeRows.length === 0);
   const [addDraft, setAddDraft] = useState<ScheduleDraft>(blankRow("new"));
   const [addError, setAddError] = useState("");
   const scheduleEndRef = useRef<HTMLDivElement | null>(null);
+  const editingRow = rows.find((row) => row.clientId === editingRowId) ?? null;
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 720px)");
+    const updateCompactDayLabels = () => setCompactDayLabels(media.matches);
+    updateCompactDayLabels();
+    media.addEventListener("change", updateCompactDayLabels);
+    return () => media.removeEventListener("change", updateCompactDayLabels);
+  }, []);
 
   function scrollToScheduleEnd() {
     window.requestAnimationFrame(() => {
@@ -303,7 +315,6 @@ export function GroupSchedulesEditor({
   }
 
   function startRowEdit(row: ScheduleDraft) {
-    if (row.plataforma_id && !window.confirm(`Confirma manter ${plataformaMapping.toSheet(plataformas.find((item) => item.plataforma_id === row.plataforma_id)?.tipo ?? "zoom")} ao alterar dia ou horário?`)) return;
     setEditingRowId(row.clientId);
     setRowBeforeEdit(row);
   }
@@ -327,9 +338,6 @@ export function GroupSchedulesEditor({
   }
 
   function deleteRow(row: ScheduleDraft) {
-    if (!window.confirm(`Excluir ${dayLabel(row.dia_semana)} ${displayTime(row.hora_inicio)}?`)) {
-      return;
-    }
     setRows((current) =>
       current.filter((item) => item.clientId !== row.clientId),
     );
@@ -337,6 +345,11 @@ export function GroupSchedulesEditor({
       setEditingRowId(null);
       setRowBeforeEdit(null);
     }
+    setDeletingRow(null);
+  }
+
+  function closeDeleteConfirmation() {
+    setDeletingRow(null);
   }
 
   function updateAddDraft(
@@ -393,7 +406,7 @@ export function GroupSchedulesEditor({
                 );
                 return (
                   <tr key={day}>
-                    <th scope="row">{label}</th>
+                    <th scope="row">{responsiveDayLabel(label, compactDayLabels)}</th>
                     <td>
                       {dayRows.length > 0 ? (
                         <span className="schedule-summary-times">
@@ -455,7 +468,6 @@ export function GroupSchedulesEditor({
               </tr>
             )}
             {rows.map((row, index) => {
-              const isEditingRow = editingRowId === row.clientId;
               const showDay =
                 index === 0 || rows[index - 1]?.dia_semana !== row.dia_semana;
               const continuesSameDay =
@@ -469,124 +481,48 @@ export function GroupSchedulesEditor({
                   key={row.clientId}
                 >
                   <td>
-                    {isEditingRow ? (
-                      <select
-                        aria-label="Dia"
-                        value={row.dia_semana}
-                        onChange={(event) =>
-                          updateRow(row.clientId, "dia_semana", event.target.value)
-                        }
-                      >
-                        {weekDays.map(([value, label]) => (
-                          <option key={value} value={value}>{label}</option>
-                        ))}
-                      </select>
-                    ) : (
-                      showDay ? dayLabel(row.dia_semana) : ""
-                    )}
+                    {showDay ? responsiveDayLabel(dayLabel(row.dia_semana), compactDayLabels) : ""}
                   </td>
                   <td>
-                    {isEditingRow ? (
-                      <select
-                        aria-label="Hora de Início"
-                        value={row.hora_inicio}
-                        onChange={(event) =>
-                          updateRow(row.clientId, "hora_inicio", event.target.value)
-                        }
-                      >
-                        {timeOptions.map((time) => (
-                          <option key={time} value={time}>{time}</option>
-                        ))}
-                      </select>
-                    ) : (
-                      <span className="schedule-time-platform">
-                        {displayTime(row.hora_inicio)}
-                        {platformDot(row)}
-                      </span>
-                    )}
-                    {isEditingRow ? platformDot(row) : null}
+                    <span className="schedule-time-platform">
+                      {displayTime(row.hora_inicio)}
+                      {platformDot(row)}
+                    </span>
                   </td>
                   <td>
-                    {isEditingRow ? (
-                      <select
-                        aria-label="Hora de Término"
-                        value={row.hora_termino}
-                        onChange={(event) =>
-                          updateRow(row.clientId, "hora_termino", event.target.value)
-                        }
-                      >
-                        <option value="">Não informar</option>
-                        {timeOptions.map((time) => (
-                          <option key={time} value={time}>{time}</option>
-                        ))}
-                      </select>
-                    ) : (
-                      row.hora_termino ? displayTime(row.hora_termino) : <span className="muted">-</span>
-                    )}
+                    {row.hora_termino ? displayTime(row.hora_termino) : <span className="muted">-</span>}
                   </td>
                   <td>
                     <div className="row-actions schedule-actions">
-                      {isEditingRow ? (
-                        <>
-                          <button type="button" onClick={finishRowEdit}>
-                            <span className="button-content">
-                              <FontAwesomeIcon icon={faCheck} />
-                              CONFIRMAR
-                            </span>
-                          </button>
-                          <button
-                            type="button"
-                            className="secondary"
-                            onClick={cancelRowEdit}
-                          >
-                            <span className="button-content">
-                              <FontAwesomeIcon icon={faXmark} />
-                              Cancelar
-                            </span>
-                          </button>
-                        </>
+                      <button
+                        type="button"
+                        className="icon-button"
+                        aria-label={`Editar ${dayLabel(row.dia_semana)} ${displayTime(row.hora_inicio)}`}
+                        title="Editar"
+                        onClick={() => startRowEdit(row)}
+                      >
+                        <FontAwesomeIcon icon={faPenToSquare} />
+                      </button>
+                      {row.horario_id ? (
+                        <button
+                          type="button"
+                          className="danger-icon-button"
+                          aria-label={`Excluir ${dayLabel(row.dia_semana)} ${displayTime(row.hora_inicio)}`}
+                          title="Excluir"
+                          onClick={() => setDeletingRow(row)}
+                        >
+                          <FontAwesomeIcon icon={faTrashCan} />
+                        </button>
                       ) : (
-                        <>
-                          <button
-                            type="button"
-                            className="icon-button"
-                            aria-label={`Editar ${dayLabel(row.dia_semana)} ${displayTime(row.hora_inicio)}`}
-                            title="Editar"
-                            onClick={() => startRowEdit(row)}
-                          >
-                            <FontAwesomeIcon icon={faPenToSquare} />
-                          </button>
-                          {row.horario_id ? (
-                            <form
-                              className="schedule-delete-form"
-                              action={toggleHorarioAction}
-                              onSubmit={(event) => {
-                                if (!window.confirm(`Excluir ${dayLabel(row.dia_semana)} ${displayTime(row.hora_inicio)}?`)) {
-                                  event.preventDefault();
-                                }
-                              }}
-                            >
-                              <input type="hidden" name="grupo_id" value={grupoId} />
-                              <input type="hidden" name="horario_id" value={row.horario_id} />
-                              <input type="hidden" name="ativo" value="false" />
-                              <input type="hidden" name="settings_section" value="schedules" />
-                              {returnToNewGroupPage ? (
-                                <input type="hidden" name="return_to_new_group_page" value="on" />
-                              ) : null}
-                              <ScheduleDeleteButton label={`${dayLabel(row.dia_semana)} ${displayTime(row.hora_inicio)}`} />
-                            </form>
-                          ) : (
-                            <button
-                              type="button"
-                              className="danger-icon-button"
-                              aria-label={`Excluir ${dayLabel(row.dia_semana)} ${displayTime(row.hora_inicio)}`}
-                              title="Excluir horário não salvo"
-                              onClick={() => deleteRow(row)}
-                            >
-                              <FontAwesomeIcon icon={faTrashCan} />
-                            </button>
-                          )}
-                        </>
+                        <button
+                          type="button"
+                          className="danger-icon-button"
+                          aria-label={`Excluir ${dayLabel(row.dia_semana)} ${displayTime(row.hora_inicio)}`}
+                          title="Excluir horário não salvo"
+                          onClick={() => setDeletingRow(row)}
+                        >
+                          <FontAwesomeIcon icon={faTrashCan} />
+                        </button>
                       )}
                     </div>
                   </td>
@@ -596,6 +532,149 @@ export function GroupSchedulesEditor({
           </tbody>
         </table>
       </div>
+
+      {editingRow ? (
+        <div
+          className="modal-backdrop schedule-row-modal-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) cancelRowEdit();
+          }}
+        >
+          <section
+            className="confirmation-modal schedule-row-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="schedule-row-modal-title"
+            onKeyDown={(event) => {
+              if (event.key === "Escape") cancelRowEdit();
+            }}
+          >
+            <header className="schedule-row-modal-header">
+              <h2 id="schedule-row-modal-title">Editar Horário</h2>
+              <button
+                type="button"
+                className="icon-button"
+                aria-label="Fechar edição do horário"
+                onClick={cancelRowEdit}
+              >
+                <FontAwesomeIcon icon={faXmark} />
+              </button>
+            </header>
+            <div className="schedule-row-modal-fields">
+              <label>
+                Dia
+                <select
+                  autoFocus
+                  value={editingRow.dia_semana}
+                  onChange={(event) => updateRow(editingRow.clientId, "dia_semana", event.target.value)}
+                >
+                  {weekDays.map(([value, label]) => (
+                    <option key={value} value={value}>{responsiveDayLabel(label, compactDayLabels)}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Hora de Início
+                <select
+                  value={editingRow.hora_inicio}
+                  onChange={(event) => updateRow(editingRow.clientId, "hora_inicio", event.target.value)}
+                >
+                  {timeOptions.map((time) => (
+                    <option key={time} value={time}>{time}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Hora de Término
+                <select
+                  value={editingRow.hora_termino}
+                  onChange={(event) => updateRow(editingRow.clientId, "hora_termino", event.target.value)}
+                >
+                  <option value="">Opcional</option>
+                  {timeOptions.map((time) => (
+                    <option key={time} value={time}>{time}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div className="schedule-row-modal-actions">
+              <button type="button" onClick={finishRowEdit}>
+                <span className="button-content">
+                  <FontAwesomeIcon icon={faCheck} />
+                  Confirmar
+                </span>
+              </button>
+              <button type="button" className="secondary" onClick={cancelRowEdit}>
+                <span className="button-content">
+                  <FontAwesomeIcon icon={faXmark} />
+                  Cancelar
+                </span>
+              </button>
+            </div>
+          </section>
+        </div>
+      ) : null}
+
+      {deletingRow ? createPortal(
+        <div
+          className="modal-backdrop schedule-delete-backdrop"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) closeDeleteConfirmation();
+          }}
+        >
+          <section
+            className="confirmation-modal schedule-delete-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="schedule-delete-title"
+            onKeyDown={(event) => {
+              if (event.key === "Escape") closeDeleteConfirmation();
+            }}
+          >
+            <h2 id="schedule-delete-title">Excluir horário?</h2>
+            <p>
+              Confirma excluir {responsiveDayLabel(dayLabel(deletingRow.dia_semana), compactDayLabels)} às {displayTime(deletingRow.hora_inicio)}?
+            </p>
+            {deletingRow.horario_id ? (
+              <form action={toggleHorarioAction}>
+                <input type="hidden" name="grupo_id" value={grupoId} />
+                <input type="hidden" name="horario_id" value={deletingRow.horario_id} />
+                <input type="hidden" name="ativo" value="false" />
+                <input type="hidden" name="settings_section" value="schedules" />
+                {returnToNewGroupPage ? (
+                  <input type="hidden" name="return_to_new_group_page" value="on" />
+                ) : null}
+                <div className="modal-actions">
+                  <button autoFocus type="button" className="secondary" onClick={closeDeleteConfirmation}>
+                    <span className="button-content">
+                      <FontAwesomeIcon icon={faXmark} />
+                      Cancelar
+                    </span>
+                  </button>
+                  <ScheduleDeleteSubmitButton />
+                </div>
+              </form>
+            ) : (
+              <div className="modal-actions">
+                <button autoFocus type="button" className="secondary" onClick={closeDeleteConfirmation}>
+                  <span className="button-content">
+                    <FontAwesomeIcon icon={faXmark} />
+                    Cancelar
+                  </span>
+                </button>
+                <button type="button" className="danger-button" onClick={() => deleteRow(deletingRow)}>
+                  <span className="button-content">
+                    <FontAwesomeIcon icon={faTrashCan} />
+                    Excluir horário
+                  </span>
+                </button>
+              </div>
+            )}
+          </section>
+        </div>,
+        document.body,
+      ) : null}
 
       {hasDuplicates && (
         <p className="form-error">
@@ -615,7 +694,7 @@ export function GroupSchedulesEditor({
             >
               <option value="">Selecione</option>
               {weekDays.map(([value, label]) => (
-                <option key={value} value={value}>{label}</option>
+                <option key={value} value={value}>{responsiveDayLabel(label, compactDayLabels)}</option>
               ))}
             </select>
           </label>
@@ -688,7 +767,7 @@ export function GroupSchedulesEditor({
           <button type="button" className="secondary" onClick={() => setAdding(true)}>
             <span className="button-content">
               <FontAwesomeIcon icon={faPlus} />
-              Adicionar horário
+              Adicionar Horário
             </span>
           </button>
         </div>
@@ -701,15 +780,15 @@ export function GroupSchedulesEditor({
           onClick={review}
         >
           <span className="button-content">
-            <FontAwesomeIcon icon={faCircleCheck} />
-            CONFIRMAR
+            <FontAwesomeIcon icon={faCheck} />
+            Confirmar
           </span>
         </button>
         {activeRows.length > 0 && (
           <button type="button" className="secondary" onClick={cancelEditing}>
             <span className="button-content">
               <FontAwesomeIcon icon={faXmark} />
-              Cancelar edição
+              Cancelar Edição
             </span>
           </button>
         )}
@@ -724,7 +803,7 @@ export function GroupSchedulesEditor({
             aria-modal="true"
             aria-labelledby="schedule-review-title"
           >
-            <h2 id="schedule-review-title">Confirmar horários</h2>
+            <h2 id="schedule-review-title">Confirmar Horários</h2>
             <div className="schedule-review-list">
               {weekDays.map(([day, label]) => {
                 const dayRows = completeRows.filter(
@@ -733,7 +812,7 @@ export function GroupSchedulesEditor({
                 if (dayRows.length === 0) return null;
                 return (
                   <section key={day}>
-                    <h3>{label}</h3>
+                    <h3>{responsiveDayLabel(label, compactDayLabels)}</h3>
                     <ul>
                       {dayRows.map((row) => (
                         <li key={`${row.dia_semana}:${row.hora_inicio}`}>

@@ -104,7 +104,7 @@ function MesaServerModal({
         <header className="mesa-server-modal-header">
           <div>
             <h2 id="mesa-server-modal-title">
-              {item.grupo_servidor_mesa_id ? "Editar encargo" : "Adicionar Servidores"}
+              {item.grupo_servidor_mesa_id ? "Editar Encargo" : "Adicionar Servidores"}
             </h2>
           </div>
           <button
@@ -195,7 +195,10 @@ function MesaServerModal({
             </span>
           </button>
           <button type="button" className="secondary" disabled={pending} onClick={onClose}>
-            Cancelar
+            <span className="button-content">
+              <FontAwesomeIcon icon={faXmark} />
+              Cancelar
+            </span>
           </button>
         </div>
       </form>
@@ -289,40 +292,40 @@ export function MesaServersSummary({
       )}
       <div className="table-wrap">
         {items.length > 0 ? (
-        <table className="schedule-summary-table mesa-summary-table mesa-summary-table-actions">
-          <thead>
-            <tr>
-              <th>Encargo</th>
-              <th>Servidor</th>
-              <th>Desde</th>
-              <th className="mesa-actions-heading">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => {
-              const vacant = isVacantMesaName(item.nome);
-              return (
-                <tr key={item.clientId}>
-                  <th scope="row">{item.encargo}</th>
-                  <td className={vacant ? "mesa-vacant-value" : undefined}>
-                    {vacant ? "(vago)" : item.nome}
-                  </td>
-                  <td className={!item.data_inicio ? "mesa-vacant-value" : undefined}>
-                    {item.data_inicio ? displayDate(item.data_inicio) : "—"}
-                  </td>
-                  <td className="mesa-actions-cell">
-                    <MesaServerActions
-                      grupoId={grupoId}
-                      item={item}
-                      disabled={disabled}
-                      onEdit={() => setSelected(item)}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+          <table className="schedule-summary-table mesa-summary-table mesa-summary-table-actions">
+            <thead>
+              <tr>
+                <th>Encargo</th>
+                <th>Servidor</th>
+                <th>Desde</th>
+                <th className="mesa-actions-heading">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item) => {
+                const vacant = isVacantMesaName(item.nome);
+                return (
+                  <tr key={item.clientId}>
+                    <th scope="row">{item.encargo}</th>
+                    <td className={vacant ? "mesa-vacant-value" : undefined}>
+                      {vacant ? "(vago)" : item.nome}
+                    </td>
+                    <td className={!item.data_inicio ? "mesa-vacant-value" : undefined}>
+                      {item.data_inicio ? displayDate(item.data_inicio) : "—"}
+                    </td>
+                    <td className="mesa-actions-cell">
+                      <MesaServerActions
+                        grupoId={grupoId}
+                        item={item}
+                        disabled={disabled}
+                        onEdit={() => setSelected(item)}
+                      />
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         ) : (
           <p className="empty-state">Nenhum encargo cadastrado para este grupo.</p>
         )}

@@ -439,12 +439,18 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .schedule-summary-separator { color: var(--muted); }
 .schedule-time-platform { display: inline-flex; align-items: center; gap: .45rem; }
 .schedule-time-platform .platform-color-dot { flex-basis: .55rem; width: .55rem; height: .55rem; }
-.schedule-management-table td:last-child { width: 1%; white-space: nowrap; }
+.schedule-management-table th:nth-child(2),
+.schedule-management-table td:nth-child(2),
+.schedule-management-table th:nth-child(3),
+.schedule-management-table td:nth-child(3) { text-align: center; }
+.schedule-management-table th:last-child,
+.schedule-management-table td:last-child { width: 5.5rem; min-width: 5.5rem; white-space: nowrap; }
+.schedule-management-table th:last-child { text-align: center; }
 .schedule-management-table .schedule-continued-day-row td { border-bottom: 0; }
 .schedule-management-table .schedule-same-day-row td { border-top: 0; }
 .schedule-management-table .schedule-continued-day-row td { padding-bottom: .35rem; }
 .schedule-management-table .schedule-same-day-row td { padding-top: .35rem; }
-.schedule-actions { flex-wrap: nowrap; justify-content: flex-start; }
+.schedule-actions { flex-wrap: nowrap; justify-content: center; }
 .schedule-delete-form { display: inline-flex; margin: 0; }
 .schedule-actions .icon-button, .schedule-actions .danger-icon-button { align-self: center; display: inline-grid; place-items: center; width: 1.75rem; height: 1.75rem; min-width: 1.75rem; min-height: 1.75rem; aspect-ratio: 1; padding: 0; border-radius: 6px; line-height: 1; }
 .schedule-actions .icon-button svg, .schedule-actions .danger-icon-button svg { width: .8rem; height: .8rem; }
@@ -718,6 +724,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .email-change-modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.25rem; }
 .email-change-modal-header h2 { margin: 0; color: var(--brand); font-size: 1.35rem; }
 .email-change-modal-header p { margin: .25rem 0 0; color: var(--muted); }
+.email-change-close-button { background: var(--brand); color: #fff; }
 .email-change-form { display: grid; gap: 1rem; }
 .email-change-form label { display: grid; gap: .4rem; }
 .email-change-form .field-hint { margin: -.6rem 0 0; line-height: 1.4; }
@@ -741,6 +748,14 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-atas-filters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; border-bottom: 1px solid var(--line); padding: 1.25rem 1.5rem; }
 .responsavel-atas-filters label { display: grid; min-width: 0; gap: .45rem; color: var(--muted); font-size: .9rem; font-weight: 800; }
 .responsavel-atas-filters input, .responsavel-atas-filters select { width: 100%; min-width: 0; min-height: 2.75rem; }
+.responsavel-atas-filters-ios input[type="date"] {
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  padding: 0;
+}
+.responsavel-atas-filters-ios input[type="date"]::-webkit-date-and-time-value { min-inline-size: 0; }
 .responsavel-status-dot { display: inline-block; width: .75rem; height: .75rem; flex: 0 0 .75rem; border: 2px solid white; border-radius: 999px; box-shadow: 0 0 0 1px currentColor; }
 .responsavel-status-dot-sent { background: #15966b; color: #087a55; }
 .responsavel-status-dot-review { background: #e3a928; color: #9b6b00; }
@@ -1739,4 +1754,22 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody td:nth-child(3) {
     white-space: nowrap;
   }
+}
+
+.schedule-row-modal { width: min(520px, 100%); height: fit-content; align-self: center; }
+.schedule-row-modal-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.schedule-row-modal-header h2 { margin: 0; color: var(--brand); font-size: 1.25rem; }
+.schedule-row-modal-fields { display: grid; gap: .75rem; margin-top: 1.25rem; }
+.schedule-row-modal-fields label { display: grid; gap: .35rem; }
+.schedule-row-modal-actions { display: flex; justify-content: flex-end; gap: .75rem; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+.schedule-row-modal-actions button { min-width: 9rem; }
+.schedule-delete-backdrop { z-index: 120; }
+.schedule-delete-modal { width: min(32rem, 100%); height: fit-content; align-self: center; }
+.schedule-delete-modal h2,
+.schedule-delete-modal p { margin: 0; }
+.schedule-delete-modal form { display: grid; gap: 1rem; }
+@media (max-width: 720px) {
+  .schedule-row-modal { width: min(520px, 100%); }
+  .schedule-row-modal-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .schedule-row-modal-actions button { min-width: 0; }
 }

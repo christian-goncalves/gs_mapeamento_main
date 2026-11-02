@@ -73,12 +73,12 @@ export default async function ResponsavelAtasPage({
           <Link
             className="button-link responsavel-history-button"
             href={historyMode ? "/responsavel/atas" : "/responsavel/atas?historico=1"}
-            aria-label={historyMode ? "Atas atuais" : "Histórico"}
-            title={historyMode ? "Atas atuais" : "Histórico"}
+            aria-label={historyMode ? "Atas Atuais" : "Histórico"}
+            title={historyMode ? "Atas Atuais" : "Histórico"}
           >
             <span className="button-content">
               <FontAwesomeIcon icon={historyMode ? faArrowLeft : faClockRotateLeft} />
-              <span className="responsavel-atas-header-button-label">{historyMode ? "Atas atuais" : "Histórico"}</span>
+              <span className="responsavel-atas-header-button-label">{historyMode ? "Atas Atuais" : "Histórico"}</span>
             </span>
           </Link>
           <Link

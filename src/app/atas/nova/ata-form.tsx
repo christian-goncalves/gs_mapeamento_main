@@ -111,6 +111,12 @@ function clientId() {
   return globalThis.crypto.randomUUID();
 }
 
+function completedVisitorCount(visitantes: Draft["visitantes"]) {
+  return visitantes.filter((visitor) =>
+    visitor.cidade.trim() && visitor.descricao && visitor.como_chegou_a_na,
+  ).length;
+}
+
 function cidadeEstado(value: string) {
   const match = value.match(/^(.*)\s+-\s+([A-Z]{2})$/);
   if (!match) return { cidade: value, estado: "-" };
@@ -121,6 +127,7 @@ function NumberStepper({
   id,
   label,
   showLabel = true,
+  required = true,
   value,
   min = 1,
   max,
@@ -129,6 +136,7 @@ function NumberStepper({
   id: string;
   label: string;
   showLabel?: boolean;
+  required?: boolean;
   value: number;
   min?: number;
   max?: number;
@@ -166,7 +174,7 @@ function NumberStepper({
           id={id}
           aria-label={showLabel ? undefined : label}
           type="number"
-          required
+          required={required}
           min={min}
           max={max}
           step={1}
@@ -320,6 +328,7 @@ export function AtaForm({
   const availabilityError = availability.status === "error" && availability.key === availabilityKey
     ? availability.message
     : undefined;
+  const completedVisitors = completedVisitorCount(draft.visitantes);
   const groupSchedules = (selectedGroup?.horarios ?? []).map((schedule) => ({
     grupo_id: selectedGroup?.id ?? "",
     ativo: true,
@@ -520,13 +529,29 @@ export function AtaForm({
   }, [availabilityReady, selectedHorario]);
 
   function removeVisitante(clientIdToRemove: string) {
-    setDraft((current) => ({
-      ...current,
-      visitantes: current.visitantes.filter(
+    setDraft((current) => {
+      const visitantes = current.visitantes.filter(
         (item) => item.clientId !== clientIdToRemove,
-      ),
-      ingressos: current.ingressos.slice(0, Math.max(0, current.visitantes.length - 1)),
-    }));
+      );
+      return {
+        ...current,
+        visitantes,
+        ingressos: current.ingressos.slice(0, completedVisitorCount(visitantes)),
+      };
+    });
+  }
+
+  function updateVisitor(clientIdToUpdate: string, patch: Partial<VisitorDraft>) {
+    setDraft((current) => {
+      const visitantes = current.visitantes.map((item) =>
+        item.clientId === clientIdToUpdate ? { ...item, ...patch } : item,
+      );
+      return {
+        ...current,
+        visitantes,
+        ingressos: current.ingressos.slice(0, completedVisitorCount(visitantes)),
+      };
+    });
   }
 
   function focusAddedField(id: string) {
@@ -620,8 +645,9 @@ export function AtaForm({
 
   function updateIngressoCount(value: number) {
     setDraft((current) => {
+      const max = completedVisitorCount(current.visitantes);
       const count = Number.isFinite(value)
-        ? Math.max(0, Math.min(Math.trunc(value), current.visitantes.length))
+        ? Math.max(0, Math.min(Math.trunc(value), max))
         : 0;
       return {
         ...current,
@@ -669,7 +695,7 @@ export function AtaForm({
       setClientError("A soma das presenças por localidade supera o total de membros presentes.");
       return;
     }
-    if (draft.ingressos.length > draft.visitantes.length) {
+    if (draft.ingressos.length > completedVisitorCount(draft.visitantes)) {
       setClientError("A quantidade de ingressos não pode ser maior que a quantidade de visitantes.");
       return;
     }
@@ -1009,11 +1035,11 @@ export function AtaForm({
         {draft.visitantes.map((item, index) => (
           <div className="repeat-row repeat-row--visitor repeat-row--unseparated" key={item.clientId} onKeyDown={(event) => addRowOnEnter(event, addVisitor)}>
             <div className="visitor-primary-row">
-              <label htmlFor={`city-${item.clientId}`}>{index === 0 && <span>Cidade</span>}<MunicipioAutocomplete ariaLabel={index === 0 ? undefined : "Cidade do Visitante"} id={`city-${item.clientId}`} placeholder="Cidade..." value={item.cidade} onChange={(value) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, cidade: value } : entry) }))} /></label>
-              <label>{index === 0 && <span>Descrição</span>}<select required aria-label={index === 0 ? undefined : "Descrição do Visitante"} value={item.descricao} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, descricao: event.target.value as typeof entry.descricao } : entry) }))}><option value="" disabled>Escolha...</option>{categoriaVisitanteMapping.codes.map((code) => <option key={code} value={code}>{categoriaVisitanteMapping.toSheet(code)}</option>)}</select></label>
+              <label htmlFor={`city-${item.clientId}`}>{index === 0 && <span>Cidade</span>}<MunicipioAutocomplete ariaLabel={index === 0 ? undefined : "Cidade do Visitante"} id={`city-${item.clientId}`} placeholder="Cidade..." value={item.cidade} onChange={(value) => updateVisitor(item.clientId, { cidade: value })} /></label>
+              <label>{index === 0 && <span>Descrição</span>}<select required aria-label={index === 0 ? undefined : "Descrição do Visitante"} value={item.descricao} onChange={(event) => updateVisitor(item.clientId, { descricao: event.target.value as typeof item.descricao })}><option value="" disabled>Escolha...</option>{categoriaVisitanteMapping.codes.map((code) => <option key={code} value={code}>{categoriaVisitanteMapping.toSheet(code)}</option>)}</select></label>
             </div>
             <div className="visitor-secondary-row">
-              <label>{index === 0 && <span>Como Chegou a NA?</span>}<select required aria-label={index === 0 ? undefined : "Como o Visitante Chegou a NA"} value={item.como_chegou_a_na} onChange={(event) => setDraft((current) => ({ ...current, visitantes: current.visitantes.map((entry) => entry.clientId === item.clientId ? { ...entry, como_chegou_a_na: event.target.value as typeof entry.como_chegou_a_na } : entry) }))}><option value="" disabled>Escolha...</option>{origemContatoMapping.codes.map((code) => <option key={code} value={code}>{origemContatoMapping.toSheet(code)}</option>)}</select></label>
+              <label>{index === 0 && <span>Como Chegou a NA?</span>}<select required aria-label={index === 0 ? undefined : "Como o Visitante Chegou a NA"} value={item.como_chegou_a_na} onChange={(event) => updateVisitor(item.clientId, { como_chegou_a_na: event.target.value as typeof item.como_chegou_a_na })}><option value="" disabled>Escolha...</option>{origemContatoMapping.codes.map((code) => <option key={code} value={code}>{origemContatoMapping.toSheet(code)}</option>)}</select></label>
               <button type="button" className="danger-icon-button" aria-label="Remover visitante" title="Remover visitante" onClick={() => removeVisitante(item.clientId)}><FontAwesomeIcon icon={faTrashCan} /></button>
             </div>
           </div>
@@ -1027,16 +1053,19 @@ export function AtaForm({
         <div className="section-heading">
           <h2>Ingressos</h2>
         </div>
-        <div className="form-grid ata-participation-grid">
-          <NumberStepper
-            id="total-ingressos"
-            label="Quantidade"
-            value={draft.ingressos.length}
-            min={0}
-            max={draft.visitantes.length}
-            onChange={updateIngressoCount}
-          />
-        </div>
+        {completedVisitors > 0 && (
+          <div className="form-grid ata-participation-grid">
+            <NumberStepper
+              id="total-ingressos"
+              label="Quantidade"
+              value={draft.ingressos.length}
+              min={0}
+              max={completedVisitors}
+              required={false}
+              onChange={updateIngressoCount}
+            />
+          </div>
+        )}
       </section>
 
       <section className="card form-section">

@@ -45,6 +45,12 @@ type DataTableComponent = typeof import("datatables.net-react").default;
 const filtersSessionEvent = "gs-mapeamento:responsavel-atas:filtros-alterados";
 const filtersSessionFallback = new Map<string, string>();
 
+function isIOSDevice() {
+  const { userAgent, platform, maxTouchPoints } = navigator;
+  return /iPad|iPhone|iPod/.test(userAgent)
+    || (platform === "MacIntel" && maxTouchPoints > 1);
+}
+
 const weekdays = [
   "Domingo",
   "Segunda",
@@ -295,6 +301,7 @@ export function ResponsavelAtasTable({
 }) {
   const [DataTableComponent, setDataTableComponent] =
     useState<DataTableComponent | null>(null);
+  const filtersRef = useRef<HTMLDivElement>(null);
   const defaultFilters = useMemo<ResponsavelAtasFilters>(() => ({
     startDate: defaultStartDate,
     endDate: defaultEndDate,
@@ -402,6 +409,10 @@ export function ResponsavelAtasTable({
 
   useEffect(() => {
     let mounted = true;
+    filtersRef.current?.classList.toggle(
+      "responsavel-atas-filters-ios",
+      isIOSDevice(),
+    );
 
     async function loadDataTable() {
       const [{ default: DataTable }, { default: DT }] = await Promise.all([
@@ -420,7 +431,11 @@ export function ResponsavelAtasTable({
 
   return (
     <section className="card responsavel-atas-card">
-      <div className="responsavel-atas-filters" aria-label="Filtros das Atas">
+      <div
+        ref={filtersRef}
+        className="responsavel-atas-filters"
+        aria-label="Filtros das Atas"
+      >
         <label>
           <span>De</span>
           <input
