@@ -1,6 +1,6 @@
 export default function LoadingGruposPage() {
   return (
-    <main className="admin-layout" aria-busy="true" aria-label="Carregando painel administrativo">
+    <main className="admin-layout app-loading" aria-busy="true" aria-label="Carregando painel administrativo">
       <aside className="admin-sidebar" aria-hidden="true">
         <div className="admin-brand">
           <span className="skeleton-block skeleton-icon" />

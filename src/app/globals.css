@@ -352,7 +352,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-layout:has(.responsavel-relatorios-azul-demo) .app-signout-button:focus-visible {
   background: #f5e7e7;
   color: var(--danger);
-  outline: 2px solid color-mix(in srgb, var(--danger) 55%, transparent);
+  outline: 2px solid var(--danger);
   outline-offset: 2px;
 }
 .responsavel-layout:has(.responsavel-relatorios-azul-demo) .app-menu-trigger {
@@ -607,7 +607,16 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .route-error h1, .route-error p { margin: 0; }
 .loading-title-stack { display: grid; gap: .55rem; }
 .loading-groups-card { display: grid; gap: 1rem; padding: 1.5rem; }
-.skeleton-block { display: block; overflow: hidden; border-radius: 8px; background: linear-gradient(90deg, #ece8de 0%, #f8f5ec 45%, #ece8de 90%); background-size: 220% 100%; animation: skeleton-pulse 1.4s ease-in-out infinite; }
+.skeleton-block { display: block; overflow: hidden; border-radius: 8px; background: linear-gradient(90deg, #e6f1fa 0%, #f5f9ff 45%, #e6f1fa 90%); background-size: 220% 100%; animation: skeleton-pulse 1.4s ease-in-out infinite; }
+body:has(.app-loading) { background: #fbfcff; }
+.app-loading {
+  --paper: #fbfcff;
+  --surface: #fff;
+  --line: #dfe3e8;
+}
+.app-loading .admin-sidebar,
+.app-loading .admin-nav { background: #f5f9ff; }
+.app-loading .admin-sidebar { border-color: #e4edf6; }
 .skeleton-icon { width: 2.75rem; height: 2.75rem; border-radius: 999px; }
 .skeleton-brand { width: 8rem; height: 1.4rem; }
 .skeleton-nav-item { width: 100%; height: 2.75rem; }
@@ -637,7 +646,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .app-nav-item-active { background: #e2eee6; color: #007a55; }
 .app-signout-form { width: 100%; margin: 0; }
 .app-signout-button { justify-content: flex-start; color: var(--danger); }
-.app-signout-button:hover, .app-signout-button:focus-visible { background: #f5e7e7; color: var(--danger); }
+.app-signout-button:hover, .app-signout-button:focus-visible { background: #f5e7e7; color: var(--danger); outline: 2px solid var(--danger); outline-offset: 2px; }
 .app-menu-trigger { display: none; width: 2.75rem; height: 2.75rem; min-width: 2.75rem; min-height: 2.75rem; padding: 0; background: #e7eee9; color: var(--brand); }
 .app-menu-trigger:hover, .app-menu-trigger:focus-visible { background: color-mix(in srgb, var(--brand) 18%, white); outline: 2px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: 2px; }
 .app-main, .admin-main, .responsavel-main { width: min(1040px, 100%); min-width: 0; padding: 2.5rem 1.75rem; }
@@ -827,10 +836,16 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-action-menu-trigger:focus-visible { background: color-mix(in srgb, var(--brand) 18%, white); outline: 2px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: 2px; }
 .responsavel-action-menu { position: fixed; z-index: 100; display: grid; width: min(14rem, calc(100vw - 1rem)); overflow: hidden; border: 1px solid var(--line); border-radius: 10px; padding: .35rem; background: white; box-shadow: 0 14px 35px rgb(16 32 24 / 22%); }
 .responsavel-action-menu-item { display: grid; grid-template-columns: 1.25rem minmax(0, 1fr) auto; align-items: center; gap: .55rem; min-height: 2.5rem; width: 100%; border-radius: 7px; padding: .55rem .65rem; background: transparent; color: var(--ink); font-size: .875rem; line-height: 1.2; text-align: left; text-decoration: none; }
-.responsavel-action-menu-item svg { width: .95rem; height: .95rem; color: var(--brand); }
+.responsavel-action-menu-item svg { width: .95rem; height: .95rem; color: #0b3a7a; }
 .responsavel-action-menu-item small { color: var(--muted); font-size: .7rem; }
 .responsavel-action-menu-item:hover,
-.responsavel-action-menu-item:focus-visible { background: #edf4ef; outline: 2px solid color-mix(in srgb, var(--brand) 35%, transparent); outline-offset: -2px; }
+.responsavel-action-menu-item:focus-visible { background: #e6f1fa; color: #0b3a7a; outline: 2px solid #1d4ed8; outline-offset: -2px; }
+.responsavel-action-menu-item:hover svg,
+.responsavel-action-menu-item:focus-visible svg { color: #0b3a7a; }
+.responsavel-action-menu-item-danger:hover:not(:disabled),
+.responsavel-action-menu-item-danger:focus-visible:not(:disabled) { background: #f5e7e7; color: var(--danger); outline: 2px solid var(--danger); outline-offset: -2px; }
+.responsavel-action-menu-item-danger:hover:not(:disabled) svg,
+.responsavel-action-menu-item-danger:focus-visible:not(:disabled) svg { color: var(--danger); }
 .responsavel-action-menu-item:disabled { background: transparent; color: color-mix(in srgb, var(--muted) 70%, white); opacity: 1; }
 .responsavel-action-menu-item:disabled svg { color: color-mix(in srgb, var(--muted) 55%, white); }
 .responsavel-action-menu-item-danger svg { color: var(--danger); }
@@ -1452,14 +1467,14 @@ legend { padding: 0 .35rem; font-weight: 700; }
   padding: 10px 12px;
 }
 .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .responsavel-sidebar {
-  background: #f8fbff;
+  background: #f5f9ff;
   border-color: #e4edf6;
 }
 .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) {
-  background: #fcfdff;
+  background: #fbfcff;
 }
 .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .responsavel-nav {
-  background: #f8fbff;
+  background: #f5f9ff;
   border-color: #e4edf6;
 }
 .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-nav-item {
@@ -1485,7 +1500,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-signout-button:focus-visible {
   background: #f5e7e7;
   color: var(--danger);
-  outline: 2px solid color-mix(in srgb, var(--danger) 55%, transparent);
+  outline: 2px solid var(--danger);
   outline-offset: 2px;
 }
 .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .app-menu-trigger {
@@ -1772,4 +1787,957 @@ legend { padding: 0 .35rem; font-weight: 700; }
   .schedule-row-modal { width: min(520px, 100%); }
   .schedule-row-modal-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .schedule-row-modal-actions button { min-width: 0; }
+}
+
+/* Padrão visual do histórico do Responsável, alinhado à rota Relatórios. */
+.responsavel-layout:has(.responsavel-atas-page-header) {
+  --ink: #1c2430;
+  --muted: #6e849a;
+  --paper: #fcfdff;
+  --surface: #fff;
+  --line: #dfe3e8;
+  --brand: #1d4ed8;
+  background: #fcfdff;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-main {
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-sidebar {
+  background: #f8fbff;
+  border-color: #e4edf6;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-nav {
+  background: #f8fbff;
+  border-color: #e4edf6;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .app-nav-item { color: #111827; }
+.responsavel-layout:has(.responsavel-atas-page-header) .app-nav-item:hover,
+.responsavel-layout:has(.responsavel-atas-page-header) .app-nav-item:focus-visible {
+  background: #e6f1fa;
+  color: #0b3a7a;
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .app-nav-item-active,
+.responsavel-layout:has(.responsavel-atas-page-header) .app-nav-item-active:hover {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .app-signout-button {
+  background: transparent;
+  color: var(--danger);
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .app-signout-button:hover,
+.responsavel-layout:has(.responsavel-atas-page-header) .app-signout-button:focus-visible {
+  background: #f5e7e7;
+  color: var(--danger);
+  outline: 2px solid var(--danger);
+  outline-offset: 2px;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .app-menu-trigger {
+  background: #e6f1fa;
+  color: #1d4ed8;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .app-menu-trigger:hover,
+.responsavel-layout:has(.responsavel-atas-page-header) .app-menu-trigger:focus-visible {
+  background: #e6f1fa;
+  color: #0b3a7a;
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-page-header { margin-bottom: 18px; }
+.responsavel-atas-page-header + .responsavel-atas-card { margin-top: 18px; }
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-page-header .eyebrow {
+  color: #1d4ed8;
+  font-size: 12.8px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-page-header h1 {
+  color: #0b3a7a;
+  font-size: 41.6px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-page-header-actions .button-link {
+  min-height: 36px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  box-shadow: none;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-page-header-actions .responsavel-history-button {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-page-header-actions .responsavel-new-ata-button {
+  background: #1d4ed8;
+  color: #fff;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-page-header-actions .button-link:hover,
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-page-header-actions .button-link:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card,
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-panel {
+  border: 1px solid #dfe3e8;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: none;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-filters {
+  gap: 12px;
+  border-bottom: 1px solid #dfe3e8;
+  padding: 12px;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-filters label {
+  gap: 6px;
+  color: #6e849a;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-filters input,
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-filters select {
+  min-height: 36px;
+  height: 36px;
+  border: 1px solid #dfe3e8;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #fff;
+  color: #1c2430;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap {
+  padding: 12px;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-container {
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table {
+  border: 1px solid #e4edf6;
+  border-radius: 8px;
+  background: #fff;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table thead th {
+  border-right: 0;
+  border-bottom: 1px solid #e4edf6;
+  padding: 9.6px 8.8px;
+  background: #1d4ed8 !important;
+  color: #fff !important;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 13.0133px;
+  font-weight: 700;
+  line-height: 16.2667px;
+  text-transform: uppercase;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table thead th:last-child { border-right: 0; }
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td {
+  border-bottom: 1px solid #e4edf6;
+  border-right: 0;
+  padding: 9.6px 8.8px;
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td:last-child { border-right: 0; }
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody tr:last-child td { border-bottom: 0; }
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-status-dot {
+  border: 0;
+  box-shadow: none;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td:first-child {
+  font-size: 14.9333px;
+  font-weight: 700;
+  line-height: 18.6667px;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td:nth-child(2),
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td:nth-child(3) {
+  font-size: 17.3333px;
+  font-weight: 400;
+  line-height: 21.6667px;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-action-menu-trigger {
+  min-height: 30px;
+  background: transparent;
+  color: rgb(0 0 0 / 50%);
+  outline: 0;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-action-menu-trigger:hover {
+  background: #e6f1fa;
+  color: #0b3a7a;
+  outline: 0;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-action-menu-trigger:focus-visible {
+  background: transparent;
+  color: rgb(0 0 0 / 80%);
+  outline: 2px solid rgb(0 0 0 / 80%);
+  outline-offset: 2px;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-paging .dt-paging-button {
+  min-height: 36px;
+  border-radius: 8px;
+  background: #e6f1fa;
+  color: #0b3a7a !important;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-paging .dt-paging-button.current {
+  background: #1d4ed8;
+  color: #fff !important;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-paging .dt-paging-button:hover:not(.disabled),
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-paging .dt-paging-button:focus-visible:not(.disabled) {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-panel h2 { color: #1c2430; }
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-panel > header p,
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-panel small { color: #6e849a; }
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-panel input[type="checkbox"] { accent-color: #1d4ed8; }
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-list { border-color: #e4edf6; border-radius: 8px; }
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-list-heading {
+  border-bottom: 1px solid #e4edf6;
+  background: #1d4ed8;
+  color: #fff;
+  font-size: 13.0133px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-row { border-color: #e4edf6; }
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-row-actions button,
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-panel > header button {
+  min-height: 36px;
+  border-radius: 8px;
+  background: #1d4ed8;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-pagination button {
+  min-height: 36px;
+  border-radius: 8px;
+  background: #e6f1fa;
+  color: #0b3a7a;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-feedback,
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-row-actions a { color: #1d4ed8; }
+
+/* Configuracoes do grupo: aplicar o padrao azul somente na rota Responsavel. */
+.responsavel-layout:has(.responsavel-config-page) {
+  --ink: #1c2430;
+  --muted: #6e849a;
+  --paper: #fcfdff;
+  --surface: #fff;
+  --line: #dfe3e8;
+  --brand: #1d4ed8;
+  background: #fcfdff;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-main {
+  background: #fcfdff;
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-sidebar,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-nav {
+  border-color: #e4edf6;
+  background: #f8fbff;
+}
+.responsavel-layout:has(.responsavel-config-page) .app-nav-item { color: #111827; }
+.responsavel-layout:has(.responsavel-config-page) .app-nav-item:hover,
+.responsavel-layout:has(.responsavel-config-page) .app-nav-item:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.responsavel-config-page) .app-nav-item-active,
+.responsavel-layout:has(.responsavel-config-page) .app-nav-item-active:hover {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.responsavel-config-page) .app-signout-button {
+  background: transparent;
+  color: var(--danger);
+}
+.responsavel-layout:has(.responsavel-config-page) .app-signout-button:hover,
+.responsavel-layout:has(.responsavel-config-page) .app-signout-button:focus-visible {
+  background: #f5e7e7;
+  color: var(--danger);
+}
+.responsavel-layout:has(.responsavel-config-page) .app-menu-trigger {
+  background: #e6f1fa;
+  color: #1d4ed8;
+}
+.responsavel-layout:has(.responsavel-config-page) .app-menu-trigger:hover,
+.responsavel-layout:has(.responsavel-config-page) .app-menu-trigger:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-page-header .eyebrow {
+  color: #1d4ed8;
+  font-size: 12.8px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-page-header h1 {
+  color: #0b3a7a;
+  font-size: 41.6px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-page-header {
+  margin-bottom: 2px;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-page-description {
+  color: #6e849a;
+  font-size: 13px;
+  font-weight: 600;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-form {
+  color: #1c2430;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .card {
+  border: 1px solid #dfe3e8;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: none;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-panel {
+  padding: 12px;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-form > .responsavel-config-panel:not(.settings-accordion) {
+  margin-top: 0;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-panel.settings-accordion {
+  padding: 16px 12px;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-section h2,
+.responsavel-layout:has(.responsavel-config-page) .group-platforms-heading h2 {
+  color: #1c2430;
+}
+.responsavel-layout:has(.responsavel-config-page) .settings-accordion > .settings-accordion-summary {
+  color: #1c2430;
+}
+.responsavel-layout:has(.responsavel-config-page) .settings-accordion > .settings-accordion-summary:focus-visible {
+  outline: 2px solid #1d4ed8;
+}
+.responsavel-layout:has(.responsavel-config-page) .settings-accordion-chevron,
+.responsavel-layout:has(.responsavel-config-page) .schedule-time-help-icon {
+  color: #1d4ed8;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page label,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-email-field > label {
+  color: #6e849a;
+  font-size: 12px;
+  font-weight: 600;
+}
+.responsavel-config-page .responsavel-email-field {
+  grid-template-columns: minmax(0, 1fr) 36px;
+  align-self: start;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-email-field > label {
+  gap: .35rem;
+  line-height: 1.1rem;
+}
+.responsavel-config-page .responsavel-config-grid .icon-button {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0;
+}
+.responsavel-config-page .responsavel-config-grid .icon-button svg {
+  width: 14px;
+  height: 14px;
+}
+.responsavel-config-page .platform-deactivation-details > summary,
+.responsavel-config-page .group-platform-schedule-tools > summary {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  list-style: none;
+}
+.responsavel-config-page .platform-deactivation-details > summary::marker { content: ""; }
+.responsavel-config-page .platform-deactivation-details > summary::-webkit-details-marker { display: none; }
+.platform-deactivation-chevron { width: .85rem; height: .85rem; flex: 0 0 auto; }
+.platform-deactivation-details[open] .platform-deactivation-chevron { transform: rotate(180deg); }
+.responsavel-config-page .group-platform-schedule-tools > summary::marker { content: ""; }
+.responsavel-config-page .group-platform-schedule-tools > summary::-webkit-details-marker { display: none; }
+.platform-association-chevron { width: .85rem; height: .85rem; flex: 0 0 auto; }
+.group-platform-schedule-tools[open] > summary .platform-association-chevron { transform: rotate(180deg); }
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page input:not([type="checkbox"]):not([type="radio"]),
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page select,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page textarea,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop input:not([type="checkbox"]):not([type="radio"]),
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop select,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop textarea {
+  border: 1px solid #dfe3e8;
+  border-radius: 8px;
+  background: #fff;
+  color: #1c2430;
+  font-family: inherit;
+  font-size: 14px;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page input:not([type="checkbox"]):not([type="radio"]),
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page select,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop input:not([type="checkbox"]):not([type="radio"]),
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop select {
+  height: 36px;
+  min-height: 36px;
+  padding: 0 12px;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page textarea,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop textarea {
+  min-height: 5rem;
+  padding: 10px 12px;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page input[readonly] {
+  background: #f8fbff;
+  color: #1c2430;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page select:disabled,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop select:disabled {
+  background: #f8fbff;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page input:focus,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page select:focus,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page textarea:focus,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop input:focus,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop select:focus,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop textarea:focus {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 1px;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button):not(.secondary):not(.danger-button),
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button):not(.secondary):not(.danger-button),
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .email-change-modal-actions a {
+  height: 36px;
+  min-height: 36px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #1d4ed8;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .secondary,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop .secondary,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .email-change-modal-actions a.secondary {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page button.secondary:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button),
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page button.danger-button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button),
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop button.secondary:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button),
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop button.danger-button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button) {
+  height: 36px;
+  min-height: 36px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .confirmation-modal button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button).secondary,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .group-save-footer button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button).secondary,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .schedule-editor button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button).secondary,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .email-change-modal-actions a.secondary {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .platform-option-card > button {
+  background: #1d4ed8;
+  color: #fff;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .platform-option-card > button.secondary,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .responsavel-schedules-section .schedule-view-footer button.group-wide-action:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button):not(.secondary):not(.danger-button) {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .group-platform-deactivate button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button):not(.secondary) {
+  background: #f5e7e7;
+  color: var(--danger);
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .icon-button,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop .icon-button {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .danger-button,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop .danger-button {
+  background: #f5e7e7;
+  color: var(--danger);
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .danger-icon-button,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop .danger-icon-button {
+  background: #f5e7e7;
+  color: var(--danger);
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page button:focus-visible,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop button:focus-visible,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page a:focus-visible,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop a:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .danger-button:focus-visible,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop .danger-button:focus-visible,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .danger-icon-button:focus-visible,
+.responsavel-layout:has(.responsavel-config-page) .modal-backdrop .danger-icon-button:focus-visible {
+  outline-color: var(--danger);
+}
+.responsavel-layout:has(.responsavel-config-page) .group-save-footer .group-wide-action,
+.responsavel-layout:has(.responsavel-config-page) .mesa-add-button,
+.responsavel-layout:has(.responsavel-config-page) .schedule-view-footer .group-wide-action {
+  width: auto;
+  min-height: 36px;
+}
+.responsavel-layout:has(.responsavel-config-page) .platform-option-card,
+.responsavel-layout:has(.responsavel-config-page) .group-platform-distribution {
+  border-color: #dfe3e8;
+  border-radius: 12px;
+  background: #fff;
+}
+.responsavel-layout:has(.responsavel-config-page) .platform-status-active { color: #1f7541; }
+.responsavel-layout:has(.responsavel-config-page) .group-platform-schedule-tools,
+.responsavel-layout:has(.responsavel-config-page) .platform-deactivation-details,
+.responsavel-layout:has(.responsavel-config-page) .group-platform-transfer,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .schedule-add-row,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .schedule-rows,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .schedule-row {
+  border-color: #dfe3e8;
+}
+.responsavel-layout:has(.responsavel-config-page) .platforms-locked-message {
+  border-color: #dfe3e8;
+  border-radius: 8px;
+  background: #fff;
+  color: #6e849a;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .table-wrap {
+  overflow-x: auto;
+  border: 1px solid #e4edf6;
+  border-radius: 8px;
+  background: #fff;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page table {
+  margin: 0;
+  border: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page thead th {
+  border: 0;
+  border-right: 1px solid #e4edf6;
+  padding: 9.6px 8.8px;
+  background: #1d4ed8;
+  color: #fff;
+  font-size: 13.0133px;
+  font-weight: 700;
+  line-height: 16.2667px;
+  text-align: center;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page thead th:last-child { border-right: 0; }
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page tbody th,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page tbody td {
+  border: 0;
+  border-right: 1px solid #e4edf6;
+  border-bottom: 1px solid #e4edf6;
+  padding: 9.6px 8.8px;
+  color: #1c2430;
+  vertical-align: middle;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page tbody th:last-child,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page tbody td:last-child { border-right: 0; }
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page tbody tr:last-child > * { border-bottom: 0; }
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .mesa-summary-table :is(th, td) {
+  border-inline: 0;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-schedules-section .schedule-summary-table :is(th, td),
+.responsavel-layout:has(.responsavel-config-page) .responsavel-schedules-section .schedule-management-table :is(th, td) {
+  border-inline: 0;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .responsavel-schedules-section .schedule-summary-table tbody td {
+  text-align: left;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page :is(.mesa-summary-table, .schedule-management-table) :is(.icon-button, .danger-icon-button) {
+  background: transparent;
+}
+.responsavel-config-page :is(.mesa-summary-table, .schedule-management-table) .schedule-actions :is(.icon-button, .danger-icon-button) svg {
+  width: 14px;
+  height: 14px;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page :is(.mesa-summary-table, .schedule-management-table) .icon-button:hover {
+  background: #e6f1fa;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page :is(.mesa-summary-table, .schedule-management-table) .danger-icon-button:hover {
+  background: #f5e7e7;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page tbody th[scope="row"] {
+  font-size: 14.9333px;
+  font-weight: 700;
+  line-height: 18.6667px;
+  text-align: left;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page tbody td {
+  font-size: 17.3333px;
+  font-weight: 400;
+  line-height: 21.6667px;
+  text-align: center;
+}
+.responsavel-layout:has(.responsavel-config-page) .schedule-management-table .schedule-day-cell { font-weight: 700; text-align: left; }
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .schedule-day-grouped .schedule-continued-day-row td:not(.schedule-day-cell) { padding-bottom: 3.7px; }
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .schedule-day-grouped .schedule-same-day-row td { padding-top: 3.7px; }
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .schedule-day-grouped td.schedule-day-cell {
+  vertical-align: middle;
+  border-bottom: 1px solid #e4edf6;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .schedule-day-grouped tr:not(:has(~ tr:not(.schedule-same-day-row))) .schedule-day-cell { border-bottom: 0; }
+.responsavel-layout:has(.responsavel-config-page) .schedule-management-table .schedule-same-day-row td { border-top: 0; }
+.responsavel-layout:has(.responsavel-config-page) .schedule-management-table .schedule-continued-day-row td { border-bottom: 0; }
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .mesa-actions-cell,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .schedule-management-table td:last-child { white-space: nowrap; }
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .confirmation-modal {
+  border: 1px solid #dfe3e8;
+  border-radius: 12px;
+  background: #fff;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .modal-backdrop {
+  background: rgb(15 23 42 / 58%);
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .confirmation-modal h2,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .platform-modal-header h2,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .mesa-server-modal-header h2,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .schedule-row-modal-header h2,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .email-change-modal-header h2 {
+  color: #1c2430;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .platform-modal-header p,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .mesa-server-modal-header p,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .email-change-modal-header p {
+  color: #6e849a;
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .platform-modal-actions,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .schedule-row-modal-actions,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .group-platform-schedule-tools,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .schedule-review-list section {
+  border-color: #dfe3e8;
+}
+body:has(.responsavel-config-page) .email-change-backdrop,
+body:has(.responsavel-config-page) .mesa-server-modal-backdrop,
+body:has(.responsavel-config-page) .schedule-delete-backdrop {
+  background: rgb(15 23 42 / 58%);
+}
+body:has(.responsavel-config-page) .email-change-backdrop .confirmation-modal,
+body:has(.responsavel-config-page) .mesa-server-modal-backdrop .confirmation-modal,
+body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal {
+  border: 1px solid #dfe3e8;
+  border-radius: 12px;
+  background: #fff;
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+body:has(.responsavel-config-page) .email-change-backdrop .confirmation-modal h2,
+body:has(.responsavel-config-page) .mesa-server-modal-backdrop .confirmation-modal h2,
+body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal h2 {
+  color: #1c2430;
+}
+body:has(.responsavel-config-page) .email-change-backdrop .confirmation-modal p,
+body:has(.responsavel-config-page) .mesa-server-modal-backdrop .confirmation-modal p {
+  color: #6e849a;
+}
+body:has(.responsavel-config-page) .email-change-backdrop .confirmation-modal label,
+body:has(.responsavel-config-page) .mesa-server-modal-backdrop .confirmation-modal label {
+  color: #6e849a;
+  font-size: 12px;
+  font-weight: 600;
+}
+body:has(.responsavel-config-page) .email-change-backdrop .confirmation-modal input:not([type="hidden"]),
+body:has(.responsavel-config-page) .mesa-server-modal-backdrop .confirmation-modal input:not([type="hidden"]),
+body:has(.responsavel-config-page) .mesa-server-modal-backdrop .confirmation-modal select {
+  height: 36px;
+  min-height: 36px;
+  border: 1px solid #dfe3e8;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #fff;
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+}
+body:has(.responsavel-config-page) .email-change-backdrop .confirmation-modal button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button):not(.secondary):not(.danger-button),
+body:has(.responsavel-config-page) .mesa-server-modal-backdrop .confirmation-modal button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button):not(.secondary):not(.danger-button),
+body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button):not(.secondary):not(.danger-button),
+body:has(.responsavel-config-page) .email-change-backdrop .email-change-modal-actions a {
+  height: 36px;
+  min-height: 36px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #1d4ed8;
+  color: #fff;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+}
+body:has(.responsavel-config-page) .email-change-backdrop .confirmation-modal button.secondary,
+body:has(.responsavel-config-page) .mesa-server-modal-backdrop .confirmation-modal button.secondary,
+body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal button.secondary,
+body:has(.responsavel-config-page) .email-change-backdrop .email-change-modal-actions a.secondary {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+body:has(.responsavel-config-page) .email-change-backdrop .confirmation-modal button.secondary:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button),
+body:has(.responsavel-config-page) .email-change-backdrop .confirmation-modal button.danger-button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button),
+body:has(.responsavel-config-page) .mesa-server-modal-backdrop .confirmation-modal button.secondary:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button),
+body:has(.responsavel-config-page) .mesa-server-modal-backdrop .confirmation-modal button.danger-button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button),
+body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal button.secondary:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button),
+body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal button.danger-button:not(.icon-button):not(.danger-icon-button):not(.activate-icon-button) {
+  height: 36px;
+  min-height: 36px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+body:has(.responsavel-config-page) .email-change-backdrop .confirmation-modal .icon-button,
+body:has(.responsavel-config-page) .mesa-server-modal-backdrop .confirmation-modal .icon-button {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal .danger-button {
+  background: #f5e7e7;
+  color: var(--danger);
+}
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .mesa-vacant-value,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .muted,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .field-hint,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .platform-types-note {
+  color: #6e849a;
+}
+
+@media (max-width: 499px) {
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody tr {
+    height: 33.1875px;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td {
+    padding-block: 3.3px;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td:first-child {
+    font-size: 11.2px;
+    line-height: 14px;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td:nth-child(4),
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td:nth-child(5) {
+    font-size: 9.75px;
+    line-height: 12.1875px;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-status-dot {
+    width: 0.5625rem;
+    height: 0.5625rem;
+    flex-basis: 0.5625rem;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-action-menu-trigger {
+    width: 22.5px;
+    height: 22.5px;
+    min-width: 22.5px;
+    min-height: 22.5px;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-action-menu-trigger svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap,
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-layout-cell.dt-layout-full {
+    overflow-x: visible;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-layout-cell.dt-layout-full {
+    container-type: inline-size;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-container,
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table {
+    min-width: 0;
+    width: 100% !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table {
+    table-layout: fixed;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table colgroup col[data-dt-column="0"] {
+    width: 3rem !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table colgroup col[data-dt-column="1"] {
+    width: calc(66.6667cqi - 4.25rem) !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table colgroup col[data-dt-column="2"] {
+    display: none;
+    width: 0 !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table colgroup col[data-dt-column="3"] {
+    width: calc(33.3333cqi - 2.125rem) !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table colgroup col[data-dt-column="4"] {
+    width: 3.25rem !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table thead th {
+    padding-inline: 2px;
+    font-size: 11.5px;
+    line-height: 14px;
+    white-space: nowrap;
+    text-align: center !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td {
+    text-align: center !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table th:nth-child(4) {
+    font-size: 10px;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table .responsavel-status-column .dt-column-title,
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table .responsavel-actions-column .dt-column-title {
+    font-size: 11.5px !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table .responsavel-status-column .dt-column-title::after,
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table .responsavel-actions-column .dt-column-title::after {
+    content: none !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td {
+    padding-inline: 4px;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table th:nth-child(1),
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table td:nth-child(1) {
+    width: 3rem !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table th:nth-child(5),
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table td:nth-child(5) {
+    width: 3.25rem !important;
+    padding-inline: 2px;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td:nth-child(2) {
+    font-size: 12.5px;
+    line-height: 16px;
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 500px) {
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap {
+    overflow-x: visible;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-container {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-layout-cell.dt-layout-full {
+    min-width: 0;
+    overflow-x: visible;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table {
+    min-width: 0;
+    width: 100% !important;
+    table-layout: fixed;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table colgroup col[data-dt-column="0"],
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table colgroup col[data-dt-column="3"],
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table colgroup col[data-dt-column="4"] {
+    width: 64px !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table colgroup col[data-dt-column="1"],
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table colgroup col[data-dt-column="2"] {
+    width: calc(50% - 96px) !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table th:nth-child(n),
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table td:nth-child(n) {
+    width: auto !important;
+    min-width: 0;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table thead th,
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td {
+    text-align: center !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table th:nth-child(1),
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table th:nth-child(4),
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table th:nth-child(5) {
+    padding-inline: 2px;
+    font-size: 11.5px;
+  }
+}
+
+@media (min-width: 500px) and (max-width: 720px) {
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table colgroup col[data-dt-column="1"] {
+    width: calc(100% - 192px) !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table colgroup col[data-dt-column="2"] {
+    display: none;
+    width: 0 !important;
+  }
+
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table th:nth-child(3),
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table td:nth-child(3) {
+    display: none;
+  }
 }

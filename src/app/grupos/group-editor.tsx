@@ -758,9 +758,6 @@ export function GroupEditor({
           <div>
             <p className="eyebrow">Configurações</p>
             <h1>Grupo {current.grupo_nome}</h1>
-            <p className="responsavel-page-description">
-              Gerencie os dados, acessos e horários do grupo.
-            </p>
           </div>
         </header>
 
@@ -971,7 +968,7 @@ export function GroupEditor({
               </summary>
               <div className="settings-accordion-content">
                 <PlatformLegend />
-                <GroupSchedulesEditor grupoId={group.grupo_id} horarios={horarios} plataformas={plataformas} />
+                <GroupSchedulesEditor grupoId={group.grupo_id} horarios={horarios} plataformas={plataformas} groupDayRows />
               </div>
             </details>
           </>

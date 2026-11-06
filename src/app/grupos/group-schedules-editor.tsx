@@ -155,11 +155,13 @@ export function GroupSchedulesEditor({
   horarios,
   plataformas = [],
   returnToNewGroupPage = false,
+  groupDayRows = false,
 }: {
   grupoId: string;
   horarios: GrupoHorario[];
   plataformas?: GrupoPlataforma[];
   returnToNewGroupPage?: boolean;
+  groupDayRows?: boolean;
 }) {
   const activePlatforms = plataformas.filter(
     (item) => item.ativo && item.grupo_id === grupoId,
@@ -450,7 +452,7 @@ export function GroupSchedulesEditor({
   return (
     <div className="schedule-editor">
       <div className="table-wrap">
-        <table className="schedule-management-table">
+        <table className={`schedule-management-table${groupDayRows ? " schedule-day-grouped" : ""}`}>
           <thead>
             <tr>
               <th>Dia</th>
@@ -480,9 +482,11 @@ export function GroupSchedulesEditor({
                   ].filter(Boolean).join(" ") || undefined}
                   key={row.clientId}
                 >
-                  <td>
-                    {showDay ? responsiveDayLabel(dayLabel(row.dia_semana), compactDayLabels) : ""}
-                  </td>
+                  {(!groupDayRows || showDay) && (
+                    <td className="schedule-day-cell" rowSpan={groupDayRows ? rows.filter((item) => item.dia_semana === row.dia_semana).length : 1}>
+                      {showDay ? responsiveDayLabel(dayLabel(row.dia_semana), compactDayLabels) : ""}
+                    </td>
+                  )}
                   <td>
                     <span className="schedule-time-platform">
                       {displayTime(row.hora_inicio)}
@@ -764,7 +768,7 @@ export function GroupSchedulesEditor({
         </div>
       ) : (
         <div className="section-footer">
-          <button type="button" className="secondary" onClick={() => setAdding(true)}>
+          <button type="button" onClick={() => setAdding(true)}>
             <span className="button-content">
               <FontAwesomeIcon icon={faPlus} />
               Adicionar Horário

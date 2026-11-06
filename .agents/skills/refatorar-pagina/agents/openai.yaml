@@ -1,0 +1,4 @@
+interface:
+  display_name: "Refatorar página"
+  short_description: "Refatora uma rota por vez com referência visual"
+  default_prompt: "Use $refatorar-pagina para alinhar uma rota do GS Mapeamento a uma referência visual, preservando seu comportamento."

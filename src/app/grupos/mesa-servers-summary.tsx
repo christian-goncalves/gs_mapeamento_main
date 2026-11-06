@@ -218,6 +218,13 @@ function MesaServerActions({
   disabled: boolean;
   onEdit: () => void;
 }) {
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
+  const deleteFormId = `remove-mesa-server-${item.clientId}`;
+
+  useEffect(() => {
+    setPortalTarget(document.body);
+  }, []);
+
   return (
     <div className="row-actions schedule-actions">
       <button
@@ -231,24 +238,10 @@ function MesaServerActions({
         <FontAwesomeIcon icon={faPenToSquare} />
       </button>
       {item.grupo_servidor_mesa_id && (
-        <form
-          className="schedule-delete-form"
-          action={deactivateGrupoServidorMesaAction}
-          onSubmit={(event) => {
-            if (!window.confirm(`Remover o encargo ${item.encargo}?`)) {
-              event.preventDefault();
-            }
-          }}
-        >
-          <input type="hidden" name="grupo_id" value={grupoId} />
-          <input type="hidden" name="settings_section" value="servers" />
-          <input
-            type="hidden"
-            name="grupo_servidor_mesa_id"
-            value={item.grupo_servidor_mesa_id}
-          />
+        <>
           <button
             type="submit"
+            form={deleteFormId}
             className="danger-icon-button"
             aria-label={`Remover ${item.encargo}`}
             title="Remover"
@@ -256,7 +249,28 @@ function MesaServerActions({
           >
             <FontAwesomeIcon icon={faTrashCan} />
           </button>
-        </form>
+          {portalTarget && createPortal(
+            <form
+              id={deleteFormId}
+              className="schedule-delete-form"
+              action={deactivateGrupoServidorMesaAction}
+              onSubmit={(event) => {
+                if (!window.confirm(`Remover o encargo ${item.encargo}?`)) {
+                  event.preventDefault();
+                }
+              }}
+            >
+              <input type="hidden" name="grupo_id" value={grupoId} />
+              <input type="hidden" name="settings_section" value="servers" />
+              <input
+                type="hidden"
+                name="grupo_servidor_mesa_id"
+                value={item.grupo_servidor_mesa_id}
+              />
+            </form>,
+            portalTarget,
+          )}
+        </>
       )}
     </div>
   );

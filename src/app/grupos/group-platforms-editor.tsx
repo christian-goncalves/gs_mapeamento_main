@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFloppyDisk, faPenToSquare, faPlus, faRightLeft, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faFloppyDisk, faPenToSquare, faPlus, faRightLeft, faXmark } from "@fortawesome/free-solid-svg-icons";
 import type { GrupoHorario, GrupoPlataforma } from "@/domain/entities";
 import { plataformaMapping } from "@/domain/enums";
 import { associateGrupoHorariosAction, deactivateGrupoPlataformaAction, saveGrupoPlataformaAction } from "./actions";
@@ -131,7 +131,10 @@ export function GroupPlatformsEditor({
               </button>
               {active && schedules.some((schedule) => schedule.ativo && schedule.plataforma_id === active.plataforma_id) ? (
                 <details className="platform-deactivation-details">
-                  <summary>Desativar Plataforma</summary>
+                  <summary>
+                    {!isAdmin && <FontAwesomeIcon icon={faChevronDown} className="platform-deactivation-chevron" />}
+                    Desativar Plataforma
+                  </summary>
                   <form action={deactivateGrupoPlataformaAction} className="group-platform-deactivate">
                     <input type="hidden" name="grupo_id" value={grupoId} />
                     <input type="hidden" name="settings_section" value="platforms" />
@@ -214,7 +217,10 @@ export function GroupPlatformsEditor({
 
       {schedules.length > 0 ? (
         <details className="group-platform-schedule-tools" open={pendingSchedules.length > 0}>
-          <summary>Associação de Horários</summary>
+          <summary>
+            {!isAdmin && <FontAwesomeIcon icon={faChevronDown} className="platform-association-chevron" />}
+            Associação de Horários
+          </summary>
           <div className="group-platform-schedule-tools-content">
             <h3>Horários Associados</h3>
             {schedules.filter((schedule) => schedule.ativo && schedule.grupo_id === grupoId && schedule.plataforma_id).map((schedule) => (
@@ -228,7 +234,12 @@ export function GroupPlatformsEditor({
                 {returnToNewGroupPage ? <input type="hidden" name="return_to_new_group_page" value="on" /> : null}
                 <span>{dayLabels[schedule.dia_semana]} às {schedule.hora_inicio} — {label(platforms.find((platform) => platform.plataforma_id === schedule.plataforma_id)?.tipo ?? "")}</span>
                 <label>Transferir para<select name="plataforma_id" required defaultValue={schedule.plataforma_id}>{activePlatforms.map((platform) => <option key={platform.plataforma_id} value={platform.plataforma_id}>{label(platform.tipo)}</option>)}</select></label>
-                <button type="submit">Transferir Horário</button>
+                <button type="submit">
+                  <span className="button-content">
+                    <FontAwesomeIcon icon={faRightLeft} aria-hidden="true" />
+                    Transferir Horário
+                  </span>
+                </button>
               </form>
             ))}
             <h3>Horários sem plataforma</h3>

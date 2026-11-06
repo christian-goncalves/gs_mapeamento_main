@@ -7,7 +7,7 @@ Este documento registra a aparência verificada de `/responsavel/relatorios` com
 | Elemento | Referência principal | Aplicação registrada |
 |---|---|---|
 | Shell do Responsável, navegação, título da página, filtros e cartões de seção | `/responsavel/relatorios` | Cores, tipografia, contornos, dimensões e espaçamentos comuns. |
-| Cabeçalho e células das tabelas do relatório | `/responsavel/relatorios` | As bordas e a escala da tabela são próprias dela; não usar a cor de cabeçalho do Painel Azul como se fosse a cor renderizada nesta rota. |
+| Cabeçalho e contorno de tabelas equivalentes | `/responsavel/relatorios` | Reutilizar o cabeçalho azul com texto branco e o contorno claro nas tabelas das páginas refatoradas; adaptar conteúdo e geometria ao formato de cada tabela. Não usar a cor de cabeçalho do Painel Azul como se fosse a cor renderizada nesta rota. |
 | Cartão com barras horizontais, como “Grupos por CSA” | CSR Brasil Sul · Santa Catarina — Dashboard executivo | Reutilizar o padrão de tipografia dos títulos, nomes e números, as barras e o hover. A superfície do cartão segue o padrão comum de Relatórios: fundo `#ffffff` e borda `#dfe3e8`. |
 
 O padrão do CSR aplica-se a cartões com barras horizontais. Não define a tipografia de todos os outros cartões do sistema.
@@ -25,7 +25,7 @@ O padrão do CSR aplica-se a cartões com barras horizontais. Não define a tipo
 
 | Papel | Valor | Onde aparece |
 |---|---|---|
-| Fundo da página | `#fcfdff` | Área principal do relatório. |
+| Fundo da página | `#fbfcff` | Área principal do relatório. |
 | Superfície | `#ffffff` | Filtro, seções e cartões internos. |
 | Texto principal | `#1c2430` | Títulos de seção e conteúdo. |
 | Título do grupo e item ativo do menu | `#0b3a7a` | “Grupo USL” e “Relatórios” na navegação. |
@@ -34,13 +34,13 @@ O padrão do CSR aplica-se a cartões com barras horizontais. Não define a tipo
 | Borda de filtros, seções e cartões | `#dfe3e8` | Contorno dos cinco containers principais e cartões internos. |
 | Borda da tabela | `#e4edf6` | Contorno, divisórias e linhas da tabela; é mais clara que a borda dos containers. |
 | Fundo do item ativo do menu | `#e6f1fa` | Destaque do item “Relatórios”. |
-| Fundo da barra lateral | `#f8fbff` | Navegação do Responsável. |
+| Fundo da barra lateral | `#f5f9ff` | Navegação do Responsável. |
 
 ### Shell, navegação e cabeçalho
 
 | Componente | Tipografia e cor | Geometria observada |
 |---|---|---|
-| Barra lateral | Arial 16 px/24 px; texto padrão `#17221c` | Desktop: 260 px de largura; borda direita de 1 px `#e4edf6`. Em mobile, transforma-se em barra superior; na medição 375 px, 73 px de altura, com borda inferior `#e4edf6`. Fundo `#f8fbff`. |
+| Barra lateral | Arial 16 px/24 px; texto padrão `#17221c` | Desktop: 260 px de largura; borda direita de 1 px `#e4edf6`. Em mobile, transforma-se em barra superior; na medição 375 px, 73 px de altura, com borda inferior `#e4edf6`. Fundo `#f5f9ff`. |
 | Item ativo “Relatórios” | Arial 16 px/24 px, peso 700, texto `#0b3a7a`, fundo `#e6f1fa` | Raio 8 px; padding horizontal 12 px. Desktop: 227 × 45 px. |
 | Botão de menu mobile | Ícone `#1d4ed8`, fundo `#e6f1fa` | 44 × 44 px, raio 8 px. |
 | Rótulo da página “RELATÓRIOS” | System UI 12.8 px/19.2 px, peso 700, `#1d4ed8` | Caixa alta. |
@@ -62,6 +62,60 @@ O filtro é o primeiro dos cinco containers principais: **filtro**, **Servidores
 
 No mobile, os seletores ocupam duas colunas e o PDF vira um botão compacto sem rótulo. No desktop, mês e ano dividem a largura disponível e o botão PDF mantém o rótulo. O container conserva a largura do conteúdo disponível, sem rolagem horizontal.
 
+### Padrão inicial aprovado: botões e campos de uma linha
+
+Este padrão foi fechado para orientar as refatorações página por página. Ele registra decisões aprovadas, não afirma que todas as páginas já o implementam.
+
+| Variante | Fundo | Texto/ícone | Uso acordado |
+|---|---|---|---|
+| Azul preenchido | `#1d4ed8` | Branco | Ações como **Editar dados**, **Cadastrar** e **Adicionar**. |
+| Azul claro | `#e6f1fa` | `#0b3a7a` | Ações como **Voltar** e **Cancelar**. As cores correspondem ao fundo e ao texto do item ativo/hover de Relatórios no menu. |
+| Destrutiva | Vermelho semântico do contexto | Conforme o componente | Ações como **Excluir** permanecem visualmente destrutivas. |
+
+- Altura padrão: 36 px para botões com texto e campos de uma linha (inputs e selects).
+- Raio de referência: 8 px. Tipografia de botão: 14 px, peso 600, conforme o botão PDF de Relatórios.
+- Campos de uma linha usam fundo branco, borda `1px solid #dfe3e8` e texto principal conforme o contexto visual da página.
+- Textareas e controles somente com ícone podem ter geometria própria; documentar a exceção quando a página exigir.
+- No menu de Relatórios, o estado hover/ativo tem fundo `#e6f1fa` e texto `#0b3a7a`; o contorno de foco é `2px solid #1d4ed8`. O contorno não é o fundo do botão.
+- Este padrão ainda será aplicado gradualmente às páginas. Ao comparar uma página, registrar diferenças do código atual e preservar comportamentos e regras de negócio.
+
+## Aplicação: Histórico de Atas
+
+- Quando o container de filtros e tabela vem diretamente após o cabeçalho, o espaço entre eles é de 18 px, igual ao filtro de Relatórios. A margem superior do container é de 18 px e colapsa com a margem inferior do cabeçalho. O ajuste preserva a posição dos títulos e o espaçamento quando há um painel de aprovações intermediário.
+
+## Aplicação: Configurações do grupo
+
+- Rota: `/grupos/[grupoId]`, variante Responsável do editor de grupo.
+- A refatoração preserva a ordem e a estrutura dos dados, o formulário de edição, os acordeões **Servidores**, **Plataformas** e **Horários de Reunião**, os diálogos e os comportamentos atuais. Os estilos são limitados a essa variante da rota.
+- A superfície da página usa `#fcfdff`; menu lateral/superior `#f8fbff`; item ativo de Configurações `#e6f1fa` com texto `#0b3a7a`; cartões brancos com borda `#dfe3e8` e raio 12 px.
+- O título do grupo usa System UI 41.6 px/45.76 px, peso 700 e cor `#0b3a7a`, igual ao título de Relatórios. O texto auxiliar sob o título foi removido. O topo do cartão **Dados do Grupo** alinha com o topo do cartão de filtros em Relatórios. O rótulo da página e ícones de acordeão usam `#1d4ed8`; texto principal `#1c2430`; rótulos e descrições secundárias `#6e849a`.
+- Inputs e selects de uma linha, inclusive nos diálogos, medem 36 px de altura, com borda `#dfe3e8` e raio 8 px. Botões com texto medem 36 px e usam 14 px/600: azul preenchido `#1d4ed8` para ações principais e azul claro `#e6f1fa`/`#0b3a7a` para Cancelar e ações secundárias. Controles somente com ícone preservam sua dimensão local.
+- As tabelas de servidores e de horários usam cabeçalho `#1d4ed8`, texto branco em caixa alta, System UI 13.0133 px/16.2667 px, peso 700, e bordas/divisórias `#e4edf6`. Encargos e dias nas células que nomeiam a linha usam `#1c2430`, 14.9333 px/18.6667 px, peso 700; os valores usam `#1c2430`, 17.3333 px/21.6667 px, peso 400. A largura e o alinhamento das colunas seguem o conteúdo de cada tabela.
+- Em **Dados do Grupo**, os botões de acesso por e-mail, copiar link e rotacionar link medem 36 × 36 px, com ícones de 14 px, seguindo a altura e o ícone de **Editar**. E-mail alinha com Revisão de Atas; Link da ata alinha com Última reunião antes do sistema. Medição em 900 CSS px: todos os inputs/selects renderizados com 36 px de altura.
+- **Desativar Plataforma** usa chevron para baixo quando fechado e para cima quando aberto, sem o marcador triangular nativo, na variante Responsável.
+- **Associação de Horários** segue o mesmo padrão de chevron. Na tabela de **Servidores**, não há divisórias verticais no cabeçalho nem no corpo; as divisórias horizontais e o contorno externo permanecem. Editar/Remover têm fundo transparente em repouso; somente no hover exibem fundo azul-claro (`#e6f1fa`) ou vermelho-claro (`#f5e7e7`), respectivamente, preservando o contorno de foco por teclado.
+- **Editar Dados** das plataformas e **Editar Horários** usam fundo `#e6f1fa` e texto/ícone `#0b3a7a`. **Cadastrar** mantém o azul preenchido.
+- **Transferir Horário**, em Horários Associados, usa o ícone `faRightLeft`, igual a **Transferir Horários e Desativar**.
+- Na tabela de **Horários de Reunião**, os valores de **Hora de Início** ficam alinhados à esquerda. Não há divisória vertical entre Dia e Hora de Início, inclusive no cabeçalho; contorno externo e linhas horizontais permanecem.
+- Na edição de **Horários de Reunião**, todas as divisórias verticais entre Dia, Hora de Início, Hora de Término e Ações também são removidas, no cabeçalho e no corpo. As linhas horizontais permanecem como estão.
+- Os botões de ação da tabela de edição de horários seguem Servidores: fundo transparente em repouso e badge somente no hover (azul-claro para editar, vermelho-claro para excluir), com foco por teclado preservado.
+- Os ícones de ação de Servidores e Horários de Reunião medem 14 × 14 px, como o ícone de Editar em Dados do Grupo; essa medida é do ícone, não do padding.
+- Na edição de horários do Responsável, o dia ocupa uma célula com `rowSpan` centralizada verticalmente no bloco. O padding entre horários do mesmo dia passa de 9.6 px para 3.7 px por lado interno, reduzindo a distância entre horários em aproximadamente 25% (47.15 → 35.38 px na conferência). Os lados externos mantêm 9.6 px; a passagem entre dias permanece em aproximadamente 48.26 px.
+
+### Carregamento de Grupos
+
+- O skeleton compartilhado de `/grupos` e `/admin/grupos` usa fundo `#fbfcff`, menu `#f5f9ff`, cartões brancos e animação horizontal em gradiente `#e6f1fa` → `#f5f9ff` → `#e6f1fa`, substituindo os tons bege anteriores.
+- Os pontos e badges que identificam Zoom, Zello e WhatsApp mantêm suas cores. Estados ativos continuam verdes; ações destrutivas continuam vermelhas. Os cartões de plataforma usam superfície branca e borda `#dfe3e8`.
+- Conferência visual local em 2026-11-05, no grupo USL, em 1280 × 900 e 390 × 844 CSS px. O viewport de 390 px teve 375 px de largura útil por causa da barra de rolagem vertical; a página e as tabelas conferidas não apresentaram rolagem horizontal. Foram conferidos dados do grupo, cartões de plataforma, tabelas de servidores e horários, edição de horários e diálogos de plataforma, servidor, e-mail e confirmação de exclusão.
+- A responsividade preserva os breakpoints existentes (shell em 980 px; editor e cartões em 720 px; espaçamentos menores em 600 px; exceções globais de tabela/modal em 500 e 360 px). A mudança registra a aplicação visual e não altera essas transições.
+
+### Hover de ações em menus e modais
+
+- Itens de ação não destrutivos, como **Visualizar**, **Visualizar PDF** e **Editar**, mantêm os ícones azuis (`#0b3a7a`) também no estado normal. No hover e no foco por teclado, usam fundo `#e6f1fa`, texto/ícone `#0b3a7a` e contorno `2px solid #1d4ed8`. Em listas de menu, o contorno fica para dentro do item (`outline-offset: -2px`). Aplicar o mesmo padrão a listas de ações equivalentes nos demais modais.
+- Ações destrutivas, como **Excluir**, mantêm o hover vermelho: fundo `#f5e7e7`, texto/ícone e contorno na cor destrutiva do contexto (`var(--danger)` neste projeto).
+- O botão de três pontos que abre o menu não mostra badge em repouso. No hover do ponteiro, mostra fundo `#e6f1fa` e ícone `#0b3a7a`, sem contorno. O foco por teclado mantém um indicador visível.
+- O CSS compartilhado de `.responsavel-action-menu-item` deve manter essas cores para os menus de ações; menus novos devem reutilizar esse padrão, com a exceção vermelha para ações destrutivas.
+
 ### Seções e cartões de métricas
 
 Os quatro containers de seção repetem o mesmo padrão de superfície. Somados ao filtro, formam os cinco containers principais da página.
@@ -81,11 +135,24 @@ As seções observadas são “Servidores”, “Consolidado”, “Consolidados
 | Parte | Tipografia e cor | Borda e espaçamento |
 |---|---|---|
 | Container da tabela | — | Borda externa e divisórias `#e4edf6`, 1 px; raio 8 px. |
-| Cabeçalho | System UI 13.0133 px/16.2667 px, peso 700, texto branco | Fundo `#1d4ed8`; padding vertical 9.6 px. |
+| Cabeçalho | System UI 13.0133 px/16.2667 px, peso 700, texto branco em caixa alta | Fundo `#1d4ed8`; padding vertical 9.6 px; divisórias verticais de 1 px `#e4edf6`. |
 | Encargo | System UI 14.9333 px/18.6667 px, peso 700, `#1c2430` | Alinhado à esquerda. |
 | Nome e data | System UI 17.3333 px/21.6667 px, peso 400, `#1c2430` | Centralizados. |
 
 A borda da tabela (`#e4edf6`) é distinta da borda dos containers (`#dfe3e8`). Em até 500 px, as colunas Encargo/Nome/Desde usam 34%/29%/37%, o padding horizontal cai para 6.4 px e a data não quebra de linha. No viewport de 375 px, os dados exibidos ficaram em uma linha e não houve rolagem horizontal.
+
+### Exceção local: tabela de Histórico de Atas em telas estreitas
+
+Este ajuste vale somente para `/responsavel/atas`; ele não define a largura das tabelas de outras páginas.
+
+- Até 720 px, a coluna Horário fica oculta e a célula Data exibe `DD/MM | HH:mm`.
+- A partir de 500 px, ATA, Status e Ações usam 64 px fixos cada. Data e Horário têm larguras iguais e flexíveis; de 500 a 720 px, Data ocupa o espaço restante enquanto Horário fica combinado nela. A tabela usa a largura disponível, sem rolagem horizontal.
+- A partir de 500 px, todos os cabeçalhos e valores ficam centralizados em suas colunas. Conferido em 500, 655, 768, 1024 e 1438 px: as três colunas fixas mediram 64 px, Data e Horário dividiram igualmente o restante quando ambas estavam visíveis, e a página não apresentou rolagem horizontal.
+- Abaixo de 500 px, a tabela ocupa a largura interna disponível, sem rolagem horizontal. Ata (48 px) e Ações (52 px) permanecem fixas e centralizadas. Data e Status dividem o espaço restante de forma fluida, na proporção 2:1.
+- Abaixo de 500 px, os quatro cabeçalhos e os valores em todas as células ficam centralizados dentro de suas colunas, que permanecem completas. Data e horário ficam em uma linha, com fonte de 12,5 px.
+- Abaixo de 500 px, ATA usa fonte de 11,2 px; o ponto de Status mede 0,5625 rem; Ações usa fonte de 9,75 px, com botão dos três pontos de 22,5 px e ícone de 12 px. O botão mantém fundo transparente e recebe badge azul de 22,5 px no hover, sem contorno.
+- Abaixo de 500 px, as linhas da tabela ficam com 33,19 px; o botão reduzido cabe nessa altura sem aumentar a linha.
+- Conferido no navegador em 320 px, 375 px e 499 px. A partir de 500 px, entra em vigor o esquema descrito acima.
 
 ### Espaçamentos principais
 
