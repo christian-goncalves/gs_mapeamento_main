@@ -881,7 +881,7 @@ export function AtaForm({
           ])];
           return (
           <div className="repeat-row repeat-row--double repeat-row--server repeat-row--unseparated" key={item.clientId} onKeyDown={(event) => addRowOnEnter(event, addServer)}>
-            <label>{index === 0 && <span>Nome</span>}<TextAutocomplete id={`server-name-${item.clientId}`} ariaLabel={index === 0 ? undefined : "Nome do Servidor"} required value={item.nome} placeholder="Nome..." suggestions={nameSuggestions.servidores} onChange={(value) => setDraft((current) => ({
+            <label>{index === 0 && <span>Nome</span>}<TextAutocomplete id={`server-name-${item.clientId}`} ariaLabel={index === 0 ? undefined : "Nome do Servidor"} required value={item.nome} placeholder="Nome..." suggestions={nameSuggestions.servidores} suggestionTone="server-name" onChange={(value) => setDraft((current) => ({
               ...current,
               servidores: current.servidores.map((server) => server.clientId === item.clientId ? { ...server, nome: value } : server),
             }))} /></label>

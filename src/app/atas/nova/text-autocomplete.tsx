@@ -46,6 +46,7 @@ export function TextAutocomplete({
   value,
   placeholder,
   suggestions,
+  suggestionTone,
   onChange,
 }: {
   id?: string;
@@ -54,6 +55,7 @@ export function TextAutocomplete({
   value: string;
   placeholder?: string;
   suggestions: string[];
+  suggestionTone?: "server-name";
   onChange: (value: string) => void;
 }) {
   const [focused, setFocused] = useState(false);
@@ -93,7 +95,7 @@ export function TextAutocomplete({
   }
 
   return (
-    <div className="autocomplete">
+    <div className={`autocomplete${suggestionTone ? ` autocomplete--${suggestionTone}` : ""}`}>
       <input
         id={id}
         aria-label={ariaLabel}

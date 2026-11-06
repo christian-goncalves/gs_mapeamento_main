@@ -86,7 +86,7 @@ export function MunicipioAutocomplete({
   }
 
   return (
-    <div className="autocomplete">
+    <div className="autocomplete autocomplete--municipality">
       <input
         id={id}
         aria-label={ariaLabel}
