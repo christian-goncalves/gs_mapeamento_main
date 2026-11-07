@@ -75,11 +75,13 @@ export function isMunicipioOption(value: string) {
 
 export function searchMunicipios(query: string, limit = 20) {
   const normalized = normalizeMunicipioSearch(query);
-  if (!normalized || limit <= 0) return [];
-  return municipioDocument.municipios
-    .filter((item) =>
+  if (limit <= 0) return [];
+  const matches = normalized
+    ? municipioDocument.municipios.filter((item) =>
       normalizeMunicipioSearch(`${item.nome} ${item.uf}`).includes(normalized),
     )
+    : municipioDocument.municipios;
+  return matches
     .slice(0, limit)
     .map((item) => ({ ...item, label: municipioOption(item) }));
 }

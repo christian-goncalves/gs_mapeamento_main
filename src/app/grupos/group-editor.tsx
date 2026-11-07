@@ -61,8 +61,8 @@ function ScheduleTimeHelp() {
       className="schedule-time-help-icon"
       role="img"
       tabIndex={0}
-      aria-label="Informações sobre o horário da agenda"
-      title="Os horários desta agenda são informados no horário de Brasília (UTC−03:00)."
+      aria-label="Os horários desta agenda são informados no horário de Brasília (UTC−03:00)."
+      data-tooltip="Os horários desta agenda são informados no horário de Brasília (UTC−03:00)."
     >
       <FontAwesomeIcon icon={faCircleInfo} aria-hidden="true" />
     </span>
@@ -775,6 +775,7 @@ export function GroupEditor({
               key={`success-${successMessage}`}
               message={successMessage}
               type="success"
+              durationMs={3000}
               onDismiss={dismissStatus}
             />
           )}

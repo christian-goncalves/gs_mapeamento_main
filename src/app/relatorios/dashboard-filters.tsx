@@ -2,6 +2,7 @@
 
 import { useEffect, type ChangeEvent } from "react";
 import type { Grupo } from "@/domain/entities";
+import { ChoiceAutocomplete } from "../choice-autocomplete";
 import { PrintDashboardButton } from "./print-dashboard-button";
 
 const months = [
@@ -21,6 +22,12 @@ const months = [
 
 export function submitDashboardFilters(event: ChangeEvent<HTMLSelectElement>) {
   event.currentTarget.form?.requestSubmit();
+}
+
+function isPeriodControl(
+  control: Element | RadioNodeList | null,
+): control is HTMLInputElement | HTMLSelectElement {
+  return control instanceof HTMLInputElement || control instanceof HTMLSelectElement;
 }
 
 const responsavelPeriodStorageKey = "gs-mapeamento:responsavel:relatorios:periodo";
@@ -82,8 +89,8 @@ export function DashboardFilters({
     const yearSelect = form?.elements.namedItem("ano");
     if (
       !(form instanceof HTMLFormElement) ||
-      !(monthSelect instanceof HTMLSelectElement) ||
-      !(yearSelect instanceof HTMLSelectElement)
+      !isPeriodControl(monthSelect) ||
+      !isPeriodControl(yearSelect)
     ) return;
 
     const params = new URLSearchParams(window.location.search);
@@ -113,6 +120,22 @@ export function DashboardFilters({
     submitDashboardFilters(event);
   }
 
+  function handleResponsiblePeriodChoice(name: "mes" | "ano", value: string) {
+    const form = document.querySelector<HTMLFormElement>(".dashboard-filters-responsavel");
+    const month = form?.elements.namedItem("mes");
+    const year = form?.elements.namedItem("ano");
+    if (
+      !(form instanceof HTMLFormElement) ||
+      !isPeriodControl(month) ||
+      !isPeriodControl(year)
+    ) return;
+
+    if (name === "mes") month.value = value;
+    else year.value = value;
+    saveResponsiblePeriod({ month: month.value, year: year.value });
+    form.requestSubmit();
+  }
+
   return (
     <form
       className={[
@@ -140,27 +163,41 @@ export function DashboardFilters({
       )}
       <label className={isResponsavelDashboard ? "dashboard-filter-period-label" : undefined}>
         Mês
-        <select
-          name="mes"
-          defaultValue={selectedMonth}
-          onChange={handleFilterChange}
-        >
-          {months.map(([value, label]) => (
-            <option key={value} value={value}>{label}</option>
-          ))}
-        </select>
+        {isResponsavelDashboard ? (
+          <ChoiceAutocomplete
+            id="responsavel-dashboard-month"
+            name="mes"
+            className="dashboard-period-autocomplete"
+            value={selectedMonth}
+            options={months.map(([value, label]) => ({ value, label }))}
+            onChange={(value) => handleResponsiblePeriodChoice("mes", value)}
+          />
+        ) : (
+          <select name="mes" defaultValue={selectedMonth} onChange={handleFilterChange}>
+            {months.map(([value, label]) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
+          </select>
+        )}
       </label>
       <label className={isResponsavelDashboard ? "dashboard-filter-period-label" : undefined}>
         Ano
-        <select
-          name="ano"
-          defaultValue={selectedYear}
-          onChange={handleFilterChange}
-        >
-          {years.map((year) => (
-            <option key={year} value={year}>{year}</option>
-          ))}
-        </select>
+        {isResponsavelDashboard ? (
+          <ChoiceAutocomplete
+            id="responsavel-dashboard-year"
+            name="ano"
+            className="dashboard-period-autocomplete"
+            value={selectedYear}
+            options={years.map((year) => ({ value: String(year), label: String(year) }))}
+            onChange={(value) => handleResponsiblePeriodChoice("ano", value)}
+          />
+        ) : (
+          <select name="ano" defaultValue={selectedYear} onChange={handleFilterChange}>
+            {years.map((year) => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+        )}
       </label>
       <PrintDashboardButton />
     </form>

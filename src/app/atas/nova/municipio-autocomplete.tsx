@@ -24,21 +24,21 @@ export function MunicipioAutocomplete({
   const [activeIndex, setActiveIndex] = useState(-1);
 
   useEffect(() => {
-    if (value.trim().length < 2) {
-      return;
-    }
+    if (!focused) return;
     const controller = new AbortController();
     const timer = window.setTimeout(async () => {
-      setLoading(true);
       try {
         const response = await fetch(`/api/municipios?q=${encodeURIComponent(value)}`, {
           signal: controller.signal,
         });
         if (!response.ok) throw new Error("Busca indisponível.");
         const data = (await response.json()) as { municipios: Suggestion[] };
-        setSuggestions(data.municipios);
+        if (!controller.signal.aborted) setSuggestions(data.municipios);
       } catch (error) {
-        if (!(error instanceof DOMException && error.name === "AbortError")) {
+        if (
+          !controller.signal.aborted &&
+          !(error instanceof DOMException && error.name === "AbortError")
+        ) {
           setSuggestions([]);
         }
       } finally {
@@ -49,10 +49,9 @@ export function MunicipioAutocomplete({
       window.clearTimeout(timer);
       controller.abort();
     };
-  }, [value]);
+  }, [focused, value]);
 
-  const visibleSuggestions =
-    focused && value.trim().length >= 2 ? suggestions : [];
+  const visibleSuggestions = focused ? suggestions : [];
 
   function selectSuggestion(index: number) {
     const suggestion = visibleSuggestions[index];
@@ -86,7 +85,7 @@ export function MunicipioAutocomplete({
   }
 
   return (
-    <div className="autocomplete autocomplete--municipality">
+    <div className="autocomplete">
       <input
         id={id}
         aria-label={ariaLabel}
@@ -94,6 +93,8 @@ export function MunicipioAutocomplete({
         value={value}
         onChange={(event) => {
           setActiveIndex(-1);
+          setSuggestions([]);
+          setLoading(true);
           onChange(event.target.value);
         }}
         autoComplete="off"
@@ -107,12 +108,16 @@ export function MunicipioAutocomplete({
         placeholder={placeholder}
         onFocus={() => {
           setActiveIndex(-1);
+          setLoading(true);
           setFocused(true);
         }}
-        onBlur={() => setFocused(false)}
+        onBlur={() => {
+          setFocused(false);
+          setLoading(false);
+        }}
         onKeyDown={handleKeyDown}
       />
-      {value.trim().length >= 2 && loading && (
+      {focused && loading && (
         <span className="field-hint">Buscando...</span>
       )}
       {visibleSuggestions.length > 0 && (

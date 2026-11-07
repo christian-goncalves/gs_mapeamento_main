@@ -9,7 +9,7 @@ import {
   normalizeHiddenAtaSubmission,
 } from "@/domain/hidden-submission";
 import { requireAuthorizedSession } from "@/lib/auth/require-session";
-import { deleteAtaInSheets, reviseAtaInSheets } from "@/lib/sheets/ata-lifecycle";
+import { deleteAtaInSheets, restoreAtaInSheets, reviseAtaInSheets } from "@/lib/sheets/ata-lifecycle";
 
 export type AtaLifecycleActionState = { error?: string };
 
@@ -116,6 +116,35 @@ export async function deleteAtaAction(
     refreshAtaViews(metadata.data.ataId);
   } catch (error) {
     return { error: error instanceof Error ? error.message : "Não foi possível excluir a ata." };
+  }
+  redirect("/responsavel/atas?historico=1");
+}
+
+export async function restoreAtaAction(
+  _state: AtaLifecycleActionState,
+  formData: FormData,
+): Promise<AtaLifecycleActionState> {
+  const current = await requireAuthorizedSession();
+  const metadata = z.object({
+    ataId: z.string().uuid(),
+    updatedAt: z.string().datetime({ offset: true }),
+  }).safeParse({
+    ataId: field(formData, "ata_id"),
+    updatedAt: field(formData, "updated_at"),
+  });
+  if (!metadata.success) {
+    return { error: metadata.error.issues[0]?.message ?? "Dados da restauração inválidos." };
+  }
+
+  try {
+    await restoreAtaInSheets({
+      ataId: metadata.data.ataId,
+      expectedUpdatedAt: metadata.data.updatedAt,
+      actorEmail: current.access.email,
+    });
+    refreshAtaViews(metadata.data.ataId);
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : "Não foi possível restaurar a ata." };
   }
   redirect("/responsavel/atas?historico=1");
 }

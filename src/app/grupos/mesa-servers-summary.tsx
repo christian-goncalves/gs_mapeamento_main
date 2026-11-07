@@ -14,6 +14,7 @@ import {
   KNOWN_MESA_OFFICES,
   isVacantMesaName,
 } from "@/domain/grupo-servidores-mesa";
+import { ChoiceAutocomplete } from "../choice-autocomplete";
 import type { GrupoServidorMesa } from "@/domain/schemas";
 import {
   deactivateGrupoServidorMesaAction,
@@ -131,22 +132,20 @@ function MesaServerModal({
         <div className="mesa-server-modal-fields">
           <label>
             Encargo
-            <select
+            <ChoiceAutocomplete
+              id="mesa-server-office"
               name="encargo_tipo"
               required
               value={officeChoice}
-              onChange={(event) => {
-                const choice = event.target.value;
+              options={[
+                ...KNOWN_MESA_OFFICES.map((office) => ({ value: office, label: office })),
+                { value: "outro", label: "Outro" },
+              ]}
+              onChange={(choice) => {
                 setOfficeChoice(choice);
                 if (choice !== "outro") setCustomOffice("");
               }}
-            >
-              <option value="" disabled>Selecione um encargo</option>
-              {KNOWN_MESA_OFFICES.map((office) => (
-                <option key={office} value={office}>{office}</option>
-              ))}
-              <option value="outro">Outro</option>
-            </select>
+            />
           </label>
           {officeChoice === "outro" && (
             <label>
@@ -219,7 +218,7 @@ function MesaServerActions({
   onEdit: () => void;
 }) {
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
-  const deleteFormId = `remove-mesa-server-${item.clientId}`;
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   useEffect(() => {
     setPortalTarget(document.body);
@@ -238,28 +237,36 @@ function MesaServerActions({
         <FontAwesomeIcon icon={faPenToSquare} />
       </button>
       {item.grupo_servidor_mesa_id && (
-        <>
-          <button
-            type="submit"
-            form={deleteFormId}
-            className="danger-icon-button"
-            aria-label={`Remover ${item.encargo}`}
-            title="Remover"
-            disabled={disabled}
+        <button
+          type="button"
+          className="danger-icon-button"
+          aria-label={`Remover ${item.encargo}`}
+          title="Remover"
+          disabled={disabled}
+          onClick={() => setConfirmingDelete(true)}
+        >
+          <FontAwesomeIcon icon={faTrashCan} />
+        </button>
+      )}
+      {item.grupo_servidor_mesa_id && portalTarget && confirmingDelete && createPortal(
+        <div
+          className="modal-backdrop schedule-delete-backdrop"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setConfirmingDelete(false);
+          }}
+        >
+          <section
+            className="confirmation-modal schedule-delete-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`mesa-server-delete-title-${item.clientId}`}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") setConfirmingDelete(false);
+            }}
           >
-            <FontAwesomeIcon icon={faTrashCan} />
-          </button>
-          {portalTarget && createPortal(
-            <form
-              id={deleteFormId}
-              className="schedule-delete-form"
-              action={deactivateGrupoServidorMesaAction}
-              onSubmit={(event) => {
-                if (!window.confirm(`Remover o encargo ${item.encargo}?`)) {
-                  event.preventDefault();
-                }
-              }}
-            >
+            <h2 id={`mesa-server-delete-title-${item.clientId}`}>Remover servidor?</h2>
+            <p>Remover o encargo {item.encargo}?</p>
+            <form action={deactivateGrupoServidorMesaAction}>
               <input type="hidden" name="grupo_id" value={grupoId} />
               <input type="hidden" name="settings_section" value="servers" />
               <input
@@ -267,10 +274,24 @@ function MesaServerActions({
                 name="grupo_servidor_mesa_id"
                 value={item.grupo_servidor_mesa_id}
               />
-            </form>,
-            portalTarget,
-          )}
-        </>
+              <div className="modal-actions">
+                <button autoFocus type="button" className="secondary" onClick={() => setConfirmingDelete(false)}>
+                  <span className="button-content">
+                    <FontAwesomeIcon icon={faXmark} />
+                    Cancelar
+                  </span>
+                </button>
+                <button type="submit" className="danger-button">
+                  <span className="button-content">
+                    <FontAwesomeIcon icon={faTrashCan} />
+                    Remover servidor
+                  </span>
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>,
+        portalTarget,
       )}
     </div>
   );

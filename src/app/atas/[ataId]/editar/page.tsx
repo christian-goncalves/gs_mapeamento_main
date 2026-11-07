@@ -60,12 +60,12 @@ export default async function EditAtaPage({
   }
 
   return (
-    <main className="shell ata-detail-review-shell">
-      <header className="responsavel-page-header ata-new-page-header">
+    <main className="shell ata-detail-review-shell ata-edit-page">
+      <header className="responsavel-page-header ata-new-page-header ata-edit-page-header">
         <div>
           <p className="eyebrow">Editar ata</p>
           <h1>Grupo {item.grupo.grupo_nome}</h1>
-          <p className="muted">
+          <p className="responsavel-page-description ata-edit-context">
             A edição cria uma nova versão e preserva esta ata no histórico.
             {ata.status_aprovacao === "pendente_revisao" && " A nova versão continuará pendente de aprovação."}
           </p>

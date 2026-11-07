@@ -18,14 +18,13 @@ import {
   faPenToSquare,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
-import { AtaPdfDownloadButton } from "@/app/atas/ata-pdf-download-button";
 import { AtaDeleteAction } from "@/app/atas/ata-delete-action";
+import { AtaRestoreAction } from "@/app/atas/ata-restore-action";
 import type { ConfigColumns } from "datatables.net";
 import type { ResponsavelAtaRow, ResponsavelAtaStatus } from "./responsavel-atas-data";
 import {
+  decodeResponsavelAtasOrder,
   encodeResponsavelAtasOrder,
-  RESPONSAVEL_ATAS_INITIAL_ORDER,
-  RESPONSAVEL_ATAS_INITIAL_ORDER_QUERY,
 } from "./responsavel-atas-order";
 import {
   parseResponsavelAtasFilters,
@@ -201,11 +200,6 @@ function ResponsavelAtaActions({
                 <FontAwesomeIcon icon={faEye} />
                 <span>Visualizar</span>
               </Link>
-              <AtaPdfDownloadButton
-                ataId={ata.ataId}
-                onComplete={() => setOpen(false)}
-                compact
-              />
               {ata.canEdit ? (
                 <Link
                   className="responsavel-action-menu-item"
@@ -216,7 +210,12 @@ function ResponsavelAtaActions({
                   <span>Editar</span>
                 </Link>
               ) : null}
-              {ata.canDelete ? (
+              {ata.canRestore ? (
+                <AtaRestoreAction
+                  ataId={ata.ataId}
+                  updatedAt={ata.updatedAt}
+                />
+              ) : ata.canDelete ? (
                 <AtaDeleteAction
                   ataId={ata.ataId}
                   updatedAt={ata.updatedAt}
@@ -290,12 +289,14 @@ export function ResponsavelAtasTable({
   rows,
   historyMode,
   groupId,
+  initialOrder,
   defaultStartDate,
   defaultEndDate,
 }: {
   rows: ResponsavelAtaRow[];
   historyMode: boolean;
   groupId: string;
+  initialOrder?: string;
   defaultStartDate: string;
   defaultEndDate: string;
 }) {
@@ -368,7 +369,7 @@ export function ResponsavelAtasTable({
     status: selectedStatus,
   } = filters;
   const [tableOrder, setTableOrder] = useState(
-    RESPONSAVEL_ATAS_INITIAL_ORDER_QUERY,
+    () => encodeResponsavelAtasOrder(decodeResponsavelAtasOrder(initialOrder)),
   );
   const statusOptions = historyMode ? historyStatusOptions : activeStatusOptions;
   const modeRows = useMemo(
@@ -492,7 +493,7 @@ export function ResponsavelAtasTable({
             options={{
               autoWidth: false,
               ordering: true,
-              order: RESPONSAVEL_ATAS_INITIAL_ORDER,
+              order: decodeResponsavelAtasOrder(tableOrder),
               pageLength: 25,
               searching: false,
               lengthChange: false,

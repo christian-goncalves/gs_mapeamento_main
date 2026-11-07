@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faFloppyDisk, faPenToSquare, faPlus, faRightLeft, faXmark } from "@fortawesome/free-solid-svg-icons";
 import type { GrupoHorario, GrupoPlataforma } from "@/domain/entities";
@@ -10,6 +10,7 @@ import { PasswordVisibilityInput } from "../password-visibility-input";
 
 type Assignment = { horario_id: string; plataforma_id: string };
 type PlatformDraft = Pick<GrupoPlataforma, "tipo" | "link" | "id_acesso" | "senha_pin"> & { plataforma_id?: string };
+type TransferConfirmation = { form: HTMLFormElement; message: string };
 
 const dayLabels: Record<string, string> = { domingo: "Domingo", segunda: "Segunda-feira", terca: "Terça-feira", quarta: "Quarta-feira", quinta: "Quinta-feira", sexta: "Sexta-feira", sabado: "Sábado" };
 
@@ -37,6 +38,8 @@ export function GroupPlatformsEditor({
   const [step, setStep] = useState(0);
   const [distributionStarted, setDistributionStarted] = useState(false);
   const [platformDraft, setPlatformDraft] = useState<PlatformDraft | null>(null);
+  const [transferConfirmation, setTransferConfirmation] = useState<TransferConfirmation | null>(null);
+  const confirmedTransferForm = useRef<HTMLFormElement | null>(null);
   const distributorPlatforms = activePlatforms;
   const currentPlatform = distributorPlatforms[Math.min(step, Math.max(0, distributorPlatforms.length - 1))];
   const showReview = distributorPlatforms.length > 1 && step >= distributorPlatforms.length;
@@ -63,6 +66,13 @@ export function GroupPlatformsEditor({
       id_acesso: existing?.id_acesso ?? "",
       senha_pin: existing?.senha_pin ?? "",
     });
+  }
+
+  function confirmTransfer() {
+    if (!transferConfirmation) return;
+    confirmedTransferForm.current = transferConfirmation.form;
+    setTransferConfirmation(null);
+    transferConfirmation.form.requestSubmit();
   }
 
   function toggle(scheduleId: string) {
@@ -115,7 +125,7 @@ export function GroupPlatformsEditor({
                   />
                 </h3>
                 <p className={active ? "platform-status platform-status-active" : "platform-status"}>
-                  {active ? "Cadastrada" : "Ainda não cadastrada"}
+                  {active ? "Cadastrada" : "Ainda não Cadastrada"}
                 </p>
               </div>
               <button
@@ -219,14 +229,27 @@ export function GroupPlatformsEditor({
         <details className="group-platform-schedule-tools" open={pendingSchedules.length > 0}>
           <summary>
             {!isAdmin && <FontAwesomeIcon icon={faChevronDown} className="platform-association-chevron" />}
-            Associação de Horários
+            Transferência de Horários
           </summary>
           <div className="group-platform-schedule-tools-content">
             <h3>Horários Associados</h3>
             {schedules.filter((schedule) => schedule.ativo && schedule.grupo_id === grupoId && schedule.plataforma_id).map((schedule) => (
               <form key={schedule.horario_id} action={associateGrupoHorariosAction} className="group-platform-transfer" onSubmit={(event) => {
-                const target = new FormData(event.currentTarget).get("plataforma_id");
-                if (target === schedule.plataforma_id || !window.confirm(`Confirma transferir ${dayLabels[schedule.dia_semana]} às ${schedule.hora_inicio} para ${label(activePlatforms.find((platform) => platform.plataforma_id === target)?.tipo ?? "")}?`)) event.preventDefault();
+                const form = event.currentTarget;
+                const target = String(new FormData(form).get("plataforma_id") ?? "");
+                if (target === schedule.plataforma_id) {
+                  event.preventDefault();
+                  return;
+                }
+                if (confirmedTransferForm.current === form) {
+                  confirmedTransferForm.current = null;
+                  return;
+                }
+                event.preventDefault();
+                setTransferConfirmation({
+                  form,
+                  message: `Confirma transferir ${dayLabels[schedule.dia_semana]} às ${schedule.hora_inicio} para ${label(activePlatforms.find((platform) => platform.plataforma_id === target)?.tipo ?? "")}?`,
+                });
               }}>
                 <input type="hidden" name="grupo_id" value={grupoId} />
                 <input type="hidden" name="horario_id" value={schedule.horario_id} />
@@ -263,6 +286,44 @@ export function GroupPlatformsEditor({
             ) : null}
           </div>
         </details>
+      ) : null}
+
+      {transferConfirmation ? (
+        <div
+          className="modal-backdrop group-platform-transfer-confirmation-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setTransferConfirmation(null);
+          }}
+        >
+          <section
+            className="confirmation-modal group-platform-transfer-confirmation-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="group-platform-transfer-confirmation-title"
+            aria-describedby="group-platform-transfer-confirmation-message"
+            onKeyDown={(event) => {
+              if (event.key === "Escape") setTransferConfirmation(null);
+            }}
+          >
+            <h2 id="group-platform-transfer-confirmation-title">Confirmar Transferência</h2>
+            <p id="group-platform-transfer-confirmation-message">{transferConfirmation.message}</p>
+            <div className="group-platform-transfer-confirmation-actions">
+              <button autoFocus type="button" className="secondary" onClick={() => setTransferConfirmation(null)}>
+                <span className="button-content">
+                  <FontAwesomeIcon icon={faXmark} aria-hidden="true" />
+                  Cancelar
+                </span>
+              </button>
+              <button type="button" onClick={confirmTransfer}>
+                <span className="button-content">
+                  <FontAwesomeIcon icon={faRightLeft} aria-hidden="true" />
+                  Confirmar Transferência
+                </span>
+              </button>
+            </div>
+          </section>
+        </div>
       ) : null}
 
       {isAdmin ? <p className="muted platform-types-note">Tipos disponíveis: Zoom, WhatsApp e Zello.</p> : null}

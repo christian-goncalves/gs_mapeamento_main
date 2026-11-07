@@ -13,6 +13,8 @@ import {
 import { getAtaDetailBackHref } from "../nova/ata-review";
 import { AtaPdfActions } from "../ata-pdf-actions";
 import { getAtaNavigation, type AtaNavigationSearchParams } from "../ata-navigation";
+import { AdminShell } from "@/app/grupos/admin-shell";
+import { ResponsavelShell } from "@/app/responsavel/responsavel-shell";
 
 export const dynamic = "force-dynamic";
 
@@ -43,33 +45,42 @@ export default async function AtaDetailPage({
   });
   const origin = Array.isArray(query.origem) ? query.origem[0] : query.origem;
   const backHref = access.role === "responsavel_grupo" && origin === "historico"
-    ? "/responsavel/atas?historico=1"
+    ? (() => {
+        const params = new URLSearchParams({ historico: "1" });
+        for (const key of ["de", "ate", "diaSemana", "horario", "status", "ordem"] as const) {
+          const value = query[key];
+          const normalized = Array.isArray(value) ? value[0] : value;
+          if (normalized !== undefined) params.set(key, normalized);
+        }
+        return `/responsavel/atas?${params.toString()}`;
+      })()
     : getAtaDetailBackHref(access.role);
 
-  return (
-    <main className="shell ata-detail-review-shell">
+  const page = (
+    <div className="ata-detail-review-shell">
       <nav className="ata-record-navigation" aria-label="Navegação entre atas">
         {navigation.previousId ? (
           <Link className="button-link secondary" href={`/atas/${navigation.previousId}${navigation.query}`}>
-            <span className="button-content"><FontAwesomeIcon icon={faArrowLeft} />Ata anterior</span>
+            <span className="button-content"><FontAwesomeIcon icon={faArrowLeft} />Ata Anterior</span>
           </Link>
         ) : (
           <button className="secondary" type="button" disabled>
-            <span className="button-content"><FontAwesomeIcon icon={faArrowLeft} />Ata anterior</span>
+            <span className="button-content"><FontAwesomeIcon icon={faArrowLeft} />Ata Anterior</span>
           </button>
         )}
         {navigation.nextId ? (
           <Link className="button-link secondary" href={`/atas/${navigation.nextId}${navigation.query}`}>
-            <span className="button-content">Próxima ata<FontAwesomeIcon icon={faArrowRight} /></span>
+            <span className="button-content">Próxima Ata<FontAwesomeIcon icon={faArrowRight} /></span>
           </Link>
         ) : (
           <button className="secondary" type="button" disabled>
-            <span className="button-content">Próxima ata<FontAwesomeIcon icon={faArrowRight} /></span>
+            <span className="button-content">Próxima Ata<FontAwesomeIcon icon={faArrowRight} /></span>
           </button>
         )}
       </nav>
       <AtaReviewLayout
         className="ata-review-page"
+        detailPage
         title={presentation.title}
         titleId="ata-detail-title"
         headingLevel="h1"
@@ -124,6 +135,14 @@ export default async function AtaDetailPage({
           </>
         )}
       />
-    </main>
+    </div>
+  );
+
+  return access.role === "responsavel_grupo" ? (
+    <ResponsavelShell activeSection="responsavel" settingsHref={`/grupos/${grupo.grupo_id}`}>
+      {page}
+    </ResponsavelShell>
+  ) : (
+    <AdminShell activeSection="atas">{page}</AdminShell>
   );
 }

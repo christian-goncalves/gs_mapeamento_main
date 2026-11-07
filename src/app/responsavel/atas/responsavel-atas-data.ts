@@ -18,6 +18,7 @@ export type ResponsavelAtaRow = {
   updatedAt: string;
   canEdit: boolean;
   canDelete: boolean;
+  canRestore: boolean;
 };
 
 export function meetingStart(data: string, horario: string, timeZone: string) {
@@ -70,6 +71,7 @@ export function buildResponsavelAtaRows({
       canEdit: registroStatus === "ativa"
         && ["aprovada", "pendente_revisao"].includes(approvalStatus),
       canDelete: registroStatus === "ativa" && approvalStatus === "aprovada",
+      canRestore: registroStatus === "excluida" && approvalStatus === "aprovada",
     };
   });
 
@@ -92,6 +94,7 @@ export function buildResponsavelAtaRows({
     updatedAt: "",
     canEdit: false,
     canDelete: false,
+    canRestore: false,
   })));
 
   return rows.sort(

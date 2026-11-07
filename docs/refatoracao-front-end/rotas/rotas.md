@@ -1,3 +1,23 @@
+## CONCLUIDO:
+- configurações
+
+## FALTA CONCLUIR
+### historico de atas
+- Ata em modo de revisão esta no padrão antigo
+- Modo visualização no padrão anrtigo dentro de historico de atas
+- Modo PDF no padrão anrtigo dentro de historico de atas
+- mODO de edição de ata esta no padrão antigo dentro de historico de atas
+- Modal de exclusão padrão antigo no histoeico de atas
+
+### Relatorios
+- botão pdf
+
+### Configurações
+- botão pdf
+- alterar senha
+
+
+
 # Checklist de rotas para validação do front-end
 
 ## Atas

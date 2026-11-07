@@ -15,6 +15,7 @@ import {
 import { canAccessGroup, resolveAccessByEmailFromAggregated } from "@/lib/auth/access";
 import { materializeAtaSubmission } from "@/domain/submission";
 import {
+  assertUniqueAtaCustomIndex,
   assertUniqueAtaSequence,
   nextAtaSequence,
   type AtaIdentifier,
@@ -27,6 +28,7 @@ import {
   sheetAtaSchema,
   sheetAtaToDomain,
   sheetAtaBusinessKeySchema,
+  sheetAtaIdentifiersSchema,
   sheetGrupoFuncaoServidorToDomain,
 } from "./schemas";
 import {
@@ -392,4 +394,65 @@ export async function deleteAtaInSheets({
     updateAtaField(sheetId, row.rowNumber, snapshot.ataHeaders, "updated_at", now),
   ];
   await executeAtomicBatch(snapshot.sheets, snapshot.spreadsheetId, updates);
+}
+
+export async function restoreAtaInSheets({
+  ataId,
+  expectedUpdatedAt,
+  actorEmail,
+}: {
+  ataId: string;
+  expectedUpdatedAt: string;
+  actorEmail: string;
+}) {
+  const [snapshot, aggregate] = await Promise.all([readLifecycleSnapshot(), readAggregatedAtas()]);
+  const row = currentAta(snapshot, ataId);
+  const ata = row.data;
+  const access = await assertActorCanAccess(actorEmail, ata.grupo_id, aggregate);
+  assertExpectedUpdatedAt(ata.updated_at, expectedUpdatedAt);
+  if (ata.status_registro !== "excluida" || ata.status_aprovacao !== "aprovada") {
+    throw new Error("Somente atas excluídas e aprovadas podem ser restauradas.");
+  }
+
+  const businessKey = sheetAtaBusinessKeySchema.safeParse(ata);
+  if (!businessKey.success) throw new Error("Os dados da ata não permitem validar a restauração.");
+  const duplicateMeeting = validAtaRows(snapshot).some((candidate) => {
+    const current = candidate.data;
+    if (current.ata_id === ataId || current.status_registro !== "ativa") return false;
+    const key = sheetAtaBusinessKeySchema.safeParse(current);
+    return key.success
+      && key.data.grupo_id === businessKey.data.grupo_id
+      && key.data.data_reuniao === businessKey.data.data_reuniao
+      && key.data.hora_inicio === businessKey.data.hora_inicio;
+  });
+  if (duplicateMeeting) {
+    throw new Error("Já existe uma ata ativa neste grupo para a mesma data e horário. Não é possível restaurar esta ata.");
+  }
+
+  const identifiers = validAtaRows(snapshot).flatMap((candidate) => {
+    if (candidate.data.status_registro !== "ativa") return [];
+    const parsed = sheetAtaIdentifiersSchema.safeParse(candidate.data);
+    return parsed.success ? [parsed.data] : [];
+  });
+  const ownIdentifiers = sheetAtaIdentifiersSchema.safeParse(ata);
+  if (!ownIdentifiers.success) throw new Error("Os identificadores da ata não permitem validar a restauração.");
+  try {
+    assertUniqueAtaCustomIndex(
+      ata.grupo_id,
+      ownIdentifiers.data.indice_personalizado_grupo,
+      identifiers,
+      ataId,
+    );
+  } catch {
+    throw new Error("Outra ata ativa já usa este índice personalizado. Não é possível restaurar esta ata.");
+  }
+
+  const now = new Date().toISOString();
+  const sheetId = sheetIdFor(snapshot, "atas");
+  await executeAtomicBatch(snapshot.sheets, snapshot.spreadsheetId, [
+    updateAtaField(sheetId, row.rowNumber, snapshot.ataHeaders, "status_registro", "ativa"),
+    updateAtaField(sheetId, row.rowNumber, snapshot.ataHeaders, "alterado_por", access.email),
+    updateAtaField(sheetId, row.rowNumber, snapshot.ataHeaders, "alterado_em", now),
+    updateAtaField(sheetId, row.rowNumber, snapshot.ataHeaders, "updated_at", now),
+  ]);
 }

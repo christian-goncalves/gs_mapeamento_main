@@ -32,6 +32,12 @@ function validIsoDate(value: string | undefined): value is string {
   return Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
 }
 
+const weekdays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+
+function weekdayForDate(value: string) {
+  return weekdays[new Date(`${value}T00:00:00.000Z`).getUTCDay()];
+}
+
 function normalized(value: string) {
   return value.trim().replace(/\s+/g, " ").toLocaleLowerCase("pt-BR");
 }
@@ -150,6 +156,7 @@ export function getAtaNavigation({
     : undefined;
   const start = queryValue(searchParams, "de");
   const end = queryValue(searchParams, "ate");
+  const weekday = queryValue(searchParams, "diaSemana");
   const time = queryValue(searchParams, "horario");
   const status = queryValue(searchParams, "status");
   const filledBy = queryValue(searchParams, "preenchido") ?? "";
@@ -178,6 +185,7 @@ export function getAtaNavigation({
     }
     if (validIsoDate(start) && ata.data_reuniao < start) return [];
     if (validIsoDate(end) && ata.data_reuniao > end) return [];
+    if (weekday && weekday !== "todos" && weekdayForDate(ata.data_reuniao) !== weekday) return [];
     if (time && time !== "todos" && ata.hora_inicio !== time) return [];
     const currentStatus = statusLabel(item);
     if (status && status !== "todos" && status !== currentStatus) return [];
@@ -210,7 +218,7 @@ export function getAtaNavigation({
   const params = new URLSearchParams();
   params.set("origem", source === "direto" ? "direto" : source);
   if (source !== "direto") {
-    for (const key of ["de", "ate", "horario", "status", "grupo", "preenchido", "ordem"]) {
+    for (const key of ["de", "ate", "diaSemana", "horario", "status", "grupo", "preenchido", "ordem"]) {
       const value = queryValue(searchParams, key);
       if (value !== undefined) params.set(key, value);
     }

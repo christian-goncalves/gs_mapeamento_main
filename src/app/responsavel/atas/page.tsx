@@ -13,13 +13,22 @@ import { deriveAtaNumbers } from "@/domain/ata-numbering";
 
 export const dynamic = "force-dynamic";
 
+type SearchValue = string | string[] | undefined;
+
+function queryValue(value: SearchValue) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
 export default async function ResponsavelAtasPage({
   searchParams,
 }: {
-  searchParams: Promise<{ historico?: string }>;
+  searchParams: Promise<{
+    historico?: SearchValue;
+    ordem?: SearchValue;
+  }>;
 }) {
-  const { historico } = await searchParams;
-  const historyMode = historico === "1";
+  const query = await searchParams;
+  const historyMode = queryValue(query.historico) === "1";
   const { access, result } = await requireAuthorizedSessionWithAggregatedAtas();
   if (access.role === "administrador") redirect("/admin/grupos");
   const [group] = access.groups;
@@ -102,6 +111,7 @@ export default async function ResponsavelAtasPage({
         rows={rows}
         historyMode={historyMode}
         groupId={group.grupo_id}
+        initialOrder={historyMode ? queryValue(query.ordem) : undefined}
         defaultStartDate={historyStart}
         defaultEndDate={historyEnd}
       />

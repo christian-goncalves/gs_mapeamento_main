@@ -23,6 +23,7 @@ import {
 } from "@/domain/enums";
 import { checkAtaAvailabilityAction, createAtaAction, type CreateAtaState } from "./actions";
 import { AtaReviewLayout, type AtaReviewLayoutData } from "../ata-review-layout";
+import { ChoiceAutocomplete } from "../../choice-autocomplete";
 import { MunicipioAutocomplete } from "./municipio-autocomplete";
 import { TextAutocomplete } from "./text-autocomplete";
 import { convertLocalMeetingToBrasilia } from "@/domain/time-zones";
@@ -881,7 +882,7 @@ export function AtaForm({
           ])];
           return (
           <div className="repeat-row repeat-row--double repeat-row--server repeat-row--unseparated" key={item.clientId} onKeyDown={(event) => addRowOnEnter(event, addServer)}>
-            <label>{index === 0 && <span>Nome</span>}<TextAutocomplete id={`server-name-${item.clientId}`} ariaLabel={index === 0 ? undefined : "Nome do Servidor"} required value={item.nome} placeholder="Nome..." suggestions={nameSuggestions.servidores} suggestionTone="server-name" onChange={(value) => setDraft((current) => ({
+            <label>{index === 0 && <span>Nome</span>}<TextAutocomplete id={`server-name-${item.clientId}`} ariaLabel={index === 0 ? undefined : "Nome do Servidor"} required value={item.nome} placeholder="Nome..." suggestions={nameSuggestions.servidores} onChange={(value) => setDraft((current) => ({
               ...current,
               servidores: current.servidores.map((server) => server.clientId === item.clientId ? { ...server, nome: value } : server),
             }))} /></label>
@@ -1036,10 +1037,10 @@ export function AtaForm({
           <div className="repeat-row repeat-row--visitor repeat-row--unseparated" key={item.clientId} onKeyDown={(event) => addRowOnEnter(event, addVisitor)}>
             <div className="visitor-primary-row">
               <label htmlFor={`city-${item.clientId}`}>{index === 0 && <span>Cidade</span>}<MunicipioAutocomplete ariaLabel={index === 0 ? undefined : "Cidade do Visitante"} id={`city-${item.clientId}`} placeholder="Cidade..." value={item.cidade} onChange={(value) => updateVisitor(item.clientId, { cidade: value })} /></label>
-              <label>{index === 0 && <span>Descrição</span>}<select required aria-label={index === 0 ? undefined : "Descrição do Visitante"} value={item.descricao} onChange={(event) => updateVisitor(item.clientId, { descricao: event.target.value as typeof item.descricao })}><option value="" disabled>Escolha...</option>{categoriaVisitanteMapping.codes.map((code) => <option key={code} value={code}>{categoriaVisitanteMapping.toSheet(code)}</option>)}</select></label>
+              <label>{index === 0 && <span>Descrição</span>}<ChoiceAutocomplete id={`visitor-description-${item.clientId}`} required ariaLabel={index === 0 ? undefined : "Descrição do Visitante"} value={item.descricao} options={categoriaVisitanteMapping.codes.map((code) => ({ value: code, label: categoriaVisitanteMapping.toSheet(code) }))} onChange={(value) => updateVisitor(item.clientId, { descricao: value as typeof item.descricao })} /></label>
             </div>
             <div className="visitor-secondary-row">
-              <label>{index === 0 && <span>Como Chegou a NA?</span>}<select required aria-label={index === 0 ? undefined : "Como o Visitante Chegou a NA"} value={item.como_chegou_a_na} onChange={(event) => updateVisitor(item.clientId, { como_chegou_a_na: event.target.value as typeof item.como_chegou_a_na })}><option value="" disabled>Escolha...</option>{origemContatoMapping.codes.map((code) => <option key={code} value={code}>{origemContatoMapping.toSheet(code)}</option>)}</select></label>
+              <label>{index === 0 && <span>Como Chegou a NA?</span>}<ChoiceAutocomplete id={`visitor-source-${item.clientId}`} required ariaLabel={index === 0 ? undefined : "Como o Visitante Chegou a NA"} value={item.como_chegou_a_na} options={origemContatoMapping.codes.map((code) => ({ value: code, label: origemContatoMapping.toSheet(code) }))} onChange={(value) => updateVisitor(item.clientId, { como_chegou_a_na: value as typeof item.como_chegou_a_na })} /></label>
               <button type="button" className="danger-icon-button" aria-label="Remover visitante" title="Remover visitante" onClick={() => removeVisitante(item.clientId)}><FontAwesomeIcon icon={faTrashCan} /></button>
             </div>
           </div>
@@ -1074,7 +1075,7 @@ export function AtaForm({
         </div>
         {draft.trocas_chaveiro.map((item, index) => (
           <div className="repeat-row repeat-row--double repeat-row--clean-time repeat-row--compact-quantity repeat-row--unseparated" key={item.clientId} onKeyDown={(event) => addRowOnEnter(event, addAchievement)}>
-            <label>{index === 0 && <span>Tempo Limpo</span>}<select id={`clean-time-${item.clientId}`} aria-label={index === 0 ? undefined : "Tempo Limpo"} value={item.tempo_limpo} onChange={(event) => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.map((entry) => entry.clientId === item.clientId ? { ...entry, tempo_limpo: event.target.value as typeof entry.tempo_limpo } : entry) }))}>{tempoLimpoMapping.codes.map((code) => <option key={code} value={code}>{tempoLimpoMapping.toSheet(code)}</option>)}</select></label>
+            <label>{index === 0 && <span>Tempo Limpo</span>}<ChoiceAutocomplete id={`clean-time-${item.clientId}`} ariaLabel={index === 0 ? undefined : "Tempo Limpo"} value={item.tempo_limpo} options={tempoLimpoMapping.codes.map((code) => ({ value: code, label: tempoLimpoMapping.toSheet(code) }))} onChange={(value) => setDraft((current) => ({ ...current, trocas_chaveiro: current.trocas_chaveiro.map((entry) => entry.clientId === item.clientId ? { ...entry, tempo_limpo: value as typeof entry.tempo_limpo } : entry) }))} /></label>
             <NumberStepper
               id={`clean-time-count-${item.clientId}`}
               label="Quantidade"
@@ -1127,7 +1128,7 @@ export function AtaForm({
 
       {reviewing && (
         <div className="modal-backdrop">
-          <section className="confirmation-modal" role="dialog" aria-modal="true" aria-labelledby="confirmation-title">
+          <section className="confirmation-modal ata-review-confirmation-modal" role="dialog" aria-modal="true" aria-labelledby="confirmation-title">
             <AtaReviewLayout
               title={revision ? "Resumo da revisão" : "Resumo da ata"}
               titleId="confirmation-title"
