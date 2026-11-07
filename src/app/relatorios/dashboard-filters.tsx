@@ -85,13 +85,11 @@ export function DashboardFilters({
     if (!isResponsavelDashboard) return;
 
     const form = document.querySelector<HTMLFormElement>(".dashboard-filters-responsavel");
-    const monthSelect = form?.elements.namedItem("mes");
-    const yearSelect = form?.elements.namedItem("ano");
-    if (
-      !(form instanceof HTMLFormElement) ||
-      !isPeriodControl(monthSelect) ||
-      !isPeriodControl(yearSelect)
-    ) return;
+    if (!(form instanceof HTMLFormElement)) return;
+
+    const monthSelect = form.elements.namedItem("mes");
+    const yearSelect = form.elements.namedItem("ano");
+    if (!isPeriodControl(monthSelect) || !isPeriodControl(yearSelect)) return;
 
     const params = new URLSearchParams(window.location.search);
     if (params.has("mes") || params.has("ano")) {
@@ -122,13 +120,11 @@ export function DashboardFilters({
 
   function handleResponsiblePeriodChoice(name: "mes" | "ano", value: string) {
     const form = document.querySelector<HTMLFormElement>(".dashboard-filters-responsavel");
-    const month = form?.elements.namedItem("mes");
-    const year = form?.elements.namedItem("ano");
-    if (
-      !(form instanceof HTMLFormElement) ||
-      !isPeriodControl(month) ||
-      !isPeriodControl(year)
-    ) return;
+    if (!(form instanceof HTMLFormElement)) return;
+
+    const month = form.elements.namedItem("mes");
+    const year = form.elements.namedItem("ano");
+    if (!isPeriodControl(month) || !isPeriodControl(year)) return;
 
     if (name === "mes") month.value = value;
     else year.value = value;
