@@ -154,6 +154,8 @@ export function MonthlyGroupDashboard({
           selectedGroupId={data.filters.grupoId}
           selectedMonth={selectedMonth}
           selectedYear={selectedYear}
+          groupName={data.group.grupo_nome}
+          defaultRecipient={data.group.email_acesso_grupo}
           showGroupFilter={showGroupFilter}
           isResponsavelDashboard={showResponsavelHeader}
         />

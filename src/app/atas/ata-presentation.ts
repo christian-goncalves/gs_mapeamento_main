@@ -61,7 +61,7 @@ export function buildAtaPresentation(
 
   return {
     ataId: ata.ata_id,
-    title: `Ata de reunião nº ${displayIndex}`,
+    title: `Ata de Reunião nº ${displayIndex}`,
     filename: `ata-${safeFilename(grupo.grupo_nome)}-${ata.data_reuniao}-${filenameIndex}.pdf`,
     groupEmail: grupo.email_acesso_grupo,
     groupActive: grupo.ativo,

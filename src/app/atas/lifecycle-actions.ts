@@ -56,6 +56,9 @@ export async function reviseAtaAction(
   formData: FormData,
 ): Promise<AtaLifecycleActionState> {
   const current = await requireAuthorizedSession();
+  if (current.access.role !== "responsavel_grupo") {
+    return { error: "Somente o responsável do grupo pode editar esta ata." };
+  }
   if (field(formData, "confirmed") !== "true") {
     return { error: "Confirme o resumo da revisão antes de salvar." };
   }

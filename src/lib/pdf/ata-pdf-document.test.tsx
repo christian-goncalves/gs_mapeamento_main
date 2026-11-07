@@ -9,7 +9,7 @@ import { renderAtaPdf } from "./ata-pdf-document";
 function presentation(locationCount = 2): AtaPresentation {
   return {
     ataId: "024d893a-98cc-4df6-82b1-0cd09fd1d90c",
-    title: "Ata de reunião nº 01 - USL",
+    title: "Ata de Reunião nº 01 - USL",
     filename: "ata-usl-2026-07-01-1.pdf",
     groupEmail: "usl@example.com",
     groupActive: true,

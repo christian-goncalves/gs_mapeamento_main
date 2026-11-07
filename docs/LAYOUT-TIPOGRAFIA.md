@@ -157,6 +157,21 @@ Este ajuste vale somente para `/responsavel/atas`; ele não define a largura das
 - Abaixo de 500 px, as linhas da tabela ficam com 33,19 px; o botão reduzido cabe nessa altura sem aumentar a linha.
 - Conferido no navegador em 320 px, 375 px e 499 px. A partir de 500 px, entra em vigor o esquema descrito acima.
 
+### Aplicação: detalhamento da ata em visualização e PDF
+
+- Em `/atas/[ataId]`, Localidades nacionais inicia a coluna esquerda. Servidores, Localidades internacionais, Visitantes, Ingressos e Conquistas são distribuídos nessa ordem para a coluna que estiver mais baixa, conforme a altura estimada dos dados e cabeçalhos. A mesma regra de distribuição é usada pelo PDF da ata.
+- Acima de 980 px, o detalhamento usa duas colunas. Até 980 px, a visualização reúne as tabelas em uma coluna na ordem definida.
+- As tabelas de Localidades nacionais e Localidades internacionais usam **Total** como rótulo da coluna numérica.
+- A folha A4 da ata usa fundo `#fcfdff`, cards brancos com contorno `#dfe3e8`, azul `#1d4ed8` e azul claro `#e6f1fa` nos destaques, seguindo os tokens comuns.
+- O documento da ata usa páginas A4 em pé. A medição local em 1024 × 1466 CSS px mostrou 15 localidades nacionais à esquerda e as outras cinco tabelas empilhadas à direita; a largura útil medida foi 1009 px. Em 375 px, as tabelas ficaram em uma coluna, sem rolagem horizontal. O PDF da mesma ata foi renderizado em uma página A4.
+
+### Aplicação: relatório mensal em visualização, impressão, PDF e e-mail
+
+- Admin e Responsável mantêm seus conjuntos de dados e blocos próprios, seguindo o padrão visual azul comum: fundo `#fcfdff`, superfícies brancas, bordas `#dfe3e8`, texto principal `#1c2430`, rótulos `#6e849a` e ações, números e cabeçalhos de tabela em `#1d4ed8`.
+- O relatório nativo PDF é A4 em pé, preserva o período selecionado e os dados próprios de cada perfil. Cada linha permanece inteira. A visualização do PDF e o anexo de e-mail usam a mesma renderização; a impressão da tela continua disponível com o CSS de impressão da rota.
+- O envio manual por e-mail inicia com `email_acesso_grupo` e permite editar o destinatário antes de confirmar. Não há envio automático.
+- Conferência local em `/responsavel/relatorios`: 984 CSS px de viewport, sem overflow horizontal; em 375 CSS px a largura útil foi 360 px e continuou sem overflow. Fundos de página/cartões/seções e botões foram conferidos pelos estilos computados. O endpoint do PDF retornou `200 application/pdf` para o grupo e período selecionados.
+
 ### Espaçamentos principais
 
 - Conteúdo mobile medido: 16 px de margem lateral da página; conteúdo do card começa a 13 px da borda do card por causa do padding de 12 px mais a borda.

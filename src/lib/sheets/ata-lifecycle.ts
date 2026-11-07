@@ -203,6 +203,9 @@ export async function reviseAtaInSheets({
   const oldRow = currentAta(snapshot, ataId);
   const oldAta = oldRow.data;
   const access = await assertActorCanAccess(actorEmail, oldAta.grupo_id, aggregate);
+  if (access.role !== "responsavel_grupo") {
+    throw new Error("Somente o responsável do grupo pode editar esta ata.");
+  }
   const fixedFunctionByKey = new Map(
     servidorFuncoes.map((funcao) => [serverFunctionComparisonKey(funcao), funcao]),
   );

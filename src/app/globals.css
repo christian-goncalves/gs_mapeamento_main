@@ -938,6 +938,12 @@ body:has(.app-loading) { background: #fbfcff; }
 .ata-pdf-icon-button svg { width: 1rem; height: 1rem; }
 .ata-pdf-preview-frame { overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #3f3f3f; box-shadow: 0 12px 30px rgb(16 28 21 / 12%); }
 .ata-pdf-preview-frame iframe { display: block; width: 100%; height: calc(100dvh - 7rem); min-height: 650px; border: 0; }
+.ata-pdf-preview-shell { background: #fcfdff; color: #1c2430; }
+.ata-pdf-preview-header { border-color: #dfe3e8; border-radius: 12px; background: #ffffff; }
+.ata-pdf-preview-actions .ata-pdf-icon-button { background: #1d4ed8; color: #ffffff; }
+.ata-pdf-preview-actions .ata-pdf-icon-button:hover { background: #0b3a7a; }
+.ata-pdf-preview-actions .ata-pdf-icon-button:focus-visible { outline: 2px solid #1d4ed8; outline-offset: 2px; }
+.ata-pdf-preview-frame { border-color: #dfe3e8; background: #f5f9ff; }
 .responsavel-placeholder-card { padding: 0; overflow: hidden; }
 @media (min-width: 981px) {
   .review-section summary { cursor: default; pointer-events: none; }
@@ -2504,7 +2510,7 @@ body:has(.app-loading) { background: #fbfcff; }
 .responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .modal-backdrop {
   background: rgb(15 23 42 / 58%);
 }
-.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .confirmation-modal h2,
+.responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .confirmation-modal:not(.ata-review-confirmation-modal) h2,
 .responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .platform-modal-header h2,
 .responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .mesa-server-modal-header h2,
 .responsavel-layout:has(.responsavel-config-page) .responsavel-config-page .schedule-row-modal-header h2,
@@ -2949,8 +2955,15 @@ body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 .ata-edit-page .ata-edit-page-header {
-  align-items: center;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 2px;
+}
+.ata-edit-page .ata-edit-page-header > div {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 .ata-edit-page .ata-edit-page-header .eyebrow {
   margin: 0;
@@ -2973,19 +2986,20 @@ body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal
   line-height: 1.4;
 }
 .ata-edit-page .ata-edit-page-header > .button-link {
+  width: auto;
   height: 36px;
   min-height: 36px;
   flex: 0 0 auto;
-  border: 1px solid #dfe3e8;
+  border: 0;
   border-radius: 8px;
   padding: 0 12px;
-  background: #e6f1fa;
-  color: #0b3a7a;
+  background: #0b3a7a;
+  color: #fff;
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
 }
-.ata-edit-page .ata-edit-page-header > .button-link:hover { background: #d7e9f8; }
+.ata-edit-page .ata-edit-page-header > .button-link:hover { background: #082f62; }
 .ata-edit-page .ata-edit-page-header > .button-link:focus-visible,
 .ata-edit-page .creation-form :is(button, input, select, textarea):focus-visible {
   outline: 2px solid #1d4ed8;
@@ -3052,12 +3066,12 @@ body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal
 .ata-edit-page .creation-form button:not(.autocomplete-toggle):not(.icon-button):not(.danger-icon-button):not(:disabled):hover { filter: brightness(.96); }
 .ata-edit-page .creation-form button:disabled { opacity: .55; }
 @media (max-width: 720px) {
+  .ata-edit-page .ata-general-info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ata-edit-page .ata-edit-page-header h1 {
     font-size: clamp(1.5rem, 7vw, 2rem);
     line-height: 1;
     letter-spacing: -.025em;
   }
-  .ata-edit-page .ata-edit-page-header > .button-link { width: 100%; }
 }
 
 /* Padrão visual atual compartilhado pela leitura da ata e pela confirmação de revisão. */
@@ -3134,6 +3148,12 @@ body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal
 .ata-review-layout { color: #1c2430; }
 .ata-review-layout .review-modal-header h1,
 .ata-review-layout .review-modal-header h2 { color: #0b3a7a; }
+.responsavel-config-page .ata-review-confirmation-modal .ata-review-layout--detail-appearance .review-layout-header { margin-bottom: 18px; }
+.responsavel-config-page .ata-review-confirmation-modal .ata-review-layout--detail-appearance .review-modal-header h2 {
+  color: #0b3a7a;
+  font-size: clamp(28px, 3vw, 41.6px);
+  line-height: 1.12;
+}
 .ata-review-layout .review-info-card dt,
 .ata-review-layout .review-additional-information dt,
 .ata-review-layout .review-identification-grid dt { color: #6e849a; }
@@ -3358,12 +3378,85 @@ body:has(.ata-detail-review-shell) {
   box-shadow: none;
 }
 .ata-detail-review-shell .ata-review-layout--detail { color: #1c2430; }
-.ata-detail-review-shell .ata-review-layout--detail .review-layout-header {
+:is(.ata-detail-review-shell .ata-review-layout--detail) .review-layout-header:has(.review-layout-header-toolbar) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+}
+.ata-detail-review-shell .review-layout-header-toolbar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dfe3e8;
+}
+.ata-detail-review-shell .review-layout-header-toolbar .ata-record-navigation,
+.ata-detail-review-shell .review-layout-header-toolbar .ata-detail-toolbar-actions,
+.ata-detail-review-shell .review-layout-header-toolbar .ata-detail-toolbar-right,
+.ata-detail-review-shell .review-layout-header-toolbar .ata-detail-toolbar-badges {
+  display: flex;
+  align-items: center;
+}
+.ata-detail-review-shell .review-layout-header-toolbar .ata-record-navigation {
+  flex: 0 0 auto;
+  gap: 2.4px;
+  margin: 0;
+}
+.ata-detail-review-shell .review-layout-header-toolbar .ata-record-navigation-label {
+  color: #0b3a7a;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.ata-detail-review-shell .review-layout-header-toolbar .ata-record-navigation > :last-child { margin-left: 0; }
+.ata-detail-review-shell .review-layout-header-toolbar .ata-detail-toolbar-right {
+  display: flex;
+  min-width: 0;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.ata-detail-review-shell .review-layout-header-toolbar .ata-detail-toolbar-actions,
+.ata-detail-review-shell .review-layout-header-toolbar .ata-detail-toolbar-badges { gap: 8px; }
+.ata-detail-review-shell .review-layout-header-toolbar .ata-detail-toolbar-badges { flex-wrap: wrap; justify-content: flex-end; }
+.ata-detail-review-shell .review-layout-header-toolbar .ata-pdf-icon-button {
+  display: inline-flex;
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  padding: 0;
+  background: transparent;
+  color: #0b3a7a;
+  font-size: 18px;
+}
+.ata-detail-review-shell .review-layout-header-toolbar .ata-pdf-icon-button:hover:not(:disabled) {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.ata-detail-review-shell .review-layout-header-toolbar .ata-pdf-icon-button:focus-visible {
+  background: transparent;
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.ata-detail-review-shell .review-layout-header-toolbar .ata-pdf-icon-button:disabled {
+  color: #91a4ba;
+  cursor: not-allowed;
+}
+.ata-detail-review-shell .review-layout-header-toolbar .ata-detail-toolbar-badges:empty { display: none; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-layout-header {
   align-items: flex-end;
   margin-bottom: 18px;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-modal-header { gap: 0; }
-.ata-detail-review-shell .ata-review-layout--detail .review-detail-page-title .eyebrow {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-modal-header { gap: 0; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-detail-page-title .eyebrow {
   margin: 0;
   color: #1d4ed8;
   font-size: 12.8px;
@@ -3372,51 +3465,28 @@ body:has(.ata-detail-review-shell) {
   letter-spacing: .08em;
   text-transform: uppercase;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-modal-header h1 {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-modal-header h1 {
   color: #0b3a7a;
   font-size: 41.6px;
   font-weight: 700;
   line-height: 1.1;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-modal-header p:not(.eyebrow) {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-modal-header p:not(.eyebrow) {
   color: #5b6675;
   font-size: 15px;
   line-height: 1.45;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-layout-header-actions {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-layout-header-actions {
   gap: 8px;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-layout-header-actions .ata-pdf-icon-button {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-layout-header-actions .ata-pdf-icon-button {
   width: 36px;
   min-width: 36px;
   height: 36px;
   min-height: 36px;
   border-radius: 8px;
 }
-.ata-detail-review-shell .ata-record-navigation {
-  gap: 12px;
-  margin-bottom: 18px;
-}
-.ata-detail-review-shell .ata-record-navigation .button-link,
-.ata-detail-review-shell .ata-record-navigation button {
-  min-width: 0;
-  min-height: 36px;
-  height: 36px;
-  border: 1px solid #dfe3e8;
-  border-radius: 8px;
-  padding: 0 12px;
-  background: #e6f1fa;
-  color: #0b3a7a;
-  font-size: 14px;
-  font-weight: 600;
-}
-.ata-detail-review-shell .ata-record-navigation .button-link:hover:not([aria-disabled="true"]),
-.ata-detail-review-shell .ata-record-navigation button:hover:not(:disabled) { background: #d7e9f8; }
-.ata-detail-review-shell .ata-record-navigation :is(a, button):focus-visible {
-  outline: 2px solid #1d4ed8;
-  outline-offset: 2px;
-}
-.ata-detail-review-shell .ata-review-layout--detail .review-block {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-block {
   display: grid;
   min-width: 0;
   gap: 12px;
@@ -3425,20 +3495,20 @@ body:has(.ata-detail-review-shell) {
   padding: 12px;
   background: #fff;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-block + .review-block { margin-top: 24px; }
-.ata-detail-review-shell .ata-review-layout--detail .review-block > h2 {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-block + .review-block { margin-top: 24px; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-block > h2 {
   margin: 0;
   color: #1c2430;
   font-size: 25.92px;
   font-weight: 700;
   line-height: 1.2;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-grid {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin: 0;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-info-card {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-info-card {
   grid-template-columns: minmax(0, 1fr);
   gap: 4px;
   min-height: 64px;
@@ -3447,20 +3517,25 @@ body:has(.ata-detail-review-shell) {
   padding: 10px 12px;
   background: #fff;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-info-card--group { grid-column: 1 / -1; }
-.ata-detail-review-shell .ata-review-layout--detail .review-info-card dt,
-.ata-detail-review-shell .ata-review-layout--detail .review-additional-information dt,
-.ata-detail-review-shell .ata-review-layout--detail .review-identification-grid dt,
-.ata-detail-review-shell .ata-review-layout--detail .review-metrics dt {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-info-card--group { grid-column: 1 / -1; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-info-card--reason {
+  align-self: start;
+  min-height: 54px;
+  padding-block: 9px;
+}
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-info-card dt,
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-additional-information dt,
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-identification-grid dt,
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-metrics dt {
   color: #6e849a;
   font-size: 11px;
   font-weight: 600;
   line-height: 1.2;
   text-transform: uppercase;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-info-card dd,
-.ata-detail-review-shell .ata-review-layout--detail .review-additional-information dd,
-.ata-detail-review-shell .ata-review-layout--detail .review-identification-grid dd {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-info-card dd,
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-additional-information dd,
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-identification-grid dd {
   margin: 0;
   color: #1c2430;
   font-size: 15px;
@@ -3468,36 +3543,40 @@ body:has(.ata-detail-review-shell) {
   line-height: 1.35;
   overflow-wrap: anywhere;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-additional-information {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--admissions td[data-label="Estado"],
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--achievements td[data-label="Tempo"] {
+  text-align: center;
+}
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-additional-information {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin: 0;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-additional-information > div {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-additional-information > div {
   min-width: 0;
   border: 1px solid #dfe3e8;
   border-radius: 8px;
   padding: 10px 12px;
   background: #fff;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-identification {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-identification {
   margin: 0;
   border-color: #dfe3e8;
   border-radius: 8px;
   padding: 12px;
   background: #fff;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-identification-heading h2 {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-identification-heading h2 {
   color: #1c2430;
   font-size: 16px;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-identification-grid { margin-top: 8px; }
-.ata-detail-review-shell .ata-review-layout--detail .review-metrics {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-identification-grid { margin-top: 8px; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-metrics {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   margin: 0;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-metrics > div {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-metrics > div {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-content: center;
@@ -3510,39 +3589,51 @@ body:has(.ata-detail-review-shell) {
   background: #fff;
   text-align: left;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-metrics dt { min-height: 0; }
-.ata-detail-review-shell .ata-review-layout--detail .review-metrics dd {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-metrics dt { min-height: 0; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-metrics dd {
   margin: 0;
   color: #1d4ed8;
   font-size: 30px;
   font-weight: 700;
   line-height: 1;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-sections { gap: 12px; margin: 0; }
-.ata-detail-review-shell .ata-review-layout--detail .review-sections-main,
-.ata-detail-review-shell .ata-review-layout--detail .review-sections-bottom { gap: 12px; }
-.ata-detail-review-shell .ata-review-layout--detail .review-sections-stack { gap: 12px; }
-.ata-detail-review-shell .ata-review-layout--detail .review-section {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-sections { gap: 12px; margin: 0; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-sections-main,
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-sections-bottom { gap: 12px; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-sections-stack { gap: 12px; }
+:is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 12px;
+}
+:is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-column {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-width: 0;
+}
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-section {
   border-color: #dfe3e8;
   border-radius: 8px;
   background: #fff;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-section summary { min-height: 42px; }
-.ata-detail-review-shell .ata-review-layout--detail .review-section-content {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-section summary { min-height: 42px; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-section-content {
   border-top-color: #e4edf6;
   padding: 8px;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-section-count {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-section-count {
   background: #e6f1fa;
   color: #0b3a7a;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-table-wrap {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table-wrap {
   max-width: 100%;
   overflow: hidden;
   border: 1px solid #e4edf6;
   border-radius: 8px;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-table {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table {
   width: 100%;
   margin: 0;
   border: 0;
@@ -3551,8 +3642,8 @@ body:has(.ata-detail-review-shell) {
   table-layout: fixed;
   background: #fff;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-table th,
-.ata-detail-review-shell .ata-review-layout--detail .review-table td {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table th,
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table td {
   border-bottom: 1px solid #e4edf6;
   padding: 9px 8px;
   color: #1c2430;
@@ -3560,10 +3651,10 @@ body:has(.ata-detail-review-shell) {
   vertical-align: middle;
   overflow-wrap: anywhere;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-table th:not(:last-child),
-.ata-detail-review-shell .ata-review-layout--detail .review-table td:not(:last-child) { border-right: 1px solid #e4edf6; }
-.ata-detail-review-shell .ata-review-layout--detail .review-table tbody tr:last-child td { border-bottom: 0; }
-.ata-detail-review-shell .ata-review-layout--detail .review-table thead th {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table th:not(:last-child),
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table td:not(:last-child) { border-right: 1px solid #e4edf6; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table tbody tr:last-child td { border-bottom: 0; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table thead th {
   background: #1d4ed8;
   color: #fff;
   font-size: 13.0133px;
@@ -3572,31 +3663,39 @@ body:has(.ata-detail-review-shell) {
   text-align: center;
   text-transform: uppercase;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-table tbody td {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table tbody td {
   font-size: 14.9333px;
   font-weight: 400;
   line-height: 1.35;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-table--servers th:first-child,
-.ata-detail-review-shell .ata-review-layout--detail .review-table--servers td:first-child { width: 58%; }
-.ata-detail-review-shell .ata-review-layout--detail .review-table--servers th:last-child,
-.ata-detail-review-shell .ata-review-layout--detail .review-table--servers td:last-child { width: 42%; }
-.ata-detail-review-shell .ata-review-layout--detail .review-table--servers tbody td:nth-child(2) { text-align: center; }
-.ata-detail-review-shell .ata-review-layout--detail .review-table--locations th:first-child,
-.ata-detail-review-shell .ata-review-layout--detail .review-table--locations td:first-child { width: 74%; }
-.ata-detail-review-shell .ata-review-layout--detail .review-table--locations th:last-child,
-.ata-detail-review-shell .ata-review-layout--detail .review-table--locations td:last-child { width: 26%; text-align: center; }
-.ata-detail-review-shell .ata-review-layout--detail .review-location-name { display: block; }
-.ata-detail-review-shell .ata-review-layout--detail .review-table .review-location-name + small {
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--servers th:first-child,
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--servers td:first-child { width: 58%; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--servers th:last-child,
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--servers td:last-child { width: 42%; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--servers tbody td:nth-child(2) { text-align: center; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--locations th:first-child,
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--locations td:first-child { width: 74%; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--locations th:last-child,
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--locations td:last-child { width: 26%; text-align: center; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-location-name { display: block; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table .review-location-name + small {
   display: block;
   margin-top: 2px;
   color: #6e849a;
   font-size: 12px;
 }
-.ata-detail-review-shell .ata-review-layout--detail .review-table td::before { content: none; }
+:is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table td::before { content: none; }
 
 @media (max-width: 980px) {
-  .ata-detail-review-shell .ata-review-layout--detail .review-layout-header { align-items: flex-start; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-layout-header { align-items: flex-start; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-columns { grid-template-columns: 1fr; gap: 8px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-column { display: contents; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-item--national { order: 1; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-item--servers { order: 2; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-item--international { order: 3; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-item--visitors { order: 4; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-item--admissions { order: 5; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-item--achievements { order: 6; }
 }
 @media (max-width: 720px) {
   .admin-layout:has(.ata-detail-review-shell) .admin-main,
@@ -3604,77 +3703,180 @@ body:has(.ata-detail-review-shell) {
     width: 100%;
     padding: 16px;
   }
-  .ata-detail-review-shell .ata-review-layout--detail .review-layout-header { display: grid; gap: 12px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-layout-header-actions {
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-layout-header { display: grid; gap: 12px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-layout-header-actions {
     width: 100%;
     justify-content: flex-start;
   }
-  .ata-detail-review-shell .ata-review-layout--detail .review-modal-header h1 {
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-modal-header h1 {
     font-size: clamp(28px, 7vw, 36px);
     line-height: 1.12;
   }
-  .ata-detail-review-shell .ata-review-layout--detail .review-block > h2 { font-size: 22px; }
-  .ata-detail-review-shell .ata-record-navigation .button-link,
-  .ata-detail-review-shell .ata-record-navigation button { flex: 1 1 0; padding-inline: 8px; font-size: 12px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-sections-main,
-  .ata-detail-review-shell .ata-review-layout--detail .review-sections-bottom { grid-template-columns: 1fr; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-sections-stack { grid-column: auto; grid-row: auto; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-section--national { grid-column: auto; grid-row: auto; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table,
-  .ata-detail-review-shell .ata-review-layout--detail .review-table tbody,
-  .ata-detail-review-shell .ata-review-layout--detail .review-table tr,
-  .ata-detail-review-shell .ata-review-layout--detail .review-table td { display: table-cell; width: auto; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table { display: table; width: 100%; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table thead { display: table-header-group; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table tbody { display: table-row-group; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table tr { display: table-row; border: 0; padding: 0; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table td { display: table-cell; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table th,
-  .ata-detail-review-shell .ata-review-layout--detail .review-table td { padding: 7px 5px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table thead th { font-size: 10px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table tbody td { font-size: 11.5px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table td::before { display: none; content: none; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-block > h2 { font-size: 22px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-sections-main,
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-sections-bottom { grid-template-columns: 1fr; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-sections-stack { grid-column: auto; grid-row: auto; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-section--national { grid-column: auto; grid-row: auto; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table,
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table tbody,
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table tr,
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table td { display: table-cell; width: auto; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table { display: table; width: 100%; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table thead { display: table-header-group; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table tbody { display: table-row-group; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table tr { display: table-row; border: 0; padding: 0; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table td { display: table-cell; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table th,
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table td { padding: 7px 5px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table thead th { font-size: 10px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table tbody td { font-size: 11.5px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table td::before { display: none; content: none; }
 }
 @media (max-width: 500px) {
-  .ata-detail-review-shell .ata-review-layout--detail .review-block { gap: 10px; padding: 10px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-block + .review-block { margin-top: 18px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-grid,
-  .ata-detail-review-shell .ata-review-layout--detail .review-additional-information { gap: 8px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-info-card,
-  .ata-detail-review-shell .ata-review-layout--detail .review-additional-information > div { padding: 8px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-metrics { gap: 8px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-metrics > div { min-height: 64px; padding: 7px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-metrics dt { font-size: 10px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-metrics dd { font-size: 24px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-sections-main,
-  .ata-detail-review-shell .ata-review-layout--detail .review-sections-bottom,
-  .ata-detail-review-shell .ata-review-layout--detail .review-sections-stack { gap: 8px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-section summary { min-height: 38px; padding-inline: 8px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-section-content { padding: 5px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table th,
-  .ata-detail-review-shell .ata-review-layout--detail .review-table td { padding: 5px 3px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table thead th { font-size: 9.25px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table tbody td { font-size: 10.75px; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors th:nth-child(1),
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors td:nth-child(1) { width: 30%; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors th:nth-child(2),
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors td:nth-child(2) { width: 24%; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors th:nth-child(3),
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors td:nth-child(3) { width: 23%; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors th:nth-child(4),
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors td:nth-child(4) { width: 23%; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--admissions th:nth-child(1),
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--admissions td:nth-child(1) { width: 42%; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--admissions th:nth-child(2),
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--admissions td:nth-child(2) { width: 32%; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--admissions th:nth-child(3),
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--admissions td:nth-child(3) { width: 26%; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--achievements th:first-child,
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--achievements td:first-child { width: 64%; }
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--achievements th:last-child,
-  .ata-detail-review-shell .ata-review-layout--detail .review-table--achievements td:last-child { width: 36%; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-block { gap: 10px; padding: 10px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-block + .review-block { margin-top: 18px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-grid,
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-additional-information { gap: 8px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-info-card,
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-additional-information > div { padding: 8px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-metrics { gap: 8px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-metrics > div { min-height: 64px; padding: 7px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-metrics dt { font-size: 10px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-metrics dd { font-size: 24px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-sections-main,
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-sections-bottom,
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-sections-stack { gap: 8px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-section summary { min-height: 38px; padding-inline: 8px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-section-content { padding: 5px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table th,
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table td { padding: 5px 3px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table thead th { font-size: 9.25px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table tbody td { font-size: 10.75px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--visitors th:nth-child(1),
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--visitors td:nth-child(1) { width: 30%; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--visitors th:nth-child(2),
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--visitors td:nth-child(2) { width: 24%; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--visitors th:nth-child(3),
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--visitors td:nth-child(3) { width: 23%; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--visitors th:nth-child(4),
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--visitors td:nth-child(4) { width: 23%; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--admissions th:nth-child(1),
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--admissions td:nth-child(1) { width: 42%; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--admissions th:nth-child(2),
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--admissions td:nth-child(2) { width: 32%; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--admissions th:nth-child(3),
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--admissions td:nth-child(3) { width: 26%; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--achievements th:first-child,
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--achievements td:first-child { width: 64%; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--achievements th:last-child,
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--achievements td:last-child { width: 36%; }
 }
 @media (max-width: 360px) {
-  .ata-detail-review-shell .ata-review-layout--detail .review-grid,
-  .ata-detail-review-shell .ata-review-layout--detail .review-additional-information { grid-template-columns: 1fr; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-grid,
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-additional-information { grid-template-columns: 1fr; }
+}
+
+/* Monthly reports share the blue visual system in Admin and Responsible. */
+.admin-layout:has(.monthly-dashboard-page),
+.admin-main:has(.monthly-dashboard-page),
+.responsavel-layout:has(.monthly-dashboard-page) { background: #fcfdff; }
+.monthly-dashboard-page { background: #fcfdff; color: #1c2430; }
+.monthly-dashboard-page .monthly-dashboard-sheet {
+  border-color: #dfe3e8;
+  border-radius: 12px;
+  background: #ffffff;
+}
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .monthly-dashboard-sheet-responsavel { background: #ffffff; }
+.monthly-dashboard-page .monthly-dashboard-hero h1,
+.monthly-dashboard-page .dashboard-responsavel-title h1 { color: #0b3a7a; }
+.monthly-dashboard-page .monthly-dashboard-hero-icon,
+.monthly-dashboard-page .dashboard-metric-icon {
+  color: #1d4ed8;
+  background: #e6f1fa;
+}
+.monthly-dashboard-page .dashboard-filters,
+.monthly-dashboard-page .dashboard-section,
+.monthly-dashboard-page .dashboard-metric-card,
+.monthly-dashboard-page .dashboard-achievement-card {
+  border-color: #dfe3e8;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: none;
+}
+.monthly-dashboard-page .dashboard-section-title h2 { color: #1c2430; }
+.monthly-dashboard-page .dashboard-metric-card h3,
+.monthly-dashboard-page .dashboard-achievement-label,
+.monthly-dashboard-page .dashboard-filter-period-label,
+.monthly-dashboard-page .dashboard-filters > label { color: #6e849a; }
+.monthly-dashboard-page .dashboard-metric-card strong,
+.monthly-dashboard-page .dashboard-achievement-card strong { color: #1d4ed8; }
+.monthly-dashboard-page .dashboard-table,
+.monthly-dashboard-page .dashboard-achievement-table,
+.monthly-dashboard-page .dashboard-mesa-table,
+.monthly-dashboard-page .meeting-results-table {
+  border-color: #e4edf6;
+}
+.monthly-dashboard-page .dashboard-table thead th,
+.monthly-dashboard-page .dashboard-mesa-table thead th,
+.monthly-dashboard-page .meeting-results-table thead th {
+  border-color: #e4edf6;
+  background: #1d4ed8;
+  color: #ffffff;
+}
+.monthly-dashboard-page .dashboard-table td,
+.monthly-dashboard-page .dashboard-table tbody th,
+.monthly-dashboard-page .dashboard-mesa-table td,
+.monthly-dashboard-page .dashboard-mesa-table tbody th,
+.monthly-dashboard-page .meeting-results-table td,
+.monthly-dashboard-page .meeting-results-table tbody th { border-color: #e4edf6; color: #1c2430; }
+.monthly-dashboard-page .dashboard-table tbody th,
+.monthly-dashboard-page .dashboard-mesa-table tbody th,
+.monthly-dashboard-page .meeting-results-table tbody th { background: #ffffff; }
+.monthly-dashboard-page .dashboard-filters select,
+.monthly-dashboard-page .dashboard-filters .dashboard-period-autocomplete > input:not([type="hidden"]) {
+  min-height: 36px;
+  border: 1px solid #dfe3e8;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1c2430;
+}
+.monthly-dashboard-page .dashboard-report-actions { display: flex; grid-column: -2 / -1; justify-self: end; gap: 8px; }
+.monthly-dashboard-page .dashboard-pdf-button,
+.monthly-dashboard-page .dashboard-print-button,
+.monthly-dashboard-page .dashboard-email-button {
+  display: inline-flex;
+  width: 44px;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: #1d4ed8;
+  box-shadow: none;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.monthly-dashboard-page .dashboard-pdf-button { width: 72px; }
+.monthly-dashboard-page .dashboard-pdf-button:hover,
+.monthly-dashboard-page .dashboard-print-button:hover,
+.monthly-dashboard-page .dashboard-email-button:hover { background: #0b3a7a; }
+.monthly-dashboard-page .dashboard-pdf-button:focus-visible,
+.monthly-dashboard-page .dashboard-print-button:focus-visible,
+.monthly-dashboard-page .dashboard-email-button:focus-visible { outline: 2px solid #1d4ed8; outline-offset: 2px; }
+.monthly-dashboard-page .dashboard-print-button { flex: none; }
+.monthly-dashboard-page .dashboard-email-button { flex: none; }
+.monthly-dashboard-page .dashboard-footer { color: #6e849a; }
+@media (max-width: 600px) {
+  .monthly-dashboard-page .dashboard-report-actions { grid-column: 1 / -1; justify-self: stretch; }
+  .monthly-dashboard-page .dashboard-pdf-button { width: 36px; }
+  .monthly-dashboard-page .dashboard-pdf-button-label { display: none; }
+}
+@media print {
+  .monthly-dashboard-page { background: #ffffff; }
+  .monthly-dashboard-page .monthly-dashboard-sheet { break-inside: auto; }
+  .monthly-dashboard-page .dashboard-report-actions { display: none !important; }
 }

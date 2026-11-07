@@ -6,6 +6,7 @@ import type { AggregatedAta } from "@/domain/aggregate";
 import type { HiddenAtaSubmission } from "@/domain/hidden-submission";
 import { canAccessGroup } from "@/lib/auth/access";
 import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
+import { ResponsavelShell } from "@/app/responsavel/responsavel-shell";
 import { formatReviewLocation } from "@/app/atas/nova/ata-review";
 import { AtaForm } from "@/app/atas/nova/ata-form";
 import { reviseAtaAction } from "@/app/atas/lifecycle-actions";
@@ -51,6 +52,7 @@ export default async function EditAtaPage({
   params: Promise<{ ataId: string }>;
 }) {
   const { access, result } = await requireAuthorizedSessionWithAggregatedAtas();
+  if (access.role !== "responsavel_grupo") notFound();
   const { ataId } = await params;
   const item = result.atas.find((candidate) => candidate.registro.ata.ata_id === ataId);
   if (!item || !canAccessGroup(access, item.grupo.grupo_id)) notFound();
@@ -60,47 +62,49 @@ export default async function EditAtaPage({
   }
 
   return (
-    <main className="shell ata-detail-review-shell ata-edit-page">
-      <header className="responsavel-page-header ata-new-page-header ata-edit-page-header">
-        <div>
-          <p className="eyebrow">Editar ata</p>
-          <h1>Grupo {item.grupo.grupo_nome}</h1>
-          <p className="responsavel-page-description ata-edit-context">
-            A edição cria uma nova versão e preserva esta ata no histórico.
-            {ata.status_aprovacao === "pendente_revisao" && " A nova versão continuará pendente de aprovação."}
-          </p>
-        </div>
-        <Link className="button-link" href={`/atas/${ata.ata_id}`}>
-          <span className="button-content">
-            <FontAwesomeIcon icon={faArrowLeft} />
-            Cancelar e Voltar à Ata
-          </span>
-        </Link>
-      </header>
-      <AtaForm
-        groups={[{
-          id: item.grupo.grupo_id,
-          name: item.grupo.grupo_nome,
-          plataforma: item.grupo.plataforma,
-          fuso_horario: item.grupo.fuso_horario,
-          plataformas: result.grupo_plataformas.filter((platform) => platform.grupo_id === item.grupo.grupo_id && platform.ativo).map((platform) => platform.tipo),
-          funcoesServidor: (result.grupo_funcoes_servidor ?? [])
-            .filter((funcao) => funcao.grupo_id === item.grupo.grupo_id && funcao.ativo)
-            .map((funcao) => funcao.nome),
-          horarios: result.grupo_horarios
-            .filter((horario) => horario.grupo_id === item.grupo.grupo_id && horario.ativo)
-            .map((horario) => ({ dia_semana: horario.dia_semana, hora_inicio: horario.hora_inicio, link_reuniao: horario.link_reuniao, plataformaTipo: result.grupo_plataformas.find((platform) => platform.plataforma_id === horario.plataforma_id && platform.ativo)?.tipo })),
-        }]}
-        fixedGroupId={item.grupo.grupo_id}
-        today={ata.data_reuniao}
-        action={reviseAtaAction}
-        initialSubmission={hiddenSubmission(item)}
-        revision={{
-          ataId: ata.ata_id,
-          updatedAt: ata.updated_at,
-          approvalStatus: ata.status_aprovacao ?? "aprovada",
-        }}
-      />
-    </main>
+    <ResponsavelShell activeSection="responsavel" settingsHref={`/grupos/${item.grupo.grupo_id}`}>
+      <div className="responsavel-config-page ata-edit-page">
+        <header className="responsavel-page-header ata-new-page-header ata-edit-page-header">
+          <div>
+            <p className="eyebrow">Editar ata</p>
+            <h1>Grupo {item.grupo.grupo_nome}</h1>
+            <p className="responsavel-page-description ata-edit-context">
+              A edição cria uma nova versão e preserva esta ata no histórico.
+              {ata.status_aprovacao === "pendente_revisao" && " A nova versão continuará pendente de aprovação."}
+            </p>
+          </div>
+          <Link className="button-link" href={`/atas/${ata.ata_id}`}>
+            <span className="button-content">
+              <FontAwesomeIcon icon={faArrowLeft} />
+              Cancelar
+            </span>
+          </Link>
+        </header>
+        <AtaForm
+          groups={[{
+            id: item.grupo.grupo_id,
+            name: item.grupo.grupo_nome,
+            plataforma: item.grupo.plataforma,
+            fuso_horario: item.grupo.fuso_horario,
+            plataformas: result.grupo_plataformas.filter((platform) => platform.grupo_id === item.grupo.grupo_id && platform.ativo).map((platform) => platform.tipo),
+            funcoesServidor: (result.grupo_funcoes_servidor ?? [])
+              .filter((funcao) => funcao.grupo_id === item.grupo.grupo_id && funcao.ativo)
+              .map((funcao) => funcao.nome),
+            horarios: result.grupo_horarios
+              .filter((horario) => horario.grupo_id === item.grupo.grupo_id && horario.ativo)
+              .map((horario) => ({ dia_semana: horario.dia_semana, hora_inicio: horario.hora_inicio, link_reuniao: horario.link_reuniao, plataformaTipo: result.grupo_plataformas.find((platform) => platform.plataforma_id === horario.plataforma_id && platform.ativo)?.tipo })),
+          }]}
+          fixedGroupId={item.grupo.grupo_id}
+          today={ata.data_reuniao}
+          action={reviseAtaAction}
+          initialSubmission={hiddenSubmission(item)}
+          revision={{
+            ataId: ata.ata_id,
+            updatedAt: ata.updated_at,
+            approvalStatus: ata.status_aprovacao ?? "aprovada",
+          }}
+        />
+      </div>
+    </ResponsavelShell>
   );
 }

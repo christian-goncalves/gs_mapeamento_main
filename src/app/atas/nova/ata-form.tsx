@@ -1133,12 +1133,13 @@ export function AtaForm({
               title={revision ? "Resumo da revisão" : "Resumo da ata"}
               titleId="confirmation-title"
               data={reviewLayoutData}
+              detailAppearance
               footer={(
                 <>
                   {actionState.error && <p className="form-error" role="alert">{actionState.error}</p>}
                   <div className="modal-actions">
                     <button type="button" className="secondary" disabled={pending} autoFocus onClick={() => setReviewing(false)}><span className="button-content"><FontAwesomeIcon icon={faPenToSquare} />Corrigir</span></button>
-                    <button type="submit" disabled={pending}><span className="button-content"><FontAwesomeIcon icon={faPaperPlane} />{pending ? "Salvando..." : revision?.approvalStatus === "pendente_revisao" ? "Enviar para revisão" : revision ? "Salvar revisão aprovada" : "Enviar"}</span></button>
+                    <button type="submit" disabled={pending}><span className="button-content"><FontAwesomeIcon icon={faPaperPlane} />{pending ? "Salvando..." : revision?.approvalStatus === "pendente_revisao" ? "Enviar para revisão" : revision ? "Salvar Revisão e Aprovar" : "Enviar"}</span></button>
                   </div>
                 </>
               )}

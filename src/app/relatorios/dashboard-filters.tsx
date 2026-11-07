@@ -3,7 +3,7 @@
 import { useEffect, type ChangeEvent } from "react";
 import type { Grupo } from "@/domain/entities";
 import { ChoiceAutocomplete } from "../choice-autocomplete";
-import { PrintDashboardButton } from "./print-dashboard-button";
+import { MonthlyReportActions } from "./monthly-report-actions";
 
 const months = [
   ["1", "Janeiro"],
@@ -69,6 +69,8 @@ export function DashboardFilters({
   selectedGroupId,
   selectedMonth,
   selectedYear,
+  groupName = "",
+  defaultRecipient = "",
   showGroupFilter,
   isResponsavelDashboard = false,
 }: {
@@ -78,6 +80,8 @@ export function DashboardFilters({
   selectedGroupId: string;
   selectedMonth: string;
   selectedYear: string;
+  groupName?: string;
+  defaultRecipient?: string;
   showGroupFilter: boolean;
   isResponsavelDashboard?: boolean;
 }) {
@@ -195,7 +199,15 @@ export function DashboardFilters({
           </select>
         )}
       </label>
-      <PrintDashboardButton />
+      <div className="dashboard-report-actions">
+        <MonthlyReportActions
+          groupId={selectedGroupId}
+          month={selectedMonth}
+          year={selectedYear}
+          groupName={groupName}
+          defaultRecipient={defaultRecipient}
+        />
+      </div>
     </form>
   );
 }

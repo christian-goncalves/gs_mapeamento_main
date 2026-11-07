@@ -29,7 +29,7 @@ describe("layout compartilhado da ata", () => {
   it("renderiza o mesmo núcleo visual com indicadores complementares", () => {
     const html = renderToStaticMarkup(
       <AtaReviewLayout
-        title="Ata de reunião nº 19 - USL"
+        title="Ata de Reunião nº 19 - USL"
         description="Visualização da ata."
         titleId="ata-title"
         headingLevel="h1"
@@ -37,7 +37,7 @@ describe("layout compartilhado da ata", () => {
       />,
     );
 
-    expect(html).toContain("Ata de reunião nº 19 - USL");
+    expect(html).toContain("Ata de Reunião nº 19 - USL");
     expect(html).toContain("<dt>Data</dt><dd>31/07/2026</dd>");
     expect(html).toContain("<dt>Horário</dt><dd>21:30</dd>");
     expect(html).not.toContain("Data e hora");
@@ -50,7 +50,7 @@ describe("layout compartilhado da ata", () => {
   it("não renderiza o campo removido do layout", () => {
     const html = renderToStaticMarkup(
       <AtaReviewLayout
-        title="Ata de reunião nº 19 - USL"
+        title="Ata de Reunião nº 19 - USL"
         titleId="ata-title"
         headingLevel="h1"
         data={data}
@@ -63,7 +63,7 @@ describe("layout compartilhado da ata", () => {
   it("oculta Formato outros sem remover as demais informações adicionais", () => {
     const html = renderToStaticMarkup(
       <AtaReviewLayout
-        title="Ata de reunião nº 19 - USL"
+        title="Ata de Reunião nº 19 - USL"
         titleId="ata-title"
         data={{
           ...data,
@@ -82,7 +82,7 @@ describe("layout compartilhado da ata", () => {
   it("remove Membros presentes e Partilhas dos cards superiores e mantém os totais", () => {
     const html = renderToStaticMarkup(
       <AtaReviewLayout
-        title="Ata de reunião nº 19 - USL"
+        title="Ata de Reunião nº 19 - USL"
         titleId="ata-title"
         data={data}
       />,

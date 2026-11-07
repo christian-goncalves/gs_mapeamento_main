@@ -24,17 +24,18 @@ import {
 } from "@react-pdf/renderer";
 import type { ReactNode } from "react";
 import type { AtaPresentation } from "@/app/atas/ata-presentation";
+import { buildAtaDetailColumnLayout, type AtaDetailSectionKey } from "@/app/atas/ata-detail-column-layout";
 import { formatReviewDate } from "@/app/atas/nova/ata-review";
 
 const colors = {
-  brand: "#007A55",
-  brandSoft: "#EAF5EF",
-  ink: "#10291F",
-  muted: "#52645C",
-  quiet: "#819089",
-  line: "#DDE6E1",
-  rowLine: "#EDF1EF",
-  paper: "#FBFAF4",
+  brand: "#1D4ED8",
+  brandSoft: "#E6F1FA",
+  ink: "#1C2430",
+  muted: "#6E849A",
+  quiet: "#6E849A",
+  line: "#DFE3E8",
+  rowLine: "#E4EDF6",
+  paper: "#FCFDFF",
   white: "#FFFFFF",
 };
 
@@ -150,8 +151,6 @@ const styles = StyleSheet.create({
   sections: { marginTop: 1 },
   sectionColumns: { flexDirection: "row", alignItems: "flex-start", marginHorizontal: -3 },
   sectionColumn: { width: "50%", paddingHorizontal: 3 },
-  bottomSections: { flexDirection: "row", alignItems: "flex-start", marginHorizontal: -3 },
-  bottomSection: { width: "50%", paddingHorizontal: 3 },
   section: {
     marginBottom: 5,
     overflow: "hidden",
@@ -191,34 +190,6 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     textAlign: "center",
   },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderBottomWidth: 1,
-    borderBottomColor: colors.rowLine,
-    paddingVertical: 1.75,
-    paddingHorizontal: 5,
-  },
-  rowLast: { borderBottomWidth: 0 },
-  rowText: { flexGrow: 1, flexBasis: 0, paddingRight: 5, fontSize: 6.4, lineHeight: 1.15 },
-  rowDetail: { marginTop: 1, color: colors.muted, fontSize: 5.3 },
-  badge: {
-    borderRadius: 4,
-    paddingVertical: 1.5,
-    paddingHorizontal: 4,
-    backgroundColor: colors.brandSoft,
-    color: colors.brand,
-    fontSize: 5.5,
-    fontWeight: 700,
-  },
-  empty: {
-    minHeight: 26,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 6,
-  },
-  emptyText: { color: colors.quiet, fontSize: 5.8, textAlign: "center" },
   tableHeader: { flexDirection: "row", backgroundColor: colors.brandSoft },
   tableHeaderCell: {
     paddingVertical: 3,
@@ -234,6 +205,14 @@ const styles = StyleSheet.create({
     borderTopColor: colors.rowLine,
   },
   tableCell: { paddingVertical: 3, paddingHorizontal: 3, fontSize: 5.6, lineHeight: 1.15 },
+  emptyTableRow: {
+    minHeight: 24,
+    justifyContent: "center",
+    borderTopWidth: 1,
+    borderTopColor: colors.rowLine,
+    paddingHorizontal: 5,
+  },
+  emptyTableText: { color: colors.quiet, fontSize: 5.8, textAlign: "center" },
 });
 
 function PdfIcon({ icon, size = 9 }: { icon: IconDefinition; size?: number }) {
@@ -309,12 +288,7 @@ function Section({
   );
 }
 
-function Empty({ children }: { children: string }) {
-  return <View style={styles.empty}><Text style={styles.emptyText}>{children}</Text></View>;
-}
-
-function Table({ headers, rows, widths }: { headers: string[]; rows: string[][]; widths: string[] }) {
-  if (!rows.length) return <Empty>Nenhum registro.</Empty>;
+function Table({ headers, rows, widths, emptyMessage = "Nenhum registro." }: { headers: string[]; rows: string[][]; widths: string[]; emptyMessage?: string }) {
   return (
     <View>
       <View style={styles.tableHeader} wrap={false}>
@@ -322,13 +296,17 @@ function Table({ headers, rows, widths }: { headers: string[]; rows: string[][];
           <Text key={header} style={[styles.tableHeaderCell, { width: widths[index] }]}>{header}</Text>
         ))}
       </View>
-      {rows.map((row, rowIndex) => (
-        <View key={`${rowIndex}-${row.join("-")}`} style={styles.tableRow} wrap={false}>
-          {row.map((cell, index) => (
-            <Text key={`${index}-${cell}`} style={[styles.tableCell, { width: widths[index] }]}>{cell}</Text>
-          ))}
-        </View>
-      ))}
+      {rows.length ? rows.map((row, rowIndex) => (
+          <View key={`${rowIndex}-${row.join("-")}`} style={styles.tableRow} wrap={false}>
+            {row.map((cell, index) => (
+              <Text key={`${index}-${cell}`} style={[styles.tableCell, { width: widths[index] }]}>{cell}</Text>
+            ))}
+          </View>
+        )) : (
+          <View style={styles.emptyTableRow} wrap={false}>
+            <Text style={styles.emptyTableText}>{emptyMessage}</Text>
+          </View>
+        )}
     </View>
   );
 }
@@ -354,9 +332,71 @@ export function AtaPdfDocument({ presentation, generatedAt }: { presentation: At
     [faLocationDot, "Estados", data.supplementalMetrics?.states ?? 0],
     [faGlobe, "Outros Países", data.supplementalMetrics?.otherCountries ?? data.internationalMembers.length],
   ] as const;
+  const detailColumnLayout = buildAtaDetailColumnLayout(data);
+  const detailSections: Record<AtaDetailSectionKey, ReactNode> = {
+    servers: (
+      <Section icon={faUsers} title="Servidores" count={data.servers.length}>
+        <Table
+          headers={["Servidores", "Função"]}
+          widths={["70%", "30%"]}
+          rows={data.servers.map((item, index) => [`${index + 1}. ${item.name}`, item.role || "—"])}
+          emptyMessage="Nenhum servidor registrado."
+        />
+      </Section>
+    ),
+    international: (
+      <Section icon={faGlobe} title="Localidades Internacionais" count={data.internationalMembers.length}>
+        <Table
+          headers={["Localidades Internacionais", "Total"]}
+          widths={["80%", "20%"]}
+          rows={data.internationalMembers.map((item, index) => [`${index + 1}. ${item.country}`, String(item.count)])}
+          emptyMessage="Nenhuma localidade internacional registrada."
+        />
+      </Section>
+    ),
+    visitors: (
+      <Section icon={faUsers} title="Visitantes" count={data.visitors.length}>
+        <Table
+          headers={["Visitante", "Cidade", "Categoria", "Origem"]}
+          widths={["30%", "24%", "23%", "23%"]}
+          rows={data.visitors.map((item, index) => [
+            `${index + 1}. ${item.label}`,
+            item.city,
+            item.category,
+            item.origin,
+          ])}
+          emptyMessage="Nenhum visitante registrado."
+        />
+      </Section>
+    ),
+    admissions: (
+      <Section icon={faTicket} title="Ingressos" count={data.admissions.length}>
+        <Table
+          headers={["Ingresso", "Cidade", "Estado"]}
+          widths={["42%", "32%", "26%"]}
+          rows={data.admissions.map((item, index) => [
+            `${index + 1}. ${item.label}`,
+            item.city,
+            item.state,
+          ])}
+          emptyMessage="Nenhum ingresso registrado."
+        />
+      </Section>
+    ),
+    achievements: (
+      <Section icon={faClock} title="Conquistas" count={data.achievements.length}>
+        <Table
+          headers={["Conquista", "Tempo"]}
+          widths={["64%", "36%"]}
+          rows={data.achievements.map((item, index) => [`${index + 1}. ${item.label}`, item.time])}
+          emptyMessage="Nenhuma conquista registrada."
+        />
+      </Section>
+    ),
+  };
 
   return (
-    <Document title={presentation.title} author="GS Mapeamento" subject="Ata de reunião confirmada">
+    <Document title={presentation.title} author="GS Mapeamento" subject="Ata de Reunião confirmada">
       <Page size="A4" style={styles.page} wrap>
         <View style={styles.header} wrap={false}>
           <View style={styles.headerIcon}><PdfIcon icon={faFileCircleCheck} size={13} /></View>
@@ -390,77 +430,20 @@ export function AtaPdfDocument({ presentation, generatedAt }: { presentation: At
           <View style={styles.sectionColumns}>
             <View style={styles.sectionColumn}>
               <Section icon={faLocationDot} title="Localidades Nacionais" count={data.locations.length}>
-                {data.locations.length ? data.locations.map((item, index) => (
-                  <View key={item.id} style={[styles.row, ...(index === data.locations.length - 1 ? [styles.rowLast] : [])]} wrap={false}>
-                    <View style={styles.rowText}>
-                      <Text>{index + 1}. {item.name}</Text>
-                      {item.detail ? <Text style={styles.rowDetail}>{item.detail}</Text> : null}
-                    </View>
-                    <Text style={styles.badge}>{item.count}</Text>
-                  </View>
-                )) : <Empty>Nenhuma localidade nacional registrada.</Empty>}
+                <Table
+                  headers={["Localidades Nacionais", "Total"]}
+                  widths={["82%", "18%"]}
+                  rows={data.locations.map((item, index) => [
+                    `${index + 1}. ${item.name}${item.detail ? `\n${item.detail}` : ""}`,
+                    String(item.count),
+                  ])}
+                  emptyMessage="Nenhuma localidade nacional registrada."
+                />
               </Section>
+              {detailColumnLayout.left.map((key) => <View key={key}>{detailSections[key]}</View>)}
             </View>
-
             <View style={styles.sectionColumn}>
-              <Section icon={faGlobe} title="Localidades Internacionais" count={data.internationalMembers.length}>
-                {data.internationalMembers.length ? data.internationalMembers.map((item, index) => (
-                  <View key={item.id} style={[styles.row, ...(index === data.internationalMembers.length - 1 ? [styles.rowLast] : [])]} wrap={false}>
-                    <Text style={styles.rowText}>{index + 1}. {item.country}</Text>
-                    <Text style={styles.badge}>{item.count}</Text>
-                  </View>
-                )) : <Empty>Nenhuma localidade internacional registrada.</Empty>}
-              </Section>
-
-              <Section icon={faUsers} title="Servidores" count={data.servers.length}>
-                {data.servers.length ? data.servers.map((item, index) => (
-                  <View key={item.id} style={[styles.row, ...(index === data.servers.length - 1 ? [styles.rowLast] : [])]} wrap={false}>
-                    <Text style={styles.rowText}>{index + 1}. {item.name}</Text>
-                    {item.role ? <Text style={styles.badge}>{item.role}</Text> : null}
-                  </View>
-                )) : <Empty>Nenhum servidor registrado.</Empty>}
-              </Section>
-
-              <Section icon={faUsers} title="Visitantes" count={data.visitors.length}>
-                <Table
-                  headers={["Visitante", "Cidade", "Categoria", "Origem"]}
-                  widths={["17%", "29%", "24%", "30%"]}
-                  rows={data.visitors.map((item, index) => [
-                    `${index + 1}. ${item.label}`,
-                    item.city,
-                    item.category,
-                    item.origin,
-                  ])}
-                />
-              </Section>
-            </View>
-          </View>
-
-          <View style={styles.bottomSections}>
-            <View style={styles.bottomSection}>
-              <Section icon={faTicket} title="Ingressos" count={data.admissions.length}>
-                <Table
-                  headers={["Ingresso", "Cidade", "Estado"]}
-                  widths={["28%", "52%", "20%"]}
-                  rows={data.admissions.map((item, index) => [
-                    `${index + 1}. ${item.label}`,
-                    item.city,
-                    item.state,
-                  ])}
-                />
-              </Section>
-            </View>
-            <View style={styles.bottomSection}>
-              <Section icon={faClock} title="Conquistas" count={data.achievements.length}>
-                <Table
-                  headers={["Conquista", "Tempo"]}
-                  widths={["62%", "38%"]}
-                  rows={data.achievements.map((item, index) => [
-                    `${index + 1}. ${item.label}`,
-                    item.time,
-                  ])}
-                />
-              </Section>
+              {detailColumnLayout.right.map((key) => <View key={key}>{detailSections[key]}</View>)}
             </View>
           </View>
         </View>

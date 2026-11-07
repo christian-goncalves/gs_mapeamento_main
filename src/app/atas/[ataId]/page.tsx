@@ -10,7 +10,6 @@ import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-s
 import {
   AtaReviewLayout,
 } from "../ata-review-layout";
-import { getAtaDetailBackHref } from "../nova/ata-review";
 import { AtaPdfActions } from "../ata-pdf-actions";
 import { getAtaNavigation, type AtaNavigationSearchParams } from "../ata-navigation";
 import { AdminShell } from "@/app/grupos/admin-shell";
@@ -43,41 +42,8 @@ export default async function AtaDetailPage({
     access,
     searchParams: query,
   });
-  const origin = Array.isArray(query.origem) ? query.origem[0] : query.origem;
-  const backHref = access.role === "responsavel_grupo" && origin === "historico"
-    ? (() => {
-        const params = new URLSearchParams({ historico: "1" });
-        for (const key of ["de", "ate", "diaSemana", "horario", "status", "ordem"] as const) {
-          const value = query[key];
-          const normalized = Array.isArray(value) ? value[0] : value;
-          if (normalized !== undefined) params.set(key, normalized);
-        }
-        return `/responsavel/atas?${params.toString()}`;
-      })()
-    : getAtaDetailBackHref(access.role);
-
   const page = (
     <div className="ata-detail-review-shell">
-      <nav className="ata-record-navigation" aria-label="Navegação entre atas">
-        {navigation.previousId ? (
-          <Link className="button-link secondary" href={`/atas/${navigation.previousId}${navigation.query}`}>
-            <span className="button-content"><FontAwesomeIcon icon={faArrowLeft} />Ata Anterior</span>
-          </Link>
-        ) : (
-          <button className="secondary" type="button" disabled>
-            <span className="button-content"><FontAwesomeIcon icon={faArrowLeft} />Ata Anterior</span>
-          </button>
-        )}
-        {navigation.nextId ? (
-          <Link className="button-link secondary" href={`/atas/${navigation.nextId}${navigation.query}`}>
-            <span className="button-content">Próxima Ata<FontAwesomeIcon icon={faArrowRight} /></span>
-          </Link>
-        ) : (
-          <button className="secondary" type="button" disabled>
-            <span className="button-content">Próxima Ata<FontAwesomeIcon icon={faArrowRight} /></span>
-          </button>
-        )}
-      </nav>
       <AtaReviewLayout
         className="ata-review-page"
         detailPage
@@ -85,53 +51,68 @@ export default async function AtaDetailPage({
         titleId="ata-detail-title"
         headingLevel="h1"
         data={presentation.reviewData}
-        headerBadge={(
+        headerToolbar={(
           <>
-            {!grupo.ativo && <span className="badge">Grupo inativo</span>}
-            {ata.status_aprovacao === "pendente_revisao" && <span className="badge">Pendente de revisão</span>}
-            {ata.status_registro === "substituida" && <span className="badge">Versão substituída</span>}
-            {ata.status_registro === "excluida" && <span className="badge">Ata excluída</span>}
-          </>
-        )}
-        headerAction={(
-          <>
-            <Link
-              className="button-link secondary review-back-link ata-pdf-icon-button"
-              href={backHref}
-              title="Voltar"
-              aria-label="Voltar"
-            >
-              <FontAwesomeIcon icon={faArrowLeft} />
-            </Link>
-            {ata.status_registro === "ativa"
-              && ["aprovada", "pendente_revisao"].includes(ata.status_aprovacao ?? "aprovada") && (
-                <Link
-                  className="button-link secondary review-edit-button ata-pdf-icon-button"
-                  href={`/atas/${ata.ata_id}/editar`}
-                  title="Editar"
-                  aria-label="Editar"
-                >
-                  <FontAwesomeIcon icon={faPenToSquare} />
+            <nav className="ata-record-navigation" aria-label="Navegação entre atas">
+              {navigation.previousId ? (
+                <Link className="button-link ata-pdf-icon-button" href={`/atas/${navigation.previousId}${navigation.query}`} aria-label="Ata anterior">
+                  <FontAwesomeIcon icon={faArrowLeft} />
                 </Link>
+              ) : (
+                <button className="ata-pdf-icon-button" type="button" disabled aria-label="Ata anterior">
+                  <FontAwesomeIcon icon={faArrowLeft} />
+                </button>
               )}
-            <a
-              className="button-link secondary review-pdf-button ata-pdf-icon-button"
-              href={`/atas/${ata.ata_id}/pdf`}
-              target="_blank"
-              rel="noreferrer"
-              title="Visualizar PDF"
-              aria-label="Visualizar PDF"
-            >
-              <FontAwesomeIcon icon={faFilePdf} />
-            </a>
-            <AtaPdfActions
-              ataId={ata.ata_id}
-              title={presentation.title}
-              filename={presentation.filename}
-              defaultRecipient={presentation.groupEmail}
-              showPreview={false}
-              iconOnly
-            />
+              <span className="ata-record-navigation-label">Atas</span>
+              {navigation.nextId ? (
+                <Link className="button-link ata-pdf-icon-button" href={`/atas/${navigation.nextId}${navigation.query}`} aria-label="Próxima ata">
+                  <FontAwesomeIcon icon={faArrowRight} />
+                </Link>
+              ) : (
+                <button className="ata-pdf-icon-button" type="button" disabled aria-label="Próxima ata">
+                  <FontAwesomeIcon icon={faArrowRight} />
+                </button>
+              )}
+            </nav>
+            <div className="ata-detail-toolbar-right">
+              <div className="ata-detail-toolbar-actions">
+                {ata.status_registro === "ativa"
+                  && ["aprovada", "pendente_revisao"].includes(ata.status_aprovacao ?? "aprovada") && (
+                    <Link
+                      className="button-link secondary review-edit-button ata-pdf-icon-button"
+                      href={`/atas/${ata.ata_id}/editar`}
+                      title="Editar"
+                      aria-label="Editar"
+                    >
+                      <FontAwesomeIcon icon={faPenToSquare} />
+                    </Link>
+                  )}
+                <a
+                  className="button-link secondary review-pdf-button ata-pdf-icon-button"
+                  href={`/atas/${ata.ata_id}/pdf`}
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Visualizar PDF"
+                  aria-label="Visualizar PDF"
+                >
+                  <FontAwesomeIcon icon={faFilePdf} />
+                </a>
+                <AtaPdfActions
+                  ataId={ata.ata_id}
+                  title={presentation.title}
+                  filename={presentation.filename}
+                  defaultRecipient={presentation.groupEmail}
+                  showPreview={false}
+                  iconOnly
+                />
+              </div>
+              <div className="ata-detail-toolbar-badges">
+                {!grupo.ativo && <span className="badge">Grupo inativo</span>}
+                {ata.status_aprovacao === "pendente_revisao" && <span className="badge">Pendente de revisão</span>}
+                {ata.status_registro === "substituida" && <span className="badge">Versão substituída</span>}
+                {ata.status_registro === "excluida" && <span className="badge">Ata excluída</span>}
+              </div>
+            </div>
           </>
         )}
       />
