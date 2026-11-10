@@ -72,7 +72,7 @@ function formatDate(value: string) {
 }
 
 function Metric({ label, value, half = false, responsible = false }: { label: string; value: number; half?: boolean; responsible?: boolean }) {
-  return <View style={[styles.metric, responsible ? styles.responsibleMetric : null, half ? styles.metricHalf : null]} wrap={false}><Text style={responsible ? styles.responsibleMetricLabel : styles.metricLabel}>{label}</Text><Text style={responsible ? styles.responsibleMetricValue : styles.metricValue}>{formatNumber(value)}</Text></View>;
+  return <View style={[styles.metric, ...(responsible ? [styles.responsibleMetric] : []), ...(half ? [styles.metricHalf] : [])]} wrap={false}><Text style={responsible ? styles.responsibleMetricLabel : styles.metricLabel}>{label}</Text><Text style={responsible ? styles.responsibleMetricValue : styles.metricValue}>{formatNumber(value)}</Text></View>;
 }
 
 function FoundationDateMetric({ value }: { value: string }) {
@@ -81,15 +81,15 @@ function FoundationDateMetric({ value }: { value: string }) {
 
 function Table({ headers, rows, repeatHeader = false, framed = false }: { headers: string[]; rows: string[][]; repeatHeader?: boolean; framed?: boolean }) {
   return (
-    <View style={[styles.table, framed ? styles.tableFrame : null]}>
+    <View style={[styles.table, ...(framed ? [styles.tableFrame] : [])]}>
       <View style={[styles.row, styles.header]} fixed={repeatHeader} wrap={false}>
-        {headers.map((header, index) => <Text key={header} style={[styles.cell, framed ? styles.framedCell : null, index === headers.length - 1 && framed ? styles.lastCell : null]}>{header}</Text>)}
+        {headers.map((header, index) => <Text key={header} style={[styles.cell, ...(framed ? [styles.framedCell] : []), ...(index === headers.length - 1 && framed ? [styles.lastCell] : [])]}>{header}</Text>)}
       </View>
       {rows.length ? rows.map((row, index) => (
-        <View key={`${index}-${row.join("|")}`} style={[styles.row, index === rows.length - 1 && framed ? styles.lastRow : null]} wrap={false}>
-          {row.map((cell, cellIndex) => <Text key={cellIndex} style={[styles.cell, framed ? styles.framedCell : null, framed && cellIndex === row.length - 1 ? styles.lastCell : null]}>{cell}</Text>)}
+        <View key={`${index}-${row.join("|")}`} style={[styles.row, ...(index === rows.length - 1 && framed ? [styles.lastRow] : [])]} wrap={false}>
+          {row.map((cell, cellIndex) => <Text key={cellIndex} style={[styles.cell, ...(framed ? [styles.framedCell] : []), ...(framed && cellIndex === row.length - 1 ? [styles.lastCell] : [])]}>{cell}</Text>)}
         </View>
-      )) : <View style={[styles.row, framed ? styles.lastRow : null]} wrap={false}><Text style={[styles.cell, framed ? styles.lastCell : null]}>Nenhum registro no período.</Text></View>}
+      )) : <View style={[styles.row, ...(framed ? [styles.lastRow] : [])]} wrap={false}><Text style={[styles.cell, ...(framed ? [styles.lastCell] : [])]}>Nenhum registro no período.</Text></View>}
     </View>
   );
 }
@@ -111,7 +111,7 @@ function MeetingScheduleTable({ data }: { data: MonthlyDashboardData }) {
         <View style={[styles.meetingHeaderDay, styles.meetingHeaderSeparator]}><Text style={styles.meetingHeaderCell}>Dia da Semana</Text></View>
         <View style={styles.meetingHeaderDetails}>
           {["Horário", "Presenças", "Média", "Ingressos"].map((header, index, list) => (
-            <Text key={header} style={[styles.meetingHeaderCell, index < list.length - 1 ? styles.framedCell : null]}>{header}</Text>
+            <Text key={header} style={[styles.meetingHeaderCell, ...(index < list.length - 1 ? [styles.framedCell] : [])]}>{header}</Text>
           ))}
         </View>
       </View>
@@ -121,13 +121,13 @@ function MeetingScheduleTable({ data }: { data: MonthlyDashboardData }) {
           : [{ time: "-", presences: day.presences, averagePresences: day.averagePresences, ingressos: day.ingressos }];
         const dayLabel = weekdayLabels[day.weekday.toLocaleLowerCase("pt-BR")] ?? day.weekday;
         return (
-          <View key={day.weekday} style={[styles.meetingGroup, dayIndex === days.length - 1 ? styles.lastMeetingGroup : null]} wrap={false}>
+          <View key={day.weekday} style={[styles.meetingGroup, ...(dayIndex === days.length - 1 ? [styles.lastMeetingGroup] : [])]} wrap={false}>
             <View style={styles.meetingDayCell}><Text style={styles.meetingDay}>{dayLabel}</Text></View>
             <View style={styles.meetingSchedules}>
               {schedules.map((schedule, index) => (
-                <View key={`${day.weekday}-${schedule.time}-${index}`} style={[styles.meetingScheduleRow, index < schedules.length - 1 ? styles.meetingScheduleInnerRow : null]}>
+                <View key={`${day.weekday}-${schedule.time}-${index}`} style={[styles.meetingScheduleRow, ...(index < schedules.length - 1 ? [styles.meetingScheduleInnerRow] : [])]}>
                   {[schedule.time, formatNumber(schedule.presences), formatNumber(schedule.averagePresences), formatNumber(schedule.ingressos)].map((value, cellIndex, values) => (
-                    <Text key={cellIndex} style={[styles.meetingValueCell, cellIndex < values.length - 1 ? styles.framedCell : null, cellIndex === values.length - 1 ? styles.meetingLastValueCell : null]}>{value}</Text>
+                    <Text key={cellIndex} style={[styles.meetingValueCell, ...(cellIndex < values.length - 1 ? [styles.framedCell] : []), ...(cellIndex === values.length - 1 ? [styles.meetingLastValueCell] : [])]}>{value}</Text>
                   ))}
                 </View>
               ))}
