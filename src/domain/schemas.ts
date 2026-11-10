@@ -63,6 +63,7 @@ export const grupoSchema = z.object({
   responsaveis_ata: optionalText,
   link_formulario_ata: optionalSlug,
   ultima_reuniao_anterior: z.number().int().min(0).default(0),
+  data_fundacao: z.string().date().optional(),
   fuso_horario: z.enum(fusoHorarioMapping.codes),
   plataforma: z.enum(plataformaMapping.codes),
   acesso_plataforma: optionalText.default(""),

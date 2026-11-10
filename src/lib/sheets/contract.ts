@@ -2,7 +2,7 @@ export const SHEET_HEADERS = {
   grupos: [
     "grupo_id", "zoom_id", "grupo_nome", "ordem", "ativo", "responsavel_grupo_nome",
     "responsavel_grupo_email", "email_acesso_grupo", "responsaveis_ata",
-    "link_formulario_ata", "ultima_reuniao_anterior", "created_at", "updated_at",
+    "link_formulario_ata", "ultima_reuniao_anterior", "data_fundacao", "created_at", "updated_at",
     "fuso_horario", "plataforma", "acesso_plataforma",
   ],
   usuarios_grupo: [

@@ -158,6 +158,7 @@ export const sheetGrupoSchema = z.object({
   responsaveis_ata: optionalText,
   link_formulario_ata: optionalSlug,
   ultima_reuniao_anterior: sheetOptionalInteger(0),
+  data_fundacao: sheetOptionalDate.default(""),
   fuso_horario: optionalText.refine(
     (value) => !value || fusoHorarioMapping.codes.includes(value as never),
     "Fuso horário inválido.",
@@ -393,6 +394,7 @@ export type SheetTrocaChaveiro = z.infer<typeof sheetTrocaChaveiroSchema>;
 
 export const sheetGrupoToDomain = (row: SheetGrupo): Grupo => ({
   ...row,
+  data_fundacao: row.data_fundacao,
   fuso_horario: row.fuso_horario
     ? (row.fuso_horario as Grupo["fuso_horario"])
     : "America/Sao_Paulo",
@@ -403,6 +405,7 @@ export const sheetGrupoToDomain = (row: SheetGrupo): Grupo => ({
 });
 export const domainGrupoToSheet = (item: Grupo): SheetGrupo => ({
   ...item,
+  data_fundacao: item.data_fundacao ?? "",
   revisao_atas_ativa: item.revisao_atas_ativa ?? false,
   fuso_horario: item.fuso_horario,
   plataforma: plataformaMapping.toSheet(item.plataforma),

@@ -72,6 +72,57 @@ function normalizeHeaderAliases(name: SheetName, values: SheetCell[][]) {
   ];
 }
 
+function normalizeMissingGroupFoundationDate(
+  name: SheetName,
+  values: SheetCell[][],
+): SheetCell[][] {
+  if (name !== "grupos" || values.length === 0) return values;
+  const [headers, ...rows] = values;
+  const foundationIndex = SHEET_HEADERS.grupos.indexOf("data_fundacao");
+  if (foundationIndex < 0 || headers.includes("data_fundacao")) return values;
+
+  const headersWithoutFoundation = SHEET_HEADERS.grupos.filter(
+    (header) => header !== "data_fundacao",
+  );
+  const extensions = SHEET_V2_EXTENSIONS.grupos ?? [];
+  const extensionCount = headers.length - headersWithoutFoundation.length;
+  const hasTrailingExtensions =
+    extensionCount > 0 &&
+    headers
+      .slice(-extensionCount)
+      .every((header) => extensions.includes(String(header)));
+  const baseHeaders = hasTrailingExtensions
+    ? headers.slice(0, -extensionCount)
+    : headers;
+  const matchesLegacyPrefix =
+    baseHeaders.length <= headersWithoutFoundation.length &&
+    baseHeaders.every(
+      (header, index) => header === headersWithoutFoundation[index],
+    );
+
+  if (!matchesLegacyPrefix) return values;
+  if (
+    hasTrailingExtensions &&
+    baseHeaders.length !== headersWithoutFoundation.length
+  ) {
+    return values;
+  }
+
+  const normalizedHeaders = [
+    ...headers.slice(0, foundationIndex),
+    "data_fundacao",
+    ...headers.slice(foundationIndex),
+  ];
+  return [
+    normalizedHeaders,
+    ...rows.map((row) => [
+      ...row.slice(0, foundationIndex),
+      "",
+      ...row.slice(foundationIndex),
+    ]),
+  ];
+}
+
 export function compatibleHeaders(name: SheetName): readonly string[] {
   return [...SHEET_HEADERS[name], ...(SHEET_V2_EXTENSIONS[name] ?? [])];
 }
@@ -85,7 +136,11 @@ export function rowsToCompatibleObjects(
   values: SheetCell[][],
   options: { allowMissingTrailingHeaders?: number } = {},
 ) {
-  return rowsToObjects(SHEET_HEADERS[name], normalizeHeaderAliases(name, values), {
+  const normalizedValues = normalizeMissingGroupFoundationDate(
+    name,
+    normalizeHeaderAliases(name, values),
+  );
+  return rowsToObjects(SHEET_HEADERS[name], normalizedValues, {
     ...options,
     allowExtraTrailingHeaders: SHEET_V2_EXTENSIONS[name] ?? [],
   });
@@ -97,10 +152,17 @@ export function rowsToVersionedObjects(
 ): LocatedObject[] {
   const headers = compatibleHeaders(name);
   const extensions = SHEET_V2_EXTENSIONS[name] ?? [];
-  const rows = rowsToObjects(headers, normalizeHeaderAliases(name, values), {
-    allowMissingTrailingHeaders:
-      extensions.length + (name === "grupos" ? 3 : 0),
-  });
+  const rows = rowsToObjects(
+    headers,
+    normalizeMissingGroupFoundationDate(
+      name,
+      normalizeHeaderAliases(name, values),
+    ),
+    {
+      allowMissingTrailingHeaders:
+        extensions.length + (name === "grupos" ? 3 : 0),
+    },
+  );
   if (name !== "atas") return rows;
   return rows.map((row) => ({
     ...row,
