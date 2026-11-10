@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faFilePdf, faPaperPlane, faPrint, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faFilePdf, faPaperPlane, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 export function MonthlyReportActions({
   groupId,
@@ -65,9 +65,6 @@ export function MonthlyReportActions({
       >
         <span className="button-content"><FontAwesomeIcon icon={faFilePdf} /><span className="dashboard-pdf-button-label">PDF</span></span>
       </a>
-      <button type="button" className="dashboard-print-button" aria-label="Imprimir relatório" title="Imprimir relatório" onClick={() => window.print()}>
-        <FontAwesomeIcon icon={faPrint} />
-      </button>
       <button type="button" className="dashboard-email-button" aria-label="Enviar por e-mail" title="Enviar por e-mail" onClick={showDialog}>
         <FontAwesomeIcon icon={faEnvelope} />
       </button>

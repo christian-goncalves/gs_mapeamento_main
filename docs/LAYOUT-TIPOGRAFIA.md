@@ -19,7 +19,7 @@ O padrão do CSR aplica-se a cartões com barras horizontais. Não define a tipo
 - Rota: `/responsavel/relatorios`, com o grupo exibido como “Grupo USL”.
 - Renderização local medida no Playwright em 2026-11-02, nos viewports de 375 × 1000 e 1440 × 1000 CSS px.
 - As larguras dos containers abaixo são as observadas nesta sessão. A barra de rolagem vertical reservou 15 px: a viewport de 375 px tinha largura útil de 360 px, e a de 1440 px, largura útil de 1425 px. Os layouts usam a largura útil disponível.
-- Fonte principal do conteúdo: `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`. O shell de navegação usa Arial.
+- Fonte principal do conteúdo e do shell de navegação: `system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`. O corpo continua em Arial como fallback global para páginas fora do shell.
 
 ### Cores comuns
 
@@ -40,9 +40,10 @@ O padrão do CSR aplica-se a cartões com barras horizontais. Não define a tipo
 
 | Componente | Tipografia e cor | Geometria observada |
 |---|---|---|
-| Barra lateral | Arial 16 px/24 px; texto padrão `#17221c` | Desktop: 260 px de largura; borda direita de 1 px `#e4edf6`. Em mobile, transforma-se em barra superior; na medição 375 px, 73 px de altura, com borda inferior `#e4edf6`. Fundo `#f5f9ff`. |
-| Item ativo “Relatórios” | Arial 16 px/24 px, peso 700, texto `#0b3a7a`, fundo `#e6f1fa` | Raio 8 px; padding horizontal 12 px. Desktop: 227 × 45 px. |
+| Barra lateral | System UI 16 px/24 px; texto padrão `#17221c` | Desktop: 260 px de largura; borda direita de 1 px `#e4edf6`. Em mobile, transforma-se em barra superior; na medição 375 px, 73 px de altura, com borda inferior `#e4edf6`. Fundo `#f5f9ff`. |
+| Item ativo “Relatórios” | System UI 16 px/24 px, peso 700, texto `#0b3a7a`, fundo `#e6f1fa` | Raio 8 px; padding horizontal 12 px. Desktop: 227 × 45 px. |
 | Botão de menu mobile | Ícone `#1d4ed8`, fundo `#e6f1fa` | 44 × 44 px, raio 8 px. |
+| Botão “Sair” | System UI herdada do menu; texto `#9b2c2c` e preenchimento `#f5e7e7`; sem borda em repouso | No hover e no foco por teclado, exibe contorno de 2 px `#9b2c2c`, deslocado 2 px, igual à geometria do padrão azul. A rota de comparação `/responsavel/relatorios-azul` preserva o estilo anterior. |
 | Rótulo da página “RELATÓRIOS” | System UI 12.8 px/19.2 px, peso 700, `#1d4ed8` | Caixa alta. |
 | Nome do grupo “Grupo USL” | System UI 41.6 px/45.76 px, peso 700, `#0b3a7a` | Sem margem própria; mantém o espaçamento definido pelo bloco do cabeçalho. |
 
@@ -90,14 +91,14 @@ Este padrão foi fechado para orientar as refatorações página por página. El
 - A superfície da página usa `#fcfdff`; menu lateral/superior `#f8fbff`; item ativo de Configurações `#e6f1fa` com texto `#0b3a7a`; cartões brancos com borda `#dfe3e8` e raio 12 px.
 - O título do grupo usa System UI 41.6 px/45.76 px, peso 700 e cor `#0b3a7a`, igual ao título de Relatórios. O texto auxiliar sob o título foi removido. O topo do cartão **Dados do Grupo** alinha com o topo do cartão de filtros em Relatórios. O rótulo da página e ícones de acordeão usam `#1d4ed8`; texto principal `#1c2430`; rótulos e descrições secundárias `#6e849a`.
 - Inputs e selects de uma linha, inclusive nos diálogos, medem 36 px de altura, com borda `#dfe3e8` e raio 8 px. Botões com texto medem 36 px e usam 14 px/600: azul preenchido `#1d4ed8` para ações principais e azul claro `#e6f1fa`/`#0b3a7a` para Cancelar e ações secundárias. Controles somente com ícone preservam sua dimensão local.
-- As tabelas de servidores e de horários usam cabeçalho `#1d4ed8`, texto branco em caixa alta, System UI 13.0133 px/16.2667 px, peso 700, e bordas/divisórias `#e4edf6`. Encargos e dias nas células que nomeiam a linha usam `#1c2430`, 14.9333 px/18.6667 px, peso 700; os valores usam `#1c2430`, 17.3333 px/21.6667 px, peso 400. A largura e o alinhamento das colunas seguem o conteúdo de cada tabela.
+- As tabelas de servidores e de horários usam cabeçalho `#1d4ed8`, texto branco em caixa alta, System UI 13.0133 px/16.2667 px, peso 700, e bordas/divisórias `#e4edf6`. Encargos e dias nas células que nomeiam a linha usam `#1c2430`, 14.9333 px/18.6667 px, peso 700; os valores usam `#1c2430`, 17.3333 px/21.6667 px, peso 400, exceto Hora de Início, que usa 14.9333 px a partir de 500 px. A largura e o alinhamento das colunas seguem o conteúdo de cada tabela.
 - Em **Dados do Grupo**, os botões de acesso por e-mail, copiar link e rotacionar link medem 36 × 36 px, com ícones de 14 px, seguindo a altura e o ícone de **Editar**. E-mail alinha com Revisão de Atas; Link da ata alinha com Última reunião antes do sistema. Medição em 900 CSS px: todos os inputs/selects renderizados com 36 px de altura.
 - **Desativar Plataforma** usa chevron para baixo quando fechado e para cima quando aberto, sem o marcador triangular nativo, na variante Responsável.
 - **Associação de Horários** segue o mesmo padrão de chevron. Na tabela de **Servidores**, não há divisórias verticais no cabeçalho nem no corpo; as divisórias horizontais e o contorno externo permanecem. Editar/Remover têm fundo transparente em repouso; somente no hover exibem fundo azul-claro (`#e6f1fa`) ou vermelho-claro (`#f5e7e7`), respectivamente, preservando o contorno de foco por teclado.
 - **Editar Dados** das plataformas e **Editar Horários** usam fundo `#e6f1fa` e texto/ícone `#0b3a7a`. **Cadastrar** mantém o azul preenchido.
 - O estado das plataformas usa o mesmo tom cinza (`var(--muted)`) em **Cadastrada** e **Ainda não Cadastrada**, mantendo a distinção apenas pelo texto.
 - O aviso temporário de alterações salvas usa fundo azul-claro `#e6f1fa`, texto e X `#0b3a7a`, sem badge no botão de fechar e altura mínima de 36 px. Na variante Responsável, ele desaparece após 3 segundos ou ao fechar; erros mantêm o estilo e o tempo próprios.
-- Na tabela de **Horários de Reunião**, as células de horários usam uma área comum de 18.25 rem, centralizada na coluna; em telas menores, ela encolhe até a largura disponível. Todas as linhas mantêm a mesma borda esquerda e os horários ficam alinhados à esquerda dentro dessa área. Até 499 px, os dias usam 11.2 px/14 px, os horários 12.5 px/16 px e os pontos de plataforma 9 px; o título da seção e os cabeçalhos da tabela mantêm seus tamanhos, e as linhas continuam crescendo conforme o conteúdo.
+- Na tabela de **Horários de Reunião**, as células de horários usam uma área comum de 18.25 rem, centralizada na coluna; em telas menores, ela encolhe até a largura disponível. Todas as linhas mantêm a mesma borda esquerda e os horários ficam alinhados à esquerda dentro dessa área. Até 499 px, os dias e valores de Hora de Início usam 11.2 px; a linha do valor mantém 16 px e os pontos de plataforma medem 9 px. O título da seção e os cabeçalhos da tabela mantêm seus tamanhos, e as linhas continuam crescendo conforme o conteúdo.
 - **Transferir Horário**, em Horários Associados, usa o ícone `faRightLeft`, igual a **Transferir Horários e Desativar**.
 - Na tabela de **Horários de Reunião**, os valores de **Hora de Início** ficam alinhados à esquerda. Não há divisória vertical entre Dia e Hora de Início, inclusive no cabeçalho; contorno externo e linhas horizontais permanecem.
 - Na edição de **Horários de Reunião**, todas as divisórias verticais entre Dia, Hora de Início, Hora de Término e Ações também são removidas, no cabeçalho e no corpo. As linhas horizontais permanecem como estão.
@@ -140,9 +141,26 @@ As seções observadas são “Servidores”, “Consolidado”, “Consolidados
 | Container da tabela | — | Borda externa e divisórias `#e4edf6`, 1 px; raio 8 px. |
 | Cabeçalho | System UI 13.0133 px/16.2667 px, peso 700, texto branco em caixa alta | Fundo `#1d4ed8`; padding vertical 9.6 px; divisórias verticais de 1 px `#e4edf6`. |
 | Encargo | System UI 14.9333 px/18.6667 px, peso 700, `#1c2430` | Alinhado à esquerda. |
-| Nome e data | System UI 17.3333 px/21.6667 px, peso 400, `#1c2430` | Centralizados. |
+| Nome e Desde | System UI `calc(.85rem + 1pt)` (14.9333 px/18.6667 px com raiz de 16 px), peso 400, `#1c2430` | Centralizados; mesmo tamanho de Encargo em todas as larguras. |
 
 A borda da tabela (`#e4edf6`) é distinta da borda dos containers (`#dfe3e8`). Em até 500 px, as colunas Encargo/Nome/Desde usam 34%/29%/37%, o padding horizontal cai para 6.4 px e a data não quebra de linha. No viewport de 375 px, os dados exibidos ficaram em uma linha e não houve rolagem horizontal.
+
+#### PDF mensal do perfil Responsável
+
+- A tabela de Servidores fecha o contorno interno com borda `1px solid #e4edf6`, raio de 8 pt e conteúdo recortado nos cantos arredondados.
+- A tabela permanece dentro do cartão da seção; o contorno arredondado da tabela é independente do contorno externo do cartão.
+
+### Tabela de Consolidados por Reunião
+
+- Nas linhas de resumo por dia da semana, Dia da Semana e as colunas Presenças (total), Presenças (média) e Ingressos usam `calc(.85rem + 1pt)` (14.9333 px com raiz de 16 px).
+- As células das linhas de horários expandidas também usam esse tamanho. A regra é constante em todas as larguras; os cabeçalhos mantêm seus tamanhos próprios.
+
+#### PDF mensal do perfil Responsável
+
+- Manter uma linha por horário configurado e agrupar dinamicamente as linhas de cada dia em uma única célula vertical; o nome do dia aparece uma vez, capitalizado (por exemplo, “Segunda”), em negrito e centralizado vertical e horizontalmente.
+- Horário, Presenças, Média e Ingressos ficam centralizados horizontalmente nas respectivas colunas. Os dados por horário permanecem regulares e usam `#1c2430` com 60% de opacidade; o nome do dia usa `#1c2430` sem transparência.
+- Usar Helvetica no PDF, aproximadamente 11.2 pt no corpo e 9.76 pt no cabeçalho. O cabeçalho permanece azul `#1d4ed8`, branco e em caixa alta; a separação entre Dia da Semana e Horário é uma barra branca visível. A tabela fecha o contorno interno com borda `1px solid #e4edf6`, raio de 8 pt e conteúdo recortado nos cantos.
+- Este formato é específico do PDF; a tabela da página continua servindo como referência e não é alterada por essa regra.
 
 ### Exceção local: tabela de Histórico de Atas em telas estreitas
 
@@ -150,12 +168,13 @@ Este ajuste vale somente para `/responsavel/atas`; ele não define a largura das
 
 - Até 720 px, a coluna Horário fica oculta e a célula Data exibe `DD/MM | HH:mm`.
 - A partir de 500 px, ATA, Status e Ações usam 64 px fixos cada. Data e Horário têm larguras iguais e flexíveis; de 500 a 720 px, Data ocupa o espaço restante enquanto Horário fica combinado nela. A tabela usa a largura disponível, sem rolagem horizontal.
+- A partir de 500 px, os valores das células Ata, Data e Horário usam fonte de 14,93 px. Os cabeçalhos mantêm suas regras próprias: Ata em 11,5 px e Data/Horário em 13,0133 px.
 - A partir de 500 px, todos os cabeçalhos e valores ficam centralizados em suas colunas. Conferido em 500, 655, 768, 1024 e 1438 px: as três colunas fixas mediram 64 px, Data e Horário dividiram igualmente o restante quando ambas estavam visíveis, e a página não apresentou rolagem horizontal.
 - Abaixo de 500 px, a tabela ocupa a largura interna disponível, sem rolagem horizontal. Ata (48 px) e Ações (52 px) permanecem fixas e centralizadas. Data e Status dividem o espaço restante de forma fluida, na proporção 2:1.
-- Abaixo de 500 px, os quatro cabeçalhos e os valores em todas as células ficam centralizados dentro de suas colunas, que permanecem completas. Data e horário ficam em uma linha, com fonte de 12,5 px.
-- Abaixo de 500 px, ATA usa fonte de 11,2 px; o ponto de Status mede 0,5625 rem; Ações usa fonte de 9,75 px, com botão dos três pontos de 22,5 px e ícone de 12 px. O botão mantém fundo transparente e recebe badge azul de 22,5 px no hover, sem contorno.
+- Abaixo de 500 px, os quatro cabeçalhos e os valores em todas as células ficam centralizados dentro de suas colunas, que permanecem completas. Data e horário ficam em uma linha. Ata, Data e Horário usam fonte de 12,5 px.
+- Abaixo de 500 px, o ponto de Status mede 0,5625 rem; Ações usa fonte de 9,75 px, com botão dos três pontos de 22,5 px e ícone de 12 px. O botão mantém fundo transparente e recebe badge azul de 22,5 px no hover, sem contorno.
 - Abaixo de 500 px, as linhas da tabela ficam com 33,19 px; o botão reduzido cabe nessa altura sem aumentar a linha.
-- Conferido no navegador em 320 px, 375 px e 499 px. A partir de 500 px, entra em vigor o esquema descrito acima.
+- A geometria foi conferida no navegador em 320 px, 375 px e 499 px. A partir de 500 px, entra em vigor o esquema descrito acima. Os tamanhos tipográficos desta atualização não tiveram nova medição renderizada.
 
 ### Aplicação: detalhamento da ata em visualização e PDF
 
@@ -168,6 +187,10 @@ Este ajuste vale somente para `/responsavel/atas`; ele não define a largura das
 ### Aplicação: relatório mensal em visualização, impressão, PDF e e-mail
 
 - Admin e Responsável mantêm seus conjuntos de dados e blocos próprios, seguindo o padrão visual azul comum: fundo `#fcfdff`, superfícies brancas, bordas `#dfe3e8`, texto principal `#1c2430`, rótulos `#6e849a` e ações, números e cabeçalhos de tabela em `#1d4ed8`.
+- No PDF mensal do perfil Responsável, o Consolidado segue a ordem da página: par de cartões “Reuniões desde a Fundação” e “Data de Fundação do Grupo”, seguido pelas nove métricas em grade de três colunas. A data usa `DD/MM/AAAA`.
+- A ordem das nove métricas é: Reuniões, Presenças, Média de Presenças, Conquistas, Visitantes, Ingressos, Cidades, Estados e Outros Países. Os cartões usam rótulos de 8.25 pt e valores de 22.5 pt; o cartão de data de fundação usa valor de 18 pt.
+- No PDF mensal do perfil Responsável, Conquistas usa a grade de cartões de três colunas da página: oito categorias, com seus pontos coloridos, e o cartão “Total” no nono espaço. O ingresso permanece no cartão de Consolidado e não vira um cartão extra de Conquistas.
+- Os cartões do Consolidado e de Conquistas usam superfície branca, borda `#dfe3e8`, raio de 9 pt, rótulos `#6e849a` a 8.25 pt e valores `#1d4ed8` a 22.5 pt; no perfil Admin permanecem as tabelas e métricas próprias.
 - O relatório nativo PDF é A4 em pé, preserva o período selecionado e os dados próprios de cada perfil. Cada linha permanece inteira. A visualização do PDF e o anexo de e-mail usam a mesma renderização; a impressão da tela continua disponível com o CSS de impressão da rota.
 - O envio manual por e-mail inicia com `email_acesso_grupo` e permite editar o destinatário antes de confirmar. Não há envio automático.
 - Conferência local em `/responsavel/relatorios`: 984 CSS px de viewport, sem overflow horizontal; em 375 CSS px a largura útil foi 360 px e continuou sem overflow. Fundos de página/cartões/seções e botões foram conferidos pelos estilos computados. O endpoint do PDF retornou `200 application/pdf` para o grupo e período selecionados.

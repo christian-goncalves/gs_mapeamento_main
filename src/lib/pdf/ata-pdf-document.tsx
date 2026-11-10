@@ -1,312 +1,214 @@
-import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import {
-  faCalendarDays,
-  faClock,
-  faComments,
-  faDesktop,
-  faFileCircleCheck,
-  faFolder,
-  faGlobe,
-  faLocationDot,
-  faTableCellsLarge,
-  faTicket,
-  faUsers,
-} from "@fortawesome/free-solid-svg-icons";
 import {
   Document,
+  Font,
   Page,
-  Path,
   StyleSheet,
-  Svg,
   Text,
   View,
   renderToBuffer,
 } from "@react-pdf/renderer";
+import path from "node:path";
 import type { ReactNode } from "react";
 import type { AtaPresentation } from "@/app/atas/ata-presentation";
-import { buildAtaDetailColumnLayout, type AtaDetailSectionKey } from "@/app/atas/ata-detail-column-layout";
 import { formatReviewDate } from "@/app/atas/nova/ata-review";
 
-const colors = {
-  brand: "#1D4ED8",
-  brandSoft: "#E6F1FA",
-  ink: "#1C2430",
-  muted: "#6E849A",
-  quiet: "#6E849A",
-  line: "#DFE3E8",
-  rowLine: "#E4EDF6",
-  paper: "#FCFDFF",
-  white: "#FFFFFF",
-};
+Font.register({
+  family: "Noto Sans",
+  fonts: [
+    { src: path.join(process.cwd(), "public/fonts/NotoSans-Regular.ttf"), fontWeight: 400 },
+    { src: path.join(process.cwd(), "public/fonts/NotoSans-Bold.ttf"), fontWeight: 700 },
+  ],
+});
 
-const recordRowMinHeight = 13.5;
+const colors = {
+  brand: "#1d4ed8",
+  title: "#0b3a7a",
+  ink: "#1c2430",
+  muted: "#6e849a",
+  line: "#dfe3e8",
+  rowLine: "#e4edf6",
+  detailHeader: "#e6f1fa",
+  paper: "#fcfdff",
+  white: "#ffffff",
+};
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: 18,
-    paddingRight: 24,
-    paddingBottom: 24,
-    paddingLeft: 24,
+    paddingTop: 28,
+    paddingHorizontal: 32,
+    paddingBottom: 34,
+    fontFamily: "Noto Sans",
+    fontSize: 8,
+    color: colors.ink,
     backgroundColor: colors.paper,
-    color: colors.ink,
-    fontFamily: "Helvetica",
-    fontSize: 6.4,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 5,
-  },
-  headerIcon: {
-    width: 27,
-    height: 27,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 14,
-    backgroundColor: colors.brandSoft,
-  },
-  headerTitle: {
-    marginLeft: 8,
-    color: colors.ink,
-    fontSize: 15,
-    fontWeight: 700,
-  },
-  footer: {
-    position: "absolute",
-    right: 24,
-    bottom: 10,
-    left: 24,
-    color: colors.muted,
-    fontSize: 5.8,
-    textAlign: "right",
-  },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginHorizontal: -2,
-  },
-  infoCard: {
-    width: "50%",
-    paddingHorizontal: 2,
-    paddingBottom: 4,
-  },
-  infoCardGroup: { width: "100%" },
-  infoCardInner: {
-    minHeight: 27,
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 5,
-    paddingVertical: 4,
-    paddingHorizontal: 5,
-    backgroundColor: colors.white,
-  },
-  infoIcon: {
-    width: 18,
-    height: 18,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 9,
-    backgroundColor: colors.brandSoft,
-  },
-  infoText: { flexGrow: 1, flexBasis: 0, marginLeft: 5 },
-  label: { color: colors.muted, fontSize: 5.7 },
-  value: { marginTop: 1, color: colors.ink, fontSize: 7.5, fontWeight: 700 },
-  additionalCard: {
-    width: "50%",
-    paddingHorizontal: 2,
-    paddingBottom: 4,
-  },
-  additionalCardInner: {
-    minHeight: 25,
-    borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 5,
-    paddingVertical: 4,
-    paddingHorizontal: 6,
-    backgroundColor: colors.white,
-  },
-  metrics: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 1,
-    marginHorizontal: -2,
-  },
-  metricCard: { width: "33.333%", paddingHorizontal: 2, paddingBottom: 4 },
-  metricCardInner: {
-    minHeight: 29,
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 5,
-    paddingVertical: 4,
-    paddingHorizontal: 5,
-    backgroundColor: colors.white,
-  },
-  metricText: { flexGrow: 1, flexBasis: 0, marginLeft: 5 },
-  metricLabel: { color: colors.muted, fontSize: 5.5, fontWeight: 700 },
-  metricValue: { marginTop: 1, color: colors.ink, fontSize: 10.5, fontWeight: 700 },
-  sections: { marginTop: 1 },
-  sectionColumns: { flexDirection: "row", alignItems: "flex-start", marginHorizontal: -3 },
-  sectionColumn: { width: "50%", paddingHorizontal: 3 },
+  title: { marginBottom: 14, fontSize: 17, fontWeight: 700, color: colors.title },
   section: {
-    marginBottom: 5,
-    overflow: "hidden",
-    borderWidth: 1,
-    borderColor: colors.line,
-    borderRadius: 5,
+    marginBottom: 12,
+    border: `1 solid ${colors.line}`,
+    borderRadius: 8,
+    padding: 10,
     backgroundColor: colors.white,
   },
-  sectionHeader: {
+  heading: { marginBottom: 6, fontSize: 11, fontWeight: 700, color: colors.ink },
+  detailCard: {
+    marginBottom: 12,
+    border: `1 solid ${colors.line}`,
+    borderRadius: 9,
+    padding: 9,
+    backgroundColor: colors.white,
+  },
+  detailCardTitle: { marginBottom: 10, fontSize: 13, fontWeight: 700, color: "#000000" },
+  detailSubsection: { marginBottom: 12 },
+  detailSubsectionLast: { marginBottom: 0 },
+  detailSubsectionTitle: {
+    marginBottom: 5,
+    fontSize: 10,
+    lineHeight: 1.25,
+    fontWeight: 700,
+    color: colors.title,
+  },
+  infoGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  infoCard: {
+    width: "49%",
+    minHeight: 42,
+    border: `1 solid ${colors.line}`,
+    borderRadius: 8,
+    padding: 8,
+    backgroundColor: colors.white,
+  },
+  infoCardFull: { width: "100%" },
+  infoLabel: { fontSize: 8.25, lineHeight: 1.2, color: colors.muted },
+  infoValue: { marginTop: 3, fontSize: 10, lineHeight: 1.25, fontWeight: 700, color: colors.ink },
+  metrics: { flexDirection: "row", flexWrap: "wrap", gap: 9 },
+  metricCard: {
+    width: "32%",
+    minHeight: 54,
+    border: `1 solid ${colors.line}`,
+    borderRadius: 9,
+    padding: 9,
+    backgroundColor: colors.white,
+  },
+  metricLabel: { fontSize: 8.25, lineHeight: 1.2, color: colors.muted },
+  metricValue: { marginTop: 3, fontSize: 22.5, lineHeight: 1, fontWeight: 700, color: colors.brand },
+  table: { width: "100%", border: `1 solid ${colors.rowLine}`, borderRadius: 8, overflow: "hidden" },
+  tableHeader: {
+    minHeight: 22,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.detailHeader,
+  },
+  tableHeaderCell: {
+    paddingVertical: 4,
+    paddingHorizontal: 5,
+    color: colors.title,
+    fontSize: 7.5,
+    lineHeight: 1.2,
+    fontWeight: 700,
+    textTransform: "uppercase",
+  },
+  tableRow: {
     minHeight: 20,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    borderBottomWidth: 1,
-    borderBottomColor: colors.rowLine,
-    paddingVertical: 2,
-    paddingHorizontal: 5,
+    borderBottom: `1 solid ${colors.rowLine}`,
   },
-  sectionHeading: { flexDirection: "row", alignItems: "center", flexGrow: 1, flexBasis: 0 },
-  sectionIcon: {
-    width: 15,
-    height: 15,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 8,
-    backgroundColor: colors.brandSoft,
+  lastTableRow: { borderBottomWidth: 0 },
+  tableCell: { paddingVertical: 4, paddingHorizontal: 5, fontSize: 8, lineHeight: 1.2, color: colors.ink },
+  emptyTableRow: { minHeight: 28, justifyContent: "center", paddingHorizontal: 5 },
+  emptyTableText: { color: colors.muted, fontSize: 8, textAlign: "center" },
+  footer: {
+    position: "absolute",
+    bottom: 16,
+    left: 32,
+    right: 32,
+    textAlign: "right",
+    color: colors.muted,
+    fontSize: 7,
   },
-  sectionTitle: { marginLeft: 4, color: colors.ink, fontSize: 6.8, fontWeight: 700 },
-  count: {
-    minWidth: 15,
-    borderRadius: 4,
-    paddingVertical: 1.5,
-    paddingHorizontal: 4,
-    backgroundColor: colors.brandSoft,
-    color: colors.brand,
-    fontSize: 5.8,
-    fontWeight: 700,
-    textAlign: "center",
-  },
-  tableHeader: { flexDirection: "row", backgroundColor: colors.brandSoft },
-  tableHeaderCell: {
-    paddingVertical: 3,
-    paddingHorizontal: 3,
-    color: colors.brand,
-    fontSize: 5.1,
-    fontWeight: 700,
-  },
-  tableRow: {
-    minHeight: recordRowMinHeight,
-    flexDirection: "row",
-    borderTopWidth: 1,
-    borderTopColor: colors.rowLine,
-  },
-  tableCell: { paddingVertical: 3, paddingHorizontal: 3, fontSize: 5.6, lineHeight: 1.15 },
-  emptyTableRow: {
-    minHeight: 24,
-    justifyContent: "center",
-    borderTopWidth: 1,
-    borderTopColor: colors.rowLine,
-    paddingHorizontal: 5,
-  },
-  emptyTableText: { color: colors.quiet, fontSize: 5.8, textAlign: "center" },
 });
 
-function PdfIcon({ icon, size = 9 }: { icon: IconDefinition; size?: number }) {
-  const [width, height, , , pathData] = icon.icon;
-  const path = Array.isArray(pathData) ? pathData.join(" ") : pathData;
-  return (
-    <Svg width={size} height={size} viewBox={`0 0 ${width} ${height}`}>
-      <Path d={path} fill={colors.brand} />
-    </Svg>
-  );
+function formatNumber(value: number) {
+  return new Intl.NumberFormat("pt-BR").format(value);
 }
 
 function InfoCard({
-  icon,
   label,
   value,
-  group = false,
+  full = false,
 }: {
-  icon: IconDefinition;
   label: string;
   value: string;
-  group?: boolean;
+  full?: boolean;
 }) {
   return (
-    <View style={[styles.infoCard, ...(group ? [styles.infoCardGroup] : [])]} wrap={false}>
-      <View style={styles.infoCardInner}>
-        <View style={styles.infoIcon}><PdfIcon icon={icon} size={8} /></View>
-        <View style={styles.infoText}>
-          <Text style={styles.label}>{label}</Text>
-          <Text style={styles.value}>{value}</Text>
-        </View>
-      </View>
+    <View style={[styles.infoCard, ...(full ? [styles.infoCardFull] : [])]} wrap={false}>
+      <Text style={styles.infoLabel}>{label}</Text>
+      <Text style={styles.infoValue}>{value || "-"}</Text>
     </View>
   );
 }
 
-function MetricCard({ icon, label, value }: { icon: IconDefinition; label: string; value: number }) {
+function MetricCard({ label, value }: { label: string; value: number }) {
   return (
     <View style={styles.metricCard} wrap={false}>
-      <View style={styles.metricCardInner}>
-        <View style={styles.infoIcon}><PdfIcon icon={icon} size={8} /></View>
-        <View style={styles.metricText}>
-          <Text style={styles.metricLabel}>{label}</Text>
-          <Text style={styles.metricValue}>{value}</Text>
-        </View>
-      </View>
+      <Text style={styles.metricLabel}>{label}</Text>
+      <Text style={styles.metricValue}>{formatNumber(value)}</Text>
     </View>
   );
 }
 
-function Section({
-  icon,
-  title,
-  count,
-  children,
-}: {
-  icon: IconDefinition;
-  title: string;
-  count: number;
-  children: ReactNode;
-}) {
+function Section({ title, children, breakBefore = false }: { title: string; children: ReactNode; breakBefore?: boolean }) {
   return (
-    <View style={styles.section}>
-      <View style={styles.sectionHeader} wrap={false}>
-        <View style={styles.sectionHeading}>
-          <View style={styles.sectionIcon}><PdfIcon icon={icon} size={7} /></View>
-          <Text style={styles.sectionTitle}>{title}</Text>
-        </View>
-        <Text style={styles.count}>{count}</Text>
-      </View>
+    <View style={styles.section} break={breakBefore}>
+      <Text style={styles.heading}>{title}</Text>
       {children}
     </View>
   );
 }
 
-function Table({ headers, rows, widths, emptyMessage = "Nenhum registro." }: { headers: string[]; rows: string[][]; widths: string[]; emptyMessage?: string }) {
+function Table({
+  headers,
+  rows,
+  widths,
+  alignments,
+  emptyMessage = "Nenhum registro.",
+}: {
+  headers: string[];
+  rows: string[][];
+  widths: string[];
+  alignments: ("left" | "center")[];
+  emptyMessage?: string;
+}) {
   return (
-    <View>
-      <View style={styles.tableHeader} wrap={false}>
+    <View style={styles.table}>
+      <View style={styles.tableHeader} fixed wrap={false}>
         {headers.map((header, index) => (
-          <Text key={header} style={[styles.tableHeaderCell, { width: widths[index] }]}>{header}</Text>
+          <Text key={header} style={[styles.tableHeaderCell, { width: widths[index], textAlign: "center" }]}>
+            {header}
+          </Text>
         ))}
       </View>
       {rows.length ? rows.map((row, rowIndex) => (
-          <View key={`${rowIndex}-${row.join("-")}`} style={styles.tableRow} wrap={false}>
-            {row.map((cell, index) => (
-              <Text key={`${index}-${cell}`} style={[styles.tableCell, { width: widths[index] }]}>{cell}</Text>
-            ))}
-          </View>
-        )) : (
-          <View style={styles.emptyTableRow} wrap={false}>
-            <Text style={styles.emptyTableText}>{emptyMessage}</Text>
-          </View>
-        )}
+        <View
+          key={`${rowIndex}-${row.join("-")}`}
+          style={[
+            styles.tableRow,
+            ...(rowIndex === rows.length - 1 ? [styles.lastTableRow] : []),
+          ]}
+          wrap={false}
+        >
+          {row.map((cell, index) => (
+            <Text key={`${index}-${cell}`} style={[styles.tableCell, { width: widths[index], textAlign: alignments[index] }]}>
+              {cell}
+            </Text>
+          ))}
+        </View>
+      )) : (
+        <View style={styles.emptyTableRow} wrap={false}>
+          <Text style={styles.emptyTableText}>{emptyMessage}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -322,130 +224,136 @@ export function AtaPdfDocument({ presentation, generatedAt }: { presentation: At
     timeZone: "America/Sao_Paulo",
   }).format(generatedAt);
   const metrics = [
-    [faUsers, "Servidores", data.servers.length],
-    [faUsers, "Membros", data.membersPresent],
-    [faComments, "Partilhas", data.shares],
-    [faUsers, "Visitantes", data.visitors.length],
-    [faTicket, "Ingressos", data.admissions.length],
-    [faClock, "Conquistas", data.achievements.length],
-    [faLocationDot, "Cidades", data.supplementalMetrics?.cities ?? data.locations.length],
-    [faLocationDot, "Estados", data.supplementalMetrics?.states ?? 0],
-    [faGlobe, "Outros Países", data.supplementalMetrics?.otherCountries ?? data.internationalMembers.length],
+    ["Servidores", data.servers.length],
+    ["Membros", data.membersPresent],
+    ["Partilhas", data.shares],
+    ["Visitantes", data.visitors.length],
+    ["Ingressos", data.admissions.length],
+    ["Conquistas", data.achievements.length],
+    ["Cidades", data.supplementalMetrics?.cities ?? data.locations.length],
+    ["Estados", data.supplementalMetrics?.states ?? 0],
+    ["Outros Países", data.supplementalMetrics?.otherCountries ?? data.internationalMembers.length],
   ] as const;
-  const detailColumnLayout = buildAtaDetailColumnLayout(data);
-  const detailSections: Record<AtaDetailSectionKey, ReactNode> = {
-    servers: (
-      <Section icon={faUsers} title="Servidores" count={data.servers.length}>
-        <Table
-          headers={["Servidores", "Função"]}
-          widths={["70%", "30%"]}
-          rows={data.servers.map((item, index) => [`${index + 1}. ${item.name}`, item.role || "—"])}
-          emptyMessage="Nenhum servidor registrado."
-        />
-      </Section>
-    ),
-    international: (
-      <Section icon={faGlobe} title="Localidades Internacionais" count={data.internationalMembers.length}>
-        <Table
-          headers={["Localidades Internacionais", "Total"]}
-          widths={["80%", "20%"]}
-          rows={data.internationalMembers.map((item, index) => [`${index + 1}. ${item.country}`, String(item.count)])}
-          emptyMessage="Nenhuma localidade internacional registrada."
-        />
-      </Section>
-    ),
-    visitors: (
-      <Section icon={faUsers} title="Visitantes" count={data.visitors.length}>
-        <Table
-          headers={["Visitante", "Cidade", "Categoria", "Origem"]}
-          widths={["30%", "24%", "23%", "23%"]}
-          rows={data.visitors.map((item, index) => [
-            `${index + 1}. ${item.label}`,
-            item.city,
-            item.category,
-            item.origin,
-          ])}
-          emptyMessage="Nenhum visitante registrado."
-        />
-      </Section>
-    ),
-    admissions: (
-      <Section icon={faTicket} title="Ingressos" count={data.admissions.length}>
-        <Table
-          headers={["Ingresso", "Cidade", "Estado"]}
-          widths={["42%", "32%", "26%"]}
-          rows={data.admissions.map((item, index) => [
-            `${index + 1}. ${item.label}`,
-            item.city,
-            item.state,
-          ])}
-          emptyMessage="Nenhum ingresso registrado."
-        />
-      </Section>
-    ),
-    achievements: (
-      <Section icon={faClock} title="Conquistas" count={data.achievements.length}>
-        <Table
-          headers={["Conquista", "Tempo"]}
-          widths={["64%", "36%"]}
-          rows={data.achievements.map((item, index) => [`${index + 1}. ${item.label}`, item.time])}
-          emptyMessage="Nenhuma conquista registrada."
-        />
-      </Section>
-    ),
-  };
+
+  const achievementTotals = new Map<string, number>();
+  data.achievements.forEach((item) => {
+    achievementTotals.set(item.time, (achievementTotals.get(item.time) ?? 0) + 1);
+  });
+
+  const detailSections: {
+    title: string;
+    headers: string[];
+    widths: string[];
+    alignments: ("left" | "center")[];
+    rows: string[][];
+    emptyMessage: string;
+  }[] = [
+    {
+      title: "Localidades Nacionais",
+      headers: ["Cidade", "Total"],
+      widths: ["74%", "26%"],
+      alignments: ["left", "center"],
+      rows: data.locations.map((item, index) => [
+        `${index + 1}. ${item.name}${item.detail ? `\n${item.detail}` : ""}`,
+        String(item.count),
+      ]),
+      emptyMessage: "Nenhuma localidade nacional registrada.",
+    },
+    {
+      title: "Servidores",
+      headers: ["Servidor", "Função"],
+      widths: ["58%", "42%"],
+      alignments: ["left", "center"],
+      rows: data.servers.map((item, index) => [`${index + 1}. ${item.name}`, item.role || "-"]),
+      emptyMessage: "Nenhum servidor registrado.",
+    },
+    {
+      title: "Localidades Internacionais",
+      headers: ["País", "Total"],
+      widths: ["74%", "26%"],
+      alignments: ["left", "center"],
+      rows: data.internationalMembers.map((item, index) => [`${index + 1}. ${item.country}`, String(item.count)]),
+      emptyMessage: "Nenhuma localidade internacional registrada.",
+    },
+    {
+      title: "Visitantes",
+      headers: ["Cidade", "Categoria", "Origem"],
+      widths: ["40%", "30%", "30%"],
+      alignments: ["left", "center", "center"],
+      rows: data.visitors.map((item, index) => [
+        `${index + 1}. ${item.city}`,
+        item.category,
+        item.origin,
+      ]),
+      emptyMessage: "Nenhum visitante registrado.",
+    },
+    {
+      title: "Ingressos",
+      headers: ["Cidade", "Estado"],
+      widths: ["68%", "32%"],
+      alignments: ["left", "center"],
+      rows: data.admissions.map((item, index) => [`${index + 1}. ${item.city}`, item.state]),
+      emptyMessage: "Nenhum ingresso registrado.",
+    },
+    {
+      title: "Conquistas",
+      headers: ["Tempo", "Total"],
+      widths: ["64%", "36%"],
+      alignments: ["left", "center"],
+      rows: [...achievementTotals].map(([time, total], index) => [`${index + 1}. ${time}`, String(total)]),
+      emptyMessage: "Nenhuma conquista registrada.",
+    },
+  ];
 
   return (
     <Document title={presentation.title} author="GS Mapeamento" subject="Ata de Reunião confirmada">
       <Page size="A4" style={styles.page} wrap>
-        <View style={styles.header} wrap={false}>
-          <View style={styles.headerIcon}><PdfIcon icon={faFileCircleCheck} size={13} /></View>
-          <Text style={styles.headerTitle}>{presentation.title}</Text>
-        </View>
+        <Text style={styles.title}>{presentation.title} - Grupo {data.group}</Text>
 
-        <View style={styles.grid}>
-          <InfoCard icon={faUsers} label="Grupo" value={data.group} group />
-          <InfoCard icon={faCalendarDays} label="Data" value={formatReviewDate(data.date)} />
-          <InfoCard icon={faClock} label="Horário" value={data.time} />
-          <InfoCard icon={faFolder} label="Tipo" value={data.meetingType} />
-          <InfoCard icon={faDesktop} label="Plataforma" value={data.platform} />
-          <InfoCard icon={faTableCellsLarge} label="Formatos" value={data.formats} />
-          {additionalInformation.map((entry) => (
-            <View key={entry.label} style={styles.additionalCard} wrap={false}>
-              <View style={styles.additionalCardInner}>
-                <Text style={styles.label}>{entry.label}</Text>
-                <Text style={styles.value}>{entry.value}</Text>
-              </View>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.metrics}>
-          {metrics.map(([icon, label, value]) => (
-            <MetricCard key={label} icon={icon} label={label} value={value} />
-          ))}
-        </View>
-
-        <View style={styles.sections}>
-          <View style={styles.sectionColumns}>
-            <View style={styles.sectionColumn}>
-              <Section icon={faLocationDot} title="Localidades Nacionais" count={data.locations.length}>
-                <Table
-                  headers={["Localidades Nacionais", "Total"]}
-                  widths={["82%", "18%"]}
-                  rows={data.locations.map((item, index) => [
-                    `${index + 1}. ${item.name}${item.detail ? `\n${item.detail}` : ""}`,
-                    String(item.count),
-                  ])}
-                  emptyMessage="Nenhuma localidade nacional registrada."
-                />
-              </Section>
-              {detailColumnLayout.left.map((key) => <View key={key}>{detailSections[key]}</View>)}
-            </View>
-            <View style={styles.sectionColumn}>
-              {detailColumnLayout.right.map((key) => <View key={key}>{detailSections[key]}</View>)}
-            </View>
+        <Section title="Dados da reunião">
+          <View style={styles.infoGrid}>
+            <InfoCard label="Grupo" value={data.group} full />
+            <InfoCard label="Data" value={formatReviewDate(data.date)} />
+            <InfoCard label="Horário" value={data.time} />
+            <InfoCard label="Tipo" value={data.meetingType} />
+            <InfoCard label="Plataforma" value={data.platform} />
+            <InfoCard label="Formatos" value={data.formats} />
+            {additionalInformation.map((item) => (
+              <InfoCard key={item.label} label={item.label} value={item.value} />
+            ))}
           </View>
+        </Section>
+
+        <Section title="Consolidado">
+          <View style={styles.metrics}>
+            {metrics.map(([label, value]) => <MetricCard key={label} label={label} value={value} />)}
+          </View>
+        </Section>
+
+        <View style={styles.detailCard}>
+          <Text style={styles.detailCardTitle} minPresenceAhead={60}>
+            Detalhamento
+          </Text>
+          {detailSections.map((section, index) => (
+            <View
+              key={section.title}
+              style={[
+                styles.detailSubsection,
+                ...(index === detailSections.length - 1 ? [styles.detailSubsectionLast] : []),
+              ]}
+            >
+              <Text style={styles.detailSubsectionTitle} minPresenceAhead={48}>
+                {section.title}
+              </Text>
+              <Table
+                headers={section.headers}
+                widths={section.widths}
+                alignments={section.alignments}
+                rows={section.rows}
+                emptyMessage={section.emptyMessage}
+              />
+            </View>
+          ))}
         </View>
 
         <Text

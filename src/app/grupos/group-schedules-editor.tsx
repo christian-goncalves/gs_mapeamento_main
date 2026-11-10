@@ -350,6 +350,13 @@ export function GroupSchedulesEditor({
     setDeletingRow(null);
   }
 
+  async function deletePersistedSchedule(formData: FormData) {
+    const row = deletingRow;
+    if (!row) return;
+    await toggleHorarioAction(formData);
+    deleteRow(row);
+  }
+
   function closeDeleteConfirmation() {
     setDeletingRow(null);
   }
@@ -641,14 +648,10 @@ export function GroupSchedulesEditor({
               Confirma excluir {responsiveDayLabel(dayLabel(deletingRow.dia_semana), compactDayLabels)} às {displayTime(deletingRow.hora_inicio)}?
             </p>
             {deletingRow.horario_id ? (
-              <form action={toggleHorarioAction}>
+              <form action={deletePersistedSchedule}>
                 <input type="hidden" name="grupo_id" value={grupoId} />
                 <input type="hidden" name="horario_id" value={deletingRow.horario_id} />
                 <input type="hidden" name="ativo" value="false" />
-                <input type="hidden" name="settings_section" value="schedules" />
-                {returnToNewGroupPage ? (
-                  <input type="hidden" name="return_to_new_group_page" value="on" />
-                ) : null}
                 <div className="modal-actions">
                   <button autoFocus type="button" className="secondary" onClick={closeDeleteConfirmation}>
                     <span className="button-content">

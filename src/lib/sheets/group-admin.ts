@@ -42,6 +42,15 @@ export class GroupReviewColumnMissingError extends Error {
   }
 }
 
+export class GroupFoundationColumnMissingError extends Error {
+  constructor() {
+    super(
+      'Não foi possível salvar a data de fundação: falta a coluna "data_fundacao" no cabeçalho da planilha.',
+    );
+    this.name = "GroupFoundationColumnMissingError";
+  }
+}
+
 function requireAuthorization(value: JsonValue | undefined) {
   if (!value) throw new Error("Autorização explícita da gravação de grupo ausente.");
   return value;
@@ -290,6 +299,12 @@ export async function saveGrupo(
 ) {
   requireAuthorization(authorization);
   const snapshot = await readSheetValues("grupos");
+  if (
+    input.data_fundacao &&
+    !(snapshot[0] ?? []).map(String).includes("data_fundacao")
+  ) {
+    throw new GroupFoundationColumnMissingError();
+  }
   const validGroups = parseRows(
     "grupos",
     sheetGrupoSchema,

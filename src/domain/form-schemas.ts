@@ -37,6 +37,10 @@ export const grupoFormSchema = z.object({
   responsavel_grupo_email: optionalEmail.default(""),
   email_acesso_grupo: requiredEmail,
   ultima_reuniao_anterior: z.number().int().min(0),
+  data_fundacao: optionalText.default("").refine(
+    (value) => !value || z.string().date().safeParse(value).success,
+    "Data de fundação inválida.",
+  ),
 });
 
 export const grupoHorarioFormSchema = z.object({

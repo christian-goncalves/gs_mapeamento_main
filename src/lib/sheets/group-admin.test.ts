@@ -8,6 +8,7 @@ import {
   saveGrupoServidorMesa,
   saveGrupoPlataforma,
   deactivateGrupoPlataforma,
+  saveGrupoHorario,
   setGrupoHorarioPlataformas,
 } from "./group-admin";
 
@@ -50,7 +51,7 @@ function mockPlatformSheets({ linked = true } = {}) {
     created_at: createdAt, updated_at: createdAt, fuso_horario: "America/Sao_Paulo",
     plataforma: "Zoom", acesso_plataforma: "001",
   }[header] ?? ""));
-  const scheduleHeaders = [...SHEET_HEADERS.grupo_horarios, "plataforma_id"];
+  const scheduleHeaders = [...SHEET_HEADERS.grupo_horarios];
   const schedule = [horarioId, groupId, "segunda", "20:00", "", true, createdAt, createdAt, linked ? platformId : ""];
   mocks.get.mockImplementation(({ range }: { range: string }) => {
     if (range.startsWith("grupo_plataformas!")) return Promise.resolve({ data: { values: [[...V2_NEW_SHEET_HEADERS.grupo_plataformas], platform(platformId, "zoom"), platform(otherPlatformId, "whatsapp")] } });
@@ -170,6 +171,25 @@ describe("administração de grupos no Sheets", () => {
     await setGrupoHorarioPlataformas(groupId, [{ horario_id: horarioId, plataforma_id: otherPlatformId }], { now: () => "2026-08-03T18:00:00.000Z", uuid: () => otherPlatformId }, { kind: "authenticated", email: "admin@example.com" });
     expect(mocks.directWrite).toHaveBeenCalledTimes(1);
     expect(mocks.directWrite.mock.calls[0][0][0].updateCells.range.sheetId).toBe(22);
+  });
+
+  it("grava hora_termino na coluna correta do novo cabeçalho", async () => {
+    mockPlatformSheets();
+    await saveGrupoHorario({
+      horario_id: horarioId,
+      grupo_id: groupId,
+      dia_semana: "segunda",
+      hora_inicio: "20:00",
+      hora_termino: "21:30",
+      plataforma_id: platformId,
+      link_reuniao: "",
+      ativo: true,
+    }, { now: () => "2026-08-03T18:00:00.000Z", uuid: () => otherPlatformId }, { kind: "authenticated", email: "admin@example.com" });
+
+    const request = mocks.directWrite.mock.calls[0][0][0];
+    expect(request.updateCells.range.startColumnIndex).toBe(0);
+    expect(request.updateCells.rows[0].values[4].userEnteredValue).toEqual({ stringValue: "21:30" });
+    expect(request.updateCells.rows[0].values[8].userEnteredValue).toEqual({ stringValue: platformId });
   });
 
   it("recusa uma segunda plataforma ativa do mesmo tipo antes de gravar", async () => {

@@ -21,6 +21,7 @@ import {
 import { isSecureAtaLinkToken } from "@/lib/ata-link-token";
 import { uniqueAtaLinkToken } from "@/lib/ata-link-token.server";
 import {
+  GroupFoundationColumnMissingError,
   GroupReviewColumnMissingError,
   deactivateGrupoServidorMesa,
   saveGrupo,
@@ -71,6 +72,7 @@ function revalidateGroupAdminPaths(grupoId: string) {
   revalidatePath(`/grupos/${grupoId}`);
   revalidatePath("/meu-grupo");
   revalidatePath("/responsavel/atas");
+  revalidatePath("/responsavel/relatorios");
 }
 
 function text(formData: FormData, name: string) {
@@ -85,6 +87,15 @@ function bool(formData: FormData, name: string) {
 function int(formData: FormData, name: string) {
   const value = text(formData, name);
   return value ? Number(value) : 0;
+}
+
+function todayInSaoPaulo() {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
 }
 
 const horariosPayloadSchema = z
@@ -221,12 +232,22 @@ export async function saveGrupoAction(
       existingGroup?.email_acesso_grupo ||
       "",
     ultima_reuniao_anterior: int(formData, "ultima_reuniao_anterior"),
+    data_fundacao: isAdmin
+      ? existingGroup?.data_fundacao ?? ""
+      : text(formData, "data_fundacao"),
   };
   const parsedResult = grupoFormSchema.safeParse(raw);
   if (!parsedResult.success) {
     return {
       error: parsedResult.error.issues[0]?.message ?? "Dados inválidos.",
     };
+  }
+  if (
+    !isAdmin &&
+    parsedResult.data.data_fundacao &&
+    parsedResult.data.data_fundacao > todayInSaoPaulo()
+  ) {
+    return { error: "A data de fundação não pode ser futura." };
   }
   let parsedServidoresMesa:
     | ReturnType<typeof parseServidoresMesaPayload>
@@ -269,6 +290,7 @@ export async function saveGrupoAction(
         responsaveis_ata: existingGroup?.responsaveis_ata ?? "",
         link_formulario_ata: linkFormularioAta,
         ultima_reuniao_anterior: parsed.ultima_reuniao_anterior,
+        data_fundacao: parsed.data_fundacao,
         fuso_horario: parsed.fuso_horario,
         plataforma: parsed.plataforma,
         acesso_plataforma: parsed.acesso_plataforma,
@@ -294,6 +316,9 @@ export async function saveGrupoAction(
       ...groupToSave,
     }, undefined, { kind: "authenticated", email: current.access.email });
   } catch (error) {
+    if (error instanceof GroupFoundationColumnMissingError) {
+      return { error: error.message };
+    }
     if (error instanceof GroupReviewColumnMissingError) {
       return { error: error.message };
     }
@@ -538,6 +563,7 @@ export async function duplicateGrupoAction(formData: FormData) {
     responsaveis_ata: source.responsaveis_ata,
     link_formulario_ata: uniqueAtaLinkToken(result.grupos, newGroupId),
     ultima_reuniao_anterior: source.ultima_reuniao_anterior,
+    data_fundacao: "",
     fuso_horario: source.fuso_horario,
     plataforma: source.plataforma,
     acesso_plataforma: source.acesso_plataforma,
@@ -632,14 +658,6 @@ export async function toggleHorarioAction(formData: FormData) {
   if (!horario) throw new Error("Horário não encontrado.");
   await saveGrupoHorario({ ...horario, ativo: active }, undefined, { kind: "authenticated", email: current.access.email });
   revalidateGroupAdminPaths(grupoId);
-  redirect(returnPathKeepingSettingsSectionOpen(
-    groupReturnPath(
-      grupoId,
-      current.access.role === "administrador",
-      bool(formData, "return_to_new_group_page"),
-    ),
-    formData,
-  ));
 }
 
 export async function saveGrupoPlataformaAction(formData: FormData) {

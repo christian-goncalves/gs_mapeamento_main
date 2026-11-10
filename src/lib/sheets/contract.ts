@@ -10,8 +10,8 @@ export const SHEET_HEADERS = {
     "convite_token", "convite_expira_em", "ultimo_login", "created_at", "updated_at",
   ],
   grupo_horarios: [
-    "horario_id", "grupo_id", "dia_semana", "hora_inicio", "link_reuniao",
-    "ativo", "created_at", "updated_at",
+    "horario_id", "grupo_id", "dia_semana", "hora_inicio", "hora_termino",
+    "ativo", "created_at", "updated_at", "plataforma_id",
   ],
   grupo_servidores_mesa: [
     "grupo_servidor_mesa_id", "grupo_id", "encargo", "nome", "data_inicio",

@@ -233,6 +233,7 @@ function migratableMissingColumns(
       "responsaveis_ata",
       "link_formulario_ata",
       "ultima_reuniao_anterior",
+      "data_fundacao",
     ];
     const expectedWithoutNewGroupColumns = SHEET_HEADERS.grupos.filter(
       (header) => !newGroupColumns.includes(header),
@@ -251,6 +252,16 @@ function migratableMissingColumns(
       return {
         columns: ["ultima_reuniao_anterior"],
         insertIndex: headerIndex("grupos", "ultima_reuniao_anterior"),
+      };
+    }
+
+    const expectedWithoutDataFundacao = SHEET_HEADERS.grupos.filter(
+      (header) => header !== "data_fundacao",
+    );
+    if (isHeaderPrefix(actual, expectedWithoutDataFundacao)) {
+      return {
+        columns: ["data_fundacao"],
+        insertIndex: headerIndex("grupos", "data_fundacao"),
       };
     }
   }
@@ -734,9 +745,11 @@ function assertHeaderPrefix(sheet: string, actual: unknown[], expected: readonly
     throw new Error(`Cabeçalho duplicado em ${sheet}; nenhuma alteração foi planejada.`);
   }
   const legacy = SHEET_HEADERS.grupo_horarios;
-  const isLegacy = JSON.stringify(actual) === JSON.stringify([...legacy]);
-  const isCurrent = JSON.stringify(actual) === JSON.stringify([...expected]);
-  if (!isLegacy && !isCurrent) {
+  const isValidPrefix =
+    actual.length >= legacy.length &&
+    actual.length <= expected.length &&
+    actual.every((header, index) => String(header) === expected[index]);
+  if (!isValidPrefix) {
     throw new Error(headerMismatchMessage(sheet, expected, actual));
   }
 }

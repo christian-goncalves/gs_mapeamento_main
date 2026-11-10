@@ -297,8 +297,8 @@ export function buildMonthlyDashboardData(
       ),
     }));
 
-  const responsavelMeetingResults: ResponsavelMeetingWeekday[] = weekDayByIndex.map(
-    (weekday, index) => {
+  const responsavelMeetingResults: ResponsavelMeetingWeekday[] = weekDayByIndex.flatMap(
+    (weekday, index): ResponsavelMeetingWeekday[] => {
       const weekdayAtas = responsavelAtas.filter(
         (item) => weekdayIndex(item.registro.ata.data_reuniao) === index,
       );
@@ -309,6 +309,8 @@ export function buildMonthlyDashboardData(
             .map((schedule) => schedule.hora_inicio),
         ),
       ].sort();
+      if (dayTimes.length === 0 && weekdayAtas.length === 0) return [];
+
       const scheduleResults = dayTimes.map((time) => {
         const timeAtas = weekdayAtas.filter(
           (item) => item.registro.ata.hora_inicio === time,
@@ -331,7 +333,7 @@ export function buildMonthlyDashboardData(
         (total, item) => total + item.registro.ata.total_membros_presentes,
         0,
       );
-      return {
+      return [{
         weekday,
         presences,
         averagePresences: weekdayAtas.length
@@ -342,7 +344,7 @@ export function buildMonthlyDashboardData(
           0,
         ),
         schedules: scheduleResults,
-      };
+      }];
     },
   );
 

@@ -3,7 +3,6 @@ import { rowsToObjects, type LocatedObject, type SheetCell } from "./rows";
 
 const SHEET_V2_EXTENSIONS: Partial<Record<SheetName, readonly string[]>> = {
   grupos: ["revisao_atas_ativa"],
-  grupo_horarios: ["plataforma_id", "hora_termino"],
   atas: [
     "status_registro",
     "status_aprovacao",
@@ -69,6 +68,31 @@ function normalizeHeaderAliases(name: SheetName, values: SheetCell[][]) {
       return header;
     }),
     ...rows,
+  ];
+}
+
+function normalizeGroupScheduleHeaders(values: SheetCell[][]): SheetCell[][] {
+  if (values.length === 0) return values;
+  const [headers, ...rows] = values;
+  const currentHeaders = [...SHEET_HEADERS.grupo_horarios];
+  const objectHeaders = [...currentHeaders, "link_reuniao"];
+  const legacyHeaders = [
+    "horario_id", "grupo_id", "dia_semana", "hora_inicio", "link_reuniao",
+    "ativo", "created_at", "updated_at",
+  ];
+  const legacyWithPlatform = [...legacyHeaders, "plataforma_id"];
+  const legacyWithExtensions = [...legacyWithPlatform, "hora_termino"];
+  const actual = headers.map(String);
+  const supported = [currentHeaders, legacyHeaders, legacyWithPlatform, legacyWithExtensions]
+    .some((candidate) => candidate.length === actual.length && candidate.every((header, index) => header === actual[index]));
+  if (!supported || new Set(actual).size !== actual.length) return values;
+
+  return [
+    objectHeaders,
+    ...rows.map((row) => {
+      const valuesByHeader = new Map(actual.map((header, index) => [header, row[index] ?? ""]));
+      return objectHeaders.map((header) => valuesByHeader.get(header) ?? "");
+    }),
   ];
 }
 
@@ -138,9 +162,14 @@ export function rowsToCompatibleObjects(
 ) {
   const normalizedValues = normalizeMissingGroupFoundationDate(
     name,
-    normalizeHeaderAliases(name, values),
+    name === "grupo_horarios"
+      ? normalizeGroupScheduleHeaders(values)
+      : normalizeHeaderAliases(name, values),
   );
-  return rowsToObjects(SHEET_HEADERS[name], normalizedValues, {
+  const expectedHeaders = name === "grupo_horarios"
+    ? [...SHEET_HEADERS.grupo_horarios, "link_reuniao"]
+    : SHEET_HEADERS[name];
+  return rowsToObjects(expectedHeaders, normalizedValues, {
     ...options,
     allowExtraTrailingHeaders: SHEET_V2_EXTENSIONS[name] ?? [],
   });
@@ -153,10 +182,12 @@ export function rowsToVersionedObjects(
   const headers = compatibleHeaders(name);
   const extensions = SHEET_V2_EXTENSIONS[name] ?? [];
   const rows = rowsToObjects(
-    headers,
+    name === "grupo_horarios" ? [...headers, "link_reuniao"] : headers,
     normalizeMissingGroupFoundationDate(
       name,
-      normalizeHeaderAliases(name, values),
+      name === "grupo_horarios"
+        ? normalizeGroupScheduleHeaders(values)
+        : normalizeHeaderAliases(name, values),
     ),
     {
       allowMissingTrailingHeaders:

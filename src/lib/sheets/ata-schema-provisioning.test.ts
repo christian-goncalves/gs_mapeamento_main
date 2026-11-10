@@ -8,8 +8,8 @@ import {
 } from "./contract-reconciliation";
 
 const spreadsheetId = "synthetic-sheet-id";
-const v1ScheduleHeaders = [...SHEET_HEADERS.grupo_horarios];
-const v2ScheduleHeaders = [...compatibleHeaders("grupo_horarios")];
+const currentScheduleHeaders = [...SHEET_HEADERS.grupo_horarios];
+const compatibleScheduleHeaders = [...compatibleHeaders("grupo_horarios")];
 const platformHeaders = [...V2_NEW_SHEET_HEADERS.grupo_plataformas];
 
 function fakeClient(options: {
@@ -37,8 +37,8 @@ function fakeClient(options: {
       return { data: { values: [options.readbackHeaders[sheetName]!] } };
     }
     if (applied && range.includes("grupo_plataformas")) return { data: { values: [platformHeaders] } };
-    if (applied && range.includes("grupo_horarios")) return { data: { values: [v2ScheduleHeaders] } };
-    if (sheetName === "grupo_horarios") return { data: { values: [options.scheduleHeaders ?? v1ScheduleHeaders] } };
+    if (applied && range.includes("grupo_horarios")) return { data: { values: [compatibleScheduleHeaders] } };
+    if (sheetName === "grupo_horarios") return { data: { values: [options.scheduleHeaders ?? currentScheduleHeaders] } };
     return { data: { values: [options.platformHeaders ?? platformHeaders] } };
   });
   const client = { spreadsheets: { get, values: { get: valuesGet }, batchUpdate } } as unknown as ContractReconciliationClient;
@@ -46,15 +46,15 @@ function fakeClient(options: {
 }
 
 describe("provisionamento sintético do schema de grupo novo", () => {
-  it("simula schema ausente sem chamar batchUpdate e lê só os dois cabeçalhos necessários", async () => {
+  it("simula catálogo de plataformas ausente sem chamar batchUpdate", async () => {
     const { client, valuesGet, batchUpdate } = fakeClient();
     const result = await provisionAtaGroupSchema(client, spreadsheetId);
 
     expect(result).toMatchObject({
       spreadsheetTitle: "synthetic target",
       createdSheets: ["grupo_plataformas"],
-      addedColumns: [{ sheet: "grupo_horarios", column: "plataforma_id" }],
-      requestCount: 4,
+      addedColumns: [],
+      requestCount: 2,
       applied: false,
     });
     expect(batchUpdate).not.toHaveBeenCalled();
@@ -68,13 +68,13 @@ describe("provisionamento sintético do schema de grupo novo", () => {
     const result = await provisionAtaGroupSchema(client, spreadsheetId, { apply: true });
 
     expect(batchUpdate).toHaveBeenCalledTimes(1);
-    expect(batchUpdate.mock.calls[0][0].requestBody.requests).toHaveLength(4);
+    expect(batchUpdate.mock.calls[0][0].requestBody.requests).toHaveLength(2);
     expect(result.applied).toBe(true);
     expect(result.createdSheets).toEqual(["grupo_plataformas"]);
   });
 
   it("não escreve quando o schema já está correto", async () => {
-    const { client, batchUpdate } = fakeClient({ platformExists: true, scheduleHeaders: v2ScheduleHeaders });
+    const { client, batchUpdate } = fakeClient({ platformExists: true, scheduleHeaders: compatibleScheduleHeaders });
     const result = await provisionAtaGroupSchema(client, spreadsheetId, { apply: true });
 
     expect(result.requestCount).toBe(0);
@@ -83,9 +83,10 @@ describe("provisionamento sintético do schema de grupo novo", () => {
   });
 
   it.each([
-    ["duplicado", [...v1ScheduleHeaders, "plataforma_id", "plataforma_id"]],
+    ["duplicado", [...currentScheduleHeaders, "plataforma_id"]],
     ["incompatível", ["horario_id", "grupo_id", "dia_semana"]],
-    ["extensão não contratada", [...v1ScheduleHeaders, "plataforma_id", "vigente_desde", "vigente_ate"]],
+    ["layout histórico", ["horario_id", "grupo_id", "dia_semana", "hora_inicio", "link_reuniao", "ativo", "created_at", "updated_at", "plataforma_id"]],
+    ["extensão não contratada", [...currentScheduleHeaders, "vigente_desde", "vigente_ate"]],
   ])("interrompe antes de escrever quando grupo_horarios tem cabeçalho %s", async (_case, scheduleHeaders) => {
     const { client, batchUpdate } = fakeClient({ scheduleHeaders });
 
@@ -98,7 +99,7 @@ describe("provisionamento sintético do schema de grupo novo", () => {
     const { client, batchUpdate } = fakeClient({
       platformExists: true,
       platformHeaders: wrongPlatformHeaders,
-      scheduleHeaders: v1ScheduleHeaders,
+      scheduleHeaders: currentScheduleHeaders,
     });
 
     await expect(provisionAtaGroupSchema(client, spreadsheetId, { apply: true })).rejects.toThrow("Cabeçalho");
@@ -114,10 +115,10 @@ describe("provisionamento sintético do schema de grupo novo", () => {
 
   it("interrompe quando o readback não confirma os cabeçalhos alterados", async () => {
     const { client, batchUpdate } = fakeClient({
-      readbackHeaders: { grupo_horarios: v1ScheduleHeaders },
+      readbackHeaders: { grupo_plataformas: [...platformHeaders, "unexpected"] },
     });
 
-    await expect(provisionAtaGroupSchema(client, spreadsheetId, { apply: true })).rejects.toThrow("readback de grupo_horarios divergiu");
+    await expect(provisionAtaGroupSchema(client, spreadsheetId, { apply: true })).rejects.toThrow("readback de grupo_plataformas divergiu");
     expect(batchUpdate).toHaveBeenCalledTimes(1);
   });
 });

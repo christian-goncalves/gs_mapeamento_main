@@ -20,13 +20,44 @@ const styles = StyleSheet.create({
   section: { marginBottom: 12, border: "1 solid #dfe3e8", borderRadius: 8, padding: 10, backgroundColor: "#ffffff" },
   heading: { marginBottom: 6, fontSize: 11, fontWeight: 700, color: "#1c2430" },
   metrics: { flexDirection: "row", flexWrap: "wrap", gap: 5 },
+  responsibleMetrics: { flexDirection: "row", flexWrap: "wrap", gap: 9 },
+  foundationMetrics: { flexDirection: "row", justifyContent: "space-between", gap: 9, marginBottom: 9 },
   metric: { width: "32%", minHeight: 38, padding: 6, border: "1 solid #dfe3e8", borderRadius: 8 },
+  responsibleMetric: { minHeight: 54, padding: 9, borderRadius: 9 },
+  metricHalf: { width: "49%" },
   metricLabel: { fontSize: 7, color: "#6e849a" },
+  responsibleMetricLabel: { fontSize: 8.25, lineHeight: 1.2, color: "#6e849a" },
   metricValue: { marginTop: 3, fontSize: 12, fontWeight: 700, color: "#1d4ed8" },
+  responsibleMetricValue: { fontSize: 22.5, lineHeight: 1, fontWeight: 700, color: "#1d4ed8" },
+  foundationDateValue: { marginTop: 3, fontSize: 18, lineHeight: 1, fontWeight: 700, color: "#1d4ed8" },
+  achievementGrid: { flexDirection: "row", flexWrap: "wrap", gap: 9 },
+  achievementCard: { width: "32%", minHeight: 54, padding: 9, border: "1 solid #dfe3e8", borderRadius: 9, backgroundColor: "#ffffff" },
+  achievementLabelLine: { flexDirection: "row", alignItems: "center", gap: 4 },
+  achievementLabel: { flexGrow: 1, fontSize: 8.25, lineHeight: 1.2, fontWeight: 600, color: "#6e849a" },
+  achievementDot: { width: 4, height: 4, borderRadius: 2 },
+  achievementValue: { marginTop: 3, fontSize: 22.5, lineHeight: 1, fontWeight: 700, color: "#1d4ed8" },
   table: { width: "100%" },
   row: { flexDirection: "row", minHeight: 18, borderBottom: "1 solid #e4edf6", alignItems: "center" },
+  lastRow: { borderBottomWidth: 0 },
   header: { backgroundColor: "#1d4ed8", color: "#fff", fontWeight: 700, textTransform: "uppercase" },
   cell: { paddingVertical: 4, paddingHorizontal: 5, flexGrow: 1, flexBasis: 0 },
+  tableFrame: { border: "1 solid #e4edf6", borderRadius: 8, overflow: "hidden" },
+  framedCell: { borderRight: "1 solid #e4edf6" },
+  lastCell: { borderRightWidth: 0 },
+  meetingHeader: { flexDirection: "row", minHeight: 22, alignItems: "center", borderBottom: "1 solid #e4edf6", backgroundColor: "#1d4ed8" },
+  meetingHeaderDay: { width: "20%" },
+  meetingHeaderSeparator: { borderRight: "1.5 solid #ffffff" },
+  meetingHeaderDetails: { flex: 1, flexDirection: "row" },
+  meetingHeaderCell: { flexGrow: 1, flexBasis: 0, paddingVertical: 4, paddingHorizontal: 4, fontSize: 9.76, lineHeight: 1.2, fontWeight: 700, color: "#ffffff", textAlign: "center", textTransform: "uppercase" },
+  meetingGroup: { flexDirection: "row", borderBottom: "1 solid #e4edf6" },
+  lastMeetingGroup: { borderBottomWidth: 0 },
+  meetingDayCell: { width: "20%", alignSelf: "stretch", justifyContent: "center", alignItems: "center", paddingVertical: 3, paddingHorizontal: 4, borderRight: "1 solid #e4edf6" },
+  meetingDay: { fontSize: 11.2, lineHeight: 1.25, fontWeight: 700, color: "#1c2430", textAlign: "center" },
+  meetingSchedules: { flex: 1 },
+  meetingScheduleRow: { flexDirection: "row", minHeight: 20, alignItems: "center" },
+  meetingScheduleInnerRow: { borderBottom: "1 solid #e4edf6" },
+  meetingValueCell: { flexGrow: 1, flexBasis: 0, paddingVertical: 3, paddingHorizontal: 4, fontSize: 11.2, lineHeight: 1.25, color: "#1c2430", opacity: 0.6, textAlign: "center", borderRight: "1 solid #e4edf6" },
+  meetingLastValueCell: { borderRightWidth: 0 },
   footer: { position: "absolute", bottom: 16, left: 32, right: 32, textAlign: "right", color: "#6e849a", fontSize: 7 },
 });
 
@@ -40,21 +71,90 @@ function formatDate(value: string) {
   return `${day}/${month}/${year}`;
 }
 
-function Metric({ label, value }: { label: string; value: number }) {
-  return <View style={styles.metric} wrap={false}><Text style={styles.metricLabel}>{label}</Text><Text style={styles.metricValue}>{formatNumber(value)}</Text></View>;
+function Metric({ label, value, half = false, responsible = false }: { label: string; value: number; half?: boolean; responsible?: boolean }) {
+  return <View style={[styles.metric, responsible ? styles.responsibleMetric : null, half ? styles.metricHalf : null]} wrap={false}><Text style={responsible ? styles.responsibleMetricLabel : styles.metricLabel}>{label}</Text><Text style={responsible ? styles.responsibleMetricValue : styles.metricValue}>{formatNumber(value)}</Text></View>;
 }
 
-function Table({ headers, rows, repeatHeader = false }: { headers: string[]; rows: string[][]; repeatHeader?: boolean }) {
+function FoundationDateMetric({ value }: { value: string }) {
+  return <View style={[styles.metric, styles.responsibleMetric, styles.metricHalf]} wrap={false}><Text style={styles.responsibleMetricLabel}>Data de fundação do grupo</Text><Text style={styles.foundationDateValue}>{formatDate(value)}</Text></View>;
+}
+
+function Table({ headers, rows, repeatHeader = false, framed = false }: { headers: string[]; rows: string[][]; repeatHeader?: boolean; framed?: boolean }) {
   return (
-    <View style={styles.table}>
+    <View style={[styles.table, framed ? styles.tableFrame : null]}>
       <View style={[styles.row, styles.header]} fixed={repeatHeader} wrap={false}>
-        {headers.map((header) => <Text key={header} style={styles.cell}>{header}</Text>)}
+        {headers.map((header, index) => <Text key={header} style={[styles.cell, framed ? styles.framedCell : null, index === headers.length - 1 && framed ? styles.lastCell : null]}>{header}</Text>)}
       </View>
       {rows.length ? rows.map((row, index) => (
-        <View key={`${index}-${row.join("|")}`} style={styles.row} wrap={false}>
-          {row.map((cell, cellIndex) => <Text key={cellIndex} style={styles.cell}>{cell}</Text>)}
+        <View key={`${index}-${row.join("|")}`} style={[styles.row, index === rows.length - 1 && framed ? styles.lastRow : null]} wrap={false}>
+          {row.map((cell, cellIndex) => <Text key={cellIndex} style={[styles.cell, framed ? styles.framedCell : null, framed && cellIndex === row.length - 1 ? styles.lastCell : null]}>{cell}</Text>)}
         </View>
-      )) : <View style={styles.row} wrap={false}><Text style={styles.cell}>Nenhum registro no período.</Text></View>}
+      )) : <View style={[styles.row, framed ? styles.lastRow : null]} wrap={false}><Text style={[styles.cell, framed ? styles.lastCell : null]}>Nenhum registro no período.</Text></View>}
+    </View>
+  );
+}
+
+const weekdayLabels: Record<string, string> = {
+  domingo: "Domingo",
+  segunda: "Segunda",
+  terca: "Terça",
+  quarta: "Quarta",
+  quinta: "Quinta",
+  sexta: "Sexta",
+  sabado: "Sábado",
+};
+
+function MeetingScheduleTable({ data }: { data: MonthlyDashboardData }) {
+  return (
+    <View style={[styles.table, styles.tableFrame]}>
+      <View style={styles.meetingHeader} fixed wrap={false}>
+        <View style={[styles.meetingHeaderDay, styles.meetingHeaderSeparator]}><Text style={styles.meetingHeaderCell}>Dia da Semana</Text></View>
+        <View style={styles.meetingHeaderDetails}>
+          {["Horário", "Presenças", "Média", "Ingressos"].map((header, index, list) => (
+            <Text key={header} style={[styles.meetingHeaderCell, index < list.length - 1 ? styles.framedCell : null]}>{header}</Text>
+          ))}
+        </View>
+      </View>
+      {data.responsavelMeetingResults.map((day, dayIndex, days) => {
+        const schedules = day.schedules.length
+          ? day.schedules
+          : [{ time: "-", presences: day.presences, averagePresences: day.averagePresences, ingressos: day.ingressos }];
+        const dayLabel = weekdayLabels[day.weekday.toLocaleLowerCase("pt-BR")] ?? day.weekday;
+        return (
+          <View key={day.weekday} style={[styles.meetingGroup, dayIndex === days.length - 1 ? styles.lastMeetingGroup : null]} wrap={false}>
+            <View style={styles.meetingDayCell}><Text style={styles.meetingDay}>{dayLabel}</Text></View>
+            <View style={styles.meetingSchedules}>
+              {schedules.map((schedule, index) => (
+                <View key={`${day.weekday}-${schedule.time}-${index}`} style={[styles.meetingScheduleRow, index < schedules.length - 1 ? styles.meetingScheduleInnerRow : null]}>
+                  {[schedule.time, formatNumber(schedule.presences), formatNumber(schedule.averagePresences), formatNumber(schedule.ingressos)].map((value, cellIndex, values) => (
+                    <Text key={cellIndex} style={[styles.meetingValueCell, cellIndex < values.length - 1 ? styles.framedCell : null, cellIndex === values.length - 1 ? styles.meetingLastValueCell : null]}>{value}</Text>
+                  ))}
+                </View>
+              ))}
+            </View>
+          </View>
+        );
+      })}
+    </View>
+  );
+}
+
+function AchievementsGrid({ data }: { data: MonthlyDashboardData }) {
+  return (
+    <View style={styles.achievementGrid}>
+      {data.achievements.rows.map((row) => (
+        <View key={row.code} style={styles.achievementCard} wrap={false}>
+          <View style={styles.achievementLabelLine}>
+            <View style={[styles.achievementDot, { backgroundColor: row.color }]} />
+            <Text style={styles.achievementLabel}>{row.label.toLocaleUpperCase("pt-BR")}</Text>
+          </View>
+          <Text style={styles.achievementValue}>{formatNumber(row.value)}</Text>
+        </View>
+      ))}
+      <View style={styles.achievementCard} wrap={false}>
+        <Text style={styles.achievementLabel}>TOTAL</Text>
+        <Text style={styles.achievementValue}>{formatNumber(data.achievements.subtotal)}</Text>
+      </View>
     </View>
   );
 }
@@ -96,19 +196,23 @@ export function MonthlyReportPdfDocument({ data, profile }: { data: MonthlyDashb
         <Text style={styles.title}>Relatório Mensal - Grupo {data.group.grupo_nome}</Text>
         <Text style={styles.subtitle}>Período: {period} · {responsible ? "Relatório do grupo" : "Relatório administrativo"}</Text>
 
-        {responsible ? <Section title="Servidores"><Table headers={["Encargo", "Nome", "Desde"]} rows={data.mesa.map((row) => [row.encargo, row.vacant ? "Vago" : row.nome || "-", formatDate(row.data_inicio)])} /></Section> : null}
+        {responsible ? <Section title="Servidores"><Table headers={["Encargo", "Nome", "Desde"]} rows={data.mesa.map((row) => [row.encargo, row.vacant ? "Vago" : row.nome || "-", formatDate(row.data_inicio)])} framed /></Section> : null}
 
         <Section title="Consolidado">
-          <View style={styles.metrics}>{metrics.map(([label, value]) => <Metric key={label} label={label} value={value} />)}
-            {responsible ? <Metric label="Reuniões desde a Fundação" value={data.consolidated.reunioesDesdeFundacao} /> : null}
-          </View>
+          {responsible ? (
+            <>
+              <View style={styles.foundationMetrics}>
+                <Metric label="Reuniões desde a Fundação" value={data.consolidated.reunioesDesdeFundacao} half responsible />
+                <FoundationDateMetric value={data.group.data_fundacao ?? ""} />
+              </View>
+              <View style={styles.responsibleMetrics}>{metrics.map(([label, value]) => <Metric key={label} label={label} value={value} responsible />)}</View>
+            </>
+          ) : <View style={styles.metrics}>{metrics.map(([label, value]) => <Metric key={label} label={label} value={value} />)}</View>}
         </Section>
 
         {responsible ? (
-          <Section title="Consolidados por Dia da Semana">
-            <Table headers={["Dia da Semana", "Horário", "Presenças", "Média", "Ingressos"]} repeatHeader rows={data.responsavelMeetingResults.flatMap((day) => day.schedules.length
-              ? day.schedules.map((schedule) => [day.weekday, schedule.time, formatNumber(schedule.presences), formatNumber(schedule.averagePresences), formatNumber(schedule.ingressos)])
-              : [[day.weekday, "-", formatNumber(day.presences), formatNumber(day.averagePresences), formatNumber(day.ingressos)]])} />
+          <Section title="Consolidados por Reunião Semanal">
+            <MeetingScheduleTable data={data} />
           </Section>
         ) : (
           <Section title="Consolidados por Reunião">
@@ -120,12 +224,12 @@ export function MonthlyReportPdfDocument({ data, profile }: { data: MonthlyDashb
         )}
 
         <Section title="Conquistas">
-          <Table headers={["Conquista", "Total"]} rows={[
+          {responsible ? <AchievementsGrid data={data} /> : <Table headers={["Conquista", "Total"]} rows={[
             [data.achievements.ingresso.label, formatNumber(data.achievements.ingresso.value)],
             ...data.achievements.rows.map((row) => [row.label, formatNumber(row.value)]),
             ["Subtotal", formatNumber(data.achievements.subtotal)],
-            ...(!responsible ? [["Total", formatNumber(data.achievements.total)]] : []),
-          ]} />
+            ["Total", formatNumber(data.achievements.total)],
+          ]} />}
         </Section>
 
         {!responsible ? <Section title="Servidores"><Table headers={["Encargo", "Nome", "Desde"]} rows={data.mesa.map((row) => [row.encargo, row.vacant ? "Vago" : row.nome || "-", formatDate(row.data_inicio)])} /></Section> : null}

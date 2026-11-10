@@ -243,8 +243,8 @@ describe("criação de ata no Sheets", () => {
             }),
           ],
           grupo_horarios: [
-            [...SHEET_HEADERS.grupo_horarios, "plataforma_id"],
-            [...row("grupo_horarios", { horario_id: "33333333-3333-4333-8333-333333333333", grupo_id: groupId, dia_semana: "domingo", hora_inicio: "10:00", ativo: true, ...audit }), "22222222-2222-4222-8222-222222222222"],
+            [...SHEET_HEADERS.grupo_horarios],
+            row("grupo_horarios", { horario_id: "33333333-3333-4333-8333-333333333333", grupo_id: groupId, dia_semana: "domingo", hora_inicio: "10:00", hora_termino: "", ativo: true, plataforma_id: "22222222-2222-4222-8222-222222222222", ...audit }),
           ],
         }),
       },
@@ -273,8 +273,8 @@ describe("criação de ata no Sheets", () => {
           row("grupos", { grupo_id: groupId, zoom_id: "123", grupo_nome: "Grupo", ordem: 1, ativo: true, link_formulario_ata: "token", ultima_reuniao_anterior: 0, fuso_horario: "America/Sao_Paulo", ...audit }),
         ],
         grupo_horarios: [
-          [...SHEET_HEADERS.grupo_horarios, "plataforma_id"],
-          [...row("grupo_horarios", { horario_id: "33333333-3333-4333-8333-333333333333", grupo_id: groupId, dia_semana: "domingo", hora_inicio: "10:00", ativo: true, ...audit }), ""],
+          [...SHEET_HEADERS.grupo_horarios],
+          row("grupo_horarios", { horario_id: "33333333-3333-4333-8333-333333333333", grupo_id: groupId, dia_semana: "domingo", hora_inicio: "10:00", hora_termino: "", ativo: true, plataforma_id: "", ...audit }),
         ],
       }) },
     });
@@ -293,8 +293,8 @@ describe("criação de ata no Sheets", () => {
           row("grupos", { grupo_id: groupId, zoom_id: "123", grupo_nome: "Grupo", ordem: 1, ativo: true, link_formulario_ata: "token", ultima_reuniao_anterior: 0, fuso_horario: "America/Sao_Paulo", ...audit }),
         ],
         grupo_horarios: [
-          [...SHEET_HEADERS.grupo_horarios, "plataforma_id"],
-          ...schedules.map((horario_id) => [...row("grupo_horarios", { horario_id, grupo_id: groupId, dia_semana: "domingo", hora_inicio: "10:00", ativo: true, ...audit }), "22222222-2222-4222-8222-222222222222"]),
+          [...SHEET_HEADERS.grupo_horarios],
+          ...schedules.map((horario_id) => row("grupo_horarios", { horario_id, grupo_id: groupId, dia_semana: "domingo", hora_inicio: "10:00", hora_termino: "", ativo: true, plataforma_id: "22222222-2222-4222-8222-222222222222", ...audit })),
         ],
       }) },
     });

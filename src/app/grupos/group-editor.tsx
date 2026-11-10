@@ -48,6 +48,7 @@ const emptyGroup: Grupo = {
   responsaveis_ata: "",
   link_formulario_ata: "",
   ultima_reuniao_anterior: 0,
+  data_fundacao: "",
   fuso_horario: "America/Sao_Paulo",
   plataforma: "zoom",
   acesso_plataforma: "",
@@ -111,6 +112,8 @@ function ReviewSettingField({
   enabled: boolean;
   disabled?: boolean;
 }) {
+  const [checked, setChecked] = useState(enabled);
+
   return (
     <label className="review-setting-field">
       <span className="field-label-with-help">
@@ -140,17 +143,27 @@ function ReviewSettingField({
           </p>
         </details>
       </span>
-      <select
+      <input
+        type="hidden"
         name="revisao_atas_ativa"
-        defaultValue={enabled ? "on" : ""}
-        disabled={disabled}
-      >
-        <option value="on">Aprovação ativada</option>
-        <option value="">Aprovação desativada (padrão)</option>
-      </select>
-      {disabled && (
-        <input type="hidden" name="revisao_atas_ativa" value={enabled ? "on" : ""} />
-      )}
+        value={checked ? "on" : ""}
+      />
+      <span className="review-setting-control">
+        <span className="review-setting-value">
+          {checked ? "Sim" : "Não (padrão)"}
+        </span>
+        <button
+          type="button"
+          className="review-setting-switch"
+          role="switch"
+          aria-checked={checked}
+          aria-label="Revisão de Atas"
+          disabled={disabled}
+          onClick={() => setChecked((value) => !value)}
+        >
+          <span aria-hidden="true" />
+        </button>
+      </span>
     </label>
   );
 }
@@ -669,6 +682,7 @@ export function GroupEditor({
       plataforma: String(formData.get("plataforma") ?? ""),
       fuso_horario: String(formData.get("fuso_horario") ?? ""),
       ultima_reuniao_anterior: Number(formData.get("ultima_reuniao_anterior") ?? 0),
+      data_fundacao: String(formData.get("data_fundacao") ?? ""),
     };
   }
 
@@ -679,6 +693,7 @@ export function GroupEditor({
       plataforma: current.plataforma,
       fuso_horario: current.fuso_horario,
       ultima_reuniao_anterior: current.ultima_reuniao_anterior,
+      data_fundacao: current.data_fundacao ?? "",
     };
   }
 
@@ -808,13 +823,35 @@ export function GroupEditor({
                 )}
               </div>
               <div className="form-grid responsavel-config-grid">
-                <ReviewSettingField
-                  enabled={current.revisao_atas_ativa === true}
-                  disabled={!responsavelEditing}
-                />
                 <input type="hidden" name="acesso_plataforma" value={current.acesso_plataforma} />
                 <input type="hidden" name="plataforma" value={current.plataforma} />
                 <input type="hidden" name="fuso_horario" value={current.fuso_horario} />
+                <label className="group-foundation-field">
+                  Data de fundação do grupo
+                  <input
+                    name="data_fundacao"
+                    type="date"
+                    max={new Intl.DateTimeFormat("en-CA", {
+                      timeZone: "America/Sao_Paulo",
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    }).format(new Date())}
+                    defaultValue={current.data_fundacao ?? ""}
+                    disabled={!responsavelEditing}
+                  />
+                </label>
+                <label>
+                  Última reunião antes do sistema
+                  <input
+                    name="ultima_reuniao_anterior"
+                    type="number"
+                    min={0}
+                    step={1}
+                    defaultValue={current.ultima_reuniao_anterior}
+                    readOnly={!responsavelEditing}
+                  />
+                </label>
                 <div className="responsavel-email-field">
                   <label>
                     E-mail
@@ -833,18 +870,12 @@ export function GroupEditor({
                     />
                   )}
                 </div>
+                <ReviewSettingField
+                  key={`${current.revisao_atas_ativa}-${responsavelEditing}`}
+                  enabled={current.revisao_atas_ativa === true}
+                  disabled={!responsavelEditing}
+                />
                 {ataLinkControls()}
-                <label>
-                  Última reunião antes do sistema
-                  <input
-                    name="ultima_reuniao_anterior"
-                    type="number"
-                    min={0}
-                    step={1}
-                    defaultValue={current.ultima_reuniao_anterior}
-                    readOnly={!responsavelEditing}
-                  />
-                </label>
               </div>
               <GroupPlatformsSummary platforms={plataformas} />
             </section>
@@ -969,7 +1000,12 @@ export function GroupEditor({
               </summary>
               <div className="settings-accordion-content">
                 <PlatformLegend />
-                <GroupSchedulesEditor grupoId={group.grupo_id} horarios={horarios} plataformas={plataformas} groupDayRows />
+                <GroupSchedulesEditor
+                  grupoId={group.grupo_id}
+                  horarios={horarios}
+                  plataformas={plataformas}
+                  groupDayRows
+                />
               </div>
             </details>
           </>
@@ -1019,7 +1055,10 @@ export function GroupEditor({
               Nome
               <input name="grupo_nome" required defaultValue={current.grupo_nome} />
             </label>
-            <ReviewSettingField enabled={current.revisao_atas_ativa === true} />
+            <ReviewSettingField
+              key={current.revisao_atas_ativa ? "review-on" : "review-off"}
+              enabled={current.revisao_atas_ativa === true}
+            />
             <input type="hidden" name="fuso_horario" value={current.fuso_horario} />
             {canManageAccess && (
               <label>
@@ -1041,6 +1080,16 @@ export function GroupEditor({
                 min={0}
                 step={1}
                 defaultValue={current.ultima_reuniao_anterior}
+              />
+            </label>
+            <label className="group-foundation-field">
+              Data de fundação do grupo
+              <input
+                name="data_fundacao"
+                type="date"
+                defaultValue={current.data_fundacao ?? ""}
+                disabled
+                aria-disabled="true"
               />
             </label>
           </div>

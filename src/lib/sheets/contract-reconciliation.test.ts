@@ -493,6 +493,7 @@ describe("reconciliação do contrato Sheets", () => {
       "responsaveis_ata",
       "link_formulario_ata",
       "ultima_reuniao_anterior",
+      "data_fundacao",
     ];
     const { client, batchUpdate } = clientWith({
       afterMigration: true,

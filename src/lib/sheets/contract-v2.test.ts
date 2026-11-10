@@ -85,12 +85,22 @@ describe("V2 Sheets contract compatibility", () => {
     expect(current[0].value.revisao_de_ata_id).toBe("");
   });
 
-  it("keeps legacy group schedules readable with an empty pending platform association", () => {
-    const v1 = rowsToVersionedObjects("grupo_horarios", [
-      [...SHEET_HEADERS.grupo_horarios],
-      ["33333333-3333-4333-8333-333333333333", "11111111-1111-4111-8111-111111111111", "segunda", "20:00", "", true, "2026-10-01T00:00:00.000Z", "2026-10-01T00:00:00.000Z"],
+  it("reads the new end-time column by header and keeps historical schedule layouts readable", () => {
+    const currentHeaders = [...SHEET_HEADERS.grupo_horarios];
+    const currentRow = ["33333333-3333-4333-8333-333333333333", "11111111-1111-4111-8111-111111111111", "segunda", "20:00", "21:00", true, "2026-10-01T00:00:00.000Z", "2026-10-01T00:00:00.000Z", "22222222-2222-4222-8222-222222222222"];
+    const current = rowsToVersionedObjects("grupo_horarios", [currentHeaders, currentRow]);
+    expect(current[0].value.hora_termino).toBe("21:00");
+    expect(current[0].value.plataforma_id).toBe("22222222-2222-4222-8222-222222222222");
+    expect(current[0].value.link_reuniao).toBe("");
+
+    const oldHeaders = ["horario_id", "grupo_id", "dia_semana", "hora_inicio", "link_reuniao", "ativo", "created_at", "updated_at", "plataforma_id"];
+    const historical = rowsToVersionedObjects("grupo_horarios", [
+      oldHeaders,
+      [currentRow[0], currentRow[1], "segunda", "20:00", "https://example.org", true, currentRow[6], currentRow[7], currentRow[8]],
     ]);
-    expect(v1[0].value.plataforma_id).toBe("");
+    expect(historical[0].value.hora_termino).toBe("");
+    expect(historical[0].value.link_reuniao).toBe("https://example.org");
+    expect(historical[0].value.plataforma_id).toBe(currentRow[8]);
   });
 
   it("parses the isolated platform catalog contract", () => {

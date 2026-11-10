@@ -43,26 +43,34 @@ function MetricCard({
   label,
   value,
   icon,
-  fullWidth = false,
   labelTone,
 }: {
   label: string;
   value: number;
   icon: Parameters<typeof FontAwesomeIcon>[0]["icon"];
-  fullWidth?: boolean;
   labelTone?: "850" | "800" | "750";
 }) {
   return (
     <article
-      className={`dashboard-metric-card${fullWidth ? " dashboard-metric-card-full-row" : ""}${
-        labelTone ? ` dashboard-metric-card-label-tone-${labelTone}` : ""
-      }`}
+      className={`dashboard-metric-card${labelTone ? ` dashboard-metric-card-label-tone-${labelTone}` : ""}`}
     >
       <span className="dashboard-metric-icon" aria-hidden="true">
         <FontAwesomeIcon icon={icon} />
       </span>
       <h3>{label}</h3>
       <strong>{formatNumber(value)}</strong>
+    </article>
+  );
+}
+
+function FoundationDateCard({ value }: { value: string }) {
+  return (
+    <article className="dashboard-metric-card dashboard-foundation-date-card">
+      <span className="dashboard-metric-icon" aria-hidden="true">
+        <FontAwesomeIcon icon={faCalendarDays} />
+      </span>
+      <h3>Data de fundação do grupo</h3>
+      <strong>{value ? formatDate(value) : "-"}</strong>
     </article>
   );
 }
@@ -172,12 +180,14 @@ export function MonthlyGroupDashboard({
             }`}
           >
             {showFoundationMeetingCard ? (
-              <MetricCard
-                label="Reuniões desde a Fundação"
-                value={data.consolidated.reunioesDesdeFundacao}
-                icon={faCalendarDays}
-                fullWidth={showResponsavelHeader}
-              />
+              <div className="dashboard-foundation-metrics-pair">
+                <MetricCard
+                  label="Reuniões desde a Fundação"
+                  value={data.consolidated.reunioesDesdeFundacao}
+                  icon={faCalendarDays}
+                />
+                <FoundationDateCard value={data.group.data_fundacao ?? ""} />
+              </div>
             ) : null}
             {showResponsavelHeader ? (
               <>
