@@ -3603,15 +3603,53 @@ body:has(.ata-detail-review-shell) {
 :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-sections-stack { gap: 12px; }
 :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-columns {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
   gap: 12px;
 }
 :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-column {
   display: grid;
   align-content: start;
-  gap: 12px;
+  gap: 24px;
   min-width: 0;
+.ata-detail-review-shell .ata-review-layout--detail #review-details-title > h2 { color: #0b3a7a; }
+.ata-detail-review-shell .ata-review-layout--detail .review-detail-title {
+  margin: 0 0 8px;
+  color: #0b3a7a;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.ata-detail-review-shell .ata-review-layout--detail .review-detail-columns .review-table thead th {
+  background: #e6f1fa;
+  color: #0b3a7a;
+  text-transform: uppercase;
+}
+.ata-detail-review-shell .ata-review-layout--detail .review-table--locations th:last-child,
+.ata-detail-review-shell .ata-review-layout--detail .review-table--locations td:last-child,
+.ata-detail-review-shell .ata-review-layout--detail .review-table--achievements th:last-child,
+.ata-detail-review-shell .ata-review-layout--detail .review-table--achievements td:last-child { text-align: center; }
+.ata-detail-review-shell .ata-review-layout--detail .review-table--admissions th:last-child,
+.ata-detail-review-shell .ata-review-layout--detail .review-table--admissions td:last-child { text-align: center; }
+.ata-detail-review-shell .ata-review-layout--detail .review-detail-columns .review-table--servers th:last-child,
+.ata-detail-review-shell .ata-review-layout--detail .review-detail-columns .review-table--servers td:last-child { text-align: left; }
+.ata-detail-review-shell .ata-review-layout--detail .review-detail-columns .review-table--servers th:nth-child(2),
+.ata-detail-review-shell .ata-review-layout--detail .review-detail-columns .review-table--servers td:nth-child(2) { text-align: center; }
+.ata-detail-review-shell .ata-review-layout--detail .review-detail-columns .review-table--visitors th:nth-child(2),
+.ata-detail-review-shell .ata-review-layout--detail .review-detail-columns .review-table--visitors td:nth-child(2),
+.ata-detail-review-shell .ata-review-layout--detail .review-detail-columns .review-table--visitors th:nth-child(3),
+.ata-detail-review-shell .ata-review-layout--detail .review-detail-columns .review-table--visitors td:nth-child(3) { text-align: center; }
+.ata-detail-review-shell .ata-review-layout--detail .review-detail-columns .review-table--achievements tbody td[data-label="Tempo"] { text-align: left; }
+.ata-detail-review-shell .ata-review-layout--detail .review-table--visitors th:nth-child(1),
+.ata-detail-review-shell .ata-review-layout--detail .review-table--visitors td:nth-child(1) { width: 40%; }
+.ata-detail-review-shell .ata-review-layout--detail .review-table--visitors th:nth-child(2),
+.ata-detail-review-shell .ata-review-layout--detail .review-table--visitors td:nth-child(2) { width: 30%; }
+.ata-detail-review-shell .ata-review-layout--detail .review-table--visitors th:nth-child(3),
+.ata-detail-review-shell .ata-review-layout--detail .review-table--visitors td:nth-child(3) { width: 30%; }
+.ata-detail-review-shell .ata-review-layout--detail .review-table--admissions th:first-child,
+.ata-detail-review-shell .ata-review-layout--detail .review-table--admissions td:first-child { width: 68%; }
+.ata-detail-review-shell .ata-review-layout--detail .review-table--admissions th:last-child,
+.ata-detail-review-shell .ata-review-layout--detail .review-table--admissions td:last-child { width: 32%; }
 }
 :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-section {
   border-color: #dfe3e8;
@@ -3688,14 +3726,6 @@ body:has(.ata-detail-review-shell) {
 
 @media (max-width: 980px) {
   :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-layout-header { align-items: flex-start; }
-  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-columns { grid-template-columns: 1fr; gap: 8px; }
-  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-column { display: contents; }
-  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-item--national { order: 1; }
-  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-item--servers { order: 2; }
-  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-item--international { order: 3; }
-  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-item--visitors { order: 4; }
-  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-item--admissions { order: 5; }
-  :is(.ata-detail-review-shell .ata-review-layout--detail) .review-detail-item--achievements { order: 6; }
 }
 @media (max-width: 720px) {
   .admin-layout:has(.ata-detail-review-shell) .admin-main,
@@ -3728,7 +3758,7 @@ body:has(.ata-detail-review-shell) {
   :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table td { display: table-cell; }
   :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table th,
   :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table td { padding: 7px 5px; }
-  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table thead th { font-size: 10px; }
+  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table thead th { font-size: 11.5px; }
   :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table tbody td { font-size: 11.5px; }
   :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table td::before { display: none; content: none; }
 }
@@ -3769,6 +3799,16 @@ body:has(.ata-detail-review-shell) {
   :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--achievements th:first-child,
   :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--achievements td:first-child { width: 64%; }
   :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--achievements th:last-child,
+  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors th:nth-child(1),
+  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors td:nth-child(1) { width: 40%; }
+  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors th:nth-child(2),
+  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors td:nth-child(2),
+  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors th:nth-child(3),
+  .ata-detail-review-shell .ata-review-layout--detail .review-table--visitors td:nth-child(3) { width: 30%; }
+  .ata-detail-review-shell .ata-review-layout--detail .review-table--admissions th:first-child,
+  .ata-detail-review-shell .ata-review-layout--detail .review-table--admissions td:first-child { width: 68%; }
+  .ata-detail-review-shell .ata-review-layout--detail .review-table--admissions th:last-child,
+  .ata-detail-review-shell .ata-review-layout--detail .review-table--admissions td:last-child { width: 32%; }
   :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-table--achievements td:last-child { width: 36%; }
 }
 @media (max-width: 360px) {

@@ -19,7 +19,7 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { formatReviewDate } from "./nova/ata-review";
-import { buildAtaDetailColumnLayout, type AtaDetailSectionKey } from "./ata-detail-column-layout";
+import type { AtaDetailSectionKey } from "./ata-detail-column-layout";
 
 export type AtaReviewLayoutData = {
   group: string;
@@ -79,7 +79,7 @@ function ReviewSection({
 }) {
   const [open, setOpen] = useState(count > 0);
 
-  if (detailPage) return <>{children}</>;
+  if (detailPage) return <><h3 className="review-detail-title">{title}</h3>{children}</>;
 
   return (
     <details
@@ -166,10 +166,10 @@ function AtaDetailSection({
       <ReviewSection className="review-section--servers" icon={faUsers} title="Servidores" count={data.servers.length} desktop={desktop} detailPage={detailPage} showDecorativeIcons={showDecorativeIcons}>
         <div className="review-table-wrap">
           <table className="review-table review-table--servers">
-            <thead><tr><th>{detailPage || detailAppearance ? "Servidores" : "Servidor"}</th><th>Função</th></tr></thead>
+            <thead><tr><th>Servidor</th><th>Função</th></tr></thead>
             <tbody>{data.servers.length ? data.servers.map((item, index) => (
               <tr key={item.id}>
-                <td data-label="Servidores">{index + 1}. {item.name}</td>
+                <td data-label="Servidor">{index + 1}. {item.name}</td>
                 <td data-label="Função">{item.role || "—"}</td>
               </tr>
             )) : <tr><td colSpan={2}>Nenhum servidor registrado.</td></tr>}</tbody>
@@ -189,10 +189,10 @@ function AtaDetailSection({
       <ReviewSection className={national ? "review-section--national" : "review-section--international"} icon={national ? faLocationDot : faGlobe} title={title} count={rows.length} desktop={desktop} detailPage={detailPage} showDecorativeIcons={showDecorativeIcons}>
         <div className="review-table-wrap">
           <table className="review-table review-table--locations">
-            <thead><tr><th>{detailPage || detailAppearance ? title : national ? "Localidade" : "País"}</th><th>Total</th></tr></thead>
+            <thead><tr><th>{national ? "Cidade" : "País"}</th><th>Total</th></tr></thead>
             <tbody>{rows.length ? rows.map((item, index) => (
               <tr key={item.id}>
-                <td data-label={detailPage || detailAppearance ? title : national ? "Localidade" : "País"}>
+                <td data-label={national ? "Cidade" : "País"}>
                   <span className="review-location-name">{index + 1}. {item.label}</span>
                   {item.detail && <small>{item.detail}</small>}
                 </td>
@@ -210,15 +210,14 @@ function AtaDetailSection({
       <ReviewSection className="review-section--visitors" icon={faUsers} title="Visitantes" count={data.visitors.length} desktop={desktop} detailPage={detailPage} showDecorativeIcons={showDecorativeIcons}>
         <div className="review-table-wrap">
           <table className="review-table review-table--visitors">
-            <thead><tr><th>Visitante</th><th>Cidade</th><th>Categoria</th><th>Origem</th></tr></thead>
+            <thead><tr><th>Cidade</th><th>Categoria</th><th>Origem</th></tr></thead>
             <tbody>{data.visitors.length ? data.visitors.map((item, index) => (
               <tr key={item.id}>
-                <td data-label="Visitante">{index + 1}. {item.label}</td>
-                <td data-label="Cidade">{item.city}</td>
+                <td data-label="Cidade">{index + 1}. {item.city}</td>
                 <td data-label="Categoria">{item.category}</td>
                 <td data-label="Origem">{item.origin}</td>
               </tr>
-            )) : <tr><td colSpan={4}>Nenhum visitante registrado.</td></tr>}</tbody>
+            )) : <tr><td colSpan={3}>Nenhum visitante registrado.</td></tr>}</tbody>
           </table>
         </div>
       </ReviewSection>
@@ -230,27 +229,29 @@ function AtaDetailSection({
       <ReviewSection className="review-section--admissions" icon={faTicket} title="Ingressos" count={data.admissions.length} desktop={desktop} detailPage={detailPage} showDecorativeIcons={showDecorativeIcons}>
         <div className="review-table-wrap">
           <table className="review-table review-table--admissions">
-            <thead><tr><th>Ingresso</th><th>Cidade</th><th>Estado</th></tr></thead>
+            <thead><tr><th>Cidade</th><th>Estado</th></tr></thead>
             <tbody>{data.admissions.length ? data.admissions.map((item, index) => (
               <tr key={item.id}>
-                <td data-label="Ingresso">{index + 1}. {item.label}</td>
-                <td data-label="Cidade">{item.city}</td>
+                <td data-label="Cidade">{index + 1}. {item.city}</td>
                 <td data-label="Estado">{item.state}</td>
               </tr>
-            )) : <tr><td colSpan={3}>Nenhum ingresso registrado.</td></tr>}</tbody>
+            )) : <tr><td colSpan={2}>Nenhum ingresso registrado.</td></tr>}</tbody>
           </table>
         </div>
       </ReviewSection>
     );
   }
 
+  const achievementTotals = new Map<string, number>();
+  data.achievements.forEach((item) => achievementTotals.set(item.time, (achievementTotals.get(item.time) ?? 0) + 1));
+
   return (
     <ReviewSection className="review-section--achievements" icon={faClock} title="Conquistas" count={data.achievements.length} desktop={desktop} detailPage={detailPage} showDecorativeIcons={showDecorativeIcons}>
       <div className="review-table-wrap">
         <table className="review-table review-table--achievements">
-          <thead><tr><th>Conquista</th><th>Tempo</th></tr></thead>
-          <tbody>{data.achievements.length ? data.achievements.map((item, index) => (
-            <tr key={item.id}><td data-label="Conquista">{index + 1}. {item.label}</td><td data-label="Tempo">{item.time}</td></tr>
+          <thead><tr><th>Tempo</th><th>Total</th></tr></thead>
+          <tbody>{achievementTotals.size ? [...achievementTotals].map(([time, total], index) => (
+            <tr key={time}><td data-label="Tempo">{index + 1}. {time}</td><td data-label="Total">{total}</td></tr>
           )) : <tr><td colSpan={2}>Nenhuma conquista registrada.</td></tr>}</tbody>
         </table>
       </div>
@@ -259,7 +260,6 @@ function AtaDetailSection({
 }
 
 function AtaDetailColumns({ data, desktop }: { data: AtaReviewLayoutData; desktop: boolean }) {
-  const layout = buildAtaDetailColumnLayout(data);
   const sections = {
     servers: <AtaDetailSection sectionKey="servers" data={data} desktop={desktop} detailPage detailAppearance={false} />,
     international: <AtaDetailSection sectionKey="international" data={data} desktop={desktop} detailPage detailAppearance={false} />,
@@ -274,10 +274,9 @@ function AtaDetailColumns({ data, desktop }: { data: AtaReviewLayoutData; deskto
         <div className="review-detail-item review-detail-item--national">
           <AtaDetailSection sectionKey="national" data={data} desktop={desktop} detailPage detailAppearance={false} />
         </div>
-        {layout.left.map((key) => <div className={`review-detail-item review-detail-item--${key}`} key={key}>{sections[key]}</div>)}
-      </div>
-      <div className="review-detail-column">
-        {layout.right.map((key) => <div className={`review-detail-item review-detail-item--${key}`} key={key}>{sections[key]}</div>)}
+        {(["servers", "international", "visitors", "admissions", "achievements"] as const).map((key) => (
+          <div className={`review-detail-item review-detail-item--${key}`} key={key}>{sections[key]}</div>
+        ))}
       </div>
     </div>
   );
