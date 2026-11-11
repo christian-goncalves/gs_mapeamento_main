@@ -14,6 +14,7 @@ import { AtaPdfActions } from "../ata-pdf-actions";
 import { getAtaNavigation, type AtaNavigationSearchParams } from "../ata-navigation";
 import { AdminShell } from "@/app/grupos/admin-shell";
 import { ResponsavelShell } from "@/app/responsavel/responsavel-shell";
+import { ataPdfPath } from "@/lib/pdf/friendly-pdf-links";
 
 export const dynamic = "force-dynamic";
 
@@ -91,6 +92,14 @@ export default async function AtaDetailPage({
                   ataId={ata.ata_id}
                   title={presentation.title}
                   filename={presentation.filename}
+                  friendlyUrl={presentation.sequential === null
+                    ? `/api/atas/${ata.ata_id}/pdf`
+                    : ataPdfPath({
+                      groupId: grupo.grupo_id,
+                      groupName: grupo.grupo_nome,
+                      number: presentation.sequential,
+                      date: ata.data_reuniao,
+                    })}
                   defaultRecipient={presentation.groupEmail}
                   showPreview
                   iconOnly

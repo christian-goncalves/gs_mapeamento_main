@@ -24,7 +24,7 @@ export type AtaPresentation = {
   groupEmail: string;
   groupActive: boolean;
   groupReference: string;
-  sequential: number;
+  sequential: number | null;
   reviewData: AtaReviewLayoutData;
 };
 
@@ -66,7 +66,7 @@ export function buildAtaPresentation(
     groupEmail: grupo.email_acesso_grupo,
     groupActive: grupo.ativo,
     groupReference: displayIndex,
-    sequential: ataNumber ?? 0,
+    sequential: ataNumber,
     reviewData: {
       group: grupo.grupo_nome,
       date: ata.data_reuniao,

@@ -4,6 +4,8 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faEnvelope, faEye, faFilePdf, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { PdfEmailDialog, type PdfEmailRequest } from "../pdf-email-dialog";
+import { PdfCopyLinkAction, PdfShareActions } from "../pdf-share-actions";
+import { monthlyReportPdfPath } from "@/lib/pdf/friendly-pdf-links";
 
 export function MonthlyReportActions({
   groupId,
@@ -18,10 +20,8 @@ export function MonthlyReportActions({
   groupName: string;
   defaultRecipient: string;
 }) {
-  const query = new URLSearchParams({ grupo: groupId, mes: month, ano: year });
-  const previewUrl = `/api/relatorios/mensal/pdf?${query.toString()}`;
-  const downloadQuery = new URLSearchParams(query);
-  downloadQuery.set("download", "1");
+  const previewUrl = monthlyReportPdfPath({ groupId, groupName, month, year });
+  const downloadUrl = `${previewUrl}?download=1`;
   const [openEmail, setOpenEmail] = useState(false);
   const [openPdf, setOpenPdf] = useState(false);
 
@@ -57,24 +57,31 @@ export function MonthlyReportActions({
       {openPdf ? (
         <div className="modal-backdrop pdf-email-modal-backdrop" role="presentation">
           <section className="confirmation-modal ata-email-modal monthly-report-pdf-modal" role="dialog" aria-modal="true" aria-labelledby="monthly-report-pdf-title">
-            <header className="ata-email-modal-header">
+            <header className="ata-email-modal-header pdf-options-header">
               <div><h2 id="monthly-report-pdf-title">Relatório mensal em PDF</h2><p>{groupName} · {month}/{year}</p></div>
+              <button type="button" className="pdf-options-close" aria-label="Fechar opções do PDF" onClick={() => setOpenPdf(false)}>
+                <FontAwesomeIcon icon={faXmark} aria-hidden="true" />
+              </button>
             </header>
             <div className="ata-email-summary">
               <FontAwesomeIcon icon={faFilePdf} aria-hidden="true" />
-              <div><strong>Escolha uma opção</strong><span>Visualize o relatório ou baixe o arquivo PDF.</span></div>
+              <div><strong>Escolha uma opção</strong><span>Visualize, baixe ou compartilhe o relatório em PDF.</span></div>
             </div>
             <div className="modal-actions monthly-report-pdf-actions">
               <a href={previewUrl} target="_blank" rel="noreferrer" className="monthly-report-pdf-primary">
                 <FontAwesomeIcon icon={faEye} /><span>Visualizar</span>
               </a>
-              <a href={`/api/relatorios/mensal/pdf?${downloadQuery.toString()}`} className="secondary">
+              <a href={downloadUrl} className="secondary">
                 <FontAwesomeIcon icon={faDownload} /><span>Baixar</span>
               </a>
-              <button type="button" className="secondary" onClick={() => setOpenPdf(false)}>
-                <FontAwesomeIcon icon={faXmark} /><span>Cancelar</span>
-              </button>
+              <PdfShareActions
+                fileUrl={previewUrl}
+                shortPath={previewUrl}
+                filename="relatorio-mensal.pdf"
+                title={`Relatório mensal ${groupName} ${month}/${year}`}
+              />
             </div>
+            <PdfCopyLinkAction shortPath={previewUrl} />
           </section>
         </div>
       ) : null}

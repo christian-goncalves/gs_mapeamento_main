@@ -4,11 +4,13 @@ import { useId, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faEnvelope, faEye, faFilePdf, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { PdfEmailDialog } from "../pdf-email-dialog";
+import { PdfCopyLinkAction, PdfShareActions } from "../pdf-share-actions";
 
 export function AtaPdfActions({
   ataId,
   title,
   filename,
+  friendlyUrl,
   defaultRecipient,
   showPreview = true,
   iconOnly = false,
@@ -16,6 +18,7 @@ export function AtaPdfActions({
   ataId: string;
   title: string;
   filename: string;
+  friendlyUrl?: string;
   defaultRecipient: string;
   showPreview?: boolean;
   iconOnly?: boolean;
@@ -23,6 +26,7 @@ export function AtaPdfActions({
   const titleId = useId();
   const [openEmail, setOpenEmail] = useState(false);
   const [openPdf, setOpenPdf] = useState(false);
+  const shortPath = friendlyUrl ?? `/api/atas/${ataId}/pdf`;
 
   function openEmailDialog() {
     setOpenEmail(true);
@@ -67,24 +71,26 @@ export function AtaPdfActions({
       {openPdf && (
         <div className="modal-backdrop pdf-email-modal-backdrop" role="presentation">
           <section className="confirmation-modal ata-email-modal monthly-report-pdf-modal ata-pdf-choice-modal" role="dialog" aria-modal="true" aria-labelledby={titleId}>
-            <header className="ata-email-modal-header">
+            <header className="ata-email-modal-header pdf-options-header">
               <div><h2 id={titleId}>PDF da ata</h2><p>{title}</p></div>
+              <button type="button" className="pdf-options-close" aria-label="Fechar opções do PDF" onClick={() => setOpenPdf(false)}>
+                <FontAwesomeIcon icon={faXmark} aria-hidden="true" />
+              </button>
             </header>
             <div className="ata-email-summary">
               <FontAwesomeIcon icon={faFilePdf} aria-hidden="true" />
-              <div><strong>{filename}</strong><span>Escolha visualizar o PDF ou baixar o arquivo.</span></div>
+              <div><strong>{filename}</strong><span>Visualize, baixe ou compartilhe a ata em PDF.</span></div>
             </div>
             <div className="modal-actions monthly-report-pdf-actions">
-              <a href={`/atas/${ataId}/pdf`} target="_blank" rel="noreferrer" className="monthly-report-pdf-primary" onClick={() => setOpenPdf(false)}>
+              <a href={shortPath} target="_blank" rel="noreferrer" className="monthly-report-pdf-primary" onClick={() => setOpenPdf(false)}>
                 <FontAwesomeIcon icon={faEye} /><span>Visualizar</span>
               </a>
-              <a href={`/api/atas/${ataId}/pdf?download=1`} className="secondary" onClick={() => setOpenPdf(false)}>
+              <a href={`${shortPath}?download=1`} className="secondary" onClick={() => setOpenPdf(false)}>
                 <FontAwesomeIcon icon={faDownload} /><span>Baixar</span>
               </a>
-              <button type="button" className="secondary" onClick={() => setOpenPdf(false)}>
-                <FontAwesomeIcon icon={faXmark} /><span>Cancelar</span>
-              </button>
+              <PdfShareActions fileUrl={shortPath} shortPath={shortPath} filename={filename} title={title} />
             </div>
+            <PdfCopyLinkAction shortPath={shortPath} />
           </section>
         </div>
       )}

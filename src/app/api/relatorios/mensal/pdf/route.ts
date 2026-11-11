@@ -3,7 +3,8 @@ import { z } from "zod";
 import { canAccessGroup } from "@/lib/auth/access";
 import { requireAuthorizedSessionWithAggregatedAtas } from "@/lib/auth/require-session";
 import { buildMonthlyDashboardData } from "@/app/relatorios/monthly-group-dashboard-data";
-import { renderMonthlyReportPdf, monthlyReportFilename } from "@/lib/pdf/monthly-report-pdf-document";
+import { monthlyReportPdfResponse } from "@/lib/pdf/monthly-report-pdf-response";
+import { renderMonthlyReportPdf } from "@/lib/pdf/monthly-report-pdf-document";
 import { sendMonthlyReportPdfEmail } from "@/lib/email/monthly-report-pdf-email";
 
 export const dynamic = "force-dynamic";
@@ -25,25 +26,17 @@ function filtersFromSearch(search: URLSearchParams) {
 }
 
 export async function GET(request: Request) {
-  const { access, result } = await requireAuthorizedSessionWithAggregatedAtas();
+  const context = await requireAuthorizedSessionWithAggregatedAtas();
   const filters = filtersFromSearch(new URL(request.url).searchParams);
-  if (!filters || !canAccessGroup(access, filters.grupoId)) {
+  if (!filters) {
     return NextResponse.json({ error: "Grupo ou período inválido." }, { status: 404 });
   }
-  const group = result.grupos.find((item) => item.grupo_id === filters.grupoId && item.ativo);
-  if (!group) return NextResponse.json({ error: "Grupo não encontrado." }, { status: 404 });
-  const data = buildMonthlyDashboardData(result, filters);
-  const profile = access.role === "administrador" ? "admin" : "responsavel";
-  const pdf = await renderMonthlyReportPdf(data, profile);
   const disposition = new URL(request.url).searchParams.get("download") === "1" ? "attachment" : "inline";
-  return new NextResponse(new Uint8Array(pdf), {
-    headers: {
-      "content-type": "application/pdf",
-      "content-disposition": `${disposition}; filename="${monthlyReportFilename(data)}"`,
-      "cache-control": "private, no-store",
-      "x-content-type-options": "nosniff",
-    },
-  });
+  return monthlyReportPdfResponse(context, {
+    groupId: filters.grupoId,
+    month: filters.month,
+    year: filters.year,
+  }, disposition === "attachment");
 }
 
 export async function POST(request: Request) {
