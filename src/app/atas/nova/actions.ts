@@ -21,7 +21,10 @@ import {
 import { canAccessGroup } from "@/lib/auth/access";
 import { requireAuthorizedSession } from "@/lib/auth/require-session";
 import { createAtaInSheets } from "@/lib/sheets/create-ata";
-import { getActiveGroupByAtaLink, listActiveAtaKeys } from "@/lib/sheets/repository";
+import { sendAtaSubmissionNotificationEmail } from "@/lib/email/ata-submission-notification-email";
+import { getActiveGroupByAtaLink, listActiveAtaKeys, readAggregatedAtas } from "@/lib/sheets/repository";
+import { buildAtaPresentation } from "@/app/atas/ata-presentation";
+import { renderAtaPdf } from "@/lib/pdf/ata-pdf-document";
 
 export type CreateAtaState = { error?: string };
 
@@ -101,7 +104,28 @@ async function persistSubmission(
   publicLinkToken?: string,
 ) {
   try {
-    return await createAtaInSheets(submission, actorEmail, publicLinkToken);
+    const result = await createAtaInSheets(submission, actorEmail, publicLinkToken);
+    try {
+      const aggregate = await readAggregatedAtas();
+      const item = aggregate.atas.find(
+        (ata) => ata.registro.ata.ata_id === result.ataId,
+      );
+      if (!item) throw new Error("Ata gravada não encontrada para gerar o PDF.");
+      const presentation = buildAtaPresentation(item, aggregate.atas);
+      const pdf = await renderAtaPdf(presentation);
+      await sendAtaSubmissionNotificationEmail({
+        ataId: result.ataId,
+        ...result.notification,
+        filename: presentation.filename,
+        pdf,
+      });
+    } catch (error) {
+      console.error("Falha ao enviar aviso de preenchimento da ata:", {
+        ataId: result.ataId,
+        errorName: error instanceof Error ? error.name : "UnknownError",
+      });
+    }
+    return result;
   } catch (error) {
     if (
       error instanceof DuplicateAtaError ||

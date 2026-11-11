@@ -380,5 +380,10 @@ export async function createAtaInSheets(
   return {
     ataId: registro.ata.ata_id,
     statusAprovacao: registro.ata.status_aprovacao ?? "aprovada",
+    notification: {
+      groupName: selectedGroup.grupo_nome,
+      recipient: selectedGroup.email_acesso_grupo,
+      meetingDate: registro.ata.data_reuniao,
+    },
   };
 }
