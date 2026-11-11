@@ -202,6 +202,25 @@ export const sheetGrupoServidorMesaSchema = z
     encargo: requiredText,
     nome: requiredText,
     data_inicio: sheetOptionalDate,
+    data_encerramento: z.preprocess(
+      (value) => value === "" || value == null ? undefined : value,
+      z.string().date().optional(),
+    ),
+    motivo_encerramento: z.preprocess(
+      (value) => value === "" || value == null ? undefined : value,
+      z.enum([
+        "Encerramento do Termo",
+        "Entrega do Encargo",
+        "Destituição",
+        "Volta ao uso",
+        "Personalizado",
+        "Outro",
+      ]).optional(),
+    ),
+    motivo_encerramento_detalhe: z.preprocess(
+      (value) => value === false || value == null || value === "" ? undefined : value,
+      z.string().trim().max(25).optional(),
+    ),
     ativo: sheetBoolean,
     ordem: sheetInteger(1),
     ...auditFields,

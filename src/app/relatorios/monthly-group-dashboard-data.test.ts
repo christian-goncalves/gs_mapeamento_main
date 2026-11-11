@@ -196,6 +196,9 @@ describe("dashboard mensal do grupo", () => {
     expect(dashboard.consolidated.mediaPresencas).toBe(13);
     expect(dashboard.consolidated.mediaLocalidades).toBe(6);
     expect(dashboard.consolidated.mediaEstados).toBe(3);
+    expect(dashboard.consolidated.totalCidades).toBe(7);
+    expect(dashboard.consolidated.totalEstadosUnicos).toBe(3);
+    expect(dashboard.consolidated.totalOutrosPaises).toBe(0);
     expect(dashboard.consolidated.ingressos).toBe(3);
     expect(dashboard.achievements.subtotal).toBe(3);
     expect(dashboard.achievements.total).toBe(6);

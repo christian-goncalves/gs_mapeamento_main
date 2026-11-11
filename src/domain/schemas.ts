@@ -108,6 +108,22 @@ export const grupoServidorMesaSchema = z
       (value) => !value || z.string().date().safeParse(value).success,
       "Data de início inválida.",
     ),
+    data_encerramento: z.preprocess(
+      (value) => value === "" || value == null ? undefined : value,
+      z.string().date().optional(),
+    ),
+    motivo_encerramento: z.preprocess(
+      (value) => value === "" || value == null ? undefined : value,
+      z.enum([
+        "Encerramento do Termo",
+        "Entrega do Encargo",
+        "Destituição",
+        "Volta ao uso",
+        "Personalizado",
+        "Outro",
+      ]).optional(),
+    ),
+    motivo_encerramento_detalhe: z.string().trim().max(25).optional(),
     ativo: z.boolean(),
     ordem: z.number().int().min(1),
     ...auditFields,

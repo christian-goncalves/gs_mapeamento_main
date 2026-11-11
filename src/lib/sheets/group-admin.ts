@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import type { Grupo, GrupoHorario, GrupoPlataforma, GrupoServidorMesa, UsuarioGrupo } from "@/domain/entities";
 import { getSheetsClient, getSpreadsheetId } from "./client";
 import { SHEET_HEADERS, type SheetName } from "./contract";
-import { groupPlatformRowsToObjects, rowsToCompatibleObjects, rowsToVersionedObjects, sheetReadRange, V2_NEW_SHEET_HEADERS } from "./contract-v2";
+import { compatibleHeaders, groupPlatformRowsToObjects, rowsToCompatibleObjects, rowsToVersionedObjects, sheetReadRange, V2_NEW_SHEET_HEADERS } from "./contract-v2";
 import { executeSheetsBatch, buildCellUpdateRequest } from "./write";
 import { parseRows, type ParsedRow, type SheetCell } from "./rows";
 import {
@@ -60,6 +60,15 @@ const defaultIdentity: Identity = {
   now: () => new Date().toISOString(),
   uuid: () => randomUUID(),
 };
+
+function saoPauloDate(value: string) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(value));
+}
 
 async function readSheet(name: AdminSheetName) {
   const values = await readSheetValues(name);
@@ -656,6 +665,7 @@ export async function saveGrupoServidoresMesa(
     const values = rowValues(
       "grupo_servidores_mesa",
       domainGrupoServidorMesaToSheet(servidor),
+      compatibleHeaders("grupo_servidores_mesa"),
     );
     return {
       sheet: "grupo_servidores_mesa" as const,
@@ -706,6 +716,9 @@ export async function saveGrupoServidorMesa(
   if (input.grupo_servidor_mesa_id && !existing) {
     throw new Error("Servidor da mesa não encontrado.");
   }
+  if (existing && !existing.data.ativo) {
+    throw new Error("Encargos encerrados não podem ser editados.");
+  }
   if (existing && existing.data.grupo_id !== grupoId) {
     throw new Error("Servidor da mesa não pertence ao grupo informado.");
   }
@@ -734,6 +747,7 @@ export async function saveGrupoServidorMesa(
   const values = rowValues(
     "grupo_servidores_mesa",
     domainGrupoServidorMesaToSheet(servidor),
+    compatibleHeaders("grupo_servidores_mesa"),
   );
   await commitGroupRows({
     writes: [{ sheet: "grupo_servidores_mesa", rowNumber: existing?.rowNumber ?? snapshot.length + 1, values }],
@@ -769,11 +783,126 @@ export async function deactivateGrupoServidorMesa(
   const values = rowValues(
     "grupo_servidores_mesa",
     domainGrupoServidorMesaToSheet(servidor),
+    compatibleHeaders("grupo_servidores_mesa"),
   );
   await commitGroupRows({
     writes: [{ sheet: "grupo_servidores_mesa", rowNumber: existing.rowNumber, values }],
   });
   return servidor;
+}
+
+async function findGrupoServidorMesaRow(grupoId: string, servidorId: string) {
+  const snapshot = await readSheetValues("grupo_servidores_mesa");
+  const existing = parseRows(
+    "grupo_servidores_mesa",
+    sheetGrupoServidorMesaSchema,
+    groupAdminRowsToObjects("grupo_servidores_mesa", snapshot),
+    sheetGrupoServidorMesaToDomain,
+  ).find(
+    (row): row is ValidRow<GrupoServidorMesa> =>
+      row.valid && row.data.grupo_servidor_mesa_id === servidorId,
+  );
+  if (!existing || existing.data.grupo_id !== grupoId) {
+    throw new Error("Servidor da mesa não encontrado.");
+  }
+  return existing;
+}
+
+export async function closeGrupoServidorMesa(
+  grupoId: string,
+  servidorId: string,
+  closure: {
+    data_encerramento: string;
+    motivo_encerramento: "Encerramento do Termo" | "Entrega do Encargo" | "Destituição" | "Volta ao uso" | "Personalizado" | "Outro";
+    motivo_encerramento_detalhe?: string;
+  },
+  identity: Identity = defaultIdentity,
+  authorization?: JsonValue,
+) {
+  requireAuthorization(authorization);
+  const existing = await findGrupoServidorMesaRow(grupoId, servidorId);
+  if (!existing.data.ativo) throw new Error("Este encargo já está encerrado.");
+  if (!existing.data.data_inicio) throw new Error("Este encargo não tem data de início registrada.");
+  const today = saoPauloDate(identity.now());
+  if (
+    closure.data_encerramento < existing.data.data_inicio ||
+    closure.data_encerramento > today
+  ) {
+    throw new Error("A data deve estar entre o início do encargo e hoje.");
+  }
+  const servidor: GrupoServidorMesa = {
+    ...existing.data,
+    ativo: false,
+    data_encerramento: closure.data_encerramento,
+    motivo_encerramento: closure.motivo_encerramento,
+    motivo_encerramento_detalhe:
+      closure.motivo_encerramento === "Personalizado" || closure.motivo_encerramento === "Outro"
+        ? closure.motivo_encerramento_detalhe?.trim() ?? ""
+        : "",
+    updated_at: identity.now(),
+  };
+  await commitGroupRows({
+    writes: [{
+      sheet: "grupo_servidores_mesa",
+      rowNumber: existing.rowNumber,
+      values: rowValues("grupo_servidores_mesa", domainGrupoServidorMesaToSheet(servidor), compatibleHeaders("grupo_servidores_mesa")),
+    }],
+  });
+  return servidor;
+}
+
+export async function correctGrupoServidorMesaClosure(
+  grupoId: string,
+  servidorId: string,
+  closure: {
+    data_encerramento: string;
+    motivo_encerramento: "Encerramento do Termo" | "Entrega do Encargo" | "Destituição" | "Volta ao uso" | "Personalizado" | "Outro";
+    motivo_encerramento_detalhe?: string;
+  },
+  identity: Identity = defaultIdentity,
+  authorization?: JsonValue,
+) {
+  requireAuthorization(authorization);
+  const existing = await findGrupoServidorMesaRow(grupoId, servidorId);
+  if (existing.data.ativo) {
+    throw new Error("Somente encargos encerrados podem ser corrigidos.");
+  }
+  if (!existing.data.data_inicio) throw new Error("Este encargo não tem data de início registrada.");
+  if (
+    closure.data_encerramento < existing.data.data_inicio ||
+    closure.data_encerramento > saoPauloDate(identity.now())
+  ) {
+    throw new Error("A data deve estar entre o início do encargo e hoje.");
+  }
+  const servidor: GrupoServidorMesa = {
+    ...existing.data,
+    ...closure,
+    motivo_encerramento_detalhe:
+      closure.motivo_encerramento === "Personalizado" || closure.motivo_encerramento === "Outro"
+        ? closure.motivo_encerramento_detalhe?.trim() ?? ""
+        : "",
+    updated_at: identity.now(),
+  };
+  await commitGroupRows({
+    writes: [{
+      sheet: "grupo_servidores_mesa",
+      rowNumber: existing.rowNumber,
+      values: rowValues("grupo_servidores_mesa", domainGrupoServidorMesaToSheet(servidor), compatibleHeaders("grupo_servidores_mesa")),
+    }],
+  });
+  return servidor;
+}
+
+export async function deleteGrupoServidorMesa(
+  grupoId: string,
+  servidorId: string,
+  authorization?: JsonValue,
+) {
+  requireAuthorization(authorization);
+  const existing = await findGrupoServidorMesaRow(grupoId, servidorId);
+  await commitGroupRows({
+    deletes: [{ sheet: "grupo_servidores_mesa", rowNumber: existing.rowNumber }],
+  });
 }
 
 export async function deleteGrupoHorarios(

@@ -23,6 +23,9 @@ import { uniqueAtaLinkToken } from "@/lib/ata-link-token.server";
 import {
   GroupFoundationColumnMissingError,
   GroupReviewColumnMissingError,
+  closeGrupoServidorMesa,
+  correctGrupoServidorMesaClosure,
+  deleteGrupoServidorMesa,
   deactivateGrupoServidorMesa,
   saveGrupo,
   saveGrupoHorario,
@@ -141,6 +144,43 @@ const servidorMesaPayloadSchema =
     }));
 
 const servidoresMesaPayloadSchema = z.array(servidorMesaPayloadSchema);
+
+const closureMotiveSchema = z.enum([
+  "Encerramento do Termo",
+  "Entrega do Encargo",
+  "Destituição",
+  "Volta ao uso",
+  "Personalizado",
+  "Outro",
+]);
+
+function brazilianDateToIso(value: string) {
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value);
+  if (!match) return "";
+  const iso = `${match[3]}-${match[2]}-${match[1]}`;
+  return z.string().date().safeParse(iso).success ? iso : "";
+}
+
+const serverClosureSchema = z.object({
+  data_encerramento: z.string().date("Informe uma data válida."),
+  motivo_encerramento: closureMotiveSchema,
+  motivo_encerramento_detalhe: z.string().trim().max(25, "O motivo pode ter no máximo 25 caracteres.").optional(),
+}).superRefine((data, context) => {
+  if (
+    (data.motivo_encerramento === "Personalizado" || data.motivo_encerramento === "Outro") &&
+    !data.motivo_encerramento_detalhe?.trim()
+  ) {
+    context.addIssue({ code: "custom", path: ["motivo_encerramento_detalhe"], message: "Descreva o motivo." });
+  }
+});
+
+function serverClosureFromForm(formData: FormData) {
+  return serverClosureSchema.safeParse({
+    data_encerramento: brazilianDateToIso(text(formData, "data_encerramento")),
+    motivo_encerramento: text(formData, "motivo_encerramento"),
+    motivo_encerramento_detalhe: text(formData, "motivo_encerramento_detalhe"),
+  });
+}
 
 function normalizeEmail(value: string) {
   return value.trim().toLocaleLowerCase("en-US");
@@ -439,6 +479,85 @@ export async function deactivateGrupoServidorMesaAction(formData: FormData) {
   if (!grupoId || !canAccessGroup(current.access, grupoId)) redirect("/");
 
   await deactivateGrupoServidorMesa(grupoId, servidorId, undefined, { kind: "authenticated", email: current.access.email });
+  revalidateGroupAdminPaths(grupoId);
+  revalidatePath("/admin/relatorios");
+  revalidatePath("/responsavel/relatorios");
+  redirect(returnPathKeepingSettingsSectionOpen(
+    `${groupDetailPath(grupoId, current.access.role === "administrador")}?status=saved`,
+    formData,
+  ));
+}
+
+export async function closeGrupoServidorMesaAction(
+  _state: SaveGrupoState,
+  formData: FormData,
+): Promise<SaveGrupoState> {
+  const grupoId = text(formData, "grupo_id");
+  const servidorId = text(formData, "grupo_servidor_mesa_id");
+  const current = await requireAuthorizedSession();
+  if (!grupoId || !canAccessGroup(current.access, grupoId)) redirect("/");
+  const parsed = serverClosureFromForm(formData);
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Revise os dados do encerramento." };
+  try {
+    await closeGrupoServidorMesa(
+      grupoId,
+      servidorId,
+      parsed.data,
+      undefined,
+      { kind: "authenticated", email: current.access.email },
+    );
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : "Não foi possível encerrar o encargo." };
+  }
+  revalidateGroupAdminPaths(grupoId);
+  revalidatePath("/admin/relatorios");
+  revalidatePath("/responsavel/relatorios");
+  redirect(returnPathKeepingSettingsSectionOpen(
+    `${groupDetailPath(grupoId, current.access.role === "administrador")}?status=saved`,
+    formData,
+  ));
+}
+
+export async function correctGrupoServidorMesaClosureAction(
+  _state: SaveGrupoState,
+  formData: FormData,
+): Promise<SaveGrupoState> {
+  const grupoId = text(formData, "grupo_id");
+  const servidorId = text(formData, "grupo_servidor_mesa_id");
+  const current = await requireAuthorizedSession();
+  if (!grupoId || !canAccessGroup(current.access, grupoId)) redirect("/");
+  const parsed = serverClosureFromForm(formData);
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Revise os dados do encerramento." };
+  try {
+    await correctGrupoServidorMesaClosure(
+      grupoId,
+      servidorId,
+      parsed.data,
+      undefined,
+      { kind: "authenticated", email: current.access.email },
+    );
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : "Não foi possível corrigir o encerramento." };
+  }
+  revalidateGroupAdminPaths(grupoId);
+  revalidatePath("/admin/relatorios");
+  revalidatePath("/responsavel/relatorios");
+  const historyPath = current.access.role === "administrador"
+    ? `/admin/grupos/${grupoId}/servidores/historico`
+    : `/grupos/${grupoId}/servidores/historico`;
+  redirect(historyPath);
+}
+
+export async function deleteGrupoServidorMesaAction(formData: FormData) {
+  const grupoId = text(formData, "grupo_id");
+  const servidorId = text(formData, "grupo_servidor_mesa_id");
+  const current = await requireAuthorizedSession();
+  if (!grupoId || !canAccessGroup(current.access, grupoId)) redirect("/");
+  await deleteGrupoServidorMesa(
+    grupoId,
+    servidorId,
+    { kind: "authenticated", email: current.access.email },
+  );
   revalidateGroupAdminPaths(grupoId);
   revalidatePath("/admin/relatorios");
   revalidatePath("/responsavel/relatorios");

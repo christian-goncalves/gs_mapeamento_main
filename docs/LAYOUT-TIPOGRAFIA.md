@@ -80,9 +80,16 @@ Este padrão foi fechado para orientar as refatorações página por página. El
 - No menu de Relatórios, o estado hover/ativo tem fundo `#e6f1fa` e texto `#0b3a7a`; o contorno de foco é `2px solid #1d4ed8`. O contorno não é o fundo do botão.
 - Este padrão ainda será aplicado gradualmente às páginas. Ao comparar uma página, registrar diferenças do código atual e preservar comportamentos e regras de negócio.
 
+## Aplicação: preenchimento público de ata
+
+- `/preencher/[link]` usa o mesmo padrão visual de `/atas/nova` no cabeçalho, cartões, campos e ações, sem a navegação do Responsável.
+- O formulário permanece compartilhado. A apresentação pública é escopada em `.public-ata-page`; as regras de token, grupo fixo, validação e envio permanecem próprias do fluxo público.
+- Em 2026-11-11, os estilos foram alinhados ao tema azul e branco: fundo `#fcfdff`, cartões brancos, bordas `#dfe3e8`, título `#0b3a7a`, rótulos `#6e849a` e ações `#1d4ed8` / `#e6f1fa`. No navegador, a rota foi conferida em 1137 px e 416 px CSS: não mostrou overflow horizontal nem menu; os nove cartões do formulário permaneceram dentro da largura disponível.
+
 ## Aplicação: Histórico de Atas
 
 - Quando o container de filtros e tabela vem diretamente após o cabeçalho, o espaço entre eles é de 18 px, igual ao filtro de Relatórios. A margem superior do container é de 18 px e colapsa com a margem inferior do cabeçalho. O ajuste preserva a posição dos títulos e o espaçamento quando há um painel de aprovações intermediário.
+- Em **Pendentes de revisão**, o texto de **Selecionar página** é branco sobre o cabeçalho azul `#1d4ed8`. O modal de aprovação usa fonte System UI, superfície branca, texto `#1c2430`, apoio `#6e849a`, borda `#dfe3e8`, **Cancelar** em azul-claro `#e6f1fa` e aprovação em azul `#1d4ed8`.
 
 ## Aplicação: Configurações do grupo
 
@@ -105,6 +112,32 @@ Este padrão foi fechado para orientar as refatorações página por página. El
 - Os botões de ação da tabela de edição de horários seguem Servidores: fundo transparente em repouso e badge somente no hover (azul-claro para editar, vermelho-claro para excluir), com foco por teclado preservado.
 - Os ícones de ação de Servidores e Horários de Reunião medem 14 × 14 px, como o ícone de Editar em Dados do Grupo; essa medida é do ícone, não do padding.
 - Na edição de horários do Responsável, o dia ocupa uma célula com `rowSpan` centralizada verticalmente no bloco. O padding entre horários do mesmo dia passa de 9.6 px para 3.7 px por lado interno, reduzindo a distância entre horários em aproximadamente 25% (47.15 → 35.38 px na conferência). Os lados externos mantêm 9.6 px; a passagem entre dias permanece em aproximadamente 48.26 px.
+
+### Histórico de Encargos dos Servidores
+
+Esta especificação cobre a variante Responsável de `/grupos/[grupoId]/servidores/historico`. A página usa o componente `MesaServersHistory`, compartilhado com a variante Admin; os estilos são limitados ao shell Responsável. A referência visual é Configurações do Grupo, com o item **Configurações** ativo.
+
+Fontes da implementação: `src/app/grupos/mesa-servers-history.tsx`, `src/app/grupos/mesa-server-closure-dialog.tsx` e `src/app/globals.css`.
+
+**Estado antes da aplicação do padrão azul**
+
+- No desktop observado, a navegação lateral mede 260 px e a área principal 984 px. No viewport de 375 px, a navegação passa para a barra superior de 73 px, o cabeçalho empilha o botão **Voltar** abaixo do título e a área principal mede 343 px.
+- O estado atual usa fundo bege `#f7f4ec` e Arial no corpo. A tabela tem sete colunas e largura mínima de 850 px; no viewport mobile observado, ela permanece em uma linha de cabeçalho e usa rolagem horizontal interna. A página não precisa rolar horizontalmente para exibir a tabela.
+- O diálogo de correção é aberto pela ação em **Ações**. No viewport de 375 px, sua largura renderizada foi 351 px.
+
+**Padrão visual aplicado**
+
+- Aplicar à página inteira a paleta azul e branca de Configurações do Grupo: fundo `#fcfdff`, navegação `#f8fbff`, item ativo `#e6f1fa` com texto `#0b3a7a`, superfícies brancas, bordas de cartões `#dfe3e8`, texto principal `#1c2430` e rótulos secundários `#6e849a`. Preservar a geometria do shell e os breakpoints existentes.
+- O título **Histórico de Encargos** usa System UI, 32 px, peso 700 e `#0b3a7a`. A descrição usa texto secundário. Manter o botão **Voltar** à direita no desktop e abaixo do cabeçalho em telas estreitas; usar estilo secundário azul-claro, altura 36 px, raio 8 px e foco visível.
+- Preservar a ordem e os rótulos das sete colunas: **Encargo**, **Servidor**, **Desde**, **Até**, **Situação**, **Motivo do encerramento** e **Ações**. Em telas estreitas, manter a tabela completa com rolagem horizontal dentro de seu contêiner; não ocultar colunas nem converter linhas em cartões.
+- A tabela fica em cartão branco com borda `#dfe3e8`, raio 12 px e padding de 12 px. A moldura interna da tabela mantém borda e divisórias `#e4edf6`, raio 8 px e conteúdo recortado nos cantos.
+- Cabeçalhos usam System UI 13.0133 px/16.2667 px, peso 700, caixa alta, alinhamento central, fundo `#1d4ed8` e texto branco. Células usam System UI 14.9333 px/18.6667 px, padding vertical de 9.6 px e horizontal de 8.8 px, com alinhamento vertical central. **Encargo** fica em negrito; os demais valores, regulares. Encargo, Servidor e Motivo ficam à esquerda; datas, Situação e Ações ficam centralizadas.
+- Motivos longos podem quebrar linha e aumentar a altura da linha. Situação usa etiquetas discretas, verde para **Ativo** e cinza para **Encerrado**. A mensagem **Nenhum encargo registrado.** fica centralizada dentro do cartão branco.
+- A ação de corrigir mede 36 × 36 px, com ícone de 14 × 14 px; fica sem fundo em repouso, recebe fundo azul-claro no hover e foco azul visível.
+- O diálogo preserva sua geometria, a ordem e a posição dos campos. Usa superfície branca, borda `#dfe3e8`, título `#0b3a7a` e rótulos/descrições `#6e849a`. Campos, selects e botões medem 36 px de altura e têm raio 8 px. **Salvar** usa azul `#1d4ed8`; **Cancelar**, azul-claro `#e6f1fa` com texto `#0b3a7a`.
+- Incluir a explicação condicional quando o motivo selecionado for **Outro**, o estado de erro em vermelho semântico e os estados pendente/desabilitado durante o envio. **Voltar** e os botões do diálogo têm hover azul-claro e foco visível; **Sair** continua vermelho.
+- Preservar elegibilidade da correção, conteúdo, ordenação, regras dos campos e demais comportamentos atuais. Não há uma variante de impressão ou PDF identificada para esta rota; este padrão cobre a página e o diálogo.
+- Conferência visual local após a aplicação em 1525 × 788 e 375 × 812 CSS px. A página não apresentou rolagem horizontal; a tabela manteve largura mínima de 850 px e rolagem dentro do cartão. Em 375 px, o diálogo mediu 351 px; datas e controles permaneceram em uma linha. O campo condicional de **Outro** também foi exibido.
 
 ### Carregamento de Grupos
 

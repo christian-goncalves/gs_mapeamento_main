@@ -3,6 +3,11 @@ import { rowsToObjects, type LocatedObject, type SheetCell } from "./rows";
 
 const SHEET_V2_EXTENSIONS: Partial<Record<SheetName, readonly string[]>> = {
   grupos: ["revisao_atas_ativa"],
+  grupo_servidores_mesa: [
+    "data_encerramento",
+    "motivo_encerramento",
+    "motivo_encerramento_detalhe",
+  ],
   atas: [
     "status_registro",
     "status_aprovacao",
@@ -168,9 +173,15 @@ export function rowsToCompatibleObjects(
   );
   const expectedHeaders = name === "grupo_horarios"
     ? [...SHEET_HEADERS.grupo_horarios, "link_reuniao"]
+    : name === "grupo_servidores_mesa"
+      ? compatibleHeaders(name)
     : SHEET_HEADERS[name];
   return rowsToObjects(expectedHeaders, normalizedValues, {
     ...options,
+    allowMissingTrailingHeaders:
+      name === "grupo_servidores_mesa"
+        ? (SHEET_V2_EXTENSIONS[name] ?? []).length
+        : options.allowMissingTrailingHeaders,
     allowExtraTrailingHeaders: SHEET_V2_EXTENSIONS[name] ?? [],
   });
 }

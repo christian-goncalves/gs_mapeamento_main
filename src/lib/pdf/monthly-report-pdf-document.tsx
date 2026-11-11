@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
   responsibleMetricLabel: { fontSize: 8.25, lineHeight: 1.2, color: "#6e849a" },
   metricValue: { marginTop: 3, fontSize: 12, fontWeight: 700, color: "#1d4ed8" },
   responsibleMetricValue: { fontSize: 22.5, lineHeight: 1, fontWeight: 700, color: "#1d4ed8" },
-  foundationDateValue: { marginTop: 3, fontSize: 18, lineHeight: 1, fontWeight: 700, color: "#1d4ed8" },
   achievementGrid: { flexDirection: "row", flexWrap: "wrap", gap: 9 },
   achievementCard: { width: "32%", minHeight: 54, padding: 9, border: "1 solid #dfe3e8", borderRadius: 9, backgroundColor: "#ffffff" },
   achievementLabelLine: { flexDirection: "row", alignItems: "center", gap: 4 },
@@ -76,7 +75,7 @@ function Metric({ label, value, half = false, responsible = false }: { label: st
 }
 
 function FoundationDateMetric({ value }: { value: string }) {
-  return <View style={[styles.metric, styles.responsibleMetric, styles.metricHalf]} wrap={false}><Text style={styles.responsibleMetricLabel}>Data de fundação do grupo</Text><Text style={styles.foundationDateValue}>{formatDate(value)}</Text></View>;
+  return <View style={[styles.metric, styles.responsibleMetric, styles.metricHalf]} wrap={false}><Text style={styles.responsibleMetricLabel}>Data de fundação do grupo</Text><Text style={styles.responsibleMetricValue}>{formatDate(value)}</Text></View>;
 }
 
 function Table({ headers, rows, repeatHeader = false, framed = false }: { headers: string[]; rows: string[][]; repeatHeader?: boolean; framed?: boolean }) {

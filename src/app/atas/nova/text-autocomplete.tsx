@@ -43,6 +43,7 @@ export function TextAutocomplete({
   id,
   ariaLabel,
   required,
+  maxLength,
   value,
   placeholder,
   suggestions,
@@ -51,6 +52,7 @@ export function TextAutocomplete({
   id?: string;
   ariaLabel?: string;
   required?: boolean;
+  maxLength?: number;
   value: string;
   placeholder?: string;
   suggestions: string[];
@@ -99,6 +101,7 @@ export function TextAutocomplete({
         aria-label={ariaLabel}
         type="text"
         required={required}
+        maxLength={maxLength}
         value={value}
         placeholder={placeholder}
         autoComplete="off"

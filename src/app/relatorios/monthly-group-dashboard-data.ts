@@ -1,7 +1,6 @@
 import type { AggregatedAta, AggregatedRead } from "@/domain/aggregate";
 import type { Grupo, GrupoHorario, GrupoServidorMesa } from "@/domain/entities";
 import {
-  activeMesaServersForGroup,
   isVacantMesaName,
 } from "@/domain/grupo-servidores-mesa";
 import { tempoLimpoMapping, type TempoLimpo } from "@/domain/enums";
@@ -154,10 +153,7 @@ function distinctCities(atas: readonly AggregatedAta[]) {
   return new Set(
     atas.flatMap((item) => item.registro.participacao)
       .filter((row) => row.localidade.trim())
-      .map((row) =>
-        `${row.localidade.trim()}|${row.estado.trim()}|${row.pais.trim()}`
-          .toLocaleLowerCase("pt-BR"),
-      ),
+      .map((row) => row.localidade.trim().toLocaleLowerCase("pt-BR")),
   ).size;
 }
 
@@ -205,14 +201,26 @@ function achievements(atas: readonly AggregatedAta[], ingressos: number) {
   };
 }
 
-function mesaRows(servidores: readonly GrupoServidorMesa[], grupoId: string) {
-  const active = activeMesaServersForGroup(servidores, grupoId);
-  return active.map((item) => ({
-    encargo: item.encargo,
-    nome: item.nome,
-    data_inicio: item.data_inicio,
-    vacant: isVacantMesaName(item.nome),
-  }));
+function mesaRows(
+  servidores: readonly GrupoServidorMesa[],
+  grupoId: string,
+  monthStart: string,
+  monthEnd: string,
+) {
+  return servidores
+    .filter((item) =>
+      item.grupo_id === grupoId &&
+      Boolean(item.data_inicio) &&
+      item.data_inicio <= monthEnd &&
+      (item.ativo || Boolean(item.data_encerramento && item.data_encerramento >= monthStart)),
+    )
+    .sort((first, second) => first.ordem - second.ordem || first.encargo.localeCompare(second.encargo, "pt-BR"))
+    .map((item) => ({
+      encargo: item.encargo,
+      nome: item.nome,
+      data_inicio: item.data_inicio,
+      vacant: isVacantMesaName(item.nome),
+    }));
 }
 
 export function buildMonthlyDashboardData(
@@ -399,7 +407,7 @@ export function buildMonthlyDashboardData(
     meetingResults,
     responsavelMeetingResults,
     achievements: achievements(sentAtas, totalIngressos),
-    mesa: mesaRows(result.grupo_servidores_mesa, filters.grupoId),
+    mesa: mesaRows(result.grupo_servidores_mesa, filters.grupoId, start, end),
   };
 }
 

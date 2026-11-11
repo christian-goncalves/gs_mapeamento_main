@@ -1,9 +1,9 @@
 "use client";
 
-import { useId, useState } from "react";
-import { createPortal } from "react-dom";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faFilePdf, faPaperPlane, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faEnvelope, faEye, faFilePdf, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { PdfEmailDialog, type PdfEmailRequest } from "../pdf-email-dialog";
 
 export function MonthlyReportActions({
   groupId,
@@ -18,76 +18,78 @@ export function MonthlyReportActions({
   groupName: string;
   defaultRecipient: string;
 }) {
-  const titleId = useId();
   const query = new URLSearchParams({ grupo: groupId, mes: month, ano: year });
-  const [open, setOpen] = useState(false);
-  const [recipient, setRecipient] = useState(defaultRecipient);
-  const [requestId, setRequestId] = useState("");
-  const [pending, setPending] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const previewUrl = `/api/relatorios/mensal/pdf?${query.toString()}`;
+  const downloadQuery = new URLSearchParams(query);
+  downloadQuery.set("download", "1");
+  const [openEmail, setOpenEmail] = useState(false);
+  const [openPdf, setOpenPdf] = useState(false);
 
-  function showDialog() {
-    setRecipient(defaultRecipient);
-    setRequestId(globalThis.crypto.randomUUID());
-    setError("");
-    setSuccess("");
-    setOpen(true);
+  function showEmailDialog() {
+    setOpenEmail(true);
   }
 
-  async function send(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setPending(true);
-    setError("");
-    try {
-      const response = await fetch("/api/relatorios/mensal/pdf", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ grupo: groupId, mes: month, ano: year, recipient, requestId }),
-      });
-      const body = await response.json().catch(() => null) as { error?: string; message?: string } | null;
-      if (!response.ok) throw new Error(body?.error ?? "Não foi possível enviar o PDF.");
-      setSuccess(body?.message ?? "Relatório mensal enviado por e-mail.");
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Não foi possível enviar o PDF.");
-    } finally {
-      setPending(false);
-    }
+  async function sendReportEmail({ recipient, requestId }: PdfEmailRequest) {
+    const response = await fetch("/api/relatorios/mensal/pdf", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ grupo: groupId, mes: month, ano: year, recipient, requestId }),
+    });
+    const body = await response.json().catch(() => null) as { error?: string; message?: string } | null;
+    if (!response.ok) throw new Error(body?.error ?? "Não foi possível enviar o PDF.");
+    return body?.message ?? "Relatório mensal enviado por e-mail.";
   }
 
   return (
     <>
-      <a
+      <button
+        type="button"
         className="dashboard-pdf-button"
-        aria-label="Visualizar PDF"
-        href={`/api/relatorios/mensal/pdf?${query.toString()}`}
+        aria-label="Opções do PDF mensal"
+        title="Opções do PDF"
+        onClick={() => setOpenPdf(true)}
       >
         <FontAwesomeIcon icon={faFilePdf} aria-hidden="true" />
-      </a>
-      <button type="button" className="dashboard-email-button" aria-label="Enviar por e-mail" title="Enviar por e-mail" onClick={showDialog}>
+      </button>
+      <button type="button" className="dashboard-email-button" aria-label="Enviar por e-mail" title="Enviar por e-mail" onClick={showEmailDialog}>
         <FontAwesomeIcon icon={faEnvelope} />
       </button>
-      {open && typeof document !== "undefined" ? createPortal((
-        <div className="modal-backdrop ata-email-modal-backdrop" role="presentation">
-          <section className="confirmation-modal ata-email-modal" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+      {openPdf ? (
+        <div className="modal-backdrop pdf-email-modal-backdrop" role="presentation">
+          <section className="confirmation-modal ata-email-modal monthly-report-pdf-modal" role="dialog" aria-modal="true" aria-labelledby="monthly-report-pdf-title">
             <header className="ata-email-modal-header">
-              <div><h2 id={titleId}>Enviar relatório mensal</h2><p>{groupName} · {month}/{year}</p></div>
-              <button type="button" className="message-close" aria-label="Fechar" onClick={() => setOpen(false)} disabled={pending}><FontAwesomeIcon icon={faXmark} /></button>
+              <div><h2 id="monthly-report-pdf-title">Relatório mensal em PDF</h2><p>{groupName} · {month}/{year}</p></div>
             </header>
-            <form onSubmit={send}>
-              <div className="ata-email-summary"><FontAwesomeIcon icon={faFilePdf} aria-hidden="true" /><div><strong>Relatório mensal em PDF</strong><span>O período selecionado será enviado como anexo.</span></div></div>
-              <label className="ata-email-field"><span>Destinatário</span><input type="email" value={recipient} onChange={(event) => { setRecipient(event.target.value); setRequestId(globalThis.crypto.randomUUID()); }} placeholder="nome@exemplo.com" autoComplete="email" autoFocus required disabled={pending || Boolean(success)} /></label>
-              <p className="field-hint">Confira o endereço antes de confirmar o envio.</p>
-              {error ? <p className="form-error" role="alert">{error}</p> : null}
-              {success ? <p className="admin-status-feedback" role="status">{success}</p> : null}
-              <div className="modal-actions">
-                <button type="button" className="secondary" onClick={() => setOpen(false)} disabled={pending}>{success ? "Fechar" : "Cancelar"}</button>
-                {!success ? <button type="submit" disabled={pending || !recipient.trim()}><FontAwesomeIcon icon={faPaperPlane} /><span>{pending ? "Enviando..." : "Confirmar envio"}</span></button> : null}
-              </div>
-            </form>
+            <div className="ata-email-summary">
+              <FontAwesomeIcon icon={faFilePdf} aria-hidden="true" />
+              <div><strong>Escolha uma opção</strong><span>Visualize o relatório ou baixe o arquivo PDF.</span></div>
+            </div>
+            <div className="modal-actions monthly-report-pdf-actions">
+              <a href={previewUrl} target="_blank" rel="noreferrer" className="monthly-report-pdf-primary">
+                <FontAwesomeIcon icon={faEye} /><span>Visualizar</span>
+              </a>
+              <a href={`/api/relatorios/mensal/pdf?${downloadQuery.toString()}`} className="secondary">
+                <FontAwesomeIcon icon={faDownload} /><span>Baixar</span>
+              </a>
+              <button type="button" className="secondary" onClick={() => setOpenPdf(false)}>
+                <FontAwesomeIcon icon={faXmark} /><span>Cancelar</span>
+              </button>
+            </div>
           </section>
         </div>
-      ), document.body) : null}
+      ) : null}
+      <PdfEmailDialog
+        open={openEmail}
+        title="Enviar relatório mensal"
+        subtitle={`${groupName} · ${month}/${year}`}
+        summaryTitle="Relatório mensal em PDF"
+        summaryDescription="O período selecionado será enviado como anexo."
+        defaultRecipient={defaultRecipient}
+        onClose={() => setOpenEmail(false)}
+        onSend={sendReportEmail}
+        portal
+        className="monthly-report-email-modal"
+      />
     </>
   );
 }

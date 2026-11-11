@@ -214,7 +214,7 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .mesa-summary-table-actions th:first-child { width: 28%; }
 .mesa-summary-table-actions th:nth-child(2) { width: 35%; }
 .mesa-summary-table-actions th:nth-child(3) { width: auto; }
-.mesa-summary-table-actions th:nth-child(4) { width: 4.5rem; }
+.mesa-summary-table-actions th:nth-child(4) { width: 9rem; }
 .mesa-summary-table-actions .mesa-actions-heading,
 .mesa-summary-table-actions .mesa-actions-cell { text-align: center; }
 .mesa-summary-table-actions .mesa-actions-cell { padding-block: .45rem; }
@@ -227,6 +227,21 @@ legend { padding: 0 .35rem; font-weight: 700; }
 .mesa-server-modal-fields { display: grid; gap: 1rem; margin-top: 1.25rem; }
 .mesa-server-modal-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .mesa-server-modal-actions button { min-width: 0; }
+.mesa-server-closure-identification { margin: .65rem 0 0; color: var(--muted); font-weight: 700; }
+.mesa-server-date-controls { display: flex; gap: .5rem; align-items: center; }
+.mesa-server-date-controls > input { flex: 1 1 auto; min-width: 0; }
+.mesa-server-calendar-wrap { position: relative; display: inline-grid; flex: 0 0 2.75rem; width: 2.75rem; height: 2.75rem; place-items: center; border: 1px solid var(--line); border-radius: 8px; color: var(--brand); }
+.mesa-server-calendar-wrap input { position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; opacity: 0; }
+.mesa-server-footer-actions { justify-content: flex-start; align-items: stretch; }
+.mesa-server-footer-actions .mesa-add-button { width: auto; flex: 0 1 auto; }
+.mesa-history-button { display: inline-flex; align-items: center; justify-content: center; height: 36px; min-height: 36px; padding: 0 12px; border: 0; border-radius: 8px; font-size: 14px; font-weight: 600; line-height: 1.2; text-decoration: none; }
+.mesa-history-page { display: grid; gap: 1rem; }
+.mesa-history-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.mesa-history-header h1, .mesa-history-header p { margin: 0; }
+.mesa-history-header p { margin-top: .35rem; color: var(--muted); }
+.mesa-history-back { display: inline-flex; align-items: center; min-height: 2.75rem; padding: .65rem 1rem; border: 1px solid var(--line); border-radius: 8px; text-decoration: none; white-space: nowrap; }
+.mesa-history-table { min-width: 850px; }
+.mesa-history-actions { white-space: nowrap; text-align: center; }
 .monthly-dashboard-page { display: grid; }
 .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) { background: #fafafa; }
 .responsavel-layout:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters,
@@ -1066,6 +1081,73 @@ body:has(.app-loading) { background: #fbfcff; }
 .ata-email-summary span { color: var(--muted); font-size: .85rem; }
 .ata-email-field { display: grid; gap: .4rem; margin-top: 1rem; color: var(--ink); font-weight: 700; }
 .ata-email-modal .form-error, .ata-email-modal .admin-status-feedback { margin-top: 1rem; }
+.pdf-email-modal-backdrop { background: rgb(28 36 48 / 60%); }
+.pdf-email-dialog .modal-actions { justify-content: space-between; }
+.pdf-email-dialog .modal-actions button {
+  gap: .5rem;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.pdf-email-dialog .modal-actions button.secondary {
+  border: 1px solid transparent;
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.pdf-email-dialog .modal-actions button.secondary:hover:not(:disabled) { background: #d7e9f8; }
+.monthly-report-email-modal,
+.monthly-report-pdf-modal {
+  --ink: #1c2430;
+  --muted: #6e849a;
+  --paper: #fcfdff;
+  --surface: #ffffff;
+  --line: #dfe3e8;
+  --brand: #1d4ed8;
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.monthly-report-email-modal .ata-email-summary,
+.monthly-report-pdf-modal .ata-email-summary { background: #f8fbff; }
+.monthly-report-email-modal .modal-actions button:not(.secondary) { background: #1d4ed8; color: #ffffff; }
+.monthly-report-email-modal .modal-actions button:not(.secondary):hover:not(:disabled) { background: #1e40af; }
+.monthly-report-email-modal .modal-actions button:focus-visible,
+.monthly-report-pdf-modal .modal-actions :is(a, button):focus-visible { outline: 2px solid #1d4ed8; outline-offset: 2px; }
+.monthly-report-pdf-modal .monthly-report-pdf-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .5rem;
+}
+.monthly-report-pdf-actions :is(a, button) {
+  display: inline-flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  border: 1px solid #dfe3e8;
+  border-radius: 8px;
+  padding: .45rem .4rem;
+  background: #e6f1fa;
+  color: #0b3a7a;
+  font: 600 14px/1.2 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.monthly-report-pdf-actions .monthly-report-pdf-primary {
+  border-color: #1d4ed8;
+  background: #1d4ed8;
+  color: #ffffff;
+}
+.monthly-report-pdf-actions :is(a.secondary, button.secondary) { border-color: transparent; }
+.monthly-report-pdf-actions .monthly-report-pdf-primary:hover { background: #1e40af; }
+.monthly-report-pdf-actions :is(a, button):hover:not(.monthly-report-pdf-primary) { background: #d7e9f8; }
+.monthly-report-pdf-actions :is(a, button) svg { width: 14px; height: 14px; flex: 0 0 auto; }
+@media (max-width: 500px) {
+  .monthly-report-pdf-modal .monthly-report-pdf-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .monthly-report-pdf-actions :is(a, button) { gap: .25rem; padding-inline: .25rem; font-size: 12px; }
+}
 .ata-pdf-preview-shell { position: fixed; inset: 0; z-index: 1; width: 100%; height: 100vh; height: 100dvh; margin: 0; padding: 0; overflow: hidden; background: transparent; }
 .ata-pdf-preview-frame { width: 100%; height: 100%; overflow: hidden; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 .ata-pdf-preview-frame iframe { display: block; width: 100%; height: 100%; min-height: 0; border: 0; }
@@ -1415,6 +1497,10 @@ body:has(.ata-pdf-preview-shell) { overflow: hidden; background: transparent; }
   .group-platform-transfer { grid-template-columns: 1fr; }
   .mesa-server-modal-backdrop { place-items: center; padding: .75rem; }
   .mesa-server-modal { width: min(520px, 100%); height: auto; max-height: calc(100dvh - 1.5rem); }
+  .mesa-server-footer-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mesa-server-footer-actions .mesa-add-button,
+  .mesa-server-footer-actions .mesa-history-button { width: 100%; min-width: 0; padding-inline: .45rem; font-size: .9rem; }
+  .mesa-history-header { align-items: flex-start; flex-direction: column; }
   .dashboard-filters,
   .dashboard-filters-no-group { grid-template-columns: repeat(2, minmax(0, 1fr)) 5.5rem; gap: .65rem; }
   .dashboard-filters:not(.dashboard-filters-no-group) > label:first-child { grid-column: 1 / -1; }
@@ -1450,7 +1536,7 @@ body:has(.ata-pdf-preview-shell) { overflow: hidden; background: transparent; }
   .mesa-summary-table-actions th:first-child { width: 32%; }
   .mesa-summary-table-actions th:nth-child(2) { width: 34%; }
   .mesa-summary-table-actions th:nth-child(3) { width: auto; }
-  .mesa-summary-table-actions th:nth-child(4) { width: 3.75rem; }
+  .mesa-summary-table-actions th:nth-child(4) { width: 5.25rem; }
   .mesa-summary-table-actions th,
   .mesa-summary-table-actions td { padding-inline: .55rem; }
 }
@@ -1830,6 +1916,11 @@ body:has(.ata-pdf-preview-shell) { overflow: hidden; background: transparent; }
   }
 }
 
+@media (max-width: 500px) {
+  .monthly-report-pdf-modal .monthly-report-pdf-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .monthly-report-pdf-actions :is(a, button) { gap: .25rem; padding-inline: .25rem; font-size: 12px; }
+}
+
 @media (max-width: 499px) {
   .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-foundation-metrics-pair {
     grid-template-columns: minmax(0, 1fr) max-content;
@@ -1993,6 +2084,7 @@ body:has(.ata-pdf-preview-shell) { overflow: hidden; background: transparent; }
 .schedule-delete-modal h2,
 .schedule-delete-modal p { margin: 0; }
 .schedule-delete-modal form { display: grid; gap: 1rem; }
+.confirmation-modal.mesa-server-delete-modal .modal-actions { justify-content: center; }
 @media (max-width: 720px) {
   .schedule-row-modal { width: min(520px, 100%); }
   .schedule-row-modal-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -2195,39 +2287,49 @@ body:has(.ata-pdf-preview-shell) { overflow: hidden; background: transparent; }
   outline-offset: 2px;
 }
 .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-paging .dt-paging-button {
-  min-height: 36px;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  height: auto;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: 6px;
   background: #e6f1fa;
   color: #0b3a7a !important;
   font-family: inherit;
   font-size: 14px;
+  line-height: 1.2;
   font-weight: 600;
+  padding: 2px 6px;
+  box-shadow: none;
 }
 .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-paging .dt-paging-button.current {
-  border-color: #0b3a7a;
-  background: #1d4ed8;
+  border-color: transparent;
+  background: #0b3a7a;
   color: #fff !important;
+  font-weight: 700;
 }
-.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-paging .dt-paging-button:hover {
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-paging .dt-paging-button.disabled {
+  border-color: transparent;
   background: #e6f1fa;
-  color: #0b3a7a !important;
-  outline: 2px solid #1d4ed8;
-  outline-offset: 2px;
+  color: #6e849a !important;
+  cursor: not-allowed;
+  opacity: 0.8;
 }
-.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-paging .dt-paging-button.current:hover {
-  background: #1d4ed8;
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-paging .dt-paging-button:hover:not(.disabled) {
+  border-color: transparent;
+  background: #0b3a7a;
   color: #fff !important;
+  outline: none;
 }
 .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-paging .dt-paging-button:focus-visible:not(.disabled) {
-  background: #e6f1fa;
-  color: #0b3a7a !important;
   outline: 2px solid #1d4ed8;
   outline-offset: 2px;
 }
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-paging .dt-paging-button.current:hover,
 .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-table-wrap .dt-paging .dt-paging-button.current:focus-visible {
-  background: #1d4ed8;
+  background: #0b3a7a;
   color: #fff !important;
+  font-weight: 700;
 }
 .responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-panel h2 { color: #1c2430; }
 .responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-panel > header p,
@@ -2241,6 +2343,9 @@ body:has(.ata-pdf-preview-shell) { overflow: hidden; background: transparent; }
   font-size: 13.0133px;
   font-weight: 700;
   text-transform: uppercase;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-list-heading label {
+  color: #fff;
 }
 .responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-row { border-color: #e4edf6; }
 .responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-row-actions button,
@@ -2264,6 +2369,59 @@ body:has(.ata-pdf-preview-shell) { overflow: hidden; background: transparent; }
 }
 .responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-feedback,
 .responsavel-layout:has(.responsavel-atas-page-header) .ata-approval-row-actions a { color: #1d4ed8; }
+body:has(.responsavel-atas-page-header) .ata-approval-confirmation-backdrop {
+  background: rgb(16 28 45 / 58%);
+}
+body:has(.responsavel-atas-page-header) .ata-approval-confirmation-modal {
+  border: 1px solid #dfe3e8;
+  border-radius: 12px;
+  background: #fff;
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+body:has(.responsavel-atas-page-header) .ata-approval-confirmation-modal h2 {
+  color: #1c2430;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+body:has(.responsavel-atas-page-header) .ata-approval-confirmation-modal > p {
+  color: #6e849a;
+  font-size: 14px;
+  font-weight: 400;
+}
+body:has(.responsavel-atas-page-header) .ata-approval-confirmation-modal li {
+  color: #1c2430;
+  font-size: 14px;
+  line-height: 1.4;
+}
+body:has(.responsavel-atas-page-header) .ata-approval-confirmation-modal .modal-actions {
+  border-color: #dfe3e8;
+  background: #fff;
+  box-shadow: none;
+}
+body:has(.responsavel-atas-page-header) .ata-approval-confirmation-modal .modal-actions button {
+  height: 36px;
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+body:has(.responsavel-atas-page-header) .ata-approval-confirmation-modal .modal-actions button.secondary {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+body:has(.responsavel-atas-page-header) .ata-approval-confirmation-modal .modal-actions button.button-primary {
+  background: #1d4ed8;
+  color: #fff;
+}
+body:has(.responsavel-atas-page-header) .ata-approval-confirmation-modal .modal-actions button:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
 
 /* Configuracoes do grupo: aplicar o padrao azul somente na rota Responsavel. */
 .responsavel-layout:has(.responsavel-config-page) {
@@ -2834,6 +2992,403 @@ body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal
   color: #6e849a;
 }
 
+/* Historico de encargos do Responsavel: escopo exclusivo desta rota. */
+body:has(.responsavel-layout .mesa-history-page) {
+  --ink: #1c2430;
+  --muted: #6e849a;
+  --paper: #fcfdff;
+  --surface: #fff;
+  --line: #dfe3e8;
+  --brand: #1d4ed8;
+  background: #fcfdff;
+  color: #1c2430;
+}
+.responsavel-layout:has(.mesa-history-page) {
+  --ink: #1c2430;
+  --muted: #6e849a;
+  --paper: #fcfdff;
+  --surface: #fff;
+  --line: #dfe3e8;
+  --brand: #1d4ed8;
+  background: #fcfdff;
+}
+.responsavel-layout:has(.mesa-history-page) .responsavel-main {
+  background: #fcfdff;
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.responsavel-layout:has(.mesa-history-page) .responsavel-sidebar,
+.responsavel-layout:has(.mesa-history-page) .responsavel-nav {
+  border-color: #e4edf6;
+  background: #f8fbff;
+}
+.responsavel-layout:has(.mesa-history-page) .app-nav-item { color: #111827; }
+.responsavel-layout:has(.mesa-history-page) .app-nav-item:hover,
+.responsavel-layout:has(.mesa-history-page) .app-nav-item:focus-visible,
+.responsavel-layout:has(.mesa-history-page) .app-nav-item-active,
+.responsavel-layout:has(.mesa-history-page) .app-nav-item-active:hover {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.mesa-history-page) .app-nav-item:hover,
+.responsavel-layout:has(.mesa-history-page) .app-nav-item:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.responsavel-layout:has(.mesa-history-page) .app-signout-button {
+  background: transparent;
+  color: var(--danger);
+}
+.responsavel-layout:has(.mesa-history-page) .app-signout-button:hover,
+.responsavel-layout:has(.mesa-history-page) .app-signout-button:focus-visible {
+  background: #f5e7e7;
+  color: var(--danger);
+}
+.responsavel-layout:has(.mesa-history-page) .app-menu-trigger {
+  background: #e6f1fa;
+  color: #1d4ed8;
+}
+.responsavel-layout:has(.mesa-history-page) .app-menu-trigger:hover,
+.responsavel-layout:has(.mesa-history-page) .app-menu-trigger:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-header h1 {
+  color: #0b3a7a;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-header p {
+  color: #6e849a;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-back {
+  height: 36px;
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #e6f1fa;
+  color: #0b3a7a;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-back:hover,
+.responsavel-layout:has(.mesa-history-page) .mesa-history-back:focus-visible {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-back:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table-wrap {
+  min-width: 0;
+  border: 1px solid #dfe3e8;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table {
+  width: 100%;
+  min-width: 850px;
+  margin: 0;
+  border: 1px solid #e4edf6;
+  border-radius: 8px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  background: #fff;
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  table-layout: fixed;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table th,
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table td {
+  border-right: 1px solid #e4edf6;
+  border-bottom: 1px solid #e4edf6;
+  padding: 9.6px 8.8px;
+  color: #1c2430;
+  font-size: 14.9333px;
+  font-weight: 400;
+  line-height: 18.6667px;
+  text-align: left;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table th:last-child,
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table td:last-child { border-right: 0; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table tbody tr:last-child > * { border-bottom: 0; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table thead th {
+  background: #1d4ed8;
+  color: #fff;
+  font-size: 13.0133px;
+  font-weight: 700;
+  line-height: 16.2667px;
+  text-align: center;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table th[scope="row"] {
+  color: #1c2430;
+  font-size: 14.9333px;
+  font-weight: 700;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table th:nth-child(1) { width: 18%; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table th:nth-child(2) { width: 18%; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table th:nth-child(3),
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table th:nth-child(4) { width: 12%; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table th:nth-child(5) { width: 12%; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table th:nth-child(6) { width: 20%; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table th:nth-child(7) { width: 8%; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table th:nth-child(3) { width: 12%; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table tbody td:nth-child(3),
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table tbody td:nth-child(4) { white-space: nowrap; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table tbody td:nth-child(3),
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table tbody td:nth-child(4),
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table tbody td:nth-child(5),
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table tbody td:nth-child(7) { text-align: center; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table .mesa-history-actions { white-space: nowrap; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-status-active { background: #e8f5e9; color: #256d36; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-status-closed { background: #f1f3f5; color: #5f6b76; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-actions .icon-button {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 8px;
+  padding: 0;
+  background: transparent;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-actions .icon-button svg { width: 14px; height: 14px; }
+.responsavel-layout:has(.mesa-history-page) .mesa-history-actions .icon-button:hover {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-actions .icon-button:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.responsavel-layout:has(.mesa-history-page) .mesa-history-table-wrap .empty-state {
+  color: #6e849a;
+  text-align: center;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-modal-backdrop { background: rgb(16 28 45 / 58%); }
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal {
+  border: 1px solid #dfe3e8;
+  border-radius: 12px;
+  background: #fff;
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal .mesa-server-modal-header h2 {
+  color: #0b3a7a;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal .mesa-server-modal-header .icon-button {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+  background: transparent;
+  color: #0b3a7a;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal .mesa-server-modal-header .icon-button:hover {
+  background: #e6f1fa;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal .mesa-server-closure-identification {
+  color: #6e849a;
+  font-size: 14px;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal label {
+  color: #6e849a;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal .mesa-server-date-controls > input,
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal label > input,
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal select {
+  height: 36px;
+  min-height: 36px;
+  border: 1px solid #dfe3e8;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #fff;
+  color: #1c2430;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal .mesa-server-calendar-wrap {
+  width: 36px;
+  height: 36px;
+  flex-basis: 36px;
+  border-color: #dfe3e8;
+  color: #1d4ed8;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal .mesa-server-calendar-wrap input {
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal .modal-actions button {
+  height: 36px;
+  min-height: 36px;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal .modal-actions button:first-child {
+  background: #1d4ed8;
+  color: #fff;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal .modal-actions button.secondary {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal .modal-actions button:hover {
+  filter: brightness(.97);
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal :is(button, input, select):focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+body:has(.responsavel-layout .mesa-history-page) .mesa-server-closure-modal .form-error {
+  margin-top: 1rem;
+  border-color: #e4b6b6;
+  background: #fff3f3;
+  color: #9b2c2c;
+}
+
+/* Link publico de ata: manter o visual de /atas/nova sem carregar o menu autenticado. */
+body:has(.public-ata-page) {
+  --ink: #1c2430;
+  --muted: #6e849a;
+  --paper: #fcfdff;
+  --surface: #fff;
+  --line: #dfe3e8;
+  --brand: #1d4ed8;
+  background: #fcfdff;
+  color: #1c2430;
+}
+.public-ata-page {
+  color: #1c2430;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.public-ata-page .responsavel-page-header { margin-bottom: 2px; }
+.public-ata-page .responsavel-page-header .eyebrow {
+  color: #1d4ed8;
+  font-size: 12.8px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.public-ata-page .responsavel-page-header h1 {
+  color: #0b3a7a;
+  font-size: 41.6px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.public-ata-page .responsavel-page-description {
+  color: #6e849a;
+  font-size: 13px;
+  font-weight: 600;
+}
+.public-ata-page .creation-form { color: #1c2430; }
+.public-ata-page .creation-form .card {
+  border: 1px solid #dfe3e8;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: none;
+}
+.public-ata-page .creation-form .form-section h2 { color: #1c2430; }
+.public-ata-page .creation-form label {
+  color: #6e849a;
+  font-size: 12px;
+  font-weight: 600;
+}
+.public-ata-page .creation-form input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+.public-ata-page .creation-form select,
+.public-ata-page .creation-form textarea {
+  border: 1px solid #dfe3e8;
+  border-radius: 8px;
+  background: #fff;
+  color: #1c2430;
+  font-family: inherit;
+  font-size: 14px;
+}
+.public-ata-page .creation-form input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+.public-ata-page .creation-form select {
+  height: 36px;
+  min-height: 36px;
+  padding: 0 12px;
+}
+.public-ata-page .creation-form textarea { min-height: 5rem; padding: 10px 12px; }
+.public-ata-page .creation-form :is(button, input, select, textarea):focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+.public-ata-page .creation-form button:not(.autocomplete-toggle):not(.icon-button):not(.danger-icon-button):not(.secondary):not(.danger-button) {
+  height: 36px;
+  min-height: 36px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #1d4ed8;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.public-ata-page .creation-form button.secondary {
+  height: 36px;
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #e6f1fa;
+  color: #0b3a7a;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+.public-ata-page .creation-form .number-stepper .icon-button {
+  background: #e6f1fa;
+  color: #0b3a7a;
+}
+.public-ata-page .creation-form .number-stepper .icon-button:disabled {
+  background: #e6f1fa;
+  color: #6e849a;
+  opacity: 1;
+}
+.public-ata-page .creation-form button:not(.autocomplete-toggle):not(.icon-button):not(.danger-icon-button):not(:disabled):hover { filter: brightness(.96); }
+.public-ata-page .creation-form button:disabled { opacity: .55; }
+
 @media (max-width: 499px) {
   .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody tr {
     height: 33.1875px;
@@ -3028,15 +3583,15 @@ body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal
 }
 
 /* Keep square controls and expanded suggestion lists consistent on new ata forms. */
-.responsavel-layout:has(.creation-form) .creation-form .number-stepper {
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .number-stepper {
   grid-template-columns: 36px minmax(0, 1fr) 36px;
   gap: .35rem;
   min-width: 0;
   align-items: center;
 }
 
-.responsavel-layout:has(.creation-form) .creation-form .number-stepper .icon-button,
-.responsavel-layout:has(.creation-form) .creation-form .danger-icon-button {
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .number-stepper .icon-button,
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .danger-icon-button {
   display: inline-grid;
   width: 36px;
   height: 36px;
@@ -3049,62 +3604,62 @@ body:has(.responsavel-config-page) .schedule-delete-backdrop .confirmation-modal
   font-size: 14px;
 }
 
-.responsavel-layout:has(.creation-form) .creation-form .number-stepper .icon-button svg,
-.responsavel-layout:has(.creation-form) .creation-form .danger-icon-button svg {
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .number-stepper .icon-button svg,
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .danger-icon-button svg {
   width: 14px;
   height: 14px;
   font-size: 14px;
 }
 
-.responsavel-layout:has(.creation-form) .creation-form .repeat-row--single {
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--single {
   grid-template-columns: minmax(0, 1fr) 36px;
 }
 
-.responsavel-layout:has(.creation-form) .creation-form .repeat-row--double,
-.responsavel-layout:has(.creation-form) .creation-form .repeat-row--compact {
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--double,
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--compact {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 36px;
 }
 
-.responsavel-layout:has(.creation-form) .creation-form .repeat-row--server {
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--server {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 36px;
 }
 
-.responsavel-layout:has(.creation-form) .creation-form .repeat-row--city,
-.responsavel-layout:has(.creation-form) .creation-form .repeat-row--locality,
-.responsavel-layout:has(.creation-form) .creation-form .repeat-row--international,
-.responsavel-layout:has(.creation-form) .creation-form .repeat-row--clean-time {
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--city,
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--locality,
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--international,
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--clean-time {
   grid-template-columns: minmax(0, 1fr) minmax(10rem, .45fr) 36px;
 }
 
-.responsavel-layout:has(.creation-form) .creation-form .repeat-row--visitor {
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--visitor {
   grid-template-columns: minmax(0, 1.15fr) minmax(0, .8fr) minmax(0, 1fr) 36px;
 }
 
-.responsavel-layout:has(.creation-form) .creation-form .repeat-row > .danger-icon-button,
-.responsavel-layout:has(.creation-form) .creation-form .visitor-secondary-row .danger-icon-button {
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row > .danger-icon-button,
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .visitor-secondary-row .danger-icon-button {
   align-self: end;
 }
 
-.responsavel-layout:has(.creation-form) .creation-form .autocomplete:focus-within {
+:is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .autocomplete:focus-within {
   z-index: 6;
 }
 
 @media (max-width: 720px) {
-  .responsavel-layout:has(.creation-form) .creation-form .repeat-row--server {
+  :is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--server {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 36px;
   }
 
-  .responsavel-layout:has(.creation-form) .creation-form .repeat-row--locality,
-  .responsavel-layout:has(.creation-form) .creation-form .repeat-row--international,
-  .responsavel-layout:has(.creation-form) .creation-form .repeat-row--clean-time {
+  :is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--locality,
+  :is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--international,
+  :is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--clean-time {
     grid-template-columns: minmax(0, 1fr) minmax(7.5rem, .45fr) 36px;
   }
 
-  .responsavel-layout:has(.creation-form) .creation-form .repeat-row--visitor {
+  :is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .repeat-row--visitor {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .responsavel-layout:has(.creation-form) .creation-form .visitor-secondary-row {
+  :is(.responsavel-layout:has(.creation-form), .public-ata-page) .creation-form .visitor-secondary-row {
     grid-template-columns: minmax(0, 1fr) 36px;
   }
 }
@@ -4017,7 +4572,7 @@ body:has(.ata-detail-review-shell) {
   .ata-detail-review-shell .ata-review-layout--detail .review-table--admissions td:last-child { width: 32%; }
 }
 @media (max-width: 360px) {
-  :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-grid,
+  .ata-review-confirmation-modal .ata-review-layout--detail-appearance .review-grid,
   :is(.ata-detail-review-shell .ata-review-layout--detail, .ata-review-confirmation-modal .ata-review-layout--detail-appearance) .review-additional-information { grid-template-columns: 1fr; }
 }
 
@@ -4152,6 +4707,41 @@ body:has(.ata-detail-review-shell) {
 }
 .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging nav[aria-label="pagination"] .dt-paging-button:not(.first):not(.previous):not(.next):not(.last) + .dt-paging-button:not(.first):not(.previous):not(.next):not(.last) {
   margin-left: -0.6rem;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:last-child {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-top: -1rem;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:last-child .dt-layout-cell {
+  width: auto;
+  justify-content: flex-start;
+  text-align: left;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:last-child .dt-paging {
+  justify-content: flex-end;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging nav[aria-label="pagination"] {
+  justify-content: flex-end;
+}
+@media (max-width: 500px) {
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:last-child {
+    flex-direction: column;
+    justify-content: center;
+    gap: .5rem;
+  }
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:last-child .dt-layout-cell {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-container > .dt-layout-row:last-child .dt-paging,
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging nav[aria-label="pagination"] {
+    justify-content: center;
+  }
 }
 @media (max-width: 767px) {
   .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging nav[aria-label="pagination"] {

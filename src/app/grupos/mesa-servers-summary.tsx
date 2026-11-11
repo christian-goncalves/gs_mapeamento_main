@@ -1,10 +1,12 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useState, useSyncExternalStore } from "react";
+import Link from "next/link";
 import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFloppyDisk,
+  faClockRotateLeft,
   faPenToSquare,
   faPlus,
   faTrashCan,
@@ -14,12 +16,15 @@ import {
   KNOWN_MESA_OFFICES,
   isVacantMesaName,
 } from "@/domain/grupo-servidores-mesa";
+import { mesaServerClosureDetailOptions } from "@/domain/mesa-server-closure";
 import { ChoiceAutocomplete } from "../choice-autocomplete";
 import type { GrupoServidorMesa } from "@/domain/schemas";
 import {
-  deactivateGrupoServidorMesaAction,
+  closeGrupoServidorMesaAction,
+  deleteGrupoServidorMesaAction,
   saveGrupoServidorMesaAction,
 } from "./actions";
+import { MesaServerClosureDialog } from "./mesa-server-closure-dialog";
 
 type MesaServerItem = {
   clientId: string;
@@ -28,6 +33,14 @@ type MesaServerItem = {
   nome: string;
   data_inicio: string;
   ordem: number;
+};
+
+const subscribeToPortalTarget = () => () => {};
+const getPortalTarget = () => document.body;
+const getServerPortalTarget = () => null;
+
+type PersistedMesaServerItem = MesaServerItem & {
+  grupo_servidor_mesa_id: string;
 };
 
 function mesaServerItems(servidores: readonly GrupoServidorMesa[]) {
@@ -211,18 +224,20 @@ function MesaServerActions({
   item,
   disabled,
   onEdit,
+  onClose,
 }: {
   grupoId: string;
   item: MesaServerItem;
   disabled: boolean;
   onEdit: () => void;
+  onClose: () => void;
 }) {
-  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
+  const portalTarget = useSyncExternalStore(
+    subscribeToPortalTarget,
+    getPortalTarget,
+    getServerPortalTarget,
+  );
   const [confirmingDelete, setConfirmingDelete] = useState(false);
-
-  useEffect(() => {
-    setPortalTarget(document.body);
-  }, []);
 
   return (
     <div className="row-actions schedule-actions">
@@ -239,9 +254,21 @@ function MesaServerActions({
       {item.grupo_servidor_mesa_id && (
         <button
           type="button"
+          className="danger-icon-button mesa-server-close-button"
+          aria-label={`Encerrar encargo ${item.encargo}`}
+          title="Encerrar encargo"
+          disabled={disabled}
+          onClick={onClose}
+        >
+          <FontAwesomeIcon icon={faXmark} />
+        </button>
+      )}
+      {item.grupo_servidor_mesa_id && (
+        <button
+          type="button"
           className="danger-icon-button"
-          aria-label={`Remover ${item.encargo}`}
-          title="Remover"
+          aria-label={`Excluir ${item.encargo}`}
+          title="Excluir"
           disabled={disabled}
           onClick={() => setConfirmingDelete(true)}
         >
@@ -256,7 +283,7 @@ function MesaServerActions({
           }}
         >
           <section
-            className="confirmation-modal schedule-delete-modal"
+            className="confirmation-modal schedule-delete-modal mesa-server-delete-modal"
             role="dialog"
             aria-modal="true"
             aria-labelledby={`mesa-server-delete-title-${item.clientId}`}
@@ -264,9 +291,9 @@ function MesaServerActions({
               if (event.key === "Escape") setConfirmingDelete(false);
             }}
           >
-            <h2 id={`mesa-server-delete-title-${item.clientId}`}>Remover servidor?</h2>
-            <p>Remover o encargo {item.encargo}?</p>
-            <form action={deactivateGrupoServidorMesaAction}>
+            <h2 id={`mesa-server-delete-title-${item.clientId}`}>Excluir definitivamente?</h2>
+            <p>Esta ação não pode ser desfeita e o registro não constará no Histórico.</p>
+            <form action={deleteGrupoServidorMesaAction}>
               <input type="hidden" name="grupo_id" value={grupoId} />
               <input type="hidden" name="settings_section" value="servers" />
               <input
@@ -284,7 +311,7 @@ function MesaServerActions({
                 <button type="submit" className="danger-button">
                   <span className="button-content">
                     <FontAwesomeIcon icon={faTrashCan} />
-                    Remover servidor
+                    Excluir definitivamente
                   </span>
                 </button>
               </div>
@@ -300,18 +327,22 @@ function MesaServerActions({
 export function MesaServersSummary({
   grupoId,
   servidores,
+  historyHref,
   disabled = false,
   informativeNotice = "",
   hideHeading = false,
 }: {
   grupoId: string;
   servidores: GrupoServidorMesa[];
+  historyHref?: string;
   disabled?: boolean;
   informativeNotice?: string;
   hideHeading?: boolean;
 }) {
   const items = mesaServerItems(servidores);
+  const detailSuggestions = mesaServerClosureDetailOptions(servidores);
   const [selected, setSelected] = useState<MesaServerItem | null>(null);
+  const [closing, setClosing] = useState<PersistedMesaServerItem | null>(null);
 
   return (
     <section className="responsavel-config-section mesa-servers-section">
@@ -354,6 +385,14 @@ export function MesaServersSummary({
                         item={item}
                         disabled={disabled}
                         onEdit={() => setSelected(item)}
+                        onClose={() => {
+                          if (item.grupo_servidor_mesa_id) {
+                            setClosing({
+                              ...item,
+                              grupo_servidor_mesa_id: item.grupo_servidor_mesa_id,
+                            });
+                          }
+                        }}
                       />
                     </td>
                   </tr>
@@ -365,7 +404,7 @@ export function MesaServersSummary({
           <p className="empty-state">Nenhum encargo cadastrado para este grupo.</p>
         )}
       </div>
-      <div className="section-footer schedule-view-footer">
+      <div className="section-footer schedule-view-footer mesa-server-footer-actions">
         <button
           type="button"
           className="group-wide-action mesa-add-button"
@@ -382,9 +421,15 @@ export function MesaServersSummary({
         >
           <span className="button-content">
             <FontAwesomeIcon icon={faPlus} />
-            Adicionar Servidores
+            Adicionar
           </span>
         </button>
+        <Link href={historyHref ?? "#"} className="secondary mesa-history-button">
+          <span className="button-content">
+            <FontAwesomeIcon icon={faClockRotateLeft} />
+            Histórico
+          </span>
+        </Link>
       </div>
       {selected && (
         <MesaServerModal
@@ -392,6 +437,15 @@ export function MesaServersSummary({
           grupoId={grupoId}
           item={selected}
           onClose={() => setSelected(null)}
+        />
+      )}
+      {closing && (
+        <MesaServerClosureDialog
+          grupoId={grupoId}
+          item={closing}
+          detailSuggestions={detailSuggestions}
+          action={closeGrupoServidorMesaAction}
+          onClose={() => setClosing(null)}
         />
       )}
     </section>

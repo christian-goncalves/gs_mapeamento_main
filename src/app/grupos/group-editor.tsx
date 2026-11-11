@@ -244,6 +244,7 @@ function displayMesaDate(value: string) {
 
 function MesaServersEditor({
   grupoId = "",
+  historyHref = "#",
   servidores,
   disabled = false,
   informativeNotice = "",
@@ -254,6 +255,7 @@ function MesaServersEditor({
   onStartEditing,
 }: {
   grupoId?: string;
+  historyHref?: string;
   servidores: GrupoServidorMesa[];
   disabled?: boolean;
   informativeNotice?: string;
@@ -271,6 +273,7 @@ function MesaServersEditor({
     return (
       <MesaServersSummary
         grupoId={grupoId}
+        historyHref={historyHref}
         servidores={servidores}
         disabled={startDisabled}
         informativeNotice={informativeNotice}
@@ -910,6 +913,7 @@ export function GroupEditor({
               <MesaServersEditor
                 key={`${status ?? ""}:${mesaEditorVersion}:${JSON.stringify(mesaPayloadFromPersisted(servidoresMesa ?? []))}`}
                 grupoId={current.grupo_id}
+                historyHref={`/grupos/${current.grupo_id}/servidores/historico`}
                 servidores={servidoresMesa ?? []}
                 disabled={!mesaEditing || mesaPending}
                 errorNotice={mesaState?.error ?? mesaFormMessage}
@@ -1181,6 +1185,7 @@ export function GroupEditor({
             <div className="settings-accordion-content">
             <MesaServersEditor
               grupoId={current.grupo_id}
+              historyHref={`/admin/grupos/${current.grupo_id}/servidores/historico`}
               servidores={servidoresMesa ?? []}
               summaryMode
               hideSummaryHeading
