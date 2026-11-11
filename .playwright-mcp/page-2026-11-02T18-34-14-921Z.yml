@@ -1,0 +1,1162 @@
+- generic [ref=f3e1]:
+  - banner "Controles do artefato" [ref=f3e3]:
+    - generic [ref=f3e4]:
+      - link "Início" [ref=f3e39] [cursor=pointer]:
+        - /url: /
+        - generic [aria-hidden] [ref=f3e43]: 
+      - generic [ref=f3e5]:
+        - button "CSR Brasil Sul · Santa Catarina · Dashboard executivo" [ref=f3e6] [cursor=pointer]:
+          - generic [ref=f3e9]:
+            - generic [ref=f3e10]: CSR Brasil Sul · Santa Catarina · Dashboard executivo
+            - generic [aria-hidden] [ref=f3e12]: 
+        - generic [ref=f3e13]: O conteúdo é gerado pelo usuário e não verificado.
+      - generic [ref=f3e14]:
+        - button "Você" [ref=f3e15] [cursor=pointer]:
+          - group "Você" [ref=f3e16]:
+            - img "christian" [ref=f3e18]: C
+        - button [ref=f3e44] [cursor=pointer]:
+          - generic [ref=f3e47]:
+            - generic [aria-hidden] [ref=f3e49]: 
+            - text: Compartilhar
+        - status [ref=f3e24]
+        - alert [ref=f3e25]
+  - main [ref=f3e26]:
+    - iframe [active] [ref=f3e29]:
+      - generic [active] [ref=f7e1]:
+        - link "← Mapa do Brasil" [ref=f7e2] [cursor=pointer]:
+          - /url: https://claude.ai/artifact/6xhjWNJobjZMHLgajbJFaU
+        - banner [ref=f7e3]:
+          - heading "CSR Brasil Sul · Santa Catarina — Grupos de NA, dashboard executivo" [level=1] [ref=f7e4]
+          - paragraph [ref=f7e5]: Aba “GRUPOS CSAs Brasil SUL 3T26” · 66 de 66 grupos abertos · 10 de 10 localidades fechadas exibidas
+        - generic [ref=f7e6]:
+          - generic [ref=f7e7]:
+            - text: CSA
+            - combobox "CSA" [ref=f7e8]:
+              - option "Todas" [selected]
+              - option "CSA Catarinense"
+              - option "CSA Grande Florianópolis"
+              - option "CSA Litoral Sul"
+              - option "CSA Norte Catarinense"
+              - option "CSA Rota do Sol - BS"
+              - option "CSA Sem Fronteiras - CSR BS"
+              - option "CSA Sul Catarinense"
+          - generic [ref=f7e9]:
+            - text: Acessibilidade
+            - combobox "Acessibilidade" [ref=f7e10]:
+              - option "Todas" [selected]
+              - option "Com acessibilidade registrada"
+              - option "CadP"
+              - option "CadT"
+              - option "Sem registro"
+          - generic [ref=f7e11]:
+            - text: Escala populacional
+            - combobox "Escala populacional" [ref=f7e12]:
+              - option "Todas" [selected]
+              - option "< 10 mil"
+              - option "10–25 mil"
+              - option "25–50 mil"
+              - option "50–100 mil"
+              - option "> 100 mil"
+              - option "Sem dado"
+          - button "Limpar filtros" [ref=f7e13] [cursor=pointer]
+        - generic [ref=f7e14]:
+          - generic [ref=f7e15]:
+            - text: Grupos
+            - generic [ref=f7e16]: "66"
+          - generic [ref=f7e17]:
+            - text: Reuniões semanais
+            - generic [ref=f7e18]: "165"
+          - generic [ref=f7e19]:
+            - text: Média de reuniões por grupo
+            - generic [ref=f7e20]: 2,5
+          - generic [ref=f7e21]:
+            - text: Municípios
+            - generic [ref=f7e22]: "43"
+          - generic [ref=f7e23]:
+            - text: CSAs
+            - generic [ref=f7e24]: "7"
+          - generic [ref=f7e25]:
+            - text: Com acessibilidade registrada
+            - generic [ref=f7e26]: 22 (33%)
+          - generic [ref=f7e27]:
+            - text: Localidades fechadas
+            - generic [ref=f7e28]: "10"
+          - generic [ref=f7e29]:
+            - text: População das localidades fechadas
+            - generic [ref=f7e30]: "428.297"
+        - generic [ref=f7e31]: "Destaques: CSA Grande Florianópolis tem mais grupos (18); CSA Grande Florianópolis soma mais reuniões semanais (68); Florianópolis é o município com mais grupos (10). Há 10 localidades que já tiveram grupo e estão fechadas, somando 428.297 habitantes; a maior é Brusque (141.676)."
+        - generic [ref=f7e32]:
+          - generic [ref=f7e33]:
+            - heading "Mapa dos grupos · clique numa CSA da legenda para filtrar" [level=2] [ref=f7e34]
+            - generic [ref=f7e35]:
+              - img "Mapa de Santa Catarina com os grupos de NA do CSR Brasil Sul" [ref=f7e36]:
+                - generic "Abdon Batista (SC)" [ref=f7e37]
+                - generic "Abelardo Luz (SC)" [ref=f7e38]
+                - generic "Agrolândia (SC)" [ref=f7e39]
+                - generic "Agronômica (SC)" [ref=f7e40]
+                - generic "Alfredo Wagner (SC)" [ref=f7e41]
+                - generic "Alto Bela Vista (SC)" [ref=f7e42]
+                - generic "Anchieta (SC)" [ref=f7e43]
+                - generic "Angelina (SC)" [ref=f7e44]
+                - generic "Anita Garibaldi (SC)" [ref=f7e45]
+                - generic "Anitápolis (SC)" [ref=f7e46]
+                - generic "Antônio Carlos (SC)" [ref=f7e47]
+                - generic "Apiúna (SC)" [ref=f7e48]
+                - generic "Arabutã (SC)" [ref=f7e49]
+                - generic "Araquari (SC)" [ref=f7e50]
+                - generic "Araranguá (SC)" [ref=f7e51]
+                - generic "Armazém (SC)" [ref=f7e52]
+                - generic "Arroio Trinta (SC)" [ref=f7e53]
+                - generic "Arvoredo (SC)" [ref=f7e54]
+                - generic "Ascurra (SC)" [ref=f7e55]
+                - generic "Atalanta (SC)" [ref=f7e56]
+                - generic "Aurora (SC)" [ref=f7e57]
+                - generic "Balneário Arroio do Silva (SC)" [ref=f7e58]
+                - generic "Balneário Barra do Sul (SC)" [ref=f7e59]
+                - generic "Balneário Camboriú (SC)" [ref=f7e60]
+                - generic "Balneário Gaivota (SC)" [ref=f7e61]
+                - generic "Balneário Piçarras (SC)" [ref=f7e62]
+                - generic "Bandeirante (SC)" [ref=f7e63]
+                - generic "Barra Bonita (SC)" [ref=f7e64]
+                - generic "Barra Velha (SC)" [ref=f7e65]
+                - generic "Bela Vista do Toldo (SC)" [ref=f7e66]
+                - generic "Belmonte (SC)" [ref=f7e67]
+                - generic "Benedito Novo (SC)" [ref=f7e68]
+                - generic "Biguaçu (SC)" [ref=f7e69]
+                - generic "Blumenau (SC)" [ref=f7e70]
+                - generic "Bocaina do Sul (SC)" [ref=f7e71]
+                - generic "Bom Jardim da Serra (SC)" [ref=f7e72]
+                - generic "Bom Jesus (SC)" [ref=f7e73]
+                - generic "Bom Jesus do Oeste (SC)" [ref=f7e74]
+                - generic "Bom Retiro (SC)" [ref=f7e75]
+                - generic "Bombinhas (SC)" [ref=f7e76]
+                - generic "Botuverá (SC)" [ref=f7e77]
+                - generic "Braço do Norte (SC)" [ref=f7e78]
+                - generic "Braço do Trombudo (SC)" [ref=f7e79]
+                - generic "Brunópolis (SC)" [ref=f7e80]
+                - generic "Brusque (SC)" [ref=f7e81]
+                - generic "Caibi (SC)" [ref=f7e82]
+                - generic "Calmon (SC)" [ref=f7e83]
+                - generic "Camboriú (SC)" [ref=f7e84]
+                - generic "Campo Alegre (SC)" [ref=f7e85]
+                - generic "Campo Belo do Sul (SC)" [ref=f7e86]
+                - generic "Campo Erê (SC)" [ref=f7e87]
+                - generic "Campos Novos (SC)" [ref=f7e88]
+                - generic "Canelinha (SC)" [ref=f7e89]
+                - generic "Canoinhas (SC)" [ref=f7e90]
+                - generic "Capinzal (SC)" [ref=f7e91]
+                - generic "Capivari de Baixo (SC)" [ref=f7e92]
+                - generic "Capão Alto (SC)" [ref=f7e93]
+                - generic "Catanduvas (SC)" [ref=f7e94]
+                - generic "Caxambu do Sul (SC)" [ref=f7e95]
+                - generic "Caçador (SC)" [ref=f7e96]
+                - generic "Celso Ramos (SC)" [ref=f7e97]
+                - generic "Cerro Negro (SC)" [ref=f7e98]
+                - generic "Chapadão do Lageado (SC)" [ref=f7e99]
+                - generic "Chapecó (SC)" [ref=f7e100]
+                - generic "Cocal do Sul (SC)" [ref=f7e101]
+                - generic "Concórdia (SC)" [ref=f7e102]
+                - generic "Cordilheira Alta (SC)" [ref=f7e103]
+                - generic "Coronel Freitas (SC)" [ref=f7e104]
+                - generic "Coronel Martins (SC)" [ref=f7e105]
+                - generic "Correia Pinto (SC)" [ref=f7e106]
+                - generic "Corupá (SC)" [ref=f7e107]
+                - generic "Criciúma (SC)" [ref=f7e108]
+                - generic "Cunha Porã (SC)" [ref=f7e109]
+                - generic "Cunhataí (SC)" [ref=f7e110]
+                - generic "Curitibanos (SC)" [ref=f7e111]
+                - generic "Descanso (SC)" [ref=f7e112]
+                - generic "Dionísio Cerqueira (SC)" [ref=f7e113]
+                - generic "Dona Emma (SC)" [ref=f7e114]
+                - generic "Doutor Pedrinho (SC)" [ref=f7e115]
+                - generic "Entre Rios (SC)" [ref=f7e116]
+                - generic "Ermo (SC)" [ref=f7e117]
+                - generic "Erval Velho (SC)" [ref=f7e118]
+                - generic "Faxinal dos Guedes (SC)" [ref=f7e119]
+                - generic "Flor do Sertão (SC)" [ref=f7e120]
+                - generic "Florianópolis (SC)" [ref=f7e121]
+                - generic "Formosa do Sul (SC)" [ref=f7e122]
+                - generic "Forquilhinha (SC)" [ref=f7e123]
+                - generic "Fraiburgo (SC)" [ref=f7e124]
+                - generic "Frei Rogério (SC)" [ref=f7e125]
+                - generic "Galvão (SC)" [ref=f7e126]
+                - generic "Garopaba (SC)" [ref=f7e127]
+                - generic "Garuva (SC)" [ref=f7e128]
+                - generic "Gaspar (SC)" [ref=f7e129]
+                - generic "Governador Celso Ramos (SC)" [ref=f7e130]
+                - generic "Gravatal (SC)" [ref=f7e131]
+                - generic "Grão Pará (SC)" [ref=f7e132]
+                - generic "Guabiruba (SC)" [ref=f7e133]
+                - generic "Guaraciaba (SC)" [ref=f7e134]
+                - generic "Guaramirim (SC)" [ref=f7e135]
+                - generic "Guarujá do Sul (SC)" [ref=f7e136]
+                - generic "Guatambú (SC)" [ref=f7e137]
+                - generic "Herval d'Oeste (SC)" [ref=f7e138]
+                - generic "Ibiam (SC)" [ref=f7e139]
+                - generic "Ibicaré (SC)" [ref=f7e140]
+                - generic "Ibirama (SC)" [ref=f7e141]
+                - generic "Ilhota (SC)" [ref=f7e142]
+                - generic "Imaruí (SC)" [ref=f7e143]
+                - generic "Imbituba (SC)" [ref=f7e144]
+                - generic "Imbuia (SC)" [ref=f7e145]
+                - generic "Indaial (SC)" [ref=f7e146]
+                - generic "Iomerê (SC)" [ref=f7e147]
+                - generic "Ipira (SC)" [ref=f7e148]
+                - generic "Iporã do Oeste (SC)" [ref=f7e149]
+                - generic "Ipuaçu (SC)" [ref=f7e150]
+                - generic "Ipumirim (SC)" [ref=f7e151]
+                - generic "Iraceminha (SC)" [ref=f7e152]
+                - generic "Irani (SC)" [ref=f7e153]
+                - generic "Irati (SC)" [ref=f7e154]
+                - generic "Irineópolis (SC)" [ref=f7e155]
+                - generic "Itaiópolis (SC)" [ref=f7e156]
+                - generic "Itajaí (SC)" [ref=f7e157]
+                - generic "Itapema (SC)" [ref=f7e158]
+                - generic "Itapiranga (SC)" [ref=f7e159]
+                - generic "Itapoá (SC)" [ref=f7e160]
+                - generic "Ituporanga (SC)" [ref=f7e161]
+                - generic "Itá (SC)" [ref=f7e162]
+                - generic "Içara (SC)" [ref=f7e163]
+                - generic "Jaborá (SC)" [ref=f7e164]
+                - generic "Jacinto Machado (SC)" [ref=f7e165]
+                - generic "Jaguaruna (SC)" [ref=f7e166]
+                - generic "Jaraguá do Sul (SC)" [ref=f7e167]
+                - generic "Jardinópolis (SC)" [ref=f7e168]
+                - generic "Joaçaba (SC)" [ref=f7e169]
+                - generic "Joinville (SC)" [ref=f7e170]
+                - generic "José Boiteux (SC)" [ref=f7e171]
+                - generic "Jupiá (SC)" [ref=f7e172]
+                - generic "Lacerdópolis (SC)" [ref=f7e173]
+                - generic "Lages (SC)" [ref=f7e174]
+                - generic "Laguna (SC)" [ref=f7e175]
+                - generic "Lajeado Grande (SC)" [ref=f7e176]
+                - generic "Laurentino (SC)" [ref=f7e177]
+                - generic "Lauro Muller (SC)" [ref=f7e178]
+                - generic "Lebon Régis (SC)" [ref=f7e179]
+                - generic "Leoberto Leal (SC)" [ref=f7e180]
+                - generic "Lindóia do Sul (SC)" [ref=f7e181]
+                - generic "Lontras (SC)" [ref=f7e182]
+                - generic "Luiz Alves (SC)" [ref=f7e183]
+                - generic "Luzerna (SC)" [ref=f7e184]
+                - generic "Macieira (SC)" [ref=f7e185]
+                - generic "Mafra (SC)" [ref=f7e186]
+                - generic "Major Gercino (SC)" [ref=f7e187]
+                - generic "Major Vieira (SC)" [ref=f7e188]
+                - generic "Maracajá (SC)" [ref=f7e189]
+                - generic "Maravilha (SC)" [ref=f7e190]
+                - generic "Marema (SC)" [ref=f7e191]
+                - generic "Massaranduba (SC)" [ref=f7e192]
+                - generic "Matos Costa (SC)" [ref=f7e193]
+                - generic "Meleiro (SC)" [ref=f7e194]
+                - generic "Mirim Doce (SC)" [ref=f7e195]
+                - generic "Modelo (SC)" [ref=f7e196]
+                - generic "Mondaí (SC)" [ref=f7e197]
+                - generic "Monte Carlo (SC)" [ref=f7e198]
+                - generic "Monte Castelo (SC)" [ref=f7e199]
+                - generic "Morro Grande (SC)" [ref=f7e200]
+                - generic "Morro da Fumaça (SC)" [ref=f7e201]
+                - generic "Navegantes (SC)" [ref=f7e202]
+                - generic "Nova Erechim (SC)" [ref=f7e203]
+                - generic "Nova Itaberaba (SC)" [ref=f7e204]
+                - generic "Nova Trento (SC)" [ref=f7e205]
+                - generic "Nova Veneza (SC)" [ref=f7e206]
+                - generic "Novo Horizonte (SC)" [ref=f7e207]
+                - generic "Orleans (SC)" [ref=f7e208]
+                - generic "Otacílio Costa (SC)" [ref=f7e209]
+                - generic "Ouro (SC)" [ref=f7e210]
+                - generic "Ouro Verde (SC)" [ref=f7e211]
+                - generic "Paial (SC)" [ref=f7e212]
+                - generic "Painel (SC)" [ref=f7e213]
+                - generic "Palhoça (SC)" [ref=f7e214]
+                - generic "Palma Sola (SC)" [ref=f7e215]
+                - generic "Palmeira (SC)" [ref=f7e216]
+                - generic "Palmitos (SC)" [ref=f7e217]
+                - generic "Papanduva (SC)" [ref=f7e218]
+                - generic "Paraíso (SC)" [ref=f7e219]
+                - generic "Passo de Torres (SC)" [ref=f7e220]
+                - generic "Passos Maia (SC)" [ref=f7e221]
+                - generic "Paulo Lopes (SC)" [ref=f7e222]
+                - generic "Pedras Grandes (SC)" [ref=f7e223]
+                - generic "Penha (SC)" [ref=f7e224]
+                - generic "Peritiba (SC)" [ref=f7e225]
+                - generic "Petrolândia (SC)" [ref=f7e226]
+                - generic "Pinhalzinho (SC)" [ref=f7e227]
+                - generic "Pinheiro Preto (SC)" [ref=f7e228]
+                - generic "Piratuba (SC)" [ref=f7e229]
+                - generic "Planalto Alegre (SC)" [ref=f7e230]
+                - generic "Pomerode (SC)" [ref=f7e231]
+                - generic "Ponte Alta (SC)" [ref=f7e232]
+                - generic "Ponte Alta do Norte (SC)" [ref=f7e233]
+                - generic "Ponte Serrada (SC)" [ref=f7e234]
+                - generic "Porto Belo (SC)" [ref=f7e235]
+                - generic "Porto União (SC)" [ref=f7e236]
+                - generic "Pouso Redondo (SC)" [ref=f7e237]
+                - generic "Praia Grande (SC)" [ref=f7e238]
+                - generic "Presidente Castello Branco (SC)" [ref=f7e239]
+                - generic "Presidente Getúlio (SC)" [ref=f7e240]
+                - generic "Presidente Nereu (SC)" [ref=f7e241]
+                - generic "Princesa (SC)" [ref=f7e242]
+                - generic "Quilombo (SC)" [ref=f7e243]
+                - generic "Rancho Queimado (SC)" [ref=f7e244]
+                - generic "Rio Fortuna (SC)" [ref=f7e245]
+                - generic "Rio Negrinho (SC)" [ref=f7e246]
+                - generic "Rio Rufino (SC)" [ref=f7e247]
+                - generic "Rio das Antas (SC)" [ref=f7e248]
+                - generic "Rio do Campo (SC)" [ref=f7e249]
+                - generic "Rio do Oeste (SC)" [ref=f7e250]
+                - generic "Rio do Sul (SC)" [ref=f7e251]
+                - generic "Rio dos Cedros (SC)" [ref=f7e252]
+                - generic "Riqueza (SC)" [ref=f7e253]
+                - generic "Rodeio (SC)" [ref=f7e254]
+                - generic "Romelândia (SC)" [ref=f7e255]
+                - generic "Salete (SC)" [ref=f7e256]
+                - generic "Saltinho (SC)" [ref=f7e257]
+                - generic "Salto Veloso (SC)" [ref=f7e258]
+                - generic "Sangão (SC)" [ref=f7e259]
+                - generic "Santa Cecília (SC)" [ref=f7e260]
+                - generic "Santa Helena (SC)" [ref=f7e261]
+                - generic "Santa Rosa de Lima (SC)" [ref=f7e262]
+                - generic "Santa Rosa do Sul (SC)" [ref=f7e263]
+                - generic "Santa Terezinha (SC)" [ref=f7e264]
+                - generic "Santa Terezinha do Progresso (SC)" [ref=f7e265]
+                - generic "Santiago do Sul (SC)" [ref=f7e266]
+                - generic "Santo Amaro da Imperatriz (SC)" [ref=f7e267]
+                - generic "Saudades (SC)" [ref=f7e268]
+                - generic "Schroeder (SC)" [ref=f7e269]
+                - generic "Seara (SC)" [ref=f7e270]
+                - generic "Serra Alta (SC)" [ref=f7e271]
+                - generic "Siderópolis (SC)" [ref=f7e272]
+                - generic "Sombrio (SC)" [ref=f7e273]
+                - generic "Sul Brasil (SC)" [ref=f7e274]
+                - generic "São Bento do Sul (SC)" [ref=f7e275]
+                - generic "São Bernardino (SC)" [ref=f7e276]
+                - generic "São Bonifácio (SC)" [ref=f7e277]
+                - generic "São Carlos (SC)" [ref=f7e278]
+                - generic "São Cristovão do Sul (SC)" [ref=f7e279]
+                - generic "São Domingos (SC)" [ref=f7e280]
+                - generic "São Francisco do Sul (SC)" [ref=f7e281]
+                - generic "São Joaquim (SC)" [ref=f7e282]
+                - generic "São José (SC)" [ref=f7e283]
+                - generic "São José do Cedro (SC)" [ref=f7e284]
+                - generic "São José do Cerrito (SC)" [ref=f7e285]
+                - generic "São João Batista (SC)" [ref=f7e286]
+                - generic "São João do Itaperiú (SC)" [ref=f7e287]
+                - generic "São João do Oeste (SC)" [ref=f7e288]
+                - generic "São João do Sul (SC)" [ref=f7e289]
+                - generic "São Lourenço do Oeste (SC)" [ref=f7e290]
+                - generic "São Ludgero (SC)" [ref=f7e291]
+                - generic "São Martinho (SC)" [ref=f7e292]
+                - generic "São Miguel da Boa Vista (SC)" [ref=f7e293]
+                - generic "São Miguel do Oeste (SC)" [ref=f7e294]
+                - generic "São Pedro de Alcântara (SC)" [ref=f7e295]
+                - generic "Taió (SC)" [ref=f7e296]
+                - generic "Tangará (SC)" [ref=f7e297]
+                - generic "Tigrinhos (SC)" [ref=f7e298]
+                - generic "Tijucas (SC)" [ref=f7e299]
+                - generic "Timbé do Sul (SC)" [ref=f7e300]
+                - generic "Timbó (SC)" [ref=f7e301]
+                - generic "Timbó Grande (SC)" [ref=f7e302]
+                - generic "Treviso (SC)" [ref=f7e303]
+                - generic "Treze Tílias (SC)" [ref=f7e304]
+                - generic "Treze de Maio (SC)" [ref=f7e305]
+                - generic "Trombudo Central (SC)" [ref=f7e306]
+                - generic "Três Barras (SC)" [ref=f7e307]
+                - generic "Tubarão (SC)" [ref=f7e308]
+                - generic "Tunápolis (SC)" [ref=f7e309]
+                - generic "Turvo (SC)" [ref=f7e310]
+                - generic "União do Oeste (SC)" [ref=f7e311]
+                - generic "Urubici (SC)" [ref=f7e312]
+                - generic "Urupema (SC)" [ref=f7e313]
+                - generic "Urussanga (SC)" [ref=f7e314]
+                - generic "Vargem (SC)" [ref=f7e315]
+                - generic "Vargem Bonita (SC)" [ref=f7e316]
+                - generic "Vargeão (SC)" [ref=f7e317]
+                - generic "Vidal Ramos (SC)" [ref=f7e318]
+                - generic "Videira (SC)" [ref=f7e319]
+                - generic "Vitor Meireles (SC)" [ref=f7e320]
+                - generic "Witmarsum (SC)" [ref=f7e321]
+                - generic "Xanxerê (SC)" [ref=f7e322]
+                - generic "Xavantina (SC)" [ref=f7e323]
+                - generic "Xaxim (SC)" [ref=f7e324]
+                - generic "Zortéa (SC)" [ref=f7e325]
+                - generic "Água Doce (SC)" [ref=f7e326]
+                - generic "Águas Frias (SC)" [ref=f7e327]
+                - generic "Águas Mornas (SC)" [ref=f7e328]
+                - generic "Águas de Chapecó (SC)" [ref=f7e329]
+                - generic [ref=f7e330]:
+                  - generic [ref=f7e331] [cursor=pointer]
+                  - generic [ref=f7e332] [cursor=pointer]
+                  - generic [ref=f7e333] [cursor=pointer]
+                  - generic [ref=f7e334] [cursor=pointer]
+                  - generic [ref=f7e335] [cursor=pointer]
+                  - generic [ref=f7e336] [cursor=pointer]
+                  - generic [ref=f7e337] [cursor=pointer]
+                  - generic [ref=f7e338] [cursor=pointer]
+                  - generic [ref=f7e339] [cursor=pointer]
+                  - generic [ref=f7e340] [cursor=pointer]
+                  - generic [ref=f7e341] [cursor=pointer]
+                  - generic [ref=f7e342] [cursor=pointer]
+                  - generic [ref=f7e343] [cursor=pointer]
+                  - generic [ref=f7e344] [cursor=pointer]
+                  - generic [ref=f7e345] [cursor=pointer]
+                  - generic [ref=f7e346] [cursor=pointer]
+                  - generic [ref=f7e347] [cursor=pointer]
+                  - generic [ref=f7e348] [cursor=pointer]
+                  - generic [ref=f7e349] [cursor=pointer]
+                  - generic [ref=f7e350] [cursor=pointer]
+                  - generic [ref=f7e351] [cursor=pointer]
+                  - generic [ref=f7e352] [cursor=pointer]
+                  - generic [ref=f7e353] [cursor=pointer]
+                  - generic [ref=f7e354] [cursor=pointer]
+                  - generic [ref=f7e355] [cursor=pointer]
+                  - generic [ref=f7e356] [cursor=pointer]
+                  - generic [ref=f7e357] [cursor=pointer]
+                  - generic [ref=f7e358] [cursor=pointer]
+                  - generic [ref=f7e359] [cursor=pointer]
+                  - generic [ref=f7e360] [cursor=pointer]
+                  - generic [ref=f7e361] [cursor=pointer]
+                  - generic [ref=f7e362] [cursor=pointer]
+                  - generic [ref=f7e363] [cursor=pointer]
+                  - generic [ref=f7e364] [cursor=pointer]
+                  - generic [ref=f7e365] [cursor=pointer]
+                  - generic [ref=f7e366] [cursor=pointer]
+                  - generic [ref=f7e367] [cursor=pointer]
+                  - generic [ref=f7e368] [cursor=pointer]
+                  - generic [ref=f7e369] [cursor=pointer]
+                  - generic [ref=f7e370] [cursor=pointer]
+                  - generic [ref=f7e371] [cursor=pointer]
+                  - generic [ref=f7e372] [cursor=pointer]
+                  - generic [ref=f7e373] [cursor=pointer]
+                  - generic [ref=f7e374] [cursor=pointer]
+                  - generic [ref=f7e375] [cursor=pointer]
+                  - generic [ref=f7e376] [cursor=pointer]
+                  - generic [ref=f7e377] [cursor=pointer]
+                  - generic [ref=f7e378] [cursor=pointer]
+                  - generic [ref=f7e379] [cursor=pointer]
+                  - generic [ref=f7e380] [cursor=pointer]
+                  - generic [ref=f7e381] [cursor=pointer]
+                  - generic [ref=f7e382] [cursor=pointer]
+                  - generic [ref=f7e383] [cursor=pointer]
+                  - generic [ref=f7e384] [cursor=pointer]
+                  - generic [ref=f7e385] [cursor=pointer]
+                  - generic [ref=f7e386] [cursor=pointer]
+                  - generic [ref=f7e387] [cursor=pointer]
+                  - generic [ref=f7e388] [cursor=pointer]
+                  - generic [ref=f7e389] [cursor=pointer]
+                  - generic [ref=f7e390] [cursor=pointer]
+                  - generic [ref=f7e391] [cursor=pointer]
+                  - generic [ref=f7e392] [cursor=pointer]
+                  - generic [ref=f7e393] [cursor=pointer]
+                  - generic [ref=f7e394] [cursor=pointer]
+                  - generic [ref=f7e395] [cursor=pointer]
+                  - generic [ref=f7e396] [cursor=pointer]
+                  - generic [ref=f7e397] [cursor=pointer]
+                  - generic [ref=f7e398] [cursor=pointer]
+                  - generic [ref=f7e399] [cursor=pointer]
+                  - generic [ref=f7e400] [cursor=pointer]
+                  - generic [ref=f7e401] [cursor=pointer]
+                  - generic [ref=f7e402] [cursor=pointer]
+                  - generic [ref=f7e403] [cursor=pointer]
+                  - generic [ref=f7e404] [cursor=pointer]
+                  - generic [ref=f7e405] [cursor=pointer]
+                  - generic [ref=f7e406] [cursor=pointer]
+              - generic [ref=f7e407]:
+                - button "Aproximar" [ref=f7e408] [cursor=pointer]: +
+                - button "Afastar" [ref=f7e409] [cursor=pointer]: −
+                - button "Enquadrar os grupos" [ref=f7e410] [cursor=pointer]: ⌂
+            - generic [ref=f7e411]: Santa Catarina
+            - generic [ref=f7e414]: ● pino redondo colorido = grupo aberto (cor da CSA) · ◆ pino vermelho = localidade que já teve grupo e está fechada
+            - generic [ref=f7e415]:
+              - button "◆ Localidades fechadas (10)" [ref=f7e416] [cursor=pointer]
+              - button "Catarinense (8)" [ref=f7e417] [cursor=pointer]
+              - button "Grande Florianópolis (18)" [ref=f7e419] [cursor=pointer]
+              - button "Litoral Sul (7)" [ref=f7e421] [cursor=pointer]
+              - button "Norte Catarinense (9)" [ref=f7e423] [cursor=pointer]
+              - button "Rota do Sol - BS (11)" [ref=f7e425] [cursor=pointer]
+              - button "Sem Fronteiras - CSR BS (4)" [ref=f7e427] [cursor=pointer]
+              - button "Sul Catarinense (9)" [ref=f7e429] [cursor=pointer]
+            - generic [ref=f7e431]: Passe o mouse (ou toque) sobre um ponto do mapa para ver as informações do grupo ou da localidade fechada.
+          - generic [ref=f7e433]:
+            - generic [ref=f7e434]:
+              - heading "Grupos por CSA" [level=2] [ref=f7e435]
+              - generic [ref=f7e436]:
+                - generic [ref=f7e437] [cursor=pointer]:
+                  - generic "CSA Grande Florianópolis" [ref=f7e438]
+                  - generic [ref=f7e441]: "18"
+                - generic [ref=f7e442] [cursor=pointer]:
+                  - generic "CSA Rota do Sol - BS" [ref=f7e443]
+                  - generic [ref=f7e446]: "11"
+                - generic [ref=f7e447] [cursor=pointer]:
+                  - generic "CSA Norte Catarinense" [ref=f7e448]
+                  - generic [ref=f7e451]: "9"
+                - generic [ref=f7e452] [cursor=pointer]:
+                  - generic "CSA Sul Catarinense" [ref=f7e453]
+                  - generic [ref=f7e456]: "9"
+                - generic [ref=f7e457] [cursor=pointer]:
+                  - generic "CSA Catarinense" [ref=f7e458]
+                  - generic [ref=f7e461]: "8"
+                - generic [ref=f7e462] [cursor=pointer]:
+                  - generic "CSA Litoral Sul" [ref=f7e463]
+                  - generic [ref=f7e466]: "7"
+                - generic [ref=f7e467] [cursor=pointer]:
+                  - generic "CSA Sem Fronteiras - CSR BS" [ref=f7e468]
+                  - generic [ref=f7e471]: "4"
+            - generic [ref=f7e472]:
+              - heading "Reuniões semanais por CSA" [level=2] [ref=f7e473]
+              - generic [ref=f7e474]:
+                - generic [ref=f7e475] [cursor=pointer]:
+                  - generic "CSA Grande Florianópolis" [ref=f7e476]
+                  - generic [ref=f7e479]: "68"
+                - generic [ref=f7e480] [cursor=pointer]:
+                  - generic "CSA Rota do Sol - BS" [ref=f7e481]
+                  - generic [ref=f7e484]: "28"
+                - generic [ref=f7e485] [cursor=pointer]:
+                  - generic "CSA Norte Catarinense" [ref=f7e486]
+                  - generic [ref=f7e489]: "22"
+                - generic [ref=f7e490] [cursor=pointer]:
+                  - generic "CSA Catarinense" [ref=f7e491]
+                  - generic [ref=f7e494]: "17"
+                - generic [ref=f7e495] [cursor=pointer]:
+                  - generic "CSA Sul Catarinense" [ref=f7e496]
+                  - generic [ref=f7e499]: "12"
+                - generic [ref=f7e500] [cursor=pointer]:
+                  - generic "CSA Litoral Sul" [ref=f7e501]
+                  - generic [ref=f7e504]: "10"
+                - generic [ref=f7e505] [cursor=pointer]:
+                  - generic "CSA Sem Fronteiras - CSR BS" [ref=f7e506]
+                  - generic [ref=f7e509]: "8"
+            - generic [ref=f7e510]:
+              - heading "Média de reuniões semanais por grupo, por CSA" [level=2] [ref=f7e511]
+              - generic [ref=f7e512]:
+                - generic [ref=f7e513] [cursor=pointer]:
+                  - generic "CSA Grande Florianópolis" [ref=f7e514]
+                  - generic [ref=f7e517]: 3,8
+                - generic [ref=f7e518] [cursor=pointer]:
+                  - generic "CSA Rota do Sol - BS" [ref=f7e519]
+                  - generic [ref=f7e522]: 2,5
+                - generic [ref=f7e523] [cursor=pointer]:
+                  - generic "CSA Norte Catarinense" [ref=f7e524]
+                  - generic [ref=f7e527]: 2,4
+                - generic [ref=f7e528] [cursor=pointer]:
+                  - generic "CSA Catarinense" [ref=f7e529]
+                  - generic [ref=f7e532]: 2,1
+                - generic [ref=f7e533] [cursor=pointer]:
+                  - generic "CSA Sem Fronteiras - CSR BS" [ref=f7e534]
+                  - generic [ref=f7e537]: "2"
+                - generic [ref=f7e538] [cursor=pointer]:
+                  - generic "CSA Litoral Sul" [ref=f7e539]
+                  - generic [ref=f7e542]: 1,4
+                - generic [ref=f7e543] [cursor=pointer]:
+                  - generic "CSA Sul Catarinense" [ref=f7e544]
+                  - generic [ref=f7e547]: 1,3
+        - generic [ref=f7e548]:
+          - generic [ref=f7e549]:
+            - heading "Acessibilidade registrada" [level=2] [ref=f7e550]
+            - generic [ref=f7e551]:
+              - generic [ref=f7e552] [cursor=pointer]:
+                - generic "CadP" [ref=f7e553]
+                - generic [ref=f7e556]: "18"
+              - generic [ref=f7e557] [cursor=pointer]:
+                - generic "CadT" [ref=f7e558]
+                - generic [ref=f7e561]: "4"
+              - generic [ref=f7e562] [cursor=pointer]:
+                - generic "Sem registro" [ref=f7e563]
+                - generic [ref=f7e566]: "44"
+          - generic [ref=f7e567]:
+            - heading "Reuniões semanais por grupo" [level=2] [ref=f7e568]
+            - generic [ref=f7e569]:
+              - generic [ref=f7e570]:
+                - generic "1 reunião" [ref=f7e571]
+                - generic [ref=f7e574]: "31"
+              - generic [ref=f7e575]:
+                - generic "2 reuniões" [ref=f7e576]
+                - generic [ref=f7e579]: "14"
+              - generic [ref=f7e580]:
+                - generic "3 reuniões" [ref=f7e581]
+                - generic [ref=f7e584]: "8"
+              - generic [ref=f7e585]:
+                - generic "4 reuniões" [ref=f7e586]
+                - generic [ref=f7e589]: "5"
+              - generic [ref=f7e590]:
+                - generic "5 ou mais" [ref=f7e591]
+                - generic [ref=f7e594]: "8"
+          - generic [ref=f7e595]:
+            - heading "Grupos por escala populacional do município" [level=2] [ref=f7e596]
+            - generic [ref=f7e597]:
+              - generic [ref=f7e598] [cursor=pointer]:
+                - generic "< 10 mil" [ref=f7e599]
+                - generic [ref=f7e602]: "2"
+              - generic [ref=f7e603] [cursor=pointer]:
+                - generic "10–25 mil" [ref=f7e604]
+                - generic [ref=f7e607]: "6"
+              - generic [ref=f7e608] [cursor=pointer]:
+                - generic "25–50 mil" [ref=f7e609]
+                - generic [ref=f7e612]: "11"
+              - generic [ref=f7e613] [cursor=pointer]:
+                - generic "50–100 mil" [ref=f7e614]
+                - generic [ref=f7e617]: "12"
+              - generic [ref=f7e618] [cursor=pointer]:
+                - generic "> 100 mil" [ref=f7e619]
+                - generic [ref=f7e622]: "35"
+          - generic [ref=f7e623]:
+            - heading "10 municípios com mais grupos" [level=2] [ref=f7e624]
+            - generic [ref=f7e625]:
+              - generic [ref=f7e626]:
+                - generic "Florianópolis" [ref=f7e627]
+                - generic [ref=f7e630]: "10"
+              - generic [ref=f7e631]:
+                - generic "São José" [ref=f7e632]
+                - generic [ref=f7e635]: "5"
+              - generic [ref=f7e636]:
+                - generic "Joinville" [ref=f7e637]
+                - generic [ref=f7e640]: "4"
+              - generic [ref=f7e641]:
+                - generic "Chapecó" [ref=f7e642]
+                - generic [ref=f7e645]: "2"
+              - generic [ref=f7e646]:
+                - generic "Balneário Camboriú" [ref=f7e647]
+                - generic [ref=f7e650]: "2"
+              - generic [ref=f7e651]:
+                - generic "Palhoça" [ref=f7e652]
+                - generic [ref=f7e655]: "2"
+              - generic [ref=f7e656]:
+                - generic "Garopaba" [ref=f7e657]
+                - generic [ref=f7e660]: "2"
+              - generic [ref=f7e661]:
+                - generic "Tubarão" [ref=f7e662]
+                - generic [ref=f7e665]: "2"
+              - generic [ref=f7e666]:
+                - generic "Itapema" [ref=f7e667]
+                - generic [ref=f7e670]: "2"
+              - generic [ref=f7e671]:
+                - generic "Criciúma" [ref=f7e672]
+                - generic [ref=f7e675]: "2"
+          - generic [ref=f7e676]:
+            - heading "Localidades fechadas por CSA do grupo aberto mais próximo" [level=2] [ref=f7e677]
+            - generic [ref=f7e678]:
+              - generic [ref=f7e679]:
+                - generic "CSA Catarinense" [ref=f7e680]
+                - generic [ref=f7e683]: "6"
+              - generic [ref=f7e684]:
+                - generic "CSA Grande Florianópolis" [ref=f7e685]
+                - generic [ref=f7e688]: "1"
+              - generic [ref=f7e689]:
+                - generic "CSA Rota do Sol - BS" [ref=f7e690]
+                - generic [ref=f7e693]: "1"
+              - generic [ref=f7e694]:
+                - generic "CSA Sem Fronteiras - CSR BS" [ref=f7e695]
+                - generic [ref=f7e698]: "1"
+              - generic [ref=f7e699]:
+                - generic "CSA Sul Catarinense" [ref=f7e700]
+                - generic [ref=f7e703]: "1"
+          - generic [ref=f7e704]:
+            - heading "População das localidades fechadas (Censo 2022)" [level=2] [ref=f7e705]
+            - generic [ref=f7e706]:
+              - generic [ref=f7e707]:
+                - generic "Brusque" [ref=f7e708]
+                - generic [ref=f7e711]: "141.676"
+              - generic [ref=f7e712]:
+                - generic "Biguaçu" [ref=f7e713]
+                - generic [ref=f7e716]: "78.623"
+              - generic [ref=f7e717]:
+                - generic "Caçador" [ref=f7e718]
+                - generic [ref=f7e721]: "74.105"
+              - generic [ref=f7e722]:
+                - generic "Porto União" [ref=f7e723]
+                - generic [ref=f7e726]: "32.190"
+              - generic [ref=f7e727]:
+                - generic "São Joaquim" [ref=f7e728]
+                - generic [ref=f7e731]: "26.026"
+              - generic [ref=f7e732]:
+                - generic "Herval d'Oeste" [ref=f7e733]
+                - generic [ref=f7e736]: "21.339"
+              - generic [ref=f7e737]:
+                - generic "Urussanga" [ref=f7e738]
+                - generic [ref=f7e741]: "20.915"
+              - generic [ref=f7e742]:
+                - generic "Seara" [ref=f7e743]
+                - generic [ref=f7e746]: "18.623"
+              - generic [ref=f7e747]:
+                - generic "São José do Cerrito" [ref=f7e748]
+                - generic [ref=f7e751]: "8.708"
+              - generic [ref=f7e752]:
+                - generic "São Cristóvão do Sul" [ref=f7e753]
+                - generic [ref=f7e756]: "6.092"
+          - generic [ref=f7e757]:
+            - heading "Grupos abertos por escala populacional do município" [level=2] [ref=f7e758]
+            - generic [ref=f7e759]:
+              - img "Gráfico de pizza dos grupos abertos por escala populacional" [ref=f7e760]:
+                - 'generic "Menos de 10 mil: 2 grupos" [ref=f7e761]'
+                - 'generic "10 a 25 mil: 6 grupos" [ref=f7e762]'
+                - 'generic "25 a 50 mil: 11 grupos" [ref=f7e763]'
+                - 'generic "50 a 100 mil: 12 grupos" [ref=f7e764]'
+                - 'generic "Mais de 100 mil: 35 grupos" [ref=f7e765]'
+              - list [ref=f7e766]:
+                - listitem [ref=f7e767]:
+                  - text: Menos de 10 mil
+                  - generic [ref=f7e769]: 2 · 3%
+                - listitem [ref=f7e770]:
+                  - text: 10 a 25 mil
+                  - generic [ref=f7e772]: 6 · 9%
+                - listitem [ref=f7e773]:
+                  - text: 25 a 50 mil
+                  - generic [ref=f7e775]: 11 · 17%
+                - listitem [ref=f7e776]:
+                  - text: 50 a 100 mil
+                  - generic [ref=f7e778]: 12 · 18%
+                - listitem [ref=f7e779]:
+                  - text: Mais de 100 mil
+                  - generic [ref=f7e781]: 35 · 53%
+                - listitem [ref=f7e782]:
+                  - generic [ref=f7e783]: Total
+                  - generic [ref=f7e784]: "66"
+          - generic [ref=f7e785]:
+            - heading "Municípios sem grupos abertos por escala populacional" [level=2] [ref=f7e786]
+            - generic [ref=f7e787]:
+              - img "Gráfico de pizza dos municípios sem grupos abertos por escala populacional" [ref=f7e788]:
+                - 'generic "Menos de 10 mil: 160 municípios" [ref=f7e789]'
+                - 'generic "10 a 25 mil: 66 municípios" [ref=f7e790]'
+                - 'generic "25 a 50 mil: 18 municípios" [ref=f7e791]'
+                - 'generic "50 a 100 mil: 6 municípios" [ref=f7e792]'
+                - 'generic "Mais de 100 mil: 1 municípios" [ref=f7e793]'
+                - 'generic "Sem dado: 1 municípios" [ref=f7e794]'
+              - list [ref=f7e795]:
+                - listitem [ref=f7e796]:
+                  - text: Menos de 10 mil
+                  - generic [ref=f7e798]: 160 · 63%
+                - listitem [ref=f7e799]:
+                  - text: 10 a 25 mil
+                  - generic [ref=f7e801]: 66 · 26%
+                - listitem [ref=f7e802]:
+                  - text: 25 a 50 mil
+                  - generic [ref=f7e804]: 18 · 7%
+                - listitem [ref=f7e805]:
+                  - text: 50 a 100 mil
+                  - generic [ref=f7e807]: 6 · 2%
+                - listitem [ref=f7e808]:
+                  - text: Mais de 100 mil
+                  - generic [ref=f7e810]: 1 · 0%
+                - listitem [ref=f7e811]:
+                  - text: Sem dado
+                  - generic [ref=f7e813]: 1 · 0%
+                - listitem [ref=f7e814]:
+                  - generic [ref=f7e815]: Total
+                  - generic [ref=f7e816]: "252"
+            - generic [ref=f7e817]: 293 municípios no estado, dos quais 41 têm grupo aberto. A pizza segue só o filtro de escala populacional e inclui as 10 localidades que já tiveram grupo e estão fechadas.
+        - generic [ref=f7e818]:
+          - heading "Mapa de Santa Catarina por escala populacional (tons de vermelho) com os grupos abertos" [level=2] [ref=f7e819]
+          - generic [ref=f7e820]:
+            - generic [ref=f7e821]:
+              - img "Mapa de Santa Catarina colorido pela escala populacional dos municípios" [ref=f7e822]:
+                - generic "Abdon Batista · 2.600 hab. · Menos de 10 mil" [ref=f7e823]
+                - generic "Abelardo Luz · 17.389 hab. · 10 a 25 mil" [ref=f7e824]
+                - generic "Agrolândia · 11.010 hab. · 10 a 25 mil" [ref=f7e825]
+                - generic "Agronômica · 6.055 hab. · Menos de 10 mil" [ref=f7e826]
+                - generic "Alfredo Wagner · 10.455 hab. · 10 a 25 mil" [ref=f7e827]
+                - generic "Alto Bela Vista · 1.859 hab. · Menos de 10 mil" [ref=f7e828]
+                - generic "Anchieta · 5.942 hab. · Menos de 10 mil" [ref=f7e829]
+                - generic "Angelina · 5.497 hab. · Menos de 10 mil" [ref=f7e830]
+                - generic "Anita Garibaldi · 8.286 hab. · Menos de 10 mil" [ref=f7e831]
+                - generic "Anitápolis · 3.463 hab. · Menos de 10 mil" [ref=f7e832]
+                - generic "Antônio Carlos · 11.295 hab. · 10 a 25 mil" [ref=f7e833]
+                - generic "Apiúna · 11.926 hab. · 10 a 25 mil" [ref=f7e834]
+                - generic "Arabutã · 4.378 hab. · Menos de 10 mil" [ref=f7e835]
+                - generic "Araquari · 45.462 hab. · 25 a 50 mil" [ref=f7e836]
+                - generic "Araranguá · 72.138 hab. · 50 a 100 mil" [ref=f7e837]
+                - generic "Armazém · 8.825 hab. · Menos de 10 mil" [ref=f7e838]
+                - generic "Arroio Trinta · 3.556 hab. · Menos de 10 mil" [ref=f7e839]
+                - generic "Arvoredo · 2.539 hab. · Menos de 10 mil" [ref=f7e840]
+                - generic "Ascurra · 8.408 hab. · Menos de 10 mil" [ref=f7e841]
+                - generic "Atalanta · 3.218 hab. · Menos de 10 mil" [ref=f7e842]
+                - generic "Aurora · 6.810 hab. · Menos de 10 mil" [ref=f7e843]
+                - generic "Balneário Arroio do Silva · 15.693 hab. · 10 a 25 mil" [ref=f7e844]
+                - generic "Balneário Barra do Sul · 14.885 hab. · 10 a 25 mil" [ref=f7e845]
+                - generic "Balneário Camboriú · 140.036 hab. · Mais de 100 mil" [ref=f7e846]
+                - generic "Balneário Gaivota · 15.353 hab. · 10 a 25 mil" [ref=f7e847]
+                - generic "Balneário Piçarras · 28.177 hab. · 25 a 50 mil" [ref=f7e848]
+                - generic "Bandeirante · 3.144 hab. · Menos de 10 mil" [ref=f7e849]
+                - generic "Barra Bonita · 1.608 hab. · Menos de 10 mil" [ref=f7e850]
+                - generic "Barra Velha · 45.633 hab. · 25 a 50 mil" [ref=f7e851]
+                - generic "Bela Vista do Toldo · 5.863 hab. · Menos de 10 mil" [ref=f7e852]
+                - generic "Belmonte · 2.703 hab. · Menos de 10 mil" [ref=f7e853]
+                - generic "Benedito Novo · 10.484 hab. · 10 a 25 mil" [ref=f7e854]
+                - generic "Biguaçu · 78.623 hab. · 50 a 100 mil" [ref=f7e855]
+                - generic "Blumenau · 363.340 hab. · Mais de 100 mil" [ref=f7e856]
+                - generic "Bocaina do Sul · 3.514 hab. · Menos de 10 mil" [ref=f7e857]
+                - generic "Bom Jardim da Serra · 4.362 hab. · Menos de 10 mil" [ref=f7e858]
+                - generic "Bom Jesus · 2.721 hab. · Menos de 10 mil" [ref=f7e859]
+                - generic "Bom Jesus do Oeste · 2.182 hab. · Menos de 10 mil" [ref=f7e860]
+                - generic "Bom Retiro · 8.698 hab. · Menos de 10 mil" [ref=f7e861]
+                - generic "Bombinhas · 24.416 hab. · 10 a 25 mil" [ref=f7e862]
+                - generic "Botuverá · 5.368 hab. · Menos de 10 mil" [ref=f7e863]
+                - generic "Braço do Norte · 34.113 hab. · 25 a 50 mil" [ref=f7e864]
+                - generic "Braço do Trombudo · 3.954 hab. · Menos de 10 mil" [ref=f7e865]
+                - generic "Brunópolis · 2.488 hab. · Menos de 10 mil" [ref=f7e866]
+                - generic "Brusque · 141.676 hab. · Mais de 100 mil" [ref=f7e867]
+                - generic "Caibi · 6.199 hab. · Menos de 10 mil" [ref=f7e868]
+                - generic "Calmon · 3.465 hab. · Menos de 10 mil" [ref=f7e869]
+                - generic "Camboriú · 112.167 hab. · Mais de 100 mil" [ref=f7e870]
+                - generic "Campo Alegre · 12.318 hab. · 10 a 25 mil" [ref=f7e871]
+                - generic "Campo Belo do Sul · 7.345 hab. · Menos de 10 mil" [ref=f7e872]
+                - generic "Campo Erê · 9.562 hab. · Menos de 10 mil" [ref=f7e873]
+                - generic "Campos Novos · 36.976 hab. · 25 a 50 mil" [ref=f7e874]
+                - generic "Canelinha · 12.759 hab. · 10 a 25 mil" [ref=f7e875]
+                - generic "Canoinhas · 54.848 hab. · 50 a 100 mil" [ref=f7e876]
+                - generic "Capinzal · 23.184 hab. · 10 a 25 mil" [ref=f7e877]
+                - generic "Capivari de Baixo · 22.873 hab. · 10 a 25 mil" [ref=f7e878]
+                - generic "Capão Alto · 2.892 hab. · Menos de 10 mil" [ref=f7e879]
+                - generic "Catanduvas · 10.565 hab. · 10 a 25 mil" [ref=f7e880]
+                - generic "Caxambu do Sul · 4.614 hab. · Menos de 10 mil" [ref=f7e881]
+                - generic "Caçador · 74.105 hab. · 50 a 100 mil" [ref=f7e882]
+                - generic "Celso Ramos · 2.802 hab. · Menos de 10 mil" [ref=f7e883]
+                - generic "Cerro Negro · 3.318 hab. · Menos de 10 mil" [ref=f7e884]
+                - generic "Chapadão do Lageado · 2.949 hab. · Menos de 10 mil" [ref=f7e885]
+                - generic "Chapecó · 251.150 hab. · Mais de 100 mil" [ref=f7e886]
+                - generic "Cocal do Sul · 17.241 hab. · 10 a 25 mil" [ref=f7e887]
+                - generic "Concórdia · 81.625 hab. · 50 a 100 mil" [ref=f7e888]
+                - generic "Cordilheira Alta · 4.735 hab. · Menos de 10 mil" [ref=f7e889]
+                - generic "Coronel Freitas · 10.303 hab. · 10 a 25 mil" [ref=f7e890]
+                - generic "Coronel Martins · 2.069 hab. · Menos de 10 mil" [ref=f7e891]
+                - generic "Correia Pinto · 15.720 hab. · 10 a 25 mil" [ref=f7e892]
+                - generic "Corupá · 15.287 hab. · 10 a 25 mil" [ref=f7e893]
+                - generic "Criciúma · 231.088 hab. · Mais de 100 mil" [ref=f7e894]
+                - generic "Cunha Porã · 10.904 hab. · 10 a 25 mil" [ref=f7e895]
+                - generic "Cunhataí · 1.757 hab. · Menos de 10 mil" [ref=f7e896]
+                - generic "Curitibanos · 40.289 hab. · 25 a 50 mil" [ref=f7e897]
+                - generic "Descanso · 8.559 hab. · Menos de 10 mil" [ref=f7e898]
+                - generic "Dionísio Cerqueira · 14.989 hab. · 10 a 25 mil" [ref=f7e899]
+                - generic "Dona Emma · 4.006 hab. · Menos de 10 mil" [ref=f7e900]
+                - generic "Doutor Pedrinho · 3.670 hab. · Menos de 10 mil" [ref=f7e901]
+                - generic "Entre Rios · 3.322 hab. · Menos de 10 mil" [ref=f7e902]
+                - generic "Ermo · 2.270 hab. · Menos de 10 mil" [ref=f7e903]
+                - generic "Erval Velho · 4.824 hab. · Menos de 10 mil" [ref=f7e904]
+                - generic "Faxinal dos Guedes · 10.965 hab. · 10 a 25 mil" [ref=f7e905]
+                - generic "Flor do Sertão · 1.784 hab. · Menos de 10 mil" [ref=f7e906]
+                - generic "Florianópolis · 574.200 hab. · Mais de 100 mil" [ref=f7e907]
+                - generic "Formosa do Sul · 2.682 hab. · Menos de 10 mil" [ref=f7e908]
+                - generic "Forquilhinha · 31.692 hab. · 25 a 50 mil" [ref=f7e909]
+                - generic "Fraiburgo · 33.662 hab. · 25 a 50 mil" [ref=f7e910]
+                - generic "Frei Rogério · 2.411 hab. · Menos de 10 mil" [ref=f7e911]
+                - generic "Galvão · 3.219 hab. · Menos de 10 mil" [ref=f7e912]
+                - generic "Garopaba · 29.801 hab. · 25 a 50 mil" [ref=f7e913]
+                - generic "Garuva · 18.697 hab. · 10 a 25 mil" [ref=f7e914]
+                - generic "Gaspar · 73.053 hab. · 50 a 100 mil" [ref=f7e915]
+                - generic "Governador Celso Ramos · 17.306 hab. · 10 a 25 mil" [ref=f7e916]
+                - generic "Gravatal · 14.022 hab. · 10 a 25 mil" [ref=f7e917]
+                - generic "Grão Pará · 6.149 hab. · Menos de 10 mil" [ref=f7e918]
+                - generic "Guabiruba · 24.578 hab. · 10 a 25 mil" [ref=f7e919]
+                - generic "Guaraciaba · 11.154 hab. · 10 a 25 mil" [ref=f7e920]
+                - generic "Guaramirim · 46.502 hab. · 25 a 50 mil" [ref=f7e921]
+                - generic "Guarujá do Sul · 4.819 hab. · Menos de 10 mil" [ref=f7e922]
+                - generic "Guatambú · 8.400 hab. · Menos de 10 mil" [ref=f7e923]
+                - generic "Herval d'Oeste · 21.339 hab. · 10 a 25 mil" [ref=f7e924]
+                - generic "Ibiam · 2.003 hab. · Menos de 10 mil" [ref=f7e925]
+                - generic "Ibicaré · 3.267 hab. · Menos de 10 mil" [ref=f7e926]
+                - generic "Ibirama · 21.425 hab. · 10 a 25 mil" [ref=f7e927]
+                - generic "Ilhota · 20.319 hab. · 10 a 25 mil" [ref=f7e928]
+                - generic "Imaruí · 12.331 hab. · 10 a 25 mil" [ref=f7e929]
+                - generic "Imbituba · 54.258 hab. · 50 a 100 mil" [ref=f7e930]
+                - generic "Imbuia · 5.988 hab. · Menos de 10 mil" [ref=f7e931]
+                - generic "Indaial · 71.369 hab. · 50 a 100 mil" [ref=f7e932]
+                - generic "Iomerê · 2.865 hab. · Menos de 10 mil" [ref=f7e933]
+                - generic "Ipira · 4.580 hab. · Menos de 10 mil" [ref=f7e934]
+                - generic "Iporã do Oeste · 9.333 hab. · Menos de 10 mil" [ref=f7e935]
+                - generic "Ipuaçu · 7.726 hab. · Menos de 10 mil" [ref=f7e936]
+                - generic "Ipumirim · 7.815 hab. · Menos de 10 mil" [ref=f7e937]
+                - generic "Iraceminha · 3.987 hab. · Menos de 10 mil" [ref=f7e938]
+                - generic "Irani · 10.014 hab. · 10 a 25 mil" [ref=f7e939]
+                - generic "Irati · 2.069 hab. · Menos de 10 mil" [ref=f7e940]
+                - generic "Irineópolis · 10.298 hab. · 10 a 25 mil" [ref=f7e941]
+                - generic "Itaiópolis · 22.065 hab. · 10 a 25 mil" [ref=f7e942]
+                - generic "Itajaí · 291.169 hab. · Mais de 100 mil" [ref=f7e943]
+                - generic "Itapema · 76.247 hab. · 50 a 100 mil" [ref=f7e944]
+                - generic "Itapiranga · 16.503 hab. · 10 a 25 mil" [ref=f7e945]
+                - generic "Itapoá · 30.731 hab. · 25 a 50 mil" [ref=f7e946]
+                - generic "Ituporanga · 26.694 hab. · 25 a 50 mil" [ref=f7e947]
+                - generic "Itá · 7.063 hab. · Menos de 10 mil" [ref=f7e948]
+                - generic "Içara · 64.456 hab. · 50 a 100 mil" [ref=f7e949]
+                - generic "Jaborá · 4.314 hab. · Menos de 10 mil" [ref=f7e950]
+                - generic "Jacinto Machado · 10.624 hab. · 10 a 25 mil" [ref=f7e951]
+                - generic "Jaguaruna · 19.538 hab. · 10 a 25 mil" [ref=f7e952]
+                - generic "Jaraguá do Sul · 193.304 hab. · Mais de 100 mil" [ref=f7e953]
+                - generic "Jardinópolis · 1.785 hab. · Menos de 10 mil" [ref=f7e954]
+                - generic "Joaçaba · 29.976 hab. · 25 a 50 mil" [ref=f7e955]
+                - generic "Joinville · 617.979 hab. · Mais de 100 mil" [ref=f7e956]
+                - generic "José Boiteux · 5.991 hab. · Menos de 10 mil" [ref=f7e957]
+                - generic "Jupiá · 2.542 hab. · Menos de 10 mil" [ref=f7e958]
+                - generic "Lacerdópolis · 2.256 hab. · Menos de 10 mil" [ref=f7e959]
+                - generic "Lages · 164.881 hab. · Mais de 100 mil" [ref=f7e960]
+                - generic "Laguna · 41.269 hab. · 25 a 50 mil" [ref=f7e961]
+                - generic "Lajeado Grande · 1.682 hab. · Menos de 10 mil" [ref=f7e962]
+                - generic "Laurentino · 7.524 hab. · Menos de 10 mil" [ref=f7e963]
+                - generic "Lauro Muller · 14.192 hab. · 10 a 25 mil" [ref=f7e964]
+                - generic "Lebon Régis · 11.553 hab. · 10 a 25 mil" [ref=f7e965]
+                - generic "Leoberto Leal · 3.334 hab. · Menos de 10 mil" [ref=f7e966]
+                - generic "Lindóia do Sul · 4.549 hab. · Menos de 10 mil" [ref=f7e967]
+                - generic "Lontras · 12.913 hab. · 10 a 25 mil" [ref=f7e968]
+                - generic "Luiz Alves · 12.249 hab. · 10 a 25 mil" [ref=f7e969]
+                - generic "Luzerna · 5.760 hab. · Menos de 10 mil" [ref=f7e970]
+                - generic "Macieira · 1.778 hab. · Menos de 10 mil" [ref=f7e971]
+                - generic "Mafra · 55.463 hab. · 50 a 100 mil" [ref=f7e972]
+                - generic "Major Gercino · 3.887 hab. · Menos de 10 mil" [ref=f7e973]
+                - generic "Major Vieira · 7.359 hab. · Menos de 10 mil" [ref=f7e974]
+                - generic "Maracajá · 7.825 hab. · Menos de 10 mil" [ref=f7e975]
+                - generic "Maravilha · 28.045 hab. · 25 a 50 mil" [ref=f7e976]
+                - generic "Marema · 2.177 hab. · Menos de 10 mil" [ref=f7e977]
+                - generic "Massaranduba · 18.922 hab. · 10 a 25 mil" [ref=f7e978]
+                - generic "Matos Costa · 2.762 hab. · Menos de 10 mil" [ref=f7e979]
+                - generic "Meleiro · 6.940 hab. · Menos de 10 mil" [ref=f7e980]
+                - generic "Mirim Doce · 2.502 hab. · Menos de 10 mil" [ref=f7e981]
+                - generic "Modelo · 4.085 hab. · Menos de 10 mil" [ref=f7e982]
+                - generic "Mondaí · 9.961 hab. · Menos de 10 mil" [ref=f7e983]
+                - generic "Monte Carlo · 9.131 hab. · Menos de 10 mil" [ref=f7e984]
+                - generic "Monte Castelo · 7.754 hab. · Menos de 10 mil" [ref=f7e985]
+                - generic "Morro Grande · 2.982 hab. · Menos de 10 mil" [ref=f7e986]
+                - generic "Morro da Fumaça · 18.687 hab. · 10 a 25 mil" [ref=f7e987]
+                - generic "Navegantes · 88.655 hab. · 50 a 100 mil" [ref=f7e988]
+                - generic "Nova Erechim · 5.179 hab. · Menos de 10 mil" [ref=f7e989]
+                - generic "Nova Itaberaba · 4.432 hab. · Menos de 10 mil" [ref=f7e990]
+                - generic "Nova Trento · 13.645 hab. · 10 a 25 mil" [ref=f7e991]
+                - generic "Nova Veneza · 13.396 hab. · 10 a 25 mil" [ref=f7e992]
+                - generic "Novo Horizonte · 2.652 hab. · Menos de 10 mil" [ref=f7e993]
+                - generic "Orleans · 23.531 hab. · 10 a 25 mil" [ref=f7e994]
+                - generic "Otacílio Costa · 17.357 hab. · 10 a 25 mil" [ref=f7e995]
+                - generic "Ouro · 7.025 hab. · Menos de 10 mil" [ref=f7e996]
+                - generic "Ouro Verde · 2.168 hab. · Menos de 10 mil" [ref=f7e997]
+                - generic "Paial · 1.931 hab. · Menos de 10 mil" [ref=f7e998]
+                - generic "Painel · 2.199 hab. · Menos de 10 mil" [ref=f7e999]
+                - generic "Palhoça · 236.638 hab. · Mais de 100 mil" [ref=f7e1000]
+                - generic "Palma Sola · 7.601 hab. · Menos de 10 mil" [ref=f7e1001]
+                - generic "Palmeira · 2.627 hab. · Menos de 10 mil" [ref=f7e1002]
+                - generic "Palmitos · 15.627 hab. · 10 a 25 mil" [ref=f7e1003]
+                - generic "Papanduva · 19.132 hab. · 10 a 25 mil" [ref=f7e1004]
+                - generic "Paraíso · 4.437 hab. · Menos de 10 mil" [ref=f7e1005]
+                - generic "Passo de Torres · 12.875 hab. · 10 a 25 mil" [ref=f7e1006]
+                - generic "Passos Maia · 4.025 hab. · Menos de 10 mil" [ref=f7e1007]
+                - generic "Paulo Lopes · 9.326 hab. · Menos de 10 mil" [ref=f7e1008]
+                - generic "Pedras Grandes · 4.233 hab. · Menos de 10 mil" [ref=f7e1009]
+                - generic "Penha · 33.400 hab. · 25 a 50 mil" [ref=f7e1010]
+                - generic "Peritiba · 2.993 hab. · Menos de 10 mil" [ref=f7e1011]
+                - generic "Petrolândia · 6.718 hab. · Menos de 10 mil" [ref=f7e1012]
+                - generic "Pinhalzinho · 21.495 hab. · 10 a 25 mil" [ref=f7e1013]
+                - generic "Pinheiro Preto · 3.469 hab. · Menos de 10 mil" [ref=f7e1014]
+                - generic "Piratuba · 5.746 hab. · Menos de 10 mil" [ref=f7e1015]
+                - generic "Planalto Alegre · 2.946 hab. · Menos de 10 mil" [ref=f7e1016]
+                - generic "Pomerode · 34.699 hab. · 25 a 50 mil" [ref=f7e1017]
+                - generic "Ponte Alta · 4.437 hab. · Menos de 10 mil" [ref=f7e1018]
+                - generic "Ponte Alta do Norte · 3.217 hab. · Menos de 10 mil" [ref=f7e1019]
+                - generic "Ponte Serrada · 10.414 hab. · 10 a 25 mil" [ref=f7e1020]
+                - generic "Porto Belo · 27.726 hab. · 25 a 50 mil" [ref=f7e1021]
+                - generic "Porto União · 32.190 hab. · 25 a 50 mil" [ref=f7e1022]
+                - generic "Pouso Redondo · 17.143 hab. · 10 a 25 mil" [ref=f7e1023]
+                - generic "Praia Grande · 8.131 hab. · Menos de 10 mil" [ref=f7e1024]
+                - generic "Presidente Castello Branco · 1.692 hab. · Menos de 10 mil" [ref=f7e1025]
+                - generic "Presidente Getúlio · 21.231 hab. · 10 a 25 mil" [ref=f7e1026]
+                - generic "Presidente Nereu · 2.300 hab. · Menos de 10 mil" [ref=f7e1027]
+                - generic "Princesa · 2.964 hab. · Menos de 10 mil" [ref=f7e1028]
+                - generic "Quilombo · 11.027 hab. · 10 a 25 mil" [ref=f7e1029]
+                - generic "Rancho Queimado · 3.252 hab. · Menos de 10 mil" [ref=f7e1030]
+                - generic "Rio Fortuna · 4.885 hab. · Menos de 10 mil" [ref=f7e1031]
+                - generic "Rio Negrinho · 38.531 hab. · 25 a 50 mil" [ref=f7e1032]
+                - generic "Rio Rufino · 2.432 hab. · Menos de 10 mil" [ref=f7e1033]
+                - generic "Rio das Antas · 6.221 hab. · Menos de 10 mil" [ref=f7e1034]
+                - generic "Rio do Campo · 6.447 hab. · Menos de 10 mil" [ref=f7e1035]
+                - generic "Rio do Oeste · 7.623 hab. · Menos de 10 mil" [ref=f7e1036]
+                - generic "Rio do Sul · 70.952 hab. · 50 a 100 mil" [ref=f7e1037]
+                - generic "Rio dos Cedros · 10.879 hab. · 10 a 25 mil" [ref=f7e1038]
+                - generic "Riqueza · 4.769 hab. · Menos de 10 mil" [ref=f7e1039]
+                - generic "Rodeio · 12.715 hab. · 10 a 25 mil" [ref=f7e1040]
+                - generic "Romelândia · 4.826 hab. · Menos de 10 mil" [ref=f7e1041]
+                - generic "Salete · 7.502 hab. · Menos de 10 mil" [ref=f7e1042]
+                - generic "Saltinho · 3.626 hab. · Menos de 10 mil" [ref=f7e1043]
+                - generic "Salto Veloso · 4.416 hab. · Menos de 10 mil" [ref=f7e1044]
+                - generic "Sangão · 12.995 hab. · 10 a 25 mil" [ref=f7e1045]
+                - generic "Santa Cecília · 15.247 hab. · 10 a 25 mil" [ref=f7e1046]
+                - generic "Santa Helena · 2.427 hab. · Menos de 10 mil" [ref=f7e1047]
+                - generic "Santa Rosa de Lima · 2.002 hab. · Menos de 10 mil" [ref=f7e1048]
+                - generic "Santa Rosa do Sul · 9.308 hab. · Menos de 10 mil" [ref=f7e1049]
+                - generic "Santa Terezinha · 8.061 hab. · Menos de 10 mil" [ref=f7e1050]
+                - generic "Santa Terezinha do Progresso · 2.580 hab. · Menos de 10 mil" [ref=f7e1051]
+                - generic "Santiago do Sul · 1.642 hab. · Menos de 10 mil" [ref=f7e1052]
+                - generic "Santo Amaro da Imperatriz · 28.260 hab. · 25 a 50 mil" [ref=f7e1053]
+                - generic "Saudades · 10.272 hab. · 10 a 25 mil" [ref=f7e1054]
+                - generic "Schroeder · 20.213 hab. · 10 a 25 mil" [ref=f7e1055]
+                - generic "Seara · 18.623 hab. · 10 a 25 mil" [ref=f7e1056]
+                - generic "Serra Alta · 3.314 hab. · Menos de 10 mil" [ref=f7e1057]
+                - generic "Siderópolis · 13.862 hab. · 10 a 25 mil" [ref=f7e1058]
+                - generic "Sombrio · 29.503 hab. · 25 a 50 mil" [ref=f7e1059]
+                - generic "Sul Brasil · 2.878 hab. · Menos de 10 mil" [ref=f7e1060]
+                - generic "São Bento do Sul · 82.760 hab. · 50 a 100 mil" [ref=f7e1061]
+                - generic "São Bernardino · 2.651 hab. · Menos de 10 mil" [ref=f7e1062]
+                - generic "São Bonifácio · 2.950 hab. · Menos de 10 mil" [ref=f7e1063]
+                - generic "São Carlos · 10.279 hab. · 10 a 25 mil" [ref=f7e1064]
+                - generic "São Cristovão do Sul · 6.092 hab. · Menos de 10 mil" [ref=f7e1065]
+                - generic "São Domingos · 8.984 hab. · Menos de 10 mil" [ref=f7e1066]
+                - generic "São Francisco do Sul · 52.428 hab. · 50 a 100 mil" [ref=f7e1067]
+                - generic "São Joaquim · 26.026 hab. · 25 a 50 mil" [ref=f7e1068]
+                - generic "São José · 287.409 hab. · Mais de 100 mil" [ref=f7e1069]
+                - generic "São José do Cedro · 15.100 hab. · 10 a 25 mil" [ref=f7e1070]
+                - generic "São José do Cerrito · 8.708 hab. · Menos de 10 mil" [ref=f7e1071]
+                - generic "São João Batista · 32.360 hab. · 25 a 50 mil" [ref=f7e1072]
+                - generic "São João do Itaperiú · 4.484 hab. · Menos de 10 mil" [ref=f7e1073]
+                - generic "São João do Oeste · 6.287 hab. · Menos de 10 mil" [ref=f7e1074]
+                - generic "São João do Sul · 8.642 hab. · Menos de 10 mil" [ref=f7e1075]
+                - generic "São Lourenço do Oeste · 24.774 hab. · 10 a 25 mil" [ref=f7e1076]
+                - generic "São Ludgero · 13.431 hab. · 10 a 25 mil" [ref=f7e1077]
+                - generic "São Martinho · 3.654 hab. · Menos de 10 mil" [ref=f7e1078]
+                - generic "São Miguel da Boa Vista · 1.768 hab. · Menos de 10 mil" [ref=f7e1079]
+                - generic "São Miguel do Oeste · 43.946 hab. · 25 a 50 mil" [ref=f7e1080]
+                - generic "São Pedro de Alcântara · 5.693 hab. · Menos de 10 mil" [ref=f7e1081]
+                - generic "Taió · 18.282 hab. · 10 a 25 mil" [ref=f7e1082]
+                - generic "Tangará · 8.153 hab. · Menos de 10 mil" [ref=f7e1083]
+                - generic "Tigrinhos · 2.325 hab. · Menos de 10 mil" [ref=f7e1084]
+                - generic "Tijucas · 49.474 hab. · 25 a 50 mil" [ref=f7e1085]
+                - generic "Timbé do Sul · 5.377 hab. · Menos de 10 mil" [ref=f7e1086]
+                - generic "Timbó · 46.144 hab. · 25 a 50 mil" [ref=f7e1087]
+                - generic "Timbó Grande · 7.368 hab. · Menos de 10 mil" [ref=f7e1088]
+                - generic "Treviso · 3.783 hab. · Menos de 10 mil" [ref=f7e1089]
+                - generic "Treze Tílias · 8.803 hab. · Menos de 10 mil" [ref=f7e1090]
+                - generic "Treze de Maio · 7.354 hab. · Menos de 10 mil" [ref=f7e1091]
+                - generic "Trombudo Central · 7.074 hab. · Menos de 10 mil" [ref=f7e1092]
+                - generic "Três Barras · 19.782 hab. · 10 a 25 mil" [ref=f7e1093]
+                - generic "Tubarão · 114.389 hab. · Mais de 100 mil" [ref=f7e1094]
+                - generic "Tunápolis · 5.018 hab. · Menos de 10 mil" [ref=f7e1095]
+                - generic "Turvo · 12.993 hab. · 10 a 25 mil" [ref=f7e1096]
+                - generic "União do Oeste · 2.782 hab. · Menos de 10 mil" [ref=f7e1097]
+                - generic "Urubici · 11.156 hab. · 10 a 25 mil" [ref=f7e1098]
+                - generic "Urupema · 2.719 hab. · Menos de 10 mil" [ref=f7e1099]
+                - generic "Urussanga · sem dado na planilha de escala" [ref=f7e1100]
+                - generic "Vargem · 2.621 hab. · Menos de 10 mil" [ref=f7e1101]
+                - generic "Vargem Bonita · 4.572 hab. · Menos de 10 mil" [ref=f7e1102]
+                - generic "Vargeão · 3.585 hab. · Menos de 10 mil" [ref=f7e1103]
+                - generic "Vidal Ramos · 6.160 hab. · Menos de 10 mil" [ref=f7e1104]
+                - generic "Videira · 55.921 hab. · 50 a 100 mil" [ref=f7e1105]
+                - generic "Vitor Meireles · 5.362 hab. · Menos de 10 mil" [ref=f7e1106]
+                - generic "Witmarsum · 4.314 hab. · Menos de 10 mil" [ref=f7e1107]
+                - generic "Xanxerê · 50.998 hab. · 50 a 100 mil" [ref=f7e1108]
+                - generic "Xavantina · 3.654 hab. · Menos de 10 mil" [ref=f7e1109]
+                - generic "Xaxim · 31.625 hab. · 25 a 50 mil" [ref=f7e1110]
+                - generic "Zortéa · 3.925 hab. · Menos de 10 mil" [ref=f7e1111]
+                - generic "Água Doce · 6.286 hab. · Menos de 10 mil" [ref=f7e1112]
+                - generic "Águas Frias · 2.802 hab. · Menos de 10 mil" [ref=f7e1113]
+                - generic "Águas Mornas · 6.765 hab. · Menos de 10 mil" [ref=f7e1114]
+                - generic "Águas de Chapecó · 5.872 hab. · Menos de 10 mil" [ref=f7e1115]
+                - generic [ref=f7e1116]:
+                  - generic "Resgate · Campos Novos · CSA Catarinense" [ref=f7e1117]
+                  - generic "Vida Nova · Chapecó · CSA Sem Fronteiras - CSR BS" [ref=f7e1118]
+                  - generic "O Caminho · Concórdia · CSA Sem Fronteiras - CSR BS" [ref=f7e1119]
+                  - generic "Sabedoria · Correia Pinto · CSA Catarinense" [ref=f7e1120]
+                  - generic "Mente Aberta · Fraiburgo · CSA Catarinense" [ref=f7e1121]
+                  - generic "Continue Voltando · Lages · CSA Catarinense" [ref=f7e1122]
+                  - generic "Despertar · lages · CSA Catarinense" [ref=f7e1123]
+                  - generic "Vivendo Limpo · Salto Veloso · CSA Catarinense" [ref=f7e1124]
+                  - generic "Renascer · Videira · CSA Catarinense" [ref=f7e1125]
+                  - generic "Nova Vida - BC · Balneário Camboriú · CSA Grande Florianópolis" [ref=f7e1126]
+                  - generic "Campeche · Florianópolis · CSA Grande Florianópolis" [ref=f7e1127]
+                  - generic "Esperança · Florianópolis · CSA Grande Florianópolis" [ref=f7e1128]
+                  - generic "Ilha · Florianópolis · CSA Grande Florianópolis" [ref=f7e1129]
+                  - generic "Ingleses · Florianópolis · CSA Grande Florianópolis" [ref=f7e1130]
+                  - generic "Lagoa · Florianópolis · CSA Grande Florianópolis" [ref=f7e1131]
+                  - generic "Morro das Pedras · Florianópolis · CSA Grande Florianópolis" [ref=f7e1132]
+                  - generic "Pax · Florianópolis · CSA Grande Florianópolis" [ref=f7e1133]
+                  - generic "Rio Tavares · Florianópolis · CSA Grande Florianópolis" [ref=f7e1134]
+                  - generic "Sambaqui · Florianópolis · CSA Grande Florianópolis" [ref=f7e1135]
+                  - generic "Mente Aberta · Palhoça · CSA Grande Florianópolis" [ref=f7e1136]
+                  - generic "Só por Hoje · Palhoça · CSA Grande Florianópolis" [ref=f7e1137]
+                  - generic "Braços Abertos · São José · CSA Grande Florianópolis" [ref=f7e1138]
+                  - generic "Confiança · São José · CSA Grande Florianópolis" [ref=f7e1139]
+                  - generic "Desejo · São José · CSA Grande Florianópolis" [ref=f7e1140]
+                  - generic "Procasa · São José · CSA Grande Florianópolis" [ref=f7e1141]
+                  - generic "Rendição · São José · CSA Grande Florianópolis" [ref=f7e1142]
+                  - generic "União · Capivari de Baixo · CSA Litoral Sul" [ref=f7e1143]
+                  - generic "Liberdade · Garopaba · CSA Litoral Sul" [ref=f7e1144]
+                  - generic "Nova Onda · Garopaba · CSA Litoral Sul" [ref=f7e1145]
+                  - generic "Vida Livre · Imbituba · CSA Litoral Sul" [ref=f7e1146]
+                  - generic "Tamo Junto · Laguna · CSA Litoral Sul" [ref=f7e1147]
+                  - generic "Força · Tubarão · CSA Litoral Sul" [ref=f7e1148]
+                  - generic "Viver · Tubarão · CSA Litoral Sul" [ref=f7e1149]
+                  - generic "Nova Esperança · Guaramirim · CSA Norte Catarinense" [ref=f7e1150]
+                  - generic "Guerreiros da Luz · Jaraguá do Sul · CSA Norte Catarinense" [ref=f7e1151]
+                  - generic "Bom Retiro · Joinville · CSA Norte Catarinense" [ref=f7e1152]
+                  - generic "Despertar · Joinville · CSA Norte Catarinense" [ref=f7e1153]
+                  - generic "Unidade · Joinville · CSA Norte Catarinense" [ref=f7e1154]
+                  - generic "Viva Elas · Joinville · CSA Norte Catarinense" [ref=f7e1155]
+                  - generic "Novo Despertar · Mafra · CSA Norte Catarinense" [ref=f7e1156]
+                  - generic "Liberdade · Balneário Camboriú · CSA Rota do Sol - BS" [ref=f7e1157]
+                  - generic "Tamo Junto · Barra Velha · CSA Rota do Sol - BS" [ref=f7e1158]
+                  - generic "Libertação · Blumenau · CSA Rota do Sol - BS" [ref=f7e1159]
+                  - generic "Paraiso de Vida · Bombinhas · CSA Rota do Sol - BS" [ref=f7e1160]
+                  - generic "Renascer · Camboriú · CSA Rota do Sol - BS" [ref=f7e1161]
+                  - generic "Só por Hoje Itajaí · Itajaí · CSA Rota do Sol - BS" [ref=f7e1162]
+                  - generic "Brisa dos Passos Meia Praia · Itapema · CSA Rota do Sol - BS" [ref=f7e1163]
+                  - generic "Brisa dos Passos Morretes · Itapema · CSA Rota do Sol - BS" [ref=f7e1164]
+                  - generic "Esperança · Navegantes · CSA Rota do Sol - BS" [ref=f7e1165]
+                  - generic "Liberdade · Penha · CSA Rota do Sol - BS" [ref=f7e1166]
+                  - generic "Porto da Serenidade · Porto Belo · CSA Rota do Sol - BS" [ref=f7e1167]
+                  - generic "Novo Horizonte · Araranguá · CSA Sul Catarinense" [ref=f7e1168]
+                  - generic "Alternativa · Criciúma · CSA Sul Catarinense" [ref=f7e1169]
+                  - generic "Vida · Criciúma · CSA Sul Catarinense" [ref=f7e1170]
+                  - generic "Sobriedade · Forquilhinha · CSA Sul Catarinense" [ref=f7e1171]
+                  - generic "Realidade Social · Içara · CSA Sul Catarinense" [ref=f7e1172]
+                  - generic "Renascer · Orleans · CSA Sul Catarinense" [ref=f7e1173]
+                  - generic "Luz · Sombrio · CSA Sul Catarinense" [ref=f7e1174]
+                  - generic "Liberdade · Rio do Sul · CSA Catarinense" [ref=f7e1175]
+                  - generic "Guerreiros do EFAPI · Chapecó · CSA Sem Fronteiras - CSR BS" [ref=f7e1176]
+                  - generic "Fênix · Xanxerê · CSA Sem Fronteiras - CSR BS" [ref=f7e1177]
+                  - generic "Só Por Hoje · Corupá · CSA Norte Catarinense" [ref=f7e1178]
+                  - generic "Impacto · Praia Grande · CSA Sul Catarinense" [ref=f7e1179]
+                  - generic "Tapera · Florianópolis · CSA Grande Florianópolis" [ref=f7e1180]
+                  - generic "Sol Nascente · Balneário Rincão · CSA Sul Catarinense" [ref=f7e1181]
+                  - generic "Praia Grande · São Francisco do Sul · CSA Norte Catarinense" [ref=f7e1182]
+                  - generic "◆ Biguaçu (localidade fechada)" [ref=f7e1183]
+                  - generic "◆ Brusque (localidade fechada)" [ref=f7e1184]
+                  - generic "◆ Caçador (localidade fechada)" [ref=f7e1185]
+                  - generic "◆ Herval d'Oeste (localidade fechada)" [ref=f7e1186]
+                  - generic "◆ Porto União (localidade fechada)" [ref=f7e1187]
+                  - generic "◆ São Cristóvão do Sul (localidade fechada)" [ref=f7e1188]
+                  - generic "◆ São Joaquim (localidade fechada)" [ref=f7e1189]
+                  - generic "◆ São José do Cerrito (localidade fechada)" [ref=f7e1190]
+                  - generic "◆ Seara (localidade fechada)" [ref=f7e1191]
+                  - generic "◆ Urussanga (localidade fechada)" [ref=f7e1192]
+              - generic [ref=f7e1193]:
+                - button "Aproximar" [ref=f7e1194] [cursor=pointer]: +
+                - button "Afastar" [ref=f7e1195] [cursor=pointer]: −
+                - button "Enquadrar o estado" [ref=f7e1196] [cursor=pointer]: ⌂
+            - generic [ref=f7e1197]:
+              - text: População (IBGE 2022)
+              - button "Menos de 10 mil 162 mun. · 2 grupos" [ref=f7e1198] [cursor=pointer]:
+                - text: Menos de 10 mil
+                - generic [ref=f7e1200]: 162 mun. · 2 grupos
+              - button "10 a 25 mil 71 mun. · 6 grupos" [ref=f7e1201] [cursor=pointer]:
+                - text: 10 a 25 mil
+                - generic [ref=f7e1203]: 71 mun. · 6 grupos
+              - button "25 a 50 mil 28 mun. · 11 grupos" [ref=f7e1204] [cursor=pointer]:
+                - text: 25 a 50 mil
+                - generic [ref=f7e1206]: 28 mun. · 11 grupos
+              - button "50 a 100 mil 17 mun. · 12 grupos" [ref=f7e1207] [cursor=pointer]:
+                - text: 50 a 100 mil
+                - generic [ref=f7e1209]: 17 mun. · 12 grupos
+              - button "Mais de 100 mil 14 mun. · 35 grupos" [ref=f7e1210] [cursor=pointer]:
+                - text: Mais de 100 mil
+                - generic [ref=f7e1212]: 14 mun. · 35 grupos
+              - button "Sem dado 1 mun." [ref=f7e1213] [cursor=pointer]:
+                - text: Sem dado
+                - generic [ref=f7e1215]: 1 mun.
+              - generic [ref=f7e1216]: Clique numa faixa para destacá-la
+          - generic [ref=f7e1217]: Passe o mouse sobre um município ou um ponto para ver o nome. Os pontos seguem os filtros do dashboard (CSA, escala populacional e acessibilidade) e o botão de localidades fechadas.
+        - paragraph [ref=f7e1218]: "Fontes: planilha INDICADORES_GEORREFERENCIADOS_BRASIL_SUL_SC (aba GRUPOS CSAs Brasil SUL 3T26). População dos municípios: Censo 2022 do IBGE, pelas tabelas de municípios da planilha CSR Brasil. Acessibilidade: o código 0 e as células vazias da planilha foram tratados como “Sem registro”. Localidades fechadas: planilha LOCALIDADES_GRUPOS_FECHADOS (aba GRPS FECHADOS 2026). A planilha não indica o grupo mais próximo: calculei em linha reta, entre cada localidade e os grupos abertos. Elas não têm dado de acessibilidade, então o filtro de acessibilidade as oculta. Escala populacional: planilha Escala_Populacional_UF_SC (294 municípios, IBGE 2022). Urussanga está no mapa, mas não consta na planilha de escala: aparece como “Sem dado”. Pescaria Brava e Balneário Rincão constam na planilha, mas não existem no GeoJSON do mapa (293 municípios); o grupo Sol Nascente (Balneário Rincão) segue no mapa, com a coordenada da planilha. Balneário Rincão e São Francisco do Sul têm grupo e constam como “ISOLADO” na planilha de escala; prevaleceu a planilha de grupos para definir quem tem grupo."
+  - generic:
+    - generic:
+      - alert
+      - generic:
+        - alert
+        - status
+  - status [ref=f3e30]
+  - status [ref=f3e31]
+  - status [ref=f3e32]
+  - status [ref=f3e33]
+  - status [ref=f3e34]
+  - status [ref=f3e35]
+  - status [ref=f3e36]
+  - status [ref=f3e37]
+  - status [ref=f3e38]

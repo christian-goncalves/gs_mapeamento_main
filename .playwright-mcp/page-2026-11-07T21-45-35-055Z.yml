@@ -1,0 +1,190 @@
+- main [ref=f4e2]:
+  - complementary "Navegação do responsável" [ref=f4e3]:
+    - link "Página inicial do responsável" [ref=f4e5] [cursor=pointer]:
+      - /url: /responsavel/atas
+      - generic [ref=f4e6]: GS Mapeamento
+    - navigation "Navegação do responsável" [ref=f4e7]:
+      - link "Histórico de Atas" [ref=f4e8] [cursor=pointer]:
+        - /url: /responsavel/atas
+      - link "Relatórios" [ref=f4e12] [cursor=pointer]:
+        - /url: /responsavel/relatorios
+      - link "Configurações" [ref=f4e16] [cursor=pointer]:
+        - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+      - button "Sair" [ref=f4e21] [cursor=pointer]
+  - generic [ref=f4e27]:
+    - generic [ref=f4e28]:
+      - generic [ref=f4e29]:
+        - navigation "Navegação entre atas" [ref=f4e30]:
+          - link "Ata anterior" [ref=f4e31] [cursor=pointer]:
+            - /url: /atas/20daa324-d154-415c-b867-c7a900c65352?origem=responsavel&de=2026-09-13&ate=2026-11-07&diaSemana=todos&horario=todos&status=todos&ordem=1.desc%2C2.desc
+          - generic [ref=f4e34]: Atas
+          - button "Próxima ata" [disabled] [ref=f4e35]
+        - generic [ref=f4e39]:
+          - link "Editar" [ref=f4e40] [cursor=pointer]:
+            - /url: /atas/902858c3-a9c1-4255-8646-ce33f5dad0d8/editar
+          - link "Visualizar PDF" [ref=f4e43] [cursor=pointer]:
+            - /url: /atas/902858c3-a9c1-4255-8646-ce33f5dad0d8/pdf
+          - button "Enviar por e-mail" [ref=f4e46] [cursor=pointer]
+      - generic [ref=f4e50]:
+        - paragraph [ref=f4e51]: Ata
+        - heading "Ata de Reunião nº 46" [level=1] [ref=f4e52]
+    - region [ref=f4e53]:
+      - heading "Dados" [level=2] [ref=f4e54]
+      - generic [ref=f4e55]:
+        - generic [ref=f4e57]:
+          - term [ref=f4e58]: Grupo
+          - definition [ref=f4e59]: USL
+        - generic [ref=f4e61]:
+          - term [ref=f4e62]: Data
+          - definition [ref=f4e63]: 13/09/2026
+        - generic [ref=f4e65]:
+          - term [ref=f4e66]: Horário
+          - definition [ref=f4e67]: 10:00
+        - generic [ref=f4e69]:
+          - term [ref=f4e70]: Tipo
+          - definition [ref=f4e71]: Fechada
+        - generic [ref=f4e73]:
+          - term [ref=f4e74]: Plataforma
+          - definition [ref=f4e75]: Zoom
+        - generic [ref=f4e77]:
+          - term [ref=f4e78]: Formatos
+          - definition [ref=f4e79]: Partilha
+    - region [ref=f4e80]:
+      - heading "Consolidado" [level=2] [ref=f4e81]
+      - generic "Totais da Ata" [ref=f4e82]:
+        - generic [ref=f4e84]:
+          - term [ref=f4e85]: Servidores
+          - definition [ref=f4e86]: "2"
+        - generic [ref=f4e88]:
+          - term [ref=f4e89]: Membros
+          - definition [ref=f4e90]: "44"
+        - generic [ref=f4e92]:
+          - term [ref=f4e93]: Partilhas
+          - definition [ref=f4e94]: "12"
+        - generic [ref=f4e96]:
+          - term [ref=f4e97]: Visitantes
+          - definition [ref=f4e98]: "1"
+        - generic [ref=f4e100]:
+          - term [ref=f4e101]: Ingressos
+          - definition [ref=f4e102]: "0"
+        - generic [ref=f4e104]:
+          - term [ref=f4e105]: Conquistas
+          - definition [ref=f4e106]: "2"
+        - generic [ref=f4e108]:
+          - term [ref=f4e109]: Cidades
+          - definition [ref=f4e110]: "15"
+        - generic [ref=f4e112]:
+          - term [ref=f4e113]: Estados
+          - definition [ref=f4e114]: "12"
+        - generic [ref=f4e116]:
+          - term [ref=f4e117]: Outros Países
+          - definition [ref=f4e118]: "1"
+    - region [ref=f4e119]:
+      - heading "Detalhamento" [level=2] [ref=f4e120]
+      - generic [ref=f4e122]:
+        - table [ref=f4e124]:
+          - rowgroup [ref=f4e125]:
+            - row [ref=f4e126]:
+              - columnheader "Localidades Nacionais" [ref=f4e127]
+              - columnheader "Total" [ref=f4e128]
+          - rowgroup [ref=f4e129]:
+            - row [ref=f4e130]:
+              - cell "1. Iguape - SP" [ref=f4e131]
+              - cell "2" [ref=f4e133]
+            - row [ref=f4e134]:
+              - cell "2. Nerópolis - GO" [ref=f4e135]
+              - cell "1" [ref=f4e137]
+            - row [ref=f4e138]:
+              - cell "3. Bom Princípio do Piauí - PI" [ref=f4e139]
+              - cell "2" [ref=f4e141]
+            - row [ref=f4e142]:
+              - cell "4. Campo Alegre de Goiás - GO" [ref=f4e143]
+              - cell "2" [ref=f4e145]
+            - row [ref=f4e146]:
+              - cell "5. Manoel Urbano - AC" [ref=f4e147]
+              - cell "2" [ref=f4e149]
+            - row [ref=f4e150]:
+              - cell "6. Schroeder - SC" [ref=f4e151]
+              - cell "1" [ref=f4e153]
+            - row [ref=f4e154]:
+              - cell "7. Brejo - MA" [ref=f4e155]
+              - cell "1" [ref=f4e157]
+            - row [ref=f4e158]:
+              - cell "8. Cândido Sales - BA" [ref=f4e159]
+              - cell "1" [ref=f4e161]
+            - row [ref=f4e162]:
+              - cell "9. Taquaritinga do Norte - PE" [ref=f4e163]
+              - cell "1" [ref=f4e165]
+            - row [ref=f4e166]:
+              - cell "10. Itá - SC" [ref=f4e167]
+              - cell "1" [ref=f4e169]
+            - row [ref=f4e170]:
+              - cell "11. Prado - BA" [ref=f4e171]
+              - cell "1" [ref=f4e173]
+            - row [ref=f4e174]:
+              - cell "12. Sumidouro - RJ" [ref=f4e175]
+              - cell "2" [ref=f4e177]
+            - row [ref=f4e178]:
+              - cell "13. Rondon do Pará - PA" [ref=f4e179]
+              - cell "1" [ref=f4e181]
+            - row [ref=f4e182]:
+              - cell "14. Lassance - MG" [ref=f4e183]
+              - cell "2" [ref=f4e185]
+            - row [ref=f4e186]:
+              - cell "15. Iranduba - AM" [ref=f4e187]
+              - cell "2" [ref=f4e189]
+        - table [ref=f4e192]:
+          - rowgroup [ref=f4e193]:
+            - row [ref=f4e194]:
+              - columnheader "Servidores" [ref=f4e195]
+              - columnheader "Função" [ref=f4e196]
+          - rowgroup [ref=f4e197]:
+            - row [ref=f4e198]:
+              - cell "1. Theo Carvalho" [ref=f4e199]
+              - cell "Moderador" [ref=f4e200]
+            - row [ref=f4e201]:
+              - cell "2. Bianca Ramos" [ref=f4e202]
+              - cell "Coanfitrião" [ref=f4e203]
+        - table [ref=f4e206]:
+          - rowgroup [ref=f4e207]:
+            - row [ref=f4e208]:
+              - columnheader "Localidades Internacionais" [ref=f4e209]
+              - columnheader "Total" [ref=f4e210]
+          - rowgroup [ref=f4e211]:
+            - row [ref=f4e212]:
+              - cell "1. Níger" [ref=f4e213]
+              - cell "1" [ref=f4e215]
+        - table [ref=f4e218]:
+          - rowgroup [ref=f4e219]:
+            - row [ref=f4e220]:
+              - columnheader "Visitante" [ref=f4e221]
+              - columnheader "Cidade" [ref=f4e222]
+              - columnheader "Categoria" [ref=f4e223]
+              - columnheader "Origem" [ref=f4e224]
+          - rowgroup [ref=f4e225]:
+            - row [ref=f4e226]:
+              - cell "1. Visitante" [ref=f4e227]
+              - cell "Fonte Boa - AM" [ref=f4e228]
+              - cell "Provável adicto" [ref=f4e229]
+              - cell "Outro" [ref=f4e230]
+        - table [ref=f4e233]:
+          - rowgroup [ref=f4e234]:
+            - row [ref=f4e235]:
+              - columnheader "Ingresso" [ref=f4e236]
+              - columnheader "Cidade" [ref=f4e237]
+              - columnheader "Estado" [ref=f4e238]
+          - rowgroup [ref=f4e239]:
+            - row [ref=f4e240]:
+              - cell "Nenhum ingresso registrado." [ref=f4e241]
+        - table [ref=f4e244]:
+          - rowgroup [ref=f4e245]:
+            - row [ref=f4e246]:
+              - columnheader "Conquista" [ref=f4e247]
+              - columnheader "Tempo" [ref=f4e248]
+          - rowgroup [ref=f4e249]:
+            - row [ref=f4e250]:
+              - cell "1. Conquista" [ref=f4e251]
+              - cell "1 ano" [ref=f4e252]
+            - row [ref=f4e253]:
+              - cell "2. Conquista" [ref=f4e254]
+              - cell "18 meses" [ref=f4e255]

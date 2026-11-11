@@ -1,0 +1,551 @@
+- generic [ref=e1]:
+  - link "Skip to content":
+    - /url: "#geist-skip-nav"
+  - main [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - generic [ref=e10]:
+              - link "christian-goncalves' projects Hobby" [ref=e11] [cursor=pointer]:
+                - /url: /christian-goncalves-projects
+                - generic [ref=e14]:
+                  - generic [ref=e15]: christian-goncalves' projects
+                  - generic [ref=e16]: Hobby
+              - button [ref=e18] [cursor=pointer]
+            - button "Find F" [ref=e23]:
+              - generic [ref=e25]:
+                - generic [ref=e29]: Find
+                - generic [ref=e30]: F
+          - navigation [ref=e34]:
+            - generic [ref=e38]:
+              - link "Overview" [ref=e39] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento
+              - link "Deployments" [ref=e44] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/deployments
+              - link "CI" [ref=e50] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/ci
+              - link "Logs" [ref=e56] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/logs
+              - link "Analytics" [ref=e65] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/analytics
+              - link "Speed Insights" [ref=e71] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/speed-insights
+              - link "Observability" [ref=e77] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/observability
+              - link "Firewall" [ref=e86] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/firewall
+              - link "CDN" [ref=e95] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/cdn
+              - separator [ref=e104]
+              - link "Environment Variables" [ref=e105] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/settings/environment-variables
+              - link "Domains" [ref=e111] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/settings/domains
+              - link "Connect" [ref=e117] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/connect
+              - link "Integrations" [ref=e126] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/settings/integrations
+              - link "Storage" [ref=e132] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/stores
+              - link "Flags" [ref=e138] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/flags
+              - link "Agent" [ref=e147] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/agent
+              - link "AI Gateway" [ref=e156] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/ai-gateway
+              - link "Sandboxes" [ref=e165] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/sandboxes
+              - link "Workflows" [ref=e174] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/workflows
+              - link "Images" [ref=e180] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/images
+              - link "Daemons" [ref=e187] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/daemons
+              - separator [ref=e196]
+              - link "Usage" [ref=e197] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/usage
+              - link "Support" [ref=e203] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/support
+              - link "Settings" [ref=e209] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/settings
+          - generic [ref=e637]:
+            - button "Avatar for christian-goncalves christian-goncalves" [ref=e638] [cursor=pointer]:
+              - img "Avatar for christian-goncalves" [ref=e639]:
+                - img "Avatar for christian-goncalves" [ref=e640]
+              - generic [ref=e641]: christian-goncalves
+            - button "10 unseen notifications" [ref=e1595] [cursor=pointer]
+        - button [ref=e228] [cursor=pointer]
+      - generic [ref=e232]:
+        - generic [ref=e233]:
+          - generic [ref=e236]:
+            - link "gs-mapeamento" [ref=e237] [cursor=pointer]:
+              - /url: /christian-goncalves-projects/gs-mapeamento
+            - button [ref=e241] [cursor=pointer]
+            - link "Back to team view" [ref=e247] [cursor=pointer]:
+              - /url: /christian-goncalves-projects/~/deployments
+          - navigation "Breadcrumb"
+          - generic [ref=e251]:
+            - button "Create New" [ref=e253] [cursor=pointer]
+            - button "Vercel Agent is available on Pro" [ref=e651] [cursor=pointer]:
+              - generic [ref=e664]: Agent
+        - generic [ref=e667]:
+          - generic [ref=e669]:
+            - generic [ref=e670]:
+              - heading "Project Deployments" [level=1] [ref=e672]
+              - button "Deployments actions" [ref=e674] [cursor=pointer]
+            - generic [ref=e686]:
+              - button "Add Filter" [ref=e688] [cursor=pointer]
+              - button "Author christian-goncalves" [ref=e697] [cursor=pointer]:
+                - generic [ref=e700]:
+                  - generic [ref=e701]: Author
+                  - generic [ref=e702]: christian-goncalves
+              - button "Environment Production" [ref=e704] [cursor=pointer]:
+                - generic [ref=e707]:
+                  - generic [ref=e708]: Environment
+                  - generic [ref=e709]: Production
+              - button "Status Error" [ref=e711] [cursor=pointer]:
+                - generic [ref=e714]:
+                  - generic [ref=e715]: Status
+                  - generic [ref=e716]: Error
+          - generic [ref=e717]:
+            - generic [ref=e718]:
+              - generic [ref=e719] [cursor=pointer]:
+                - generic [ref=e720]:
+                  - link "View deployment gs-mapeamento-4nlc8m3c0-christian-goncalves-projects.vercel.app" [ref=e721]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/9dJNoLkHVNMkGa9ssP35uLCqmGD5
+                  - 'link "feat: refina tipologia visual do relatorio responsavel" [ref=e725]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/9dJNoLkHVNMkGa9ssP35uLCqmGD5
+                  - generic:
+                    - generic "This deployment is ready." [ref=e726]: Ready
+                    - generic "29 de out. de 2026, 15:48:36 BRT" [ref=e732]: 35s
+                  - link "Preview" [ref=e738]:
+                    - /url: https://gs-mapeamento-4nlc8m3c0-christian-goncalves-projects.vercel.app
+                - generic [ref=e743]:
+                  - generic [ref=e744]:
+                    - link [aria-hidden] [ref=e745]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/9dJNoLkHVNMkGa9ssP35uLCqmGD5
+                    - generic [ref=e746]:
+                      - link "8ac53dc" [ref=e747]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/commit/8ac53dc9f06ef35e3099ac9aa4bc7d0767bd0639
+                      - 'button "Filter by Commit: 8ac53dc9f06ef35e3099ac9aa4bc7d0767bd0639" [ref=e752]'
+                  - generic [ref=e756]:
+                    - link [aria-hidden] [ref=e757]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/9dJNoLkHVNMkGa9ssP35uLCqmGD5
+                    - generic [ref=e758]:
+                      - link "codex/revisao-estado-2026-10-25" [ref=e759]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/tree/codex/revisao-estado-2026-10-25
+                      - 'button "Filter by Branch: codex/revisao-estado-2026-10-25" [ref=e763]'
+                  - generic:
+                    - generic [ref=e767]: 3h ago
+                    - img "github/christian-goncalves" [ref=e773]:
+                      - img "github/christian-goncalves" [ref=e774]
+                - button "Deployment Actions" [ref=e776]
+              - generic [ref=e781] [cursor=pointer]:
+                - generic [ref=e782]:
+                  - link "View deployment gs-mapeamento-l6g0lu36i-christian-goncalves-projects.vercel.app" [ref=e783]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/78kPgkow3fVGQpHECv9EFkrrtREo
+                  - 'link "fix: padroniza responsividade dos relatorios" [ref=e787]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/78kPgkow3fVGQpHECv9EFkrrtREo
+                  - generic:
+                    - generic "This deployment is ready." [ref=e788]: Ready
+                    - generic "29 de out. de 2026, 11:53:20 BRT" [ref=e794]: 1m 10s
+                  - link "Production" [ref=e800]:
+                    - /url: https://gs-mapeamento-l6g0lu36i-christian-goncalves-projects.vercel.app
+                - generic [ref=e804]:
+                  - generic [ref=e805]:
+                    - link [aria-hidden] [ref=e806]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/78kPgkow3fVGQpHECv9EFkrrtREo
+                    - generic [ref=e807]:
+                      - link "37fbbf2" [ref=e808]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/commit/37fbbf2c86ec300f9c3b67f5c011c3aa4a76a9bc
+                      - 'button "Filter by Commit: 37fbbf2c86ec300f9c3b67f5c011c3aa4a76a9bc" [ref=e813]'
+                  - generic [ref=e817]:
+                    - link [aria-hidden] [ref=e818]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/78kPgkow3fVGQpHECv9EFkrrtREo
+                    - generic [ref=e819]:
+                      - link "codex/revisao-estado-2026-10-25" [ref=e820]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/tree/codex/revisao-estado-2026-10-25
+                      - 'button "Filter by Branch: codex/revisao-estado-2026-10-25" [ref=e824]'
+                  - generic:
+                    - generic [ref=e828]: 7h ago
+                    - img "github/christian-goncalves" [ref=e834]:
+                      - img "github/christian-goncalves" [ref=e835]
+                - button "Deployment Actions" [ref=e837]
+              - generic [ref=e842] [cursor=pointer]:
+                - generic [ref=e843]:
+                  - link "View deployment gs-mapeamento-axpsypmly-christian-goncalves-projects.vercel.app" [ref=e844]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/DeCXrPVTTZpHkLBbtwZkvoLJ2GrM
+                  - 'link "fix: padroniza responsividade dos relatorios" [ref=e848]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/DeCXrPVTTZpHkLBbtwZkvoLJ2GrM
+                  - generic:
+                    - generic "This deployment is ready." [ref=e849]: Ready
+                    - generic "29 de out. de 2026, 11:51:30 BRT" [ref=e855]: 48s
+                  - link "Preview" [ref=e861]:
+                    - /url: https://gs-mapeamento-axpsypmly-christian-goncalves-projects.vercel.app
+                - generic [ref=e866]:
+                  - generic [ref=e867]:
+                    - link [aria-hidden] [ref=e868]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/DeCXrPVTTZpHkLBbtwZkvoLJ2GrM
+                    - generic [ref=e869]:
+                      - link "37fbbf2" [ref=e870]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/commit/37fbbf2c86ec300f9c3b67f5c011c3aa4a76a9bc
+                      - 'button "Filter by Commit: 37fbbf2c86ec300f9c3b67f5c011c3aa4a76a9bc" [ref=e875]'
+                  - generic [ref=e879]:
+                    - link [aria-hidden] [ref=e880]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/DeCXrPVTTZpHkLBbtwZkvoLJ2GrM
+                    - generic [ref=e881]:
+                      - link "codex/revisao-estado-2026-10-25" [ref=e882]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/tree/codex/revisao-estado-2026-10-25
+                      - 'button "Filter by Branch: codex/revisao-estado-2026-10-25" [ref=e886]'
+                  - generic:
+                    - generic [ref=e890]: 7h ago
+                    - img "github/christian-goncalves" [ref=e896]:
+                      - img "github/christian-goncalves" [ref=e897]
+                - button "Deployment Actions" [ref=e899]
+              - generic [ref=e904] [cursor=pointer]:
+                - generic [ref=e905]:
+                  - link "View deployment gs-mapeamento-blp8sl6ra-christian-goncalves-projects.vercel.app" [ref=e906]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/Dgo4QRjmtzNHLb9V1GAuSTwEz4rb
+                  - 'link "chore: consolida estado atual do sistema" [ref=e910]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/Dgo4QRjmtzNHLb9V1GAuSTwEz4rb
+                  - generic:
+                    - generic "This deployment is ready." [ref=e911]: Ready
+                    - generic "29 de out. de 2026, 10:30:01 BRT" [ref=e917]: 50s
+                  - link "Production" [ref=e923]:
+                    - /url: https://gs-mapeamento-blp8sl6ra-christian-goncalves-projects.vercel.app
+                - generic [ref=e927]:
+                  - generic [ref=e928]:
+                    - link [aria-hidden] [ref=e929]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/Dgo4QRjmtzNHLb9V1GAuSTwEz4rb
+                    - generic [ref=e930]:
+                      - link "01b793f" [ref=e931]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/commit/01b793f35e73359ea2d90e13339b75df0f352626
+                      - 'button "Filter by Commit: 01b793f35e73359ea2d90e13339b75df0f352626" [ref=e936]'
+                  - generic [ref=e940]:
+                    - link [aria-hidden] [ref=e941]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/Dgo4QRjmtzNHLb9V1GAuSTwEz4rb
+                    - generic [ref=e942]:
+                      - link "codex/revisao-estado-2026-10-25" [ref=e943]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/tree/codex/revisao-estado-2026-10-25
+                      - 'button "Filter by Branch: codex/revisao-estado-2026-10-25" [ref=e947]'
+                  - generic:
+                    - generic [ref=e951]: 8h ago
+                    - img "github/christian-goncalves" [ref=e957]:
+                      - img "github/christian-goncalves" [ref=e958]
+                - button "Deployment Actions" [ref=e960]
+              - generic [ref=e965] [cursor=pointer]:
+                - generic [ref=e966]:
+                  - link "View deployment gs-mapeamento-hff3h3i9g-christian-goncalves-projects.vercel.app" [ref=e967]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/ATnoFxahU9frg4DmA86uVh2ocTk1
+                  - 'link "chore: consolida estado atual do sistema" [ref=e971]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/ATnoFxahU9frg4DmA86uVh2ocTk1
+                  - generic:
+                    - generic "This deployment is ready." [ref=e972]: Ready
+                    - generic "29 de out. de 2026, 10:29:10 BRT" [ref=e978]: 47s
+                  - link "Preview" [ref=e984]:
+                    - /url: https://gs-mapeamento-hff3h3i9g-christian-goncalves-projects.vercel.app
+                - generic [ref=e989]:
+                  - generic [ref=e990]:
+                    - link [aria-hidden] [ref=e991]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/ATnoFxahU9frg4DmA86uVh2ocTk1
+                    - generic [ref=e992]:
+                      - link "01b793f" [ref=e993]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/commit/01b793f35e73359ea2d90e13339b75df0f352626
+                      - 'button "Filter by Commit: 01b793f35e73359ea2d90e13339b75df0f352626" [ref=e998]'
+                  - generic [ref=e1002]:
+                    - link [aria-hidden] [ref=e1003]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/ATnoFxahU9frg4DmA86uVh2ocTk1
+                    - generic [ref=e1004]:
+                      - link "codex/revisao-estado-2026-10-25" [ref=e1005]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/tree/codex/revisao-estado-2026-10-25
+                      - 'button "Filter by Branch: codex/revisao-estado-2026-10-25" [ref=e1009]'
+                  - generic:
+                    - generic [ref=e1013]: 8h ago
+                    - img "github/christian-goncalves" [ref=e1019]:
+                      - img "github/christian-goncalves" [ref=e1020]
+                - button "Deployment Actions" [ref=e1022]
+              - generic [ref=e1027] [cursor=pointer]:
+                - generic [ref=e1028]:
+                  - link "View deployment gs-mapeamento-bse1pcppj-christian-goncalves-projects.vercel.app" [ref=e1029]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/EjMFX2YeptjZ82VKpD2mYHWCy5zE
+                  - 'link "Merge pull request #2 from christian-goncalves/codex/revisao-estado-2026-10-25" [ref=e1033]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/EjMFX2YeptjZ82VKpD2mYHWCy5zE
+                  - generic:
+                    - generic "This deployment is ready." [ref=e1034]: Ready
+                    - generic "25 de out. de 2026, 19:00:22 BRT" [ref=e1040]: 58s
+                  - link "Production" [ref=e1046]:
+                    - /url: https://gs-mapeamento-bse1pcppj-christian-goncalves-projects.vercel.app
+                - generic [ref=e1050]:
+                  - generic [ref=e1051]:
+                    - link [aria-hidden] [ref=e1052]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/EjMFX2YeptjZ82VKpD2mYHWCy5zE
+                    - generic [ref=e1053]:
+                      - link "e6888be" [ref=e1054]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/commit/e6888befa95e3fbf3bf00037a7b1b4b707c5e9ba
+                      - 'button "Filter by Commit: e6888befa95e3fbf3bf00037a7b1b4b707c5e9ba" [ref=e1059]'
+                  - generic [ref=e1063]:
+                    - link [aria-hidden] [ref=e1064]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/EjMFX2YeptjZ82VKpD2mYHWCy5zE
+                    - generic [ref=e1065]:
+                      - link "main" [ref=e1066]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/tree/main
+                      - 'button "Filter by Branch: main" [ref=e1070]'
+                  - generic:
+                    - generic [ref=e1074]: Oct 25
+                    - img "github/christian-goncalves" [ref=e1080]:
+                      - img "github/christian-goncalves" [ref=e1081]
+                - button "Deployment Actions" [ref=e1083]
+              - generic [ref=e1088] [cursor=pointer]:
+                - generic [ref=e1089]:
+                  - link "View deployment gs-mapeamento-hj9lajrs8-christian-goncalves-projects.vercel.app" [ref=e1090]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/8FwFbYtZyszYM9kc3QY6kFgqRuVL
+                  - 'link "chore: consolidar estado atual do projeto" [ref=e1094]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/8FwFbYtZyszYM9kc3QY6kFgqRuVL
+                  - generic:
+                    - generic "This deployment is ready." [ref=e1095]: Ready
+                    - generic "25 de out. de 2026, 18:54:13 BRT" [ref=e1101]: 29s
+                  - link "Preview" [ref=e1107]:
+                    - /url: https://gs-mapeamento-hj9lajrs8-christian-goncalves-projects.vercel.app
+                - generic [ref=e1112]:
+                  - generic [ref=e1113]:
+                    - link [aria-hidden] [ref=e1114]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/8FwFbYtZyszYM9kc3QY6kFgqRuVL
+                    - generic [ref=e1115]:
+                      - link "e879bcb" [ref=e1116]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/commit/e879bcb1c6b46b46a5a5425da13546e1328ac90a
+                      - 'button "Filter by Commit: e879bcb1c6b46b46a5a5425da13546e1328ac90a" [ref=e1121]'
+                  - generic [ref=e1125]:
+                    - link [aria-hidden] [ref=e1126]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/8FwFbYtZyszYM9kc3QY6kFgqRuVL
+                    - generic [ref=e1127]:
+                      - link "codex/revisao-estado-2026-10-25" [ref=e1128]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/tree/codex/revisao-estado-2026-10-25
+                      - 'button "Filter by Branch: codex/revisao-estado-2026-10-25" [ref=e1132]'
+                  - generic:
+                    - generic [ref=e1136]: Oct 25
+                    - img "github/christian-goncalves" [ref=e1142]:
+                      - img "github/christian-goncalves" [ref=e1143]
+                - button "Deployment Actions" [ref=e1145]
+              - generic [ref=e1150] [cursor=pointer]:
+                - generic [ref=e1151]:
+                  - link "View deployment gs-mapeamento-egbjhoyeh-christian-goncalves-projects.vercel.app" [ref=e1152]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/EQjLqKF76qBjQSBHu899TVTyQqqS
+                  - 'link "feat: consolidar melhorias de atas e relatorios" [ref=e1156]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/EQjLqKF76qBjQSBHu899TVTyQqqS
+                  - generic:
+                    - generic "This deployment is ready." [ref=e1157]: Ready
+                    - generic "25 de out. de 2026, 18:32:20 BRT" [ref=e1163]: 31s
+                  - link "Preview" [ref=e1169]:
+                    - /url: https://gs-mapeamento-egbjhoyeh-christian-goncalves-projects.vercel.app
+                - generic [ref=e1174]:
+                  - generic [ref=e1175]:
+                    - link [aria-hidden] [ref=e1176]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/EQjLqKF76qBjQSBHu899TVTyQqqS
+                    - generic [ref=e1177]:
+                      - link "69be891" [ref=e1178]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/commit/69be891ad1cfcaf1e677ea418fdabc94b4823a1d
+                      - 'button "Filter by Commit: 69be891ad1cfcaf1e677ea418fdabc94b4823a1d" [ref=e1183]'
+                  - generic [ref=e1187]:
+                    - link [aria-hidden] [ref=e1188]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/EQjLqKF76qBjQSBHu899TVTyQqqS
+                    - generic [ref=e1189]:
+                      - link "codex/revisao-estado-2026-10-25" [ref=e1190]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/tree/codex/revisao-estado-2026-10-25
+                      - 'button "Filter by Branch: codex/revisao-estado-2026-10-25" [ref=e1194]'
+                  - generic:
+                    - generic [ref=e1198]: Oct 25
+                    - img "github/christian-goncalves" [ref=e1204]:
+                      - img "github/christian-goncalves" [ref=e1205]
+                - button "Deployment Actions" [ref=e1207]
+              - generic [ref=e1212] [cursor=pointer]:
+                - generic [ref=e1213]:
+                  - link "View deployment gs-mapeamento-bi0pf0oz4-christian-goncalves-projects.vercel.app" [ref=e1214]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/GGPpuBd1JATm2Xn9sdV6txg5b3Cz
+                  - 'link "feat: consolidar melhorias de atas e relatorios" [ref=e1218]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/GGPpuBd1JATm2Xn9sdV6txg5b3Cz
+                  - generic:
+                    - generic "This deployment is ready." [ref=e1219]: Ready
+                    - generic "25 de out. de 2026, 18:28:08 BRT" [ref=e1225]: 27s
+                  - link "Preview" [ref=e1231]:
+                    - /url: https://gs-mapeamento-bi0pf0oz4-christian-goncalves-projects.vercel.app
+                - generic [ref=e1236]:
+                  - generic [ref=e1237]:
+                    - link [aria-hidden] [ref=e1238]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/GGPpuBd1JATm2Xn9sdV6txg5b3Cz
+                    - generic [ref=e1239]:
+                      - link "7c37520" [ref=e1240]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/commit/7c37520a0b5bd98259ea3137f3e7c57c19b9993b
+                      - 'button "Filter by Commit: 7c37520a0b5bd98259ea3137f3e7c57c19b9993b" [ref=e1245]'
+                  - generic [ref=e1249]:
+                    - link [aria-hidden] [ref=e1250]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/GGPpuBd1JATm2Xn9sdV6txg5b3Cz
+                    - generic [ref=e1251]:
+                      - link "codex/revisao-estado-2026-10-25" [ref=e1252]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/tree/codex/revisao-estado-2026-10-25
+                      - 'button "Filter by Branch: codex/revisao-estado-2026-10-25" [ref=e1256]'
+                  - generic:
+                    - generic [ref=e1260]: Oct 25
+                    - img "github/christian-goncalves" [ref=e1266]:
+                      - img "github/christian-goncalves" [ref=e1267]
+                - button "Deployment Actions" [ref=e1269]
+              - generic [ref=e1274] [cursor=pointer]:
+                - generic [ref=e1275]:
+                  - link "View deployment gs-mapeamento-rm0r78wlj-christian-goncalves-projects.vercel.app" [ref=e1276]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/DWbY4Ua2pKMBKmWsXvpETbv7v5gD
+                  - 'link "feat: finaliza ajustes de ciclo de vida das atas" [ref=e1280]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/DWbY4Ua2pKMBKmWsXvpETbv7v5gD
+                  - generic:
+                    - generic "This deployment is ready." [ref=e1281]: Ready
+                    - generic "18 de out. de 2026, 19:02:48 BRT" [ref=e1287]: 59s
+                  - link "Production" [ref=e1293]:
+                    - /url: https://gs-mapeamento-rm0r78wlj-christian-goncalves-projects.vercel.app
+                - generic [ref=e1297]:
+                  - link "Redeploy of 3VCURMCT8" [ref=e1298]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/3VCURMCT8Sk8QdFY1az6iGyXvN4Z
+                  - generic:
+                    - generic [ref=e1302]: Oct 18
+                    - img "christian-goncalves Avatar" [ref=e1307]:
+                      - img "christian-goncalves Avatar" [ref=e1308]
+                - button "Deployment Actions" [ref=e1310]
+              - generic [ref=e1315] [cursor=pointer]:
+                - generic [ref=e1316]:
+                  - link "View deployment gs-mapeamento-dvthse0hn-christian-goncalves-projects.vercel.app" [ref=e1317]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/3VCURMCT8Sk8QdFY1az6iGyXvN4Z
+                  - 'link "feat: finaliza ajustes de ciclo de vida das atas" [ref=e1321]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/3VCURMCT8Sk8QdFY1az6iGyXvN4Z
+                  - generic:
+                    - generic "This deployment is ready." [ref=e1322]: Ready
+                    - generic "18 de out. de 2026, 18:52:36 BRT" [ref=e1328]: 45s
+                  - link "Production" [ref=e1334]:
+                    - /url: https://gs-mapeamento-dvthse0hn-christian-goncalves-projects.vercel.app
+                - generic [ref=e1338]:
+                  - generic [ref=e1339]:
+                    - link [aria-hidden] [ref=e1340]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/3VCURMCT8Sk8QdFY1az6iGyXvN4Z
+                    - generic [ref=e1341]:
+                      - link "0838db1" [ref=e1342]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/commit/0838db1d782008ecbc72911540d9379b146091b6
+                      - 'button "Filter by Commit: 0838db1d782008ecbc72911540d9379b146091b6" [ref=e1347]'
+                  - generic [ref=e1351]:
+                    - link [aria-hidden] [ref=e1352]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/3VCURMCT8Sk8QdFY1az6iGyXvN4Z
+                    - generic [ref=e1353]:
+                      - link "main" [ref=e1354]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/tree/main
+                      - 'button "Filter by Branch: main" [ref=e1358]'
+                  - generic:
+                    - generic [ref=e1362]: Oct 18
+                    - img "github/christian-goncalves" [ref=e1368]:
+                      - img "github/christian-goncalves" [ref=e1369]
+                - button "Deployment Actions" [ref=e1371]
+              - generic [ref=e1376] [cursor=pointer]:
+                - generic [ref=e1377]:
+                  - link "View deployment gs-mapeamento-hvdckq6o3-christian-goncalves-projects.vercel.app" [ref=e1378]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/AdJNHLqKLSqK5YCUPYrzq5otvbui
+                  - 'link "Merge pull request #1 from christian-goncalves/codex/public-safe-diagnostics-20261014" [ref=e1382]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/AdJNHLqKLSqK5YCUPYrzq5otvbui
+                  - generic:
+                    - generic "This deployment is ready." [ref=e1383]: Ready
+                    - generic "17 de out. de 2026, 14:55:56 BRT" [ref=e1389]: 41s
+                  - link "Production" [ref=e1395]:
+                    - /url: https://gs-mapeamento-hvdckq6o3-christian-goncalves-projects.vercel.app
+                - generic [ref=e1399]:
+                  - link "Redeploy of FMrvcjz9C" [ref=e1400]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/FMrvcjz9CV2zkq9FSGR5pXh3bqLU
+                  - generic:
+                    - generic [ref=e1404]: Oct 17
+                    - img "christian-goncalves Avatar" [ref=e1409]:
+                      - img "christian-goncalves Avatar" [ref=e1410]
+                - button "Deployment Actions" [ref=e1412]
+              - generic [ref=e1417] [cursor=pointer]:
+                - generic [ref=e1418]:
+                  - link "View deployment gs-mapeamento-ig7be8cyl-christian-goncalves-projects.vercel.app" [ref=e1419]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/FMrvcjz9CV2zkq9FSGR5pXh3bqLU
+                  - 'link "Merge pull request #1 from christian-goncalves/codex/public-safe-diagnostics-20261014" [ref=e1423]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/FMrvcjz9CV2zkq9FSGR5pXh3bqLU
+                  - generic:
+                    - generic "This deployment is ready." [ref=e1424]: Ready
+                    - generic "14 de out. de 2026, 20:44:33 BRT" [ref=e1430]: 33s
+                  - link "Production" [ref=e1436]:
+                    - /url: https://gs-mapeamento-ig7be8cyl-christian-goncalves-projects.vercel.app
+                - generic [ref=e1440]:
+                  - generic [ref=e1441]:
+                    - link [aria-hidden] [ref=e1442]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/FMrvcjz9CV2zkq9FSGR5pXh3bqLU
+                    - generic [ref=e1443]:
+                      - link "06d74da" [ref=e1444]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/commit/06d74dafd6625769607d575211a69ea203bcf73e
+                      - 'button "Filter by Commit: 06d74dafd6625769607d575211a69ea203bcf73e" [ref=e1449]'
+                  - generic [ref=e1453]:
+                    - link [aria-hidden] [ref=e1454]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/FMrvcjz9CV2zkq9FSGR5pXh3bqLU
+                    - generic [ref=e1455]:
+                      - link "main" [ref=e1456]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/tree/main
+                      - 'button "Filter by Branch: main" [ref=e1460]'
+                  - generic:
+                    - generic [ref=e1464]: Oct 14
+                    - img "github/christian-goncalves" [ref=e1470]:
+                      - img "github/christian-goncalves" [ref=e1471]
+                - button "Deployment Actions" [ref=e1473]
+              - generic [ref=e1478] [cursor=pointer]:
+                - generic [ref=e1479]:
+                  - link "View deployment gs-mapeamento-emqkjjjse-christian-goncalves-projects.vercel.app" [ref=e1480]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/Ao54fxsS8LZoYxU4UfGXfBbJSivq
+                  - 'link "docs: registra diagnosticos locais e protege credenciais" [ref=e1484]':
+                    - /url: /christian-goncalves-projects/gs-mapeamento/Ao54fxsS8LZoYxU4UfGXfBbJSivq
+                  - generic:
+                    - generic "This deployment is ready." [ref=e1485]: Ready
+                    - generic "14 de out. de 2026, 20:40:37 BRT" [ref=e1491]: 36s
+                  - link "Preview" [ref=e1497]:
+                    - /url: https://gs-mapeamento-emqkjjjse-christian-goncalves-projects.vercel.app
+                - generic [ref=e1502]:
+                  - generic [ref=e1503]:
+                    - link [aria-hidden] [ref=e1504]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/Ao54fxsS8LZoYxU4UfGXfBbJSivq
+                    - generic [ref=e1505]:
+                      - link "a27a972" [ref=e1506]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/commit/a27a9722c14b4f5af3d8f9c2eba9e15693e8c424
+                      - 'button "Filter by Commit: a27a9722c14b4f5af3d8f9c2eba9e15693e8c424" [ref=e1511]'
+                  - generic [ref=e1515]:
+                    - link [aria-hidden] [ref=e1516]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/Ao54fxsS8LZoYxU4UfGXfBbJSivq
+                    - generic [ref=e1517]:
+                      - link "codex/public-safe-diagnostics-20261014" [ref=e1518]:
+                        - /url: https://github.com/christian-goncalves/gs_mapeamento_main/tree/codex/public-safe-diagnostics-20261014
+                      - 'button "Filter by Branch: codex/public-safe-diagnostics-20261014" [ref=e1522]'
+                  - generic:
+                    - generic [ref=e1526]: Oct 14
+                    - img "github/christian-goncalves" [ref=e1532]:
+                      - img "github/christian-goncalves" [ref=e1533]
+                - button "Deployment Actions" [ref=e1535]
+              - generic [ref=e1540] [cursor=pointer]:
+                - generic [ref=e1541]:
+                  - link "View deployment gs-mapeamento-8mqxtzari-christian-goncalves-projects.vercel.app" [ref=e1542]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/9Li8DTq4rieoFke432ajoqta2Lg5
+                  - link "9Li8DTq4r" [ref=e1546]:
+                    - /url: /christian-goncalves-projects/gs-mapeamento/9Li8DTq4rieoFke432ajoqta2Lg5
+                  - generic:
+                    - generic "This deployment is ready." [ref=e1547]: Ready
+                    - generic "23 de ago. de 2026, 19:19:44 BRT" [ref=e1553]: 52s
+                  - link "Production" [ref=e1559]:
+                    - /url: https://gs-mapeamento-8mqxtzari-christian-goncalves-projects.vercel.app
+                - generic [ref=e1563]:
+                  - generic [ref=e1564]:
+                    - link "View code" [ref=e1565]:
+                      - /url: /christian-goncalves-projects/gs-mapeamento/9Li8DTq4rieoFke432ajoqta2Lg5/source
+                    - link "vercel deploy" [ref=e1569]:
+                      - /url: /docs/cli/deploy
+                  - generic:
+                    - generic [ref=e1573]: Aug 23
+                    - img "christian-goncalves Avatar" [ref=e1578]:
+                      - img "christian-goncalves Avatar" [ref=e1579]
+                - button "Deployment Actions" [ref=e1581]
+            - generic [ref=e1586]:
+              - paragraph [ref=e1587]:
+                - text: Deployment Retention is enabled for this project — some deployments will be deleted after a set time period.
+                - link "Learn more" [ref=e1588] [cursor=pointer]:
+                  - /url: /docs/security/deployment-retention
+              - button "View Recently Deleted" [ref=e1591] [cursor=pointer]
+  - alert [ref=e636]

@@ -1,0 +1,31 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - complementary "Navegação do responsável" [ref=e3]:
+      - link "Página inicial do responsável" [ref=e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=e7]:
+        - link "Histórico de Atas" [ref=e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=e21] [cursor=pointer]
+    - generic [ref=e26]:
+      - generic [ref=e28]:
+        - paragraph [ref=e29]: Nova ata
+        - heading "Grupo USL" [level=1] [ref=e30]
+        - paragraph [ref=e31]: Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
+      - generic [ref=e33]:
+        - heading "Informações Gerais" [level=2] [ref=e34]
+        - generic [ref=e35]:
+          - generic [ref=e36]:
+            - text: Data
+            - textbox "Data" [ref=e37]: 2026-11-07
+          - generic [ref=e38]:
+            - text: Horário
+            - combobox "Horário" [disabled] [ref=e39]:
+              - option "Selecione..." [selected]
+        - status [ref=e40]: Verificando disponibilidade de horário…
+  - button "Open Next.js Dev Tools" [ref=e46] [cursor=pointer]

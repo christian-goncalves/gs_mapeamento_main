@@ -1,0 +1,306 @@
+- generic [active] [ref=f15e1]:
+  - main [ref=f15e2]:
+    - complementary "Navegação do responsável" [ref=f15e3]:
+      - link "Página inicial do responsável" [ref=f15e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f15e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f15e7]:
+        - link "Histórico de Atas" [ref=f15e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f15e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f15e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=f15e21] [cursor=pointer]
+    - generic [ref=f15e26]:
+      - generic [ref=f15e28]:
+        - paragraph [ref=f15e29]: Configurações
+        - heading "Grupo USL" [level=1] [ref=f15e30]
+      - generic [ref=f15e31]:
+        - generic [ref=f15e33]:
+          - generic [ref=f15e34]:
+            - heading "Dados do Grupo" [level=2] [ref=f15e35]
+            - button "Editar" [ref=f15e36] [cursor=pointer]
+          - generic [ref=f15e40]:
+            - generic [ref=f15e41]:
+              - generic [ref=f15e42]:
+                - generic [ref=f15e43]: Revisão de Atas
+                - group [ref=f15e44]:
+                  - generic "Informações sobre a revisão de atas" [ref=f15e45] [cursor=pointer]
+              - combobox "Revisão de Atas Informações sobre a revisão de atas" [disabled] [ref=f15e48]:
+                - option "Aprovação ativada" [selected]
+                - option "Aprovação desativada (padrão)"
+            - generic [ref=f15e49]:
+              - generic [ref=f15e50]:
+                - text: E-mail
+                - textbox "E-mail" [ref=f15e51]: codex.odonto@gmail.com
+              - button "Alterar e-mail ou senha" [ref=f15e52] [cursor=pointer]
+            - generic [ref=f15e56]:
+              - generic [ref=f15e57]: Link da ata
+              - generic [ref=f15e58]:
+                - textbox "Link da ata" [ref=f15e59]: http://localhost:3000/preencher/1218223fc61c1c375dacd2cab9f774dbdc9e114e61e0b53f17a3915c3a75329d
+                - button "Copiar link da ata" [ref=f15e60] [cursor=pointer]
+                - button "Rotacionar link de preenchimento" [ref=f15e63] [cursor=pointer]
+            - generic [ref=f15e66]:
+              - text: Última reunião antes do sistema
+              - spinbutton "Última reunião antes do sistema" [ref=f15e67]: "0"
+          - generic [ref=f15e68]:
+            - generic [ref=f15e69]: Plataformas Utilizadas
+            - list "Plataformas Utilizadas" [ref=f15e70]:
+              - listitem [ref=f15e71]: Zoom
+              - listitem [ref=f15e73]: WhatsApp
+        - group [ref=f15e75]:
+          - generic "Servidores" [ref=f15e76] [cursor=pointer]
+          - generic [ref=f15e81]:
+            - table [ref=f15e83]:
+              - rowgroup [ref=f15e84]:
+                - row [ref=f15e85]:
+                  - columnheader "Encargo" [ref=f15e86]
+                  - columnheader "Servidor" [ref=f15e87]
+                  - columnheader "Desde" [ref=f15e88]
+                  - columnheader "Ações" [ref=f15e89]
+              - rowgroup [ref=f15e90]:
+                - row [ref=f15e91]:
+                  - rowheader "RSG" [ref=f15e92]
+                  - cell "Christian" [ref=f15e93]
+                  - cell "17/10/2026" [ref=f15e94]
+                  - cell [ref=f15e95]:
+                    - generic [ref=f15e96]:
+                      - button "Editar RSG" [ref=f15e97] [cursor=pointer]
+                      - button "Remover RSG" [ref=f15e100] [cursor=pointer]
+                - row [ref=f15e103]:
+                  - rowheader "Secretário" [ref=f15e104]
+                  - cell "Alisson" [ref=f15e105]
+                  - cell "17/10/2026" [ref=f15e106]
+                  - cell [ref=f15e107]:
+                    - generic [ref=f15e108]:
+                      - button "Editar Secretário" [ref=f15e109] [cursor=pointer]
+                      - button "Remover Secretário" [ref=f15e112] [cursor=pointer]
+            - button "Adicionar Servidores" [ref=f15e116] [cursor=pointer]
+      - group [ref=f15e120]:
+        - generic "Plataformas" [ref=f15e121] [cursor=pointer]
+        - region "Plataformas" [ref=f15e126]:
+          - generic [ref=f15e127]:
+            - article [ref=f15e128]:
+              - generic [ref=f15e129]:
+                - heading "Zoom" [level=3] [ref=f15e130]
+                - paragraph [ref=f15e132]: Cadastrada
+              - button "Editar Dados" [ref=f15e133] [cursor=pointer]
+              - group [ref=f15e137]:
+                - generic "Desativar Plataforma" [ref=f15e138] [cursor=pointer]
+                - option "Selecione uma plataforma" [selected]
+                - option "WhatsApp"
+            - article [ref=f15e141]:
+              - generic [ref=f15e142]:
+                - heading "Zello" [level=3] [ref=f15e143]
+                - paragraph [ref=f15e145]: Ainda não cadastrada
+              - button "Cadastrar" [ref=f15e146] [cursor=pointer]
+            - article [ref=f15e150]:
+              - generic [ref=f15e151]:
+                - heading "WhatsApp" [level=3] [ref=f15e152]
+                - paragraph [ref=f15e154]: Cadastrada
+              - button "Editar Dados" [ref=f15e155] [cursor=pointer]
+              - group [ref=f15e159]:
+                - generic "Desativar Plataforma" [ref=f15e160] [cursor=pointer]
+                - option "Selecione uma plataforma" [selected]
+                - option "Zoom"
+          - group [ref=f15e163]:
+            - generic "Associação de Horários" [ref=f15e164] [cursor=pointer]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp" [selected]
+            - option "Zoom"
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+            - option "WhatsApp"
+            - option "Zoom" [selected]
+      - group [ref=f15e167]:
+        - generic "Horários de Reunião Informações sobre o horário da agenda" [ref=f15e168] [cursor=pointer]:
+          - generic [ref=f15e169]:
+            - generic [ref=f15e170]: Horários de Reunião
+            - img "Informações sobre o horário da agenda" [ref=f15e171]
+        - generic [ref=f15e176]:
+          - list "Legenda de plataformas" [ref=f15e177]:
+            - listitem [ref=f15e178]: Zoom
+            - listitem [ref=f15e180]: Zello
+            - listitem [ref=f15e182]: WhatsApp
+          - generic [ref=f15e184]:
+            - table [ref=f15e186]:
+              - rowgroup [ref=f15e187]:
+                - row [ref=f15e188]:
+                  - columnheader "Dia" [ref=f15e189]
+                  - columnheader "Hora de Início*" [ref=f15e190]
+              - rowgroup [ref=f15e191]:
+                - row [ref=f15e192]:
+                  - rowheader "Domingo" [ref=f15e193]
+                  - cell [ref=f15e194]:
+                    - generic [ref=f15e195]:
+                      - generic [ref=f15e196]:
+                        - text: 10:30
+                        - img "Zoom" [ref=f15e197]
+                        - text: "|"
+                      - generic [ref=f15e198]:
+                        - text: 18:00
+                        - img "Zoom" [ref=f15e199]
+                        - text: "|"
+                      - generic [ref=f15e200]:
+                        - text: 21:30
+                        - img "WhatsApp" [ref=f15e201]
+                - row [ref=f15e202]:
+                  - rowheader "Segunda-feira" [ref=f15e203]
+                  - cell [ref=f15e204]:
+                    - generic [ref=f15e205]:
+                      - generic [ref=f15e206]:
+                        - text: 07:30
+                        - img "Zoom" [ref=f15e207]
+                        - text: "|"
+                      - generic [ref=f15e208]:
+                        - text: 10:00
+                        - img "Zoom" [ref=f15e209]
+                        - text: "|"
+                      - generic [ref=f15e210]:
+                        - text: 15:00
+                        - img "Zoom" [ref=f15e211]
+                        - text: "|"
+                      - generic [ref=f15e212]:
+                        - text: 21:30
+                        - img "Zoom" [ref=f15e213]
+                - row [ref=f15e214]:
+                  - rowheader "Terça-feira" [ref=f15e215]
+                  - cell [ref=f15e216]:
+                    - generic [ref=f15e217]:
+                      - generic [ref=f15e218]:
+                        - text: 07:00
+                        - img "Zoom" [ref=f15e219]
+                        - text: "|"
+                      - generic [ref=f15e220]:
+                        - text: 10:00
+                        - img "Zoom" [ref=f15e221]
+                        - text: "|"
+                      - generic [ref=f15e222]:
+                        - text: 15:00
+                        - img "Zoom" [ref=f15e223]
+                        - text: "|"
+                      - generic [ref=f15e224]:
+                        - text: 21:30
+                        - img "Zoom" [ref=f15e225]
+                - row [ref=f15e226]:
+                  - rowheader "Quarta-feira" [ref=f15e227]
+                  - cell [ref=f15e228]:
+                    - generic [ref=f15e229]:
+                      - generic [ref=f15e230]:
+                        - text: 07:00
+                        - img "Zoom" [ref=f15e231]
+                        - text: "|"
+                      - generic [ref=f15e232]:
+                        - text: 10:00
+                        - img "Zoom" [ref=f15e233]
+                        - text: "|"
+                      - generic [ref=f15e234]:
+                        - text: 15:00
+                        - img "Zoom" [ref=f15e235]
+                        - text: "|"
+                      - generic [ref=f15e236]:
+                        - text: 21:30
+                        - img "Zoom" [ref=f15e237]
+                - row [ref=f15e238]:
+                  - rowheader "Quinta-feira" [ref=f15e239]
+                  - cell [ref=f15e240]:
+                    - generic [ref=f15e241]:
+                      - generic [ref=f15e242]:
+                        - text: 07:00
+                        - img "Zoom" [ref=f15e243]
+                        - text: "|"
+                      - generic [ref=f15e244]:
+                        - text: 10:00
+                        - img "Zoom" [ref=f15e245]
+                        - text: "|"
+                      - generic [ref=f15e246]:
+                        - text: 15:00
+                        - img "Zoom" [ref=f15e247]
+                        - text: "|"
+                      - generic [ref=f15e248]:
+                        - text: 21:30
+                        - img "Zoom" [ref=f15e249]
+                - row [ref=f15e250]:
+                  - rowheader "Sexta-feira" [ref=f15e251]
+                  - cell [ref=f15e252]:
+                    - generic [ref=f15e253]:
+                      - generic [ref=f15e254]:
+                        - text: 10:00
+                        - img "Zoom" [ref=f15e255]
+                        - text: "|"
+                      - generic [ref=f15e256]:
+                        - text: 15:00
+                        - img "Zoom" [ref=f15e257]
+                        - text: "|"
+                      - generic [ref=f15e258]:
+                        - text: 21:30
+                        - img "Zoom" [ref=f15e259]
+                - row [ref=f15e260]:
+                  - rowheader "Sábado" [ref=f15e261]
+                  - cell [ref=f15e262]:
+                    - generic [ref=f15e263]:
+                      - generic [ref=f15e264]:
+                        - text: 07:00
+                        - img "Zoom" [ref=f15e265]
+                        - text: "|"
+                      - generic [ref=f15e266]:
+                        - text: 10:00
+                        - img "Zoom" [ref=f15e267]
+                        - text: "|"
+                      - generic [ref=f15e268]:
+                        - text: 15:00
+                        - img "Zoom" [ref=f15e269]
+                        - text: "|"
+                      - generic [ref=f15e270]:
+                        - text: 21:30
+                        - img "Zoom" [ref=f15e271]
+            - paragraph [ref=f15e272]: "* Horário de Brasília (BRT)"
+            - button "Editar Horários" [ref=f15e274] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f15e283] [cursor=pointer]
+  - alert [ref=f15e287]

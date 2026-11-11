@@ -1,0 +1,131 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - complementary "Navegação do responsável" [ref=e3]:
+      - generic [ref=e4]:
+        - link "Página inicial do responsável" [ref=e5] [cursor=pointer]:
+          - /url: /responsavel/atas
+          - generic [ref=e6]: GS Mapeamento
+        - button "Abrir menu" [ref=e193] [cursor=pointer]
+    - generic [ref=e26]:
+      - generic [ref=e28]:
+        - paragraph [ref=e29]: Nova ata
+        - heading "Grupo USL" [level=1] [ref=e30]
+        - paragraph [ref=e31]: Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - heading "Informações Gerais" [level=2] [ref=e34]
+          - generic [ref=e35]:
+            - generic [ref=e36]:
+              - text: Data
+              - textbox "Data" [ref=e37]: 2026-11-07
+            - generic [ref=e38]:
+              - text: Horário
+              - combobox "Horário" [ref=e39]:
+                - option "Selecione..."
+                - option "10:00" [selected]
+                - option "15:00"
+                - option "21:30"
+          - generic [ref=e65]:
+            - group "Tipo de Reunião" [ref=e66]:
+              - generic [ref=e68]:
+                - generic [ref=e69]:
+                  - radio "Fechada" [checked] [ref=e70]
+                  - text: Fechada
+                - generic [ref=e71]:
+                  - radio "Aberta" [ref=e72]
+                  - text: Aberta
+            - group "Plataforma" [ref=e73]:
+              - generic [ref=e75]: Zoom
+          - group "Formatos" [ref=e77]:
+            - generic [ref=e79]:
+              - generic [ref=e80]:
+                - checkbox "Partilha" [ref=e81]
+                - text: Partilha
+              - generic [ref=e82]:
+                - checkbox "Estudo" [ref=e83]
+                - text: Estudo
+              - generic [ref=e84]:
+                - checkbox "Temática" [ref=e85]
+                - text: Temática
+              - generic [ref=e86]:
+                - checkbox "Literatura" [ref=e87]
+                - text: Literatura
+              - generic [ref=e88]:
+                - checkbox "Passos" [ref=e89]
+                - text: Passos
+              - generic [ref=e90]:
+                - checkbox "Tradições" [ref=e91]
+                - text: Tradições
+              - generic [ref=e92]:
+                - checkbox "Comemorativa" [checked] [ref=e93]
+                - text: Comemorativa
+              - generic [ref=e94]:
+                - checkbox "Serviço" [ref=e95]
+                - text: Serviço
+              - generic [ref=e96]:
+                - checkbox "Outros" [ref=e97]
+                - text: Outros
+        - generic [ref=e98]:
+          - heading "Servidores" [level=2] [ref=e100]
+          - button "Adicionar" [ref=e102] [cursor=pointer]
+        - generic [ref=e106]:
+          - heading "Participação" [level=2] [ref=e108]
+          - generic [ref=e109]:
+            - generic [ref=e110]:
+              - generic [ref=e111]: Membros
+              - generic [ref=e112]:
+                - button "Diminuir membros" [disabled] [ref=e113]: "-"
+                - spinbutton "Membros Diminuir membros Aumentar membros" [active] [ref=e114]
+                - button "Aumentar membros" [ref=e115] [cursor=pointer]: +
+            - generic [ref=e116]:
+              - generic [ref=e117]: Partilhas
+              - generic [ref=e118]:
+                - button "Diminuir partilhas" [disabled] [ref=e119]: "-"
+                - spinbutton "Partilhas Diminuir partilhas Aumentar partilhas" [ref=e120]
+                - button "Aumentar partilhas" [disabled] [ref=e121]: +
+        - generic [ref=e122]:
+          - heading "Localidades Nacionais" [level=2] [ref=e124]
+          - button "Adicionar" [ref=e126] [cursor=pointer]
+        - generic [ref=e130]:
+          - heading "Localidades Internacionais" [level=2] [ref=e132]
+          - button "Adicionar" [ref=e134] [cursor=pointer]
+        - generic [ref=e138]:
+          - heading "Visitantes" [level=2] [ref=e140]
+          - button "Adicionar" [ref=e142] [cursor=pointer]
+        - heading "Ingressos" [level=2] [ref=e148]
+        - generic [ref=e149]:
+          - heading "Conquista" [level=2] [ref=e151]
+          - button "Adicionar" [ref=e153] [cursor=pointer]
+        - region [ref=e157]:
+          - heading "Resumo" [level=2] [ref=e159]
+          - generic "Resumo calculado da ata" [ref=e160]:
+            - generic [ref=e161]:
+              - term [ref=e162]: Servidores
+              - definition [ref=e163]: "0"
+            - generic [ref=e164]:
+              - term [ref=e165]: Membros
+              - definition [ref=e166]: "0"
+            - generic [ref=e167]:
+              - term [ref=e168]: Partilhas
+              - definition [ref=e169]: "0"
+            - generic [ref=e170]:
+              - term [ref=e171]: Visitantes
+              - definition [ref=e172]: "0"
+            - generic [ref=e173]:
+              - term [ref=e174]: Ingressos
+              - definition [ref=e175]: "0"
+            - generic [ref=e176]:
+              - term [ref=e177]: Conquistas
+              - definition [ref=e178]: "0"
+            - generic [ref=e179]:
+              - term [ref=e180]: Cidades
+              - definition [ref=e181]: "0"
+            - generic [ref=e182]:
+              - term [ref=e183]: Estados
+              - definition [ref=e184]: "0"
+            - generic [ref=e185]:
+              - term [ref=e186]: Outros Países
+              - definition [ref=e187]: "0"
+        - button "Revisar e confirmar" [ref=e189] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e46] [cursor=pointer]
+  - alert [ref=e50]

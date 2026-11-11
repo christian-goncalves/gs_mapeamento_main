@@ -1,0 +1,169 @@
+- generic [ref=f5e1]:
+  - main [ref=f5e2]:
+    - complementary "Navegação do responsável" [ref=f5e3]:
+      - generic [ref=f5e4]:
+        - link "Página inicial do responsável" [ref=f5e5] [cursor=pointer]:
+          - /url: /responsavel/atas
+          - generic [ref=f5e6]: GS Mapeamento
+        - button "Abrir menu" [ref=f5e7] [cursor=pointer]
+    - generic [ref=f5e10]:
+      - generic [ref=f5e12]:
+        - paragraph [ref=f5e13]: Relatórios
+        - heading "Grupo USL" [level=1] [ref=f5e14]
+      - region "Dashboard do grupo" [ref=f5e15]:
+        - generic [ref=f5e16]:
+          - generic [ref=f5e17]:
+            - text: Mês
+            - combobox "Mês" [ref=f5e18]:
+              - option "Janeiro"
+              - option "Fevereiro"
+              - option "Março"
+              - option "Abril"
+              - option "Maio"
+              - option "Junho"
+              - option "Julho"
+              - option "Agosto"
+              - option "Setembro"
+              - option "Outubro"
+              - option "Novembro" [selected]
+              - option "Dezembro"
+          - generic [ref=f5e19]:
+            - text: Ano
+            - combobox "Ano" [ref=f5e20]:
+              - option "2026" [selected]
+          - button "Exportar PDF" [ref=f5e21] [cursor=pointer]:
+            - generic [ref=f5e22]: PDF
+        - generic [ref=f5e26]:
+          - heading "Servidores" [level=2] [ref=f5e28]
+          - table [ref=f5e30]:
+            - rowgroup [ref=f5e31]:
+              - row [ref=f5e32]:
+                - columnheader "Encargo" [ref=f5e33]
+                - columnheader "Nome" [ref=f5e34]
+                - columnheader "Desde" [ref=f5e35]
+            - rowgroup [ref=f5e36]:
+              - row [ref=f5e37]:
+                - rowheader "RSG" [ref=f5e38]
+                - cell "Christian" [ref=f5e39]
+                - cell "17/10/2026" [ref=f5e40]
+              - row [ref=f5e41]:
+                - rowheader "Secretário" [ref=f5e42]
+                - cell "Alisson" [ref=f5e43]
+                - cell "17/10/2026" [ref=f5e44]
+        - generic [ref=f5e45]:
+          - heading "Consolidado" [level=2] [ref=f5e47]
+          - generic [ref=f5e48]:
+            - article [ref=f5e49]:
+              - heading "Reuniões desde a Fundação" [level=3] [ref=f5e50]
+              - strong [ref=f5e51]: "125"
+            - article [ref=f5e52]:
+              - heading "Reuniões" [level=3] [ref=f5e53]
+              - strong [ref=f5e54]: "111"
+            - article [ref=f5e55]:
+              - heading "Presenças" [level=3] [ref=f5e56]
+              - strong [ref=f5e57]: "30"
+            - article [ref=f5e58]:
+              - heading "Média de Presenças" [level=3] [ref=f5e59]
+              - strong [ref=f5e60]: "10"
+            - article [ref=f5e61]:
+              - heading "Conquistas" [level=3] [ref=f5e62]
+              - strong [ref=f5e63]: "0"
+            - article [ref=f5e64]:
+              - heading "Visitantes" [level=3] [ref=f5e65]
+              - strong [ref=f5e66]: "2"
+            - article [ref=f5e67]:
+              - heading "Ingressos" [level=3] [ref=f5e68]
+              - strong [ref=f5e69]: "2"
+            - article [ref=f5e70]:
+              - heading "Cidades" [level=3] [ref=f5e71]
+              - strong [ref=f5e72]: "0"
+            - article [ref=f5e73]:
+              - heading "Estados" [level=3] [ref=f5e74]
+              - strong [ref=f5e75]: "0"
+            - article [ref=f5e76]:
+              - heading "Outros Países" [level=3] [ref=f5e77]
+              - strong [ref=f5e78]: "0"
+        - generic [ref=f5e79]:
+          - heading "Consolidados por Reunião" [level=2] [ref=f5e82]
+          - table [ref=f5e84]:
+            - rowgroup [ref=f5e85]:
+              - row [ref=f5e86]:
+                - columnheader "Dia da Semana" [ref=f5e87]
+                - columnheader "Presenças (total)" [ref=f5e88]: Presenças(total)
+                - columnheader "Presenças (média)" [ref=f5e89]: Presenças(média)
+                - columnheader "Ingressos" [ref=f5e90]
+            - rowgroup [ref=f5e91]:
+              - row [ref=f5e92]:
+                - rowheader [ref=f5e93]:
+                  - button "Domingo" [ref=f5e94] [cursor=pointer]
+                - cell "0" [ref=f5e98]
+                - cell "0" [ref=f5e99]
+                - cell "0" [ref=f5e100]
+              - row [ref=f5e101]:
+                - rowheader [ref=f5e102]:
+                  - button "Segunda" [ref=f5e103] [cursor=pointer]
+                - cell "30" [ref=f5e107]
+                - cell "10" [ref=f5e108]
+                - cell "2" [ref=f5e109]
+              - row [ref=f5e110]:
+                - rowheader [ref=f5e111]:
+                  - button "Terça" [ref=f5e112] [cursor=pointer]
+                - cell "0" [ref=f5e116]
+                - cell "0" [ref=f5e117]
+                - cell "0" [ref=f5e118]
+              - row [ref=f5e119]:
+                - rowheader [ref=f5e120]:
+                  - button "Quarta" [ref=f5e121] [cursor=pointer]
+                - cell "0" [ref=f5e125]
+                - cell "0" [ref=f5e126]
+                - cell "0" [ref=f5e127]
+              - row [ref=f5e128]:
+                - rowheader [ref=f5e129]:
+                  - button "Quinta" [ref=f5e130] [cursor=pointer]
+                - cell "0" [ref=f5e134]
+                - cell "0" [ref=f5e135]
+                - cell "0" [ref=f5e136]
+              - row [ref=f5e137]:
+                - rowheader [ref=f5e138]:
+                  - button "Sexta" [ref=f5e139] [cursor=pointer]
+                - cell "0" [ref=f5e143]
+                - cell "0" [ref=f5e144]
+                - cell "0" [ref=f5e145]
+              - row [ref=f5e146]:
+                - rowheader [ref=f5e147]:
+                  - button "Sábado" [ref=f5e148] [cursor=pointer]
+                - cell "0" [ref=f5e152]
+                - cell "0" [ref=f5e153]
+                - cell "0" [ref=f5e154]
+        - generic [ref=f5e156]:
+          - heading "Conquistas" [level=2] [ref=f5e158]
+          - generic [ref=f5e159]:
+            - article [ref=f5e160]:
+              - heading "30 dias" [level=3] [ref=f5e161]
+              - strong [ref=f5e163]: "0"
+            - article [ref=f5e164]:
+              - heading "60 dias" [level=3] [ref=f5e165]
+              - strong [ref=f5e167]: "0"
+            - article [ref=f5e168]:
+              - heading "90 dias" [level=3] [ref=f5e169]
+              - strong [ref=f5e171]: "0"
+            - article [ref=f5e172]:
+              - heading "6 meses" [level=3] [ref=f5e173]
+              - strong [ref=f5e175]: "0"
+            - article [ref=f5e176]:
+              - heading "9 meses" [level=3] [ref=f5e177]
+              - strong [ref=f5e179]: "0"
+            - article [ref=f5e180]:
+              - heading "1 ano" [level=3] [ref=f5e181]
+              - strong [ref=f5e183]: "0"
+            - article [ref=f5e184]:
+              - heading "18 meses" [level=3] [ref=f5e185]
+              - strong [ref=f5e187]: "0"
+            - article [ref=f5e188]:
+              - heading "Múltiplos anos" [level=3] [ref=f5e189]
+              - strong [ref=f5e191]: "0"
+            - article [ref=f5e192]:
+              - heading "Total" [level=3] [ref=f5e193]
+              - strong [ref=f5e194]: "0"
+        - generic [ref=f5e195]: Dados consolidados do grupo USL referentes a Novembro/2026.
+  - button "Open Next.js Dev Tools" [ref=f5e204] [cursor=pointer]

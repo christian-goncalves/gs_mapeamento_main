@@ -1,0 +1,21 @@
+- generic [ref=f23e1]:
+  - main [ref=f23e2]:
+    - generic [ref=f23e3]:
+      - heading "GS Mapeamento" [level=1] [ref=f23e4]
+      - paragraph [ref=f23e5]: Entre com seu e-mail cadastrado.
+      - generic [ref=f23e6]:
+        - generic [ref=f23e7]:
+          - text: E-mail
+          - textbox "E-mail" [ref=f23e8]: codex.odonto@gmail.com
+        - generic [ref=f23e9]:
+          - text: Senha
+          - generic [ref=f23e10]:
+            - textbox "Senha Mostrar senha" [ref=f23e11]: Aa111111
+            - button "Mostrar senha" [ref=f23e12] [cursor=pointer]
+        - button "Entrar" [ref=f23e15] [cursor=pointer]
+      - button "Entrar com Google" [ref=f23e17] [cursor=pointer]
+      - paragraph [ref=f23e24]:
+        - link "Esqueci minha senha" [ref=f23e25] [cursor=pointer]:
+          - /url: /esqueci-senha
+  - button "Open Next.js Dev Tools" [ref=f23e31] [cursor=pointer]
+  - alert [ref=f23e35]

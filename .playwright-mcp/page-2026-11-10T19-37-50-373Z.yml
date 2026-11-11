@@ -1,0 +1,108 @@
+- generic [active] [ref=f3e1]:
+  - main [ref=f3e2]:
+    - complementary "Navegação do responsável" [ref=f3e3]:
+      - link "Página inicial do responsável" [ref=f3e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f3e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f3e46]:
+        - link "Histórico de Atas" [ref=f3e47] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f3e51] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f3e55] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=f3e60] [cursor=pointer]
+    - generic [ref=f3e9]:
+      - generic [ref=f3e10]:
+        - generic [ref=f3e11]:
+          - paragraph [ref=f3e12]: Histórico de Atas
+          - heading "Grupo USL" [level=1] [ref=f3e13]
+        - generic [ref=f3e14]:
+          - link "Histórico" [ref=f3e15] [cursor=pointer]:
+            - /url: /responsavel/atas?historico=1
+          - link "Nova Ata" [ref=f3e20] [cursor=pointer]:
+            - /url: /atas/nova
+      - generic [ref=f3e25]:
+        - generic "Filtros das Atas" [ref=f3e26]:
+          - generic [ref=f3e27]:
+            - generic [ref=f3e28]: De
+            - textbox "De" [ref=f3e29]: 2026-11-01
+          - generic [ref=f3e30]:
+            - generic [ref=f3e31]: Até
+            - textbox "Até" [ref=f3e32]: 2026-11-10
+          - generic [ref=f3e33]:
+            - generic [ref=f3e34]: Dia da Semana
+            - combobox "Dia da Semana" [ref=f3e35]:
+              - option "Todos" [selected]
+              - option "Domingo"
+              - option "Segunda"
+              - option "Terça"
+              - option "Quarta"
+              - option "Quinta"
+              - option "Sexta"
+              - option "Sábado"
+          - generic [ref=f3e36]:
+            - generic [ref=f3e37]: Horário
+            - combobox "Horário" [ref=f3e38]:
+              - option "Todos" [selected]
+              - option "07:00"
+              - option "10:00"
+          - generic [ref=f3e39]:
+            - generic [ref=f3e40]: Status
+            - combobox "Status" [ref=f3e41]:
+              - option "Todos" [selected]
+              - option "Enviadas"
+              - option "Não enviadas"
+              - option "Pendentes de revisão"
+        - generic [ref=f3e65]:
+          - table [ref=f3e68]:
+            - rowgroup [ref=f3e74]:
+              - row [ref=f3e131]:
+                - 'columnheader "Ata Ata: Activate to sort" [ref=f3e76] [cursor=pointer]':
+                  - generic [ref=f3e77]:
+                    - generic [ref=f3e78]: Ata
+                    - 'button "Ata: Activate to sort" [ref=f3e79]'
+                - 'columnheader "Data Data: Activate to remove sorting" [ref=f3e80] [cursor=pointer]':
+                  - generic [ref=f3e81]:
+                    - generic [ref=f3e82]: Data
+                    - 'button "Data: Activate to remove sorting" [ref=f3e83]'
+                - 'columnheader "Horário Horário: Activate to sort" [ref=f3e132] [cursor=pointer]':
+                  - generic [ref=f3e133]:
+                    - generic [ref=f3e134]: Horário
+                    - 'button "Horário: Activate to sort" [ref=f3e135]'
+                - 'columnheader "Status Status: Activate to sort" [ref=f3e84] [cursor=pointer]':
+                  - generic [ref=f3e85]:
+                    - generic [ref=f3e86]: Status
+                    - 'button "Status: Activate to sort" [ref=f3e87]'
+                - columnheader "Ações" [ref=f3e88]
+            - rowgroup [ref=f3e91]:
+              - row [ref=f3e136]:
+                - cell "-" [ref=f3e93]
+                - cell "10/11/2026" [ref=f3e137]
+                - cell "10:00" [ref=f3e138]
+                - cell [ref=f3e97]:
+                  - 'img "Status: Não enviada" [ref=f3e99]'
+                - cell [ref=f3e100]
+              - row [ref=f3e139]:
+                - cell "-" [ref=f3e102]
+                - cell "10/11/2026" [ref=f3e140]
+                - cell "07:00" [ref=f3e141]
+                - cell [ref=f3e106]:
+                  - 'img "Status: Não enviada" [ref=f3e108]'
+                - cell [ref=f3e109]
+          - generic [ref=f3e110]:
+            - status [ref=f3e112]: 1 - 2 de 2
+            - navigation "pagination" [ref=f3e115]:
+              - link "First" [disabled] [ref=f3e142]: Primeira
+              - link "Previous" [disabled] [ref=f3e116]: Anterior
+              - link "1" [ref=f3e117] [cursor=pointer]
+              - link "Next" [disabled] [ref=f3e118]: Próxima
+              - link "Last" [disabled] [ref=f3e143]: Última
+  - button "Open Next.js Dev Tools" [ref=f3e144] [cursor=pointer]:
+    - generic [ref=f3e147]:
+      - text: Rendering
+      - generic [ref=f3e148]:
+        - generic [ref=f3e149]: .
+        - generic [ref=f3e150]: .
+        - generic [ref=f3e151]: .
+  - alert [ref=f3e128]

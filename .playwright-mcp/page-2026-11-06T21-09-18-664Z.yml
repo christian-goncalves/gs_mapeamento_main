@@ -1,0 +1,199 @@
+- generic [active] [ref=f1e1]:
+  - main [ref=f1e2]:
+    - complementary "Navegação do responsável" [ref=f1e3]:
+      - link "Página inicial do responsável" [ref=f1e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f1e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f1e7]:
+        - link "Histórico de Atas" [ref=f1e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f1e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f1e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=f1e21] [cursor=pointer]
+    - generic [ref=f1e26]:
+      - navigation "Navegação entre atas" [ref=f1e27]:
+        - link "Ata Anterior" [ref=f1e28] [cursor=pointer]:
+          - /url: /atas/459e72cc-92fb-44e7-bdcc-52f5530cbed8?origem=responsavel&de=2026-09-01&ate=2026-11-06&diaSemana=todos&horario=todos&status=todos&ordem=1.desc%2C2.desc
+        - link "Próxima Ata" [ref=f1e32] [cursor=pointer]:
+          - /url: /atas/7eeae407-77f2-473b-b05f-3562f77ba110?origem=responsavel&de=2026-09-01&ate=2026-11-06&diaSemana=todos&horario=todos&status=todos&ordem=1.desc%2C2.desc
+      - generic [ref=f1e36]:
+        - generic [ref=f1e37]:
+          - generic [ref=f1e39]:
+            - paragraph [ref=f1e40]: Ata
+            - heading "Ata de reunião nº 02" [level=1] [ref=f1e41]
+          - generic [ref=f1e42]:
+            - link "Voltar" [ref=f1e43] [cursor=pointer]:
+              - /url: /responsavel/atas
+            - link "Editar" [ref=f1e46] [cursor=pointer]:
+              - /url: /atas/2c1ee081-45bc-4bbc-b37c-6e8ba9bff57f/editar
+            - link "Visualizar PDF" [ref=f1e49] [cursor=pointer]:
+              - /url: /atas/2c1ee081-45bc-4bbc-b37c-6e8ba9bff57f/pdf
+            - button "Enviar por e-mail" [ref=f1e52] [cursor=pointer]
+        - region [ref=f1e55]:
+          - heading "Dados da Reunião" [level=2] [ref=f1e56]
+          - generic [ref=f1e57]:
+            - generic [ref=f1e59]:
+              - term [ref=f1e60]: Grupo
+              - definition [ref=f1e61]: USL
+            - generic [ref=f1e63]:
+              - term [ref=f1e64]: Data
+              - definition [ref=f1e65]: 01/09/2026
+            - generic [ref=f1e67]:
+              - term [ref=f1e68]: Horário
+              - definition [ref=f1e69]: 10:00
+            - generic [ref=f1e71]:
+              - term [ref=f1e72]: Tipo
+              - definition [ref=f1e73]: Fechada
+            - generic [ref=f1e75]:
+              - term [ref=f1e76]: Plataforma
+              - definition [ref=f1e77]: Zoom
+            - generic [ref=f1e79]:
+              - term [ref=f1e80]: Formatos
+              - definition [ref=f1e81]: Partilha
+        - region [ref=f1e82]:
+          - heading "Consolidado da Reunião" [level=2] [ref=f1e83]
+          - generic "Totais da Ata" [ref=f1e84]:
+            - generic [ref=f1e86]:
+              - term [ref=f1e87]: Servidores
+              - definition [ref=f1e88]: "2"
+            - generic [ref=f1e90]:
+              - term [ref=f1e91]: Membros
+              - definition [ref=f1e92]: "42"
+            - generic [ref=f1e94]:
+              - term [ref=f1e95]: Partilhas
+              - definition [ref=f1e96]: "12"
+            - generic [ref=f1e98]:
+              - term [ref=f1e99]: Visitantes
+              - definition [ref=f1e100]: "2"
+            - generic [ref=f1e102]:
+              - term [ref=f1e103]: Ingressos
+              - definition [ref=f1e104]: "0"
+            - generic [ref=f1e106]:
+              - term [ref=f1e107]: Conquistas
+              - definition [ref=f1e108]: "0"
+            - generic [ref=f1e110]:
+              - term [ref=f1e111]: Cidades
+              - definition [ref=f1e112]: "11"
+            - generic [ref=f1e114]:
+              - term [ref=f1e115]: Estados
+              - definition [ref=f1e116]: "8"
+            - generic [ref=f1e118]:
+              - term [ref=f1e119]: Outros Países
+              - definition [ref=f1e120]: "1"
+        - region [ref=f1e121]:
+          - heading "Detalhamento da Reunião" [level=2] [ref=f1e122]
+          - generic [ref=f1e123]:
+            - generic [ref=f1e124]:
+              - generic [ref=f1e125]:
+                - group [ref=f1e126]:
+                  - generic "Servidores 2 registros":
+                    - generic: Servidores
+                    - generic:
+                      - generic "2 registros": "2"
+                  - table [ref=f1e129]:
+                    - rowgroup [ref=f1e130]:
+                      - row [ref=f1e131]:
+                        - columnheader "Servidor" [ref=f1e132]
+                        - columnheader "Função" [ref=f1e133]
+                    - rowgroup [ref=f1e134]:
+                      - row [ref=f1e135]:
+                        - cell "1. Theo Carvalho" [ref=f1e136]
+                        - cell "Anfitrião" [ref=f1e137]
+                      - row [ref=f1e138]:
+                        - cell "2. Rafael Nunes" [ref=f1e139]
+                        - cell "Anfitrião" [ref=f1e140]
+                - group [ref=f1e141]:
+                  - generic "Localidades Internacionais 1 registros":
+                    - generic: Localidades Internacionais
+                    - generic:
+                      - generic "1 registros": "1"
+                  - table [ref=f1e144]:
+                    - rowgroup [ref=f1e145]:
+                      - row [ref=f1e146]:
+                        - columnheader "País" [ref=f1e147]
+                        - columnheader "Quantidade" [ref=f1e148]
+                    - rowgroup [ref=f1e149]:
+                      - row [ref=f1e150]:
+                        - cell "1. Suíça" [ref=f1e151]
+                        - cell "1" [ref=f1e152]
+                - group [ref=f1e153]:
+                  - generic "Visitantes 2 registros":
+                    - generic: Visitantes
+                    - generic:
+                      - generic "2 registros": "2"
+                  - table [ref=f1e156]:
+                    - rowgroup [ref=f1e157]:
+                      - row [ref=f1e158]:
+                        - columnheader "Visitante" [ref=f1e159]
+                        - columnheader "Cidade" [ref=f1e160]
+                        - columnheader "Categoria" [ref=f1e161]
+                        - columnheader "Origem" [ref=f1e162]
+                    - rowgroup [ref=f1e163]:
+                      - row [ref=f1e164]:
+                        - cell "1. Visitante" [ref=f1e165]
+                        - cell "Jaborandi - SP" [ref=f1e166]
+                        - cell "Familiar" [ref=f1e167]
+                        - cell "Encaminhamento" [ref=f1e168]
+                      - row [ref=f1e169]:
+                        - cell "2. Visitante" [ref=f1e170]
+                        - cell "São José do Cedro - SC" [ref=f1e171]
+                        - cell "Outro" [ref=f1e172]
+                        - cell "TV" [ref=f1e173]
+              - group [ref=f1e174]:
+                - generic "Localidades Nacionais 11 registros":
+                  - generic: Localidades Nacionais
+                  - generic:
+                    - generic "11 registros": "11"
+                - table [ref=f1e177]:
+                  - rowgroup [ref=f1e178]:
+                    - row [ref=f1e179]:
+                      - columnheader "Localidade" [ref=f1e180]
+                      - columnheader "Quantidade" [ref=f1e181]
+                  - rowgroup [ref=f1e182]:
+                    - row [ref=f1e183]:
+                      - cell "1. Santiago do Sul - SC" [ref=f1e184]
+                      - cell "2" [ref=f1e186]
+                    - row [ref=f1e187]:
+                      - cell "2. Valparaíso de Goiás - GO" [ref=f1e188]
+                      - cell "2" [ref=f1e190]
+                    - row [ref=f1e191]:
+                      - cell "3. Lençóis - BA" [ref=f1e192]
+                      - cell "2" [ref=f1e194]
+                    - row [ref=f1e195]:
+                      - cell "4. Breu Branco - PA" [ref=f1e196]
+                      - cell "2" [ref=f1e198]
+                    - row [ref=f1e199]:
+                      - cell "5. São João do Oeste - SC" [ref=f1e200]
+                      - cell "2" [ref=f1e202]
+                    - row [ref=f1e203]:
+                      - cell "6. Serra Redonda - PB" [ref=f1e204]
+                      - cell "2" [ref=f1e206]
+                    - row [ref=f1e207]:
+                      - cell "7. São Pedro do Sul - RS" [ref=f1e208]
+                      - cell "2" [ref=f1e210]
+                    - row [ref=f1e211]:
+                      - cell "8. Santo Augusto - RS" [ref=f1e212]
+                      - cell "2" [ref=f1e214]
+                    - row [ref=f1e215]:
+                      - cell "9. Barra do Ouro - TO" [ref=f1e216]
+                      - cell "2" [ref=f1e218]
+                    - row [ref=f1e219]:
+                      - cell "10. São José de Princesa - PB" [ref=f1e220]
+                      - cell "2" [ref=f1e222]
+                    - row [ref=f1e223]:
+                      - cell "11. Rio Preto - MG" [ref=f1e224]
+                      - cell "1" [ref=f1e226]
+            - generic [ref=f1e227]:
+              - group [ref=f1e228]:
+                - generic "Ingressos 0 registros":
+                  - generic: Ingressos
+                  - generic:
+                    - generic "0 registros": "0"
+              - group [ref=f1e229]:
+                - generic "Conquistas 0 registros":
+                  - generic: Conquistas
+                  - generic:
+                    - generic "0 registros": "0"
+  - button "Open Next.js Dev Tools" [ref=f1e235] [cursor=pointer]

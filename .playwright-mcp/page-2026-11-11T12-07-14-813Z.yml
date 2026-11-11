@@ -1,0 +1,217 @@
+- generic [ref=f7e1]:
+  - main [ref=f7e2]:
+    - complementary "Navegação do responsável" [ref=f7e3]:
+      - link "Página inicial do responsável" [ref=f7e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f7e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f7e7]:
+        - link "Histórico de Atas" [ref=f7e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f7e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f7e16] [cursor=pointer]:
+          - /url: /grupos/505ba5ab-850a-42a1-bf26-612ea4869dc0
+        - button "Sair" [ref=f7e21] [cursor=pointer]
+    - generic [ref=f7e27]:
+      - generic [ref=f7e28]:
+        - generic [ref=f7e29]:
+          - navigation "Navegação entre atas" [ref=f7e30]:
+            - button "Ata anterior" [disabled] [ref=f7e31]
+            - generic [ref=f7e34]: Atas
+            - link "Próxima ata" [ref=f7e35] [cursor=pointer]:
+              - /url: /atas/c4fa9e96-fdb3-44a2-822a-90b1f383a9ea?origem=responsavel&de=2026-09-01&ate=2026-11-11&diaSemana=todos&horario=todos&status=todos&ordem=1.desc%2C2.desc
+          - generic [ref=f7e39]:
+            - link "Editar" [ref=f7e40] [cursor=pointer]:
+              - /url: /atas/9d1a50e8-8394-482b-9ff1-d108e373b730/editar
+            - link "Visualizar PDF" [ref=f7e43] [cursor=pointer]:
+              - /url: /atas/9d1a50e8-8394-482b-9ff1-d108e373b730/pdf
+            - button "Enviar por e-mail" [ref=f7e46] [cursor=pointer]
+        - generic [ref=f7e50]:
+          - paragraph [ref=f7e51]: Ata
+          - heading "Ata de Reunião nº 181" [level=1] [ref=f7e52]
+      - region "Dados" [ref=f7e53]:
+        - heading "Dados" [level=2] [ref=f7e54]
+        - generic [ref=f7e55]:
+          - generic [ref=f7e57]:
+            - term [ref=f7e58]: Grupo
+            - definition [ref=f7e59]: Unidade & Propósito Roraima
+          - generic [ref=f7e61]:
+            - term [ref=f7e62]: Data
+            - definition [ref=f7e63]: 29/09/2026
+          - generic [ref=f7e65]:
+            - term [ref=f7e66]: Horário
+            - definition [ref=f7e67]: 19:30
+          - generic [ref=f7e69]:
+            - term [ref=f7e70]: Tipo
+            - definition [ref=f7e71]: Fechada
+          - generic [ref=f7e73]:
+            - term [ref=f7e74]: Plataforma
+            - definition [ref=f7e75]: Zoom
+          - generic [ref=f7e77]:
+            - term [ref=f7e78]: Formatos
+            - definition [ref=f7e79]: Partilha
+      - region "Consolidado" [ref=f7e80]:
+        - heading "Consolidado" [level=2] [ref=f7e81]
+        - generic "Totais da Ata" [ref=f7e82]:
+          - generic [ref=f7e84]:
+            - term [ref=f7e85]: Servidores
+            - definition [ref=f7e86]: "2"
+          - generic [ref=f7e88]:
+            - term [ref=f7e89]: Membros
+            - definition [ref=f7e90]: "31"
+          - generic [ref=f7e92]:
+            - term [ref=f7e93]: Partilhas
+            - definition [ref=f7e94]: "11"
+          - generic [ref=f7e96]:
+            - term [ref=f7e97]: Visitantes
+            - definition [ref=f7e98]: "2"
+          - generic [ref=f7e100]:
+            - term [ref=f7e101]: Ingressos
+            - definition [ref=f7e102]: "0"
+          - generic [ref=f7e104]:
+            - term [ref=f7e105]: Conquistas
+            - definition [ref=f7e106]: "1"
+          - generic [ref=f7e108]:
+            - term [ref=f7e109]: Cidades
+            - definition [ref=f7e110]: "20"
+          - generic [ref=f7e112]:
+            - term [ref=f7e113]: Estados
+            - definition [ref=f7e114]: "11"
+          - generic [ref=f7e116]:
+            - term [ref=f7e117]: Outros Países
+            - definition [ref=f7e118]: "1"
+      - region "Detalhamento" [ref=f7e119]:
+        - heading "Detalhamento" [level=2] [ref=f7e120]
+        - generic [ref=f7e123]:
+          - generic [ref=f7e124]:
+            - heading "Localidades Nacionais" [level=3] [ref=f7e125]
+            - table [ref=f7e127]:
+              - rowgroup [ref=f7e128]:
+                - row [ref=f7e129]:
+                  - columnheader "Cidade" [ref=f7e130]
+                  - columnheader "Total" [ref=f7e131]
+              - rowgroup [ref=f7e132]:
+                - row [ref=f7e133]:
+                  - cell "1. Formosa do Oeste - PR" [ref=f7e134]
+                  - cell "1" [ref=f7e136]
+                - row [ref=f7e137]:
+                  - cell "2. Rio Negro - PR" [ref=f7e138]
+                  - cell "1" [ref=f7e140]
+                - row [ref=f7e141]:
+                  - cell "3. Aroeiras - PB" [ref=f7e142]
+                  - cell "1" [ref=f7e144]
+                - row [ref=f7e145]:
+                  - cell "4. Igarapé Grande - MA" [ref=f7e146]
+                  - cell "1" [ref=f7e148]
+                - row [ref=f7e149]:
+                  - cell "5. Goioerê - PR" [ref=f7e150]
+                  - cell "1" [ref=f7e152]
+                - row [ref=f7e153]:
+                  - cell "6. Crissiumal - RS" [ref=f7e154]
+                  - cell "1" [ref=f7e156]
+                - row [ref=f7e157]:
+                  - cell "7. Zé Doca - MA" [ref=f7e158]
+                  - cell "1" [ref=f7e160]
+                - row [ref=f7e161]:
+                  - cell "8. Ribeira do Pombal - BA" [ref=f7e162]
+                  - cell "1" [ref=f7e164]
+                - row [ref=f7e165]:
+                  - cell "9. Trindade do Sul - RS" [ref=f7e166]
+                  - cell "1" [ref=f7e168]
+                - row [ref=f7e169]:
+                  - cell "10. Amarante do Maranhão - MA" [ref=f7e170]
+                  - cell "1" [ref=f7e172]
+                - row [ref=f7e173]:
+                  - cell "11. Sandovalina - SP" [ref=f7e174]
+                  - cell "1" [ref=f7e176]
+                - row [ref=f7e177]:
+                  - cell "12. Iporã do Oeste - SC" [ref=f7e178]
+                  - cell "1" [ref=f7e180]
+                - row [ref=f7e181]:
+                  - cell "13. Nossa Senhora da Glória - SE" [ref=f7e182]
+                  - cell "1" [ref=f7e184]
+                - row [ref=f7e185]:
+                  - cell "14. Matutina - MG" [ref=f7e186]
+                  - cell "1" [ref=f7e188]
+                - row [ref=f7e189]:
+                  - cell "15. Franca - SP" [ref=f7e190]
+                  - cell "1" [ref=f7e192]
+                - row [ref=f7e193]:
+                  - cell "16. Moreilândia - PE" [ref=f7e194]
+                  - cell "1" [ref=f7e196]
+                - row [ref=f7e197]:
+                  - cell "17. Porto Lucena - RS" [ref=f7e198]
+                  - cell "1" [ref=f7e200]
+                - row [ref=f7e201]:
+                  - cell "18. Taquaral - SP" [ref=f7e202]
+                  - cell "1" [ref=f7e204]
+                - row [ref=f7e205]:
+                  - cell "19. União da Vitória - PR" [ref=f7e206]
+                  - cell "1" [ref=f7e208]
+                - row [ref=f7e209]:
+                  - cell "20. Barbalha - CE" [ref=f7e210]
+                  - cell "1" [ref=f7e212]
+          - generic [ref=f7e213]:
+            - heading "Servidores" [level=3] [ref=f7e214]
+            - table [ref=f7e216]:
+              - rowgroup [ref=f7e217]:
+                - row [ref=f7e218]:
+                  - columnheader "Servidor" [ref=f7e219]
+                  - columnheader "Função" [ref=f7e220]
+              - rowgroup [ref=f7e221]:
+                - row [ref=f7e222]:
+                  - cell "1. Edson Pacheco" [ref=f7e223]
+                  - cell "Moderador" [ref=f7e224]
+                - row [ref=f7e225]:
+                  - cell "2. Joana Teles" [ref=f7e226]
+                  - cell "Coordenador" [ref=f7e227]
+          - generic [ref=f7e228]:
+            - heading "Localidades Internacionais" [level=3] [ref=f7e229]
+            - table [ref=f7e231]:
+              - rowgroup [ref=f7e232]:
+                - row [ref=f7e233]:
+                  - columnheader "País" [ref=f7e234]
+                  - columnheader "Total" [ref=f7e235]
+              - rowgroup [ref=f7e236]:
+                - row [ref=f7e237]:
+                  - cell "1. Palau" [ref=f7e238]
+                  - cell "1" [ref=f7e240]
+          - generic [ref=f7e241]:
+            - heading "Visitantes" [level=3] [ref=f7e242]
+            - table [ref=f7e244]:
+              - rowgroup [ref=f7e245]:
+                - row [ref=f7e246]:
+                  - columnheader "Cidade" [ref=f7e247]
+                  - columnheader "Categoria" [ref=f7e248]
+                  - columnheader "Origem" [ref=f7e249]
+              - rowgroup [ref=f7e250]:
+                - row [ref=f7e251]:
+                  - cell "1. Barra dos Coqueiros - SE" [ref=f7e252]
+                  - cell "Estudante" [ref=f7e253]
+                  - cell "Rádio" [ref=f7e254]
+                - row [ref=f7e255]:
+                  - cell "2. Bragança Paulista - SP" [ref=f7e256]
+                  - cell "Familiar" [ref=f7e257]
+                  - cell "Outro" [ref=f7e258]
+          - generic [ref=f7e259]:
+            - heading "Ingressos" [level=3] [ref=f7e260]
+            - table [ref=f7e262]:
+              - rowgroup [ref=f7e263]:
+                - row [ref=f7e264]:
+                  - columnheader "Cidade" [ref=f7e265]
+                  - columnheader "Estado" [ref=f7e266]
+              - rowgroup [ref=f7e267]:
+                - row [ref=f7e268]:
+                  - cell "Nenhum ingresso registrado." [ref=f7e269]
+          - generic [ref=f7e270]:
+            - heading "Conquistas" [level=3] [ref=f7e271]
+            - table [ref=f7e273]:
+              - rowgroup [ref=f7e274]:
+                - row [ref=f7e275]:
+                  - columnheader "Tempo" [ref=f7e276]
+                  - columnheader "Total" [ref=f7e277]
+              - rowgroup [ref=f7e278]:
+                - row [ref=f7e279]:
+                  - cell "1. 60 dias" [ref=f7e280]
+                  - cell "1" [ref=f7e281]
+  - alert [ref=f7e282]

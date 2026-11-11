@@ -1,0 +1,102 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - complementary "Navegação do responsável" [ref=e3]:
+      - link "Página inicial do responsável" [ref=e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=e7]:
+        - link "Histórico de Atas" [ref=e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=e21] [cursor=pointer]
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - paragraph [ref=e28]: Histórico de Atas
+          - heading "Grupo USL" [level=1] [ref=e29]
+        - generic [ref=e30]:
+          - link "Histórico" [ref=e31] [cursor=pointer]:
+            - /url: /responsavel/atas?historico=1
+          - link "Nova Ata" [ref=e36] [cursor=pointer]:
+            - /url: /atas/nova
+      - generic [ref=e41]:
+        - generic "Filtros das Atas" [ref=e42]:
+          - generic [ref=e43]:
+            - generic [ref=e44]: De
+            - textbox "De" [ref=e45]: 2026-11-01
+          - generic [ref=e46]:
+            - generic [ref=e47]: Até
+            - textbox "Até" [ref=e48]: 2026-11-10
+          - generic [ref=e49]:
+            - generic [ref=e50]: Dia da Semana
+            - combobox "Dia da Semana" [ref=e51]:
+              - option "Todos" [selected]
+              - option "Domingo"
+              - option "Segunda"
+              - option "Terça"
+              - option "Quarta"
+              - option "Quinta"
+              - option "Sexta"
+              - option "Sábado"
+          - generic [ref=e52]:
+            - generic [ref=e53]: Horário
+            - combobox "Horário" [ref=e54]:
+              - option "Todos" [selected]
+              - option "07:00"
+              - option "10:00"
+          - generic [ref=e55]:
+            - generic [ref=e56]: Status
+            - combobox "Status" [ref=e57]:
+              - option "Todos" [selected]
+              - option "Enviadas"
+              - option "Não enviadas"
+              - option "Pendentes de revisão"
+        - generic [ref=e60]:
+          - table [ref=e63]:
+            - rowgroup [ref=e70]:
+              - row [ref=e71]:
+                - 'columnheader "Ata Ata: Activate to sort" [ref=e72] [cursor=pointer]':
+                  - generic [ref=e73]:
+                    - generic [ref=e74]: Ata
+                    - 'button "Ata: Activate to sort" [ref=e75]'
+                - 'columnheader "Data Data: Activate to remove sorting" [ref=e76] [cursor=pointer]':
+                  - generic [ref=e77]:
+                    - generic [ref=e78]: Data
+                    - 'button "Data: Activate to remove sorting" [ref=e79]'
+                - 'columnheader "Horário Horário: Activate to sort" [ref=e80] [cursor=pointer]':
+                  - generic [ref=e81]:
+                    - generic [ref=e82]: Horário
+                    - 'button "Horário: Activate to sort" [ref=e83]'
+                - 'columnheader "Status Status: Activate to sort" [ref=e84] [cursor=pointer]':
+                  - generic [ref=e85]:
+                    - generic [ref=e86]: Status
+                    - 'button "Status: Activate to sort" [ref=e87]'
+                - columnheader "Ações" [ref=e88]
+            - rowgroup [ref=e91]:
+              - row [ref=e92]:
+                - cell "-" [ref=e93]
+                - cell "10/11/2026" [ref=e94]
+                - cell "10:00" [ref=e96]
+                - cell [ref=e97]:
+                  - 'img "Status: Não enviada" [ref=e99]'
+                - cell [ref=e100]
+              - row [ref=e101]:
+                - cell "-" [ref=e102]
+                - cell "10/11/2026" [ref=e103]
+                - cell "07:00" [ref=e105]
+                - cell [ref=e106]:
+                  - 'img "Status: Não enviada" [ref=e108]'
+                - cell [ref=e109]
+          - generic [ref=e110]:
+            - status [ref=e112]: 1 - 2 de 2
+            - navigation "pagination" [ref=e115]:
+              - link "First" [disabled] [ref=e116]: Primeira
+              - link "Previous" [disabled] [ref=e117]: Anterior
+              - link "1" [ref=e118] [cursor=pointer]
+              - link "Next" [disabled] [ref=e119]: Próxima
+              - link "Last" [disabled] [ref=e120]: Última
+  - button "Open Next.js Dev Tools" [ref=e126] [cursor=pointer]
+  - alert [ref=e130]

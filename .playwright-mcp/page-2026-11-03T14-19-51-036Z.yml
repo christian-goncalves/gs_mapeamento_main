@@ -1,0 +1,56 @@
+- generic [ref=f9e1]:
+  - main [ref=f9e2]:
+    - complementary "Navegação do responsável" [ref=f9e3]:
+      - generic [ref=f9e4]:
+        - link "Página inicial do responsável" [ref=f9e5] [cursor=pointer]:
+          - /url: /responsavel/atas
+          - generic [ref=f9e6]: GS Mapeamento
+        - button "Abrir menu" [ref=f9e7] [cursor=pointer]
+    - generic [ref=f9e9]:
+      - generic [ref=f9e10]:
+        - generic [ref=f9e11]:
+          - paragraph [ref=f9e12]: Histórico de Atas
+          - heading "Grupo USL" [level=1] [ref=f9e13]
+        - generic [ref=f9e14]:
+          - link "Histórico" [ref=f9e15] [cursor=pointer]:
+            - /url: /responsavel/atas?historico=1
+          - link "Nova Ata" [ref=f9e20] [cursor=pointer]:
+            - /url: /atas/nova
+      - generic [ref=f9e25]:
+        - generic "Filtros das Atas" [ref=f9e26]:
+          - generic [ref=f9e27]:
+            - generic [ref=f9e28]: De
+            - textbox "De" [ref=f9e29]: 2026-11-01
+          - generic [ref=f9e30]:
+            - generic [ref=f9e31]: Até
+            - textbox "Até" [ref=f9e32]: 2026-11-03
+          - generic [ref=f9e33]:
+            - generic [ref=f9e34]: Dia da Semana
+            - combobox "Dia da Semana" [ref=f9e35]:
+              - option "Todos" [selected]
+              - option "Domingo"
+              - option "Segunda"
+              - option "Terça"
+              - option "Quarta"
+              - option "Quinta"
+              - option "Sexta"
+              - option "Sábado"
+          - generic [ref=f9e36]:
+            - generic [ref=f9e37]: Horário
+            - combobox "Horário" [ref=f9e38]:
+              - option "Todos" [selected]
+              - option "07:00"
+              - option "07:30"
+              - option "10:00"
+              - option "15:00"
+              - option "18:00"
+              - option "21:30"
+          - generic [ref=f9e39]:
+            - generic [ref=f9e40]: Status
+            - combobox "Status" [ref=f9e41]:
+              - option "Todos" [selected]
+              - option "Enviadas"
+              - option "Não enviadas"
+              - option "Pendentes de revisão"
+        - status [ref=f9e43]: Carregando tabela...
+  - button "Open Next.js Dev Tools" [ref=f9e49] [cursor=pointer]

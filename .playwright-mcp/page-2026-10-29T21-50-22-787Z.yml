@@ -1,0 +1,101 @@
+- generic [ref=e1]:
+  - link "Skip to content":
+    - /url: "#geist-skip-nav"
+  - main [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - generic [ref=e10]:
+              - link "christian-goncalves' projects Hobby" [ref=e11] [cursor=pointer]:
+                - /url: /christian-goncalves-projects
+                - generic [ref=e14]:
+                  - generic [ref=e15]: christian-goncalves' projects
+                  - generic [ref=e16]: Hobby
+              - button [ref=e18] [cursor=pointer]
+            - button "Find F" [ref=e23]:
+              - generic [ref=e25]:
+                - generic [ref=e29]: Find
+                - generic [ref=e30]: F
+          - navigation [ref=e34]:
+            - generic [ref=e38]:
+              - link "Overview" [ref=e39] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento
+              - link "Deployments" [ref=e44] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/deployments
+              - link "CI" [ref=e50] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/ci
+              - link "Logs" [ref=e56] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/logs
+              - link "Analytics" [ref=e65] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/analytics
+              - link "Speed Insights" [ref=e71] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/speed-insights
+              - link "Observability" [ref=e77] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/observability
+              - link "Firewall" [ref=e86] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/firewall
+              - link "CDN" [ref=e95] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/cdn
+              - separator [ref=e104]
+              - link "Environment Variables" [ref=e105] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/settings/environment-variables
+              - link "Domains" [ref=e111] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/settings/domains
+              - link "Connect" [ref=e117] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/connect
+              - link "Integrations" [ref=e126] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/settings/integrations
+              - link "Storage" [ref=e132] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/stores
+              - link "Flags" [ref=e138] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/flags
+              - link "Agent" [ref=e147] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/agent
+              - link "AI Gateway" [ref=e156] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/ai-gateway
+              - link "Sandboxes" [ref=e165] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/sandboxes
+              - link "Workflows" [ref=e174] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/workflows
+              - link "Images" [ref=e180] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/images
+              - link "Daemons" [ref=e187] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/daemons
+              - separator [ref=e196]
+              - link "Usage" [ref=e197] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/usage
+              - link "Support" [ref=e203] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/support
+              - link "Settings" [ref=e209] [cursor=pointer]:
+                - /url: /christian-goncalves-projects/gs-mapeamento/settings
+        - button [ref=e228] [cursor=pointer]
+      - generic [ref=e232]:
+        - generic [ref=e233]:
+          - generic [ref=e236]:
+            - link "gs-mapeamento" [ref=e237] [cursor=pointer]:
+              - /url: /christian-goncalves-projects/gs-mapeamento
+            - button [ref=e241] [cursor=pointer]
+            - link "Back to team view" [ref=e247] [cursor=pointer]:
+              - /url: /christian-goncalves-projects/~/deployments
+          - navigation "Breadcrumb"
+          - button "Create New" [ref=e253] [cursor=pointer]
+        - generic [ref=e265]:
+          - generic [ref=e266]:
+            - heading "Project Deployments" [level=1] [ref=e268]
+            - button "Deployments actions" [ref=e270] [cursor=pointer]
+          - generic [ref=e282]:
+            - button "Add Filter" [ref=e284] [cursor=pointer]
+            - button "Author christian-goncalves" [ref=e293] [cursor=pointer]:
+              - generic [ref=e296]:
+                - generic [ref=e297]: Author
+                - generic [ref=e298]: christian-goncalves
+            - button "Environment Production" [ref=e300] [cursor=pointer]:
+              - generic [ref=e303]:
+                - generic [ref=e304]: Environment
+                - generic [ref=e305]: Production
+            - button "Status Error" [ref=e307] [cursor=pointer]:
+              - generic [ref=e310]:
+                - generic [ref=e311]: Status
+                - generic [ref=e312]: Error
+  - alert [ref=e636]

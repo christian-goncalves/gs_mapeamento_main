@@ -59,11 +59,10 @@ export function MonthlyReportActions({
     <>
       <a
         className="dashboard-pdf-button"
-        aria-label="Baixar PDF"
-        title="Baixar PDF"
-        href={`/api/relatorios/mensal/pdf?${query.toString()}&download=1`}
+        aria-label="Visualizar PDF"
+        href={`/api/relatorios/mensal/pdf?${query.toString()}`}
       >
-        <span className="button-content"><FontAwesomeIcon icon={faFilePdf} /><span className="dashboard-pdf-button-label">PDF</span></span>
+        <FontAwesomeIcon icon={faFilePdf} aria-hidden="true" />
       </a>
       <button type="button" className="dashboard-email-button" aria-label="Enviar por e-mail" title="Enviar por e-mail" onClick={showDialog}>
         <FontAwesomeIcon icon={faEnvelope} />

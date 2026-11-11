@@ -1,0 +1,422 @@
+- generic [active] [ref=f21e1]:
+  - main [ref=f21e2]:
+    - complementary "Navegação do responsável" [ref=f21e3]:
+      - link "Página inicial do responsável" [ref=f21e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f21e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f21e7]:
+        - link "Histórico de Atas" [ref=f21e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f21e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f21e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=f21e21] [cursor=pointer]
+    - generic [ref=f21e26]:
+      - generic [ref=f21e28]:
+        - paragraph [ref=f21e29]: Configurações
+        - heading "Grupo USL" [level=1] [ref=f21e30]
+      - generic [ref=f21e31]:
+        - generic [ref=f21e33]:
+          - generic [ref=f21e34]:
+            - heading "Dados do Grupo" [level=2] [ref=f21e35]
+            - button "Editar" [ref=f21e36] [cursor=pointer]
+          - generic [ref=f21e40]:
+            - generic [ref=f21e41]:
+              - generic [ref=f21e42]:
+                - generic [ref=f21e43]: Revisão de Atas
+                - group [ref=f21e44]:
+                  - generic "Informações sobre a revisão de atas" [ref=f21e45] [cursor=pointer]
+              - combobox "Revisão de Atas Informações sobre a revisão de atas" [disabled] [ref=f21e48]:
+                - option "Aprovação ativada" [selected]
+                - option "Aprovação desativada (padrão)"
+            - generic [ref=f21e49]:
+              - generic [ref=f21e50]:
+                - text: E-mail
+                - textbox "E-mail" [ref=f21e51]: codex.odonto@gmail.com
+              - button "Alterar e-mail ou senha" [ref=f21e52] [cursor=pointer]
+            - generic [ref=f21e56]:
+              - generic [ref=f21e57]: Link da ata
+              - generic [ref=f21e58]:
+                - textbox "Link da ata" [ref=f21e59]: http://localhost:3000/preencher/1218223fc61c1c375dacd2cab9f774dbdc9e114e61e0b53f17a3915c3a75329d
+                - button "Copiar link da ata" [ref=f21e60] [cursor=pointer]
+                - button "Rotacionar link de preenchimento" [ref=f21e63] [cursor=pointer]
+            - generic [ref=f21e66]:
+              - text: Última reunião antes do sistema
+              - spinbutton "Última reunião antes do sistema" [ref=f21e67]: "0"
+          - generic [ref=f21e68]:
+            - generic [ref=f21e69]: Plataformas Utilizadas
+            - list "Plataformas Utilizadas" [ref=f21e70]:
+              - listitem [ref=f21e71]: Zoom
+              - listitem [ref=f21e73]: WhatsApp
+        - group [ref=f21e75]:
+          - generic "Servidores" [ref=f21e76] [cursor=pointer]
+      - group [ref=f21e80]:
+        - generic "Plataformas" [ref=f21e81] [cursor=pointer]
+        - option "Selecione uma plataforma" [selected]
+        - option "WhatsApp"
+        - option "Selecione uma plataforma" [selected]
+        - option "Zoom"
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp" [selected]
+        - option "Zoom"
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+      - group [ref=f21e85]:
+        - generic "Horários de Reunião Informações sobre o horário da agenda" [ref=f21e86] [cursor=pointer]:
+          - generic [ref=f21e87]:
+            - generic [ref=f21e88]: Horários de Reunião
+            - img "Informações sobre o horário da agenda" [ref=f21e89]
+        - generic [ref=f21e94]:
+          - list "Legenda de plataformas" [ref=f21e95]:
+            - listitem [ref=f21e96]: Zoom
+            - listitem [ref=f21e98]: Zello
+            - listitem [ref=f21e100]: WhatsApp
+          - generic [ref=f21e102]:
+            - table [ref=f21e104]:
+              - rowgroup [ref=f21e105]:
+                - row [ref=f21e106]:
+                  - columnheader "Dia" [ref=f21e107]
+                  - columnheader "Hora de Início" [ref=f21e108]
+                  - columnheader "Hora de Término" [ref=f21e109]
+                  - columnheader "Ações" [ref=f21e110]
+              - rowgroup [ref=f21e111]:
+                - row [ref=f21e112]:
+                  - cell "Domingo" [ref=f21e113]
+                  - cell [ref=f21e114]:
+                    - generic [ref=f21e115]:
+                      - text: 10:30
+                      - img "Zoom" [ref=f21e116]
+                  - cell "-" [ref=f21e117]
+                  - cell [ref=f21e118]:
+                    - generic [ref=f21e119]:
+                      - button "Editar Domingo 10:30" [ref=f21e120] [cursor=pointer]
+                      - button "Excluir Domingo 10:30" [ref=f21e123] [cursor=pointer]
+                - row [ref=f21e126]:
+                  - cell [ref=f21e127]
+                  - cell [ref=f21e128]:
+                    - generic [ref=f21e129]:
+                      - text: 18:00
+                      - img "Zoom" [ref=f21e130]
+                  - cell "-" [ref=f21e131]
+                  - cell [ref=f21e132]:
+                    - generic [ref=f21e133]:
+                      - button "Editar Domingo 18:00" [ref=f21e134] [cursor=pointer]
+                      - button "Excluir Domingo 18:00" [ref=f21e137] [cursor=pointer]
+                - row [ref=f21e140]:
+                  - cell [ref=f21e141]
+                  - cell [ref=f21e142]:
+                    - generic [ref=f21e143]:
+                      - text: 21:30
+                      - img "WhatsApp" [ref=f21e144]
+                  - cell "-" [ref=f21e145]
+                  - cell [ref=f21e146]:
+                    - generic [ref=f21e147]:
+                      - button "Editar Domingo 21:30" [ref=f21e148] [cursor=pointer]
+                      - button "Excluir Domingo 21:30" [ref=f21e151] [cursor=pointer]
+                - row [ref=f21e154]:
+                  - cell "Segunda-feira" [ref=f21e155]
+                  - cell [ref=f21e156]:
+                    - generic [ref=f21e157]:
+                      - text: 07:30
+                      - img "Zoom" [ref=f21e158]
+                  - cell "-" [ref=f21e159]
+                  - cell [ref=f21e160]:
+                    - generic [ref=f21e161]:
+                      - button "Editar Segunda-feira 07:30" [ref=f21e162] [cursor=pointer]
+                      - button "Excluir Segunda-feira 07:30" [ref=f21e165] [cursor=pointer]
+                - row [ref=f21e168]:
+                  - cell [ref=f21e169]
+                  - cell [ref=f21e170]:
+                    - generic [ref=f21e171]:
+                      - text: 10:00
+                      - img "Zoom" [ref=f21e172]
+                  - cell "-" [ref=f21e173]
+                  - cell [ref=f21e174]:
+                    - generic [ref=f21e175]:
+                      - button "Editar Segunda-feira 10:00" [ref=f21e176] [cursor=pointer]
+                      - button "Excluir Segunda-feira 10:00" [ref=f21e179] [cursor=pointer]
+                - row [ref=f21e182]:
+                  - cell [ref=f21e183]
+                  - cell [ref=f21e184]:
+                    - generic [ref=f21e185]:
+                      - text: 15:00
+                      - img "Zoom" [ref=f21e186]
+                  - cell "-" [ref=f21e187]
+                  - cell [ref=f21e188]:
+                    - generic [ref=f21e189]:
+                      - button "Editar Segunda-feira 15:00" [ref=f21e190] [cursor=pointer]
+                      - button "Excluir Segunda-feira 15:00" [ref=f21e193] [cursor=pointer]
+                - row [ref=f21e196]:
+                  - cell [ref=f21e197]
+                  - cell [ref=f21e198]:
+                    - generic [ref=f21e199]:
+                      - text: 21:30
+                      - img "Zoom" [ref=f21e200]
+                  - cell "-" [ref=f21e201]
+                  - cell [ref=f21e202]:
+                    - generic [ref=f21e203]:
+                      - button "Editar Segunda-feira 21:30" [ref=f21e204] [cursor=pointer]
+                      - button "Excluir Segunda-feira 21:30" [ref=f21e207] [cursor=pointer]
+                - row [ref=f21e210]:
+                  - cell "Terça-feira" [ref=f21e211]
+                  - cell [ref=f21e212]:
+                    - generic [ref=f21e213]:
+                      - text: 07:00
+                      - img "Zoom" [ref=f21e214]
+                  - cell "-" [ref=f21e215]
+                  - cell [ref=f21e216]:
+                    - generic [ref=f21e217]:
+                      - button "Editar Terça-feira 07:00" [ref=f21e218] [cursor=pointer]
+                      - button "Excluir Terça-feira 07:00" [ref=f21e221] [cursor=pointer]
+                - row [ref=f21e224]:
+                  - cell [ref=f21e225]
+                  - cell [ref=f21e226]:
+                    - generic [ref=f21e227]:
+                      - text: 10:00
+                      - img "Zoom" [ref=f21e228]
+                  - cell "-" [ref=f21e229]
+                  - cell [ref=f21e230]:
+                    - generic [ref=f21e231]:
+                      - button "Editar Terça-feira 10:00" [ref=f21e232] [cursor=pointer]
+                      - button "Excluir Terça-feira 10:00" [ref=f21e235] [cursor=pointer]
+                - row [ref=f21e238]:
+                  - cell [ref=f21e239]
+                  - cell [ref=f21e240]:
+                    - generic [ref=f21e241]:
+                      - text: 15:00
+                      - img "Zoom" [ref=f21e242]
+                  - cell "-" [ref=f21e243]
+                  - cell [ref=f21e244]:
+                    - generic [ref=f21e245]:
+                      - button "Editar Terça-feira 15:00" [ref=f21e246] [cursor=pointer]
+                      - button "Excluir Terça-feira 15:00" [ref=f21e249] [cursor=pointer]
+                - row [ref=f21e252]:
+                  - cell [ref=f21e253]
+                  - cell [ref=f21e254]:
+                    - generic [ref=f21e255]:
+                      - text: 21:30
+                      - img "Zoom" [ref=f21e256]
+                  - cell "-" [ref=f21e257]
+                  - cell [ref=f21e258]:
+                    - generic [ref=f21e259]:
+                      - button "Editar Terça-feira 21:30" [ref=f21e260] [cursor=pointer]
+                      - button "Excluir Terça-feira 21:30" [ref=f21e263] [cursor=pointer]
+                - row [ref=f21e266]:
+                  - cell "Quarta-feira" [ref=f21e267]
+                  - cell [ref=f21e268]:
+                    - generic [ref=f21e269]:
+                      - text: 07:00
+                      - img "Zoom" [ref=f21e270]
+                  - cell "-" [ref=f21e271]
+                  - cell [ref=f21e272]:
+                    - generic [ref=f21e273]:
+                      - button "Editar Quarta-feira 07:00" [ref=f21e274] [cursor=pointer]
+                      - button "Excluir Quarta-feira 07:00" [ref=f21e277] [cursor=pointer]
+                - row [ref=f21e280]:
+                  - cell [ref=f21e281]
+                  - cell [ref=f21e282]:
+                    - generic [ref=f21e283]:
+                      - text: 10:00
+                      - img "Zoom" [ref=f21e284]
+                  - cell "-" [ref=f21e285]
+                  - cell [ref=f21e286]:
+                    - generic [ref=f21e287]:
+                      - button "Editar Quarta-feira 10:00" [ref=f21e288] [cursor=pointer]
+                      - button "Excluir Quarta-feira 10:00" [ref=f21e291] [cursor=pointer]
+                - row [ref=f21e294]:
+                  - cell [ref=f21e295]
+                  - cell [ref=f21e296]:
+                    - generic [ref=f21e297]:
+                      - text: 15:00
+                      - img "Zoom" [ref=f21e298]
+                  - cell "-" [ref=f21e299]
+                  - cell [ref=f21e300]:
+                    - generic [ref=f21e301]:
+                      - button "Editar Quarta-feira 15:00" [ref=f21e302] [cursor=pointer]
+                      - button "Excluir Quarta-feira 15:00" [ref=f21e305] [cursor=pointer]
+                - row [ref=f21e308]:
+                  - cell [ref=f21e309]
+                  - cell [ref=f21e310]:
+                    - generic [ref=f21e311]:
+                      - text: 21:30
+                      - img "Zoom" [ref=f21e312]
+                  - cell "-" [ref=f21e313]
+                  - cell [ref=f21e314]:
+                    - generic [ref=f21e315]:
+                      - button "Editar Quarta-feira 21:30" [ref=f21e316] [cursor=pointer]
+                      - button "Excluir Quarta-feira 21:30" [ref=f21e319] [cursor=pointer]
+                - row [ref=f21e322]:
+                  - cell "Quinta-feira" [ref=f21e323]
+                  - cell [ref=f21e324]:
+                    - generic [ref=f21e325]:
+                      - text: 07:00
+                      - img "Zoom" [ref=f21e326]
+                  - cell "-" [ref=f21e327]
+                  - cell [ref=f21e328]:
+                    - generic [ref=f21e329]:
+                      - button "Editar Quinta-feira 07:00" [ref=f21e330] [cursor=pointer]
+                      - button "Excluir Quinta-feira 07:00" [ref=f21e333] [cursor=pointer]
+                - row [ref=f21e336]:
+                  - cell [ref=f21e337]
+                  - cell [ref=f21e338]:
+                    - generic [ref=f21e339]:
+                      - text: 10:00
+                      - img "Zoom" [ref=f21e340]
+                  - cell "-" [ref=f21e341]
+                  - cell [ref=f21e342]:
+                    - generic [ref=f21e343]:
+                      - button "Editar Quinta-feira 10:00" [ref=f21e344] [cursor=pointer]
+                      - button "Excluir Quinta-feira 10:00" [ref=f21e347] [cursor=pointer]
+                - row [ref=f21e350]:
+                  - cell [ref=f21e351]
+                  - cell [ref=f21e352]:
+                    - generic [ref=f21e353]:
+                      - text: 15:00
+                      - img "Zoom" [ref=f21e354]
+                  - cell "-" [ref=f21e355]
+                  - cell [ref=f21e356]:
+                    - generic [ref=f21e357]:
+                      - button "Editar Quinta-feira 15:00" [ref=f21e358] [cursor=pointer]
+                      - button "Excluir Quinta-feira 15:00" [ref=f21e361] [cursor=pointer]
+                - row [ref=f21e364]:
+                  - cell [ref=f21e365]
+                  - cell [ref=f21e366]:
+                    - generic [ref=f21e367]:
+                      - text: 21:30
+                      - img "Zoom" [ref=f21e368]
+                  - cell "-" [ref=f21e369]
+                  - cell [ref=f21e370]:
+                    - generic [ref=f21e371]:
+                      - button "Editar Quinta-feira 21:30" [ref=f21e372] [cursor=pointer]
+                      - button "Excluir Quinta-feira 21:30" [ref=f21e375] [cursor=pointer]
+                - row [ref=f21e378]:
+                  - cell "Sexta-feira" [ref=f21e379]
+                  - cell [ref=f21e380]:
+                    - generic [ref=f21e381]:
+                      - text: 10:00
+                      - img "Zoom" [ref=f21e382]
+                  - cell "-" [ref=f21e383]
+                  - cell [ref=f21e384]:
+                    - generic [ref=f21e385]:
+                      - button "Editar Sexta-feira 10:00" [ref=f21e386] [cursor=pointer]
+                      - button "Excluir Sexta-feira 10:00" [ref=f21e389] [cursor=pointer]
+                - row [ref=f21e392]:
+                  - cell [ref=f21e393]
+                  - cell [ref=f21e394]:
+                    - generic [ref=f21e395]:
+                      - text: 15:00
+                      - img "Zoom" [ref=f21e396]
+                  - cell "-" [ref=f21e397]
+                  - cell [ref=f21e398]:
+                    - generic [ref=f21e399]:
+                      - button "Editar Sexta-feira 15:00" [ref=f21e400] [cursor=pointer]
+                      - button "Excluir Sexta-feira 15:00" [ref=f21e403] [cursor=pointer]
+                - row [ref=f21e406]:
+                  - cell [ref=f21e407]
+                  - cell [ref=f21e408]:
+                    - generic [ref=f21e409]:
+                      - text: 21:30
+                      - img "Zoom" [ref=f21e410]
+                  - cell "-" [ref=f21e411]
+                  - cell [ref=f21e412]:
+                    - generic [ref=f21e413]:
+                      - button "Editar Sexta-feira 21:30" [ref=f21e414] [cursor=pointer]
+                      - button "Excluir Sexta-feira 21:30" [ref=f21e417] [cursor=pointer]
+                - row [ref=f21e420]:
+                  - cell "Sábado" [ref=f21e421]
+                  - cell [ref=f21e422]:
+                    - generic [ref=f21e423]:
+                      - text: 07:00
+                      - img "Zoom" [ref=f21e424]
+                  - cell "-" [ref=f21e425]
+                  - cell [ref=f21e426]:
+                    - generic [ref=f21e427]:
+                      - button "Editar Sábado 07:00" [ref=f21e428] [cursor=pointer]
+                      - button "Excluir Sábado 07:00" [ref=f21e431] [cursor=pointer]
+                - row [ref=f21e434]:
+                  - cell [ref=f21e435]
+                  - cell [ref=f21e436]:
+                    - generic [ref=f21e437]:
+                      - text: 10:00
+                      - img "Zoom" [ref=f21e438]
+                  - cell "-" [ref=f21e439]
+                  - cell [ref=f21e440]:
+                    - generic [ref=f21e441]:
+                      - button "Editar Sábado 10:00" [ref=f21e442] [cursor=pointer]
+                      - button "Excluir Sábado 10:00" [ref=f21e445] [cursor=pointer]
+                - row [ref=f21e448]:
+                  - cell [ref=f21e449]
+                  - cell [ref=f21e450]:
+                    - generic [ref=f21e451]:
+                      - text: 15:00
+                      - img "Zoom" [ref=f21e452]
+                  - cell "-" [ref=f21e453]
+                  - cell [ref=f21e454]:
+                    - generic [ref=f21e455]:
+                      - button "Editar Sábado 15:00" [ref=f21e456] [cursor=pointer]
+                      - button "Excluir Sábado 15:00" [ref=f21e459] [cursor=pointer]
+                - row [ref=f21e462]:
+                  - cell [ref=f21e463]
+                  - cell [ref=f21e464]:
+                    - generic [ref=f21e465]:
+                      - text: 21:30
+                      - img "Zoom" [ref=f21e466]
+                  - cell "-" [ref=f21e467]
+                  - cell [ref=f21e468]:
+                    - generic [ref=f21e469]:
+                      - button "Editar Sábado 21:30" [ref=f21e470] [cursor=pointer]
+                      - button "Excluir Sábado 21:30" [ref=f21e473] [cursor=pointer]
+            - button "Adicionar Horário" [ref=f21e477] [cursor=pointer]
+            - generic [ref=f21e481]:
+              - button "Confirmar" [ref=f21e482] [cursor=pointer]
+              - button "Cancelar Edição" [ref=f21e486] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f21e504] [cursor=pointer]
+  - alert [ref=f21e503]

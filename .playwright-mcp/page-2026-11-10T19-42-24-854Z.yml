@@ -1,0 +1,152 @@
+- generic [ref=f9e1]:
+  - main [ref=f9e2]:
+    - complementary "Navegação do responsável" [ref=f9e3]:
+      - link "Página inicial do responsável" [ref=f9e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f9e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f9e7]:
+        - link "Histórico de Atas" [ref=f9e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f9e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f9e16] [cursor=pointer]:
+          - /url: /grupos/505ba5ab-850a-42a1-bf26-612ea4869dc0
+        - button "Sair" [ref=f9e21] [cursor=pointer]
+    - generic [ref=f9e26]:
+      - generic [ref=f9e28]:
+        - paragraph [ref=f9e29]: Relatórios
+        - heading "Grupo Unidade & Propósito Roraima" [level=1] [ref=f9e30]
+      - region "Dashboard do grupo" [ref=f9e31]:
+        - generic [ref=f9e32]:
+          - generic [ref=f9e33]:
+            - text: Mês
+            - generic [ref=f9e34]:
+              - combobox "Mês Abrir lista de opções" [ref=f9e35]: Novembro
+              - button "Abrir lista de opções" [ref=f9e36] [cursor=pointer]
+          - generic [ref=f9e39]:
+            - text: Ano
+            - generic [ref=f9e40]:
+              - combobox "Ano Abrir lista de opções" [ref=f9e41]: "2026"
+              - button "Abrir lista de opções" [ref=f9e42] [cursor=pointer]
+          - generic [ref=f9e45]:
+            - link "Baixar PDF" [ref=f9e46] [cursor=pointer]:
+              - /url: /api/relatorios/mensal/pdf?grupo=505ba5ab-850a-42a1-bf26-612ea4869dc0&mes=11&ano=2026&download=1
+            - button "Enviar por e-mail" [ref=f9e50] [cursor=pointer]
+        - generic [ref=f9e53]:
+          - heading "Servidores" [level=2] [ref=f9e55]
+          - table [ref=f9e57]:
+            - rowgroup [ref=f9e58]:
+              - row [ref=f9e59]:
+                - columnheader "Encargo" [ref=f9e60]
+                - columnheader "Nome" [ref=f9e61]
+                - columnheader "Desde" [ref=f9e62]
+            - rowgroup [ref=f9e63]:
+              - row [ref=f9e64]:
+                - rowheader "RSG" [ref=f9e65]
+                - cell "Marcus" [ref=f9e66]
+                - cell "15/12/2024" [ref=f9e67]
+              - row [ref=f9e68]:
+                - rowheader "Tesoureiro" [ref=f9e69]
+                - cell "Christian" [ref=f9e70]
+                - cell "21/08/2026" [ref=f9e71]
+              - row [ref=f9e72]:
+                - rowheader "Secretário" [ref=f9e73]
+                - cell "Bruno" [ref=f9e74]
+                - cell "06/11/2026" [ref=f9e75]
+        - generic [ref=f9e76]:
+          - heading "Consolidado" [level=2] [ref=f9e78]
+          - generic [ref=f9e79]:
+            - generic [ref=f9e80]:
+              - article [ref=f9e81]:
+                - heading "Reuniões desde a Fundação" [level=3] [ref=f9e82]
+                - strong [ref=f9e83]: "181"
+              - article [ref=f9e84]:
+                - heading "Data de fundação do grupo" [level=3] [ref=f9e85]
+                - strong [ref=f9e86]: "-"
+            - article [ref=f9e87]:
+              - heading "Reuniões" [level=3] [ref=f9e88]
+              - strong [ref=f9e89]: "12"
+            - article [ref=f9e90]:
+              - heading "Presenças" [level=3] [ref=f9e91]
+              - strong [ref=f9e92]: "0"
+            - article [ref=f9e93]:
+              - heading "Média de Presenças" [level=3] [ref=f9e94]
+              - strong [ref=f9e95]: "0"
+            - article [ref=f9e96]:
+              - heading "Conquistas" [level=3] [ref=f9e97]
+              - strong [ref=f9e98]: "0"
+            - article [ref=f9e99]:
+              - heading "Visitantes" [level=3] [ref=f9e100]
+              - strong [ref=f9e101]: "0"
+            - article [ref=f9e102]:
+              - heading "Ingressos" [level=3] [ref=f9e103]
+              - strong [ref=f9e104]: "0"
+            - article [ref=f9e105]:
+              - heading "Cidades" [level=3] [ref=f9e106]
+              - strong [ref=f9e107]: "0"
+            - article [ref=f9e108]:
+              - heading "Estados" [level=3] [ref=f9e109]
+              - strong [ref=f9e110]: "0"
+            - article [ref=f9e111]:
+              - heading "Outros Países" [level=3] [ref=f9e112]
+              - strong [ref=f9e113]: "0"
+        - generic [ref=f9e114]:
+          - heading "Consolidados por Reunião" [level=2] [ref=f9e117]
+          - table [ref=f9e119]:
+            - rowgroup [ref=f9e120]:
+              - row [ref=f9e121]:
+                - columnheader "Dia da Semana" [ref=f9e122]
+                - columnheader "Presenças (total)" [ref=f9e123]: Presenças(total)
+                - columnheader "Presenças (média)" [ref=f9e124]: Presenças(média)
+                - columnheader "Ingressos" [ref=f9e125]
+            - rowgroup [ref=f9e126]:
+              - row [ref=f9e127]:
+                - rowheader "Terça" [ref=f9e128]:
+                  - button "Terça" [ref=f9e129] [cursor=pointer]
+                - cell "0" [ref=f9e133]
+                - cell "0" [ref=f9e134]
+                - cell "0" [ref=f9e135]
+              - row [ref=f9e136]:
+                - rowheader "Quinta" [ref=f9e137]:
+                  - button "Quinta" [ref=f9e138] [cursor=pointer]
+                - cell "0" [ref=f9e142]
+                - cell "0" [ref=f9e143]
+                - cell "0" [ref=f9e144]
+              - row [ref=f9e145]:
+                - rowheader "Sábado" [ref=f9e146]:
+                  - button "Sábado" [ref=f9e147] [cursor=pointer]
+                - cell "0" [ref=f9e151]
+                - cell "0" [ref=f9e152]
+                - cell "0" [ref=f9e153]
+        - generic [ref=f9e155]:
+          - heading "Conquistas" [level=2] [ref=f9e157]
+          - generic [ref=f9e158]:
+            - article [ref=f9e159]:
+              - heading "30 dias" [level=3] [ref=f9e160]
+              - strong [ref=f9e162]: "0"
+            - article [ref=f9e163]:
+              - heading "60 dias" [level=3] [ref=f9e164]
+              - strong [ref=f9e166]: "0"
+            - article [ref=f9e167]:
+              - heading "90 dias" [level=3] [ref=f9e168]
+              - strong [ref=f9e170]: "0"
+            - article [ref=f9e171]:
+              - heading "6 meses" [level=3] [ref=f9e172]
+              - strong [ref=f9e174]: "0"
+            - article [ref=f9e175]:
+              - heading "9 meses" [level=3] [ref=f9e176]
+              - strong [ref=f9e178]: "0"
+            - article [ref=f9e179]:
+              - heading "1 ano" [level=3] [ref=f9e180]
+              - strong [ref=f9e182]: "0"
+            - article [ref=f9e183]:
+              - heading "18 meses" [level=3] [ref=f9e184]
+              - strong [ref=f9e186]: "0"
+            - article [ref=f9e187]:
+              - heading "Múltiplos anos" [level=3] [ref=f9e188]
+              - strong [ref=f9e190]: "0"
+            - article [ref=f9e191]:
+              - heading "Total" [level=3] [ref=f9e192]
+              - strong [ref=f9e193]: "0"
+        - generic [ref=f9e194]: Dados consolidados do grupo Unidade & Propósito Roraima referentes a Novembro/2026.
+  - button "Open Next.js Dev Tools" [ref=f9e203] [cursor=pointer]

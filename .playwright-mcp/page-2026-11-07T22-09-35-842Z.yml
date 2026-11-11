@@ -1,0 +1,193 @@
+- generic [active] [ref=f2e1]:
+  - main [ref=f2e2]:
+    - complementary "Navegação do responsável" [ref=f2e3]:
+      - link "Página inicial do responsável" [ref=f2e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f2e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f2e7]:
+        - link "Histórico de Atas" [ref=f2e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f2e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f2e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=f2e21] [cursor=pointer]
+    - generic [ref=f2e27]:
+      - generic [ref=f2e28]:
+        - generic [ref=f2e29]:
+          - navigation "Navegação entre atas" [ref=f2e30]:
+            - link "Ata anterior" [ref=f2e31] [cursor=pointer]:
+              - /url: /atas/20daa324-d154-415c-b867-c7a900c65352?origem=responsavel&de=2026-09-13&ate=2026-11-07&diaSemana=todos&horario=todos&status=todos&ordem=1.desc%2C2.desc
+            - generic [ref=f2e34]: Atas
+            - button "Próxima ata" [disabled] [ref=f2e35]
+          - generic [ref=f2e39]:
+            - link "Editar" [ref=f2e40] [cursor=pointer]:
+              - /url: /atas/902858c3-a9c1-4255-8646-ce33f5dad0d8/editar
+            - link "Visualizar PDF" [ref=f2e43] [cursor=pointer]:
+              - /url: /atas/902858c3-a9c1-4255-8646-ce33f5dad0d8/pdf
+            - button "Enviar por e-mail" [ref=f2e46] [cursor=pointer]
+        - generic [ref=f2e50]:
+          - paragraph [ref=f2e51]: Ata
+          - heading "Ata de Reunião nº 46" [level=1] [ref=f2e52]
+      - region [ref=f2e53]:
+        - heading "Dados" [level=2] [ref=f2e54]
+        - generic [ref=f2e55]:
+          - generic [ref=f2e57]:
+            - term [ref=f2e58]: Grupo
+            - definition [ref=f2e59]: USL
+          - generic [ref=f2e61]:
+            - term [ref=f2e62]: Data
+            - definition [ref=f2e63]: 13/09/2026
+          - generic [ref=f2e65]:
+            - term [ref=f2e66]: Horário
+            - definition [ref=f2e67]: 10:00
+          - generic [ref=f2e69]:
+            - term [ref=f2e70]: Tipo
+            - definition [ref=f2e71]: Fechada
+          - generic [ref=f2e73]:
+            - term [ref=f2e74]: Plataforma
+            - definition [ref=f2e75]: Zoom
+          - generic [ref=f2e77]:
+            - term [ref=f2e78]: Formatos
+            - definition [ref=f2e79]: Partilha
+      - region [ref=f2e80]:
+        - heading "Consolidado" [level=2] [ref=f2e81]
+        - generic "Totais da Ata" [ref=f2e82]:
+          - generic [ref=f2e84]:
+            - term [ref=f2e85]: Servidores
+            - definition [ref=f2e86]: "2"
+          - generic [ref=f2e88]:
+            - term [ref=f2e89]: Membros
+            - definition [ref=f2e90]: "44"
+          - generic [ref=f2e92]:
+            - term [ref=f2e93]: Partilhas
+            - definition [ref=f2e94]: "12"
+          - generic [ref=f2e96]:
+            - term [ref=f2e97]: Visitantes
+            - definition [ref=f2e98]: "1"
+          - generic [ref=f2e100]:
+            - term [ref=f2e101]: Ingressos
+            - definition [ref=f2e102]: "0"
+          - generic [ref=f2e104]:
+            - term [ref=f2e105]: Conquistas
+            - definition [ref=f2e106]: "2"
+          - generic [ref=f2e108]:
+            - term [ref=f2e109]: Cidades
+            - definition [ref=f2e110]: "15"
+          - generic [ref=f2e112]:
+            - term [ref=f2e113]: Estados
+            - definition [ref=f2e114]: "12"
+          - generic [ref=f2e116]:
+            - term [ref=f2e117]: Outros Países
+            - definition [ref=f2e118]: "1"
+      - region [ref=f2e119]:
+        - heading "Detalhamento" [level=2] [ref=f2e120]
+        - generic [ref=f2e122]:
+          - table [ref=f2e126]:
+            - rowgroup [ref=f2e127]:
+              - row [ref=f2e128]:
+                - columnheader "Localidades Nacionais" [ref=f2e129]
+                - columnheader "Total" [ref=f2e130]
+            - rowgroup [ref=f2e131]:
+              - row [ref=f2e132]:
+                - cell "1. Iguape - SP" [ref=f2e133]
+                - cell "2" [ref=f2e135]
+              - row [ref=f2e136]:
+                - cell "2. Nerópolis - GO" [ref=f2e137]
+                - cell "1" [ref=f2e139]
+              - row [ref=f2e140]:
+                - cell "3. Bom Princípio do Piauí - PI" [ref=f2e141]
+                - cell "2" [ref=f2e143]
+              - row [ref=f2e144]:
+                - cell "4. Campo Alegre de Goiás - GO" [ref=f2e145]
+                - cell "2" [ref=f2e147]
+              - row [ref=f2e148]:
+                - cell "5. Manoel Urbano - AC" [ref=f2e149]
+                - cell "2" [ref=f2e151]
+              - row [ref=f2e152]:
+                - cell "6. Schroeder - SC" [ref=f2e153]
+                - cell "1" [ref=f2e155]
+              - row [ref=f2e156]:
+                - cell "7. Brejo - MA" [ref=f2e157]
+                - cell "1" [ref=f2e159]
+              - row [ref=f2e160]:
+                - cell "8. Cândido Sales - BA" [ref=f2e161]
+                - cell "1" [ref=f2e163]
+              - row [ref=f2e164]:
+                - cell "9. Taquaritinga do Norte - PE" [ref=f2e165]
+                - cell "1" [ref=f2e167]
+              - row [ref=f2e168]:
+                - cell "10. Itá - SC" [ref=f2e169]
+                - cell "1" [ref=f2e171]
+              - row [ref=f2e172]:
+                - cell "11. Prado - BA" [ref=f2e173]
+                - cell "1" [ref=f2e175]
+              - row [ref=f2e176]:
+                - cell "12. Sumidouro - RJ" [ref=f2e177]
+                - cell "2" [ref=f2e179]
+              - row [ref=f2e180]:
+                - cell "13. Rondon do Pará - PA" [ref=f2e181]
+                - cell "1" [ref=f2e183]
+              - row [ref=f2e184]:
+                - cell "14. Lassance - MG" [ref=f2e185]
+                - cell "2" [ref=f2e187]
+              - row [ref=f2e188]:
+                - cell "15. Iranduba - AM" [ref=f2e189]
+                - cell "2" [ref=f2e191]
+          - generic [ref=f2e192]:
+            - table [ref=f2e195]:
+              - rowgroup [ref=f2e196]:
+                - row [ref=f2e197]:
+                  - columnheader "Servidores" [ref=f2e198]
+                  - columnheader "Função" [ref=f2e199]
+              - rowgroup [ref=f2e200]:
+                - row [ref=f2e201]:
+                  - cell "1. Theo Carvalho" [ref=f2e202]
+                  - cell "Moderador" [ref=f2e203]
+                - row [ref=f2e204]:
+                  - cell "2. Bianca Ramos" [ref=f2e205]
+                  - cell "Coanfitrião" [ref=f2e206]
+            - table [ref=f2e209]:
+              - rowgroup [ref=f2e210]:
+                - row [ref=f2e211]:
+                  - columnheader "Localidades Internacionais" [ref=f2e212]
+                  - columnheader "Total" [ref=f2e213]
+              - rowgroup [ref=f2e214]:
+                - row [ref=f2e215]:
+                  - cell "1. Níger" [ref=f2e216]
+                  - cell "1" [ref=f2e218]
+            - table [ref=f2e221]:
+              - rowgroup [ref=f2e222]:
+                - row [ref=f2e223]:
+                  - columnheader "Visitante" [ref=f2e224]
+                  - columnheader "Cidade" [ref=f2e225]
+                  - columnheader "Categoria" [ref=f2e226]
+                  - columnheader "Origem" [ref=f2e227]
+              - rowgroup [ref=f2e228]:
+                - row [ref=f2e229]:
+                  - cell "1. Visitante" [ref=f2e230]
+                  - cell "Fonte Boa - AM" [ref=f2e231]
+                  - cell "Provável adicto" [ref=f2e232]
+                  - cell "Outro" [ref=f2e233]
+            - table [ref=f2e236]:
+              - rowgroup [ref=f2e237]:
+                - row [ref=f2e238]:
+                  - columnheader "Ingresso" [ref=f2e239]
+                  - columnheader "Cidade" [ref=f2e240]
+                  - columnheader "Estado" [ref=f2e241]
+              - rowgroup [ref=f2e242]:
+                - row [ref=f2e243]:
+                  - cell "Nenhum ingresso registrado." [ref=f2e244]
+            - table [ref=f2e247]:
+              - rowgroup [ref=f2e248]:
+                - row [ref=f2e249]:
+                  - columnheader "Conquista" [ref=f2e250]
+                  - columnheader "Tempo" [ref=f2e251]
+              - rowgroup [ref=f2e252]:
+                - row [ref=f2e253]:
+                  - cell "1. Conquista" [ref=f2e254]
+                  - cell "1 ano" [ref=f2e255]
+                - row [ref=f2e256]:
+                  - cell "2. Conquista" [ref=f2e257]
+                  - cell "18 meses" [ref=f2e258]
+  - button "Open Next.js Dev Tools" [ref=f2e264] [cursor=pointer]

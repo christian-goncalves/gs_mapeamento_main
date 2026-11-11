@@ -1,0 +1,50 @@
+- main [ref=f3e2]:
+  - complementary "Navegação do responsável" [ref=f3e3]:
+    - generic [ref=f3e4]:
+      - link "Página inicial do responsável" [ref=f3e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f3e6]: GS Mapeamento
+      - button "Abrir menu" [ref=f3e7] [cursor=pointer]
+  - generic [ref=f3e9]:
+    - generic [ref=f3e10]:
+      - generic [ref=f3e11]:
+        - paragraph [ref=f3e12]: Histórico de Atas
+        - heading "Grupo USL" [level=1] [ref=f3e13]
+      - generic [ref=f3e14]:
+        - link "Histórico" [ref=f3e15] [cursor=pointer]:
+          - /url: /responsavel/atas?historico=1
+        - link "Nova Ata" [ref=f3e20] [cursor=pointer]:
+          - /url: /atas/nova
+    - generic [ref=f3e25]:
+      - generic "Filtros das Atas" [ref=f3e26]:
+        - generic [ref=f3e27]:
+          - generic [ref=f3e28]: De
+          - textbox "De" [ref=f3e29]: 2026-11-01
+        - generic [ref=f3e30]:
+          - generic [ref=f3e31]: Até
+          - textbox "Até" [ref=f3e32]: 2026-11-10
+        - generic [ref=f3e33]:
+          - generic [ref=f3e34]: Dia da Semana
+          - combobox "Dia da Semana" [ref=f3e35]:
+            - option "Todos" [selected]
+            - option "Domingo"
+            - option "Segunda"
+            - option "Terça"
+            - option "Quarta"
+            - option "Quinta"
+            - option "Sexta"
+            - option "Sábado"
+        - generic [ref=f3e36]:
+          - generic [ref=f3e37]: Horário
+          - combobox "Horário" [ref=f3e38]:
+            - option "Todos" [selected]
+            - option "07:00"
+            - option "10:00"
+        - generic [ref=f3e39]:
+          - generic [ref=f3e40]: Status
+          - combobox "Status" [ref=f3e41]:
+            - option "Todos" [selected]
+            - option "Enviadas"
+            - option "Não enviadas"
+            - option "Pendentes de revisão"
+      - status [ref=f3e43]: Carregando tabela...

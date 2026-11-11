@@ -1,0 +1,252 @@
+- generic [active] [ref=f7e1]:
+  - button "Open Next.js Dev Tools" [ref=f7e85] [cursor=pointer]
+  - alert [ref=f7e89]
+  - main [ref=f7e100]:
+    - complementary "Navegação do responsável" [ref=f7e101]:
+      - generic [ref=f7e102]:
+        - link "Página inicial do responsável" [ref=f7e103] [cursor=pointer]:
+          - /url: /responsavel/atas
+          - generic [ref=f7e104]: GS Mapeamento
+        - button "Abrir menu" [ref=f7e105] [cursor=pointer]
+    - generic [ref=f7e109]:
+      - generic [ref=f7e111]:
+        - paragraph [ref=f7e112]: Configurações
+        - heading "Grupo USL" [level=1] [ref=f7e113]
+        - paragraph [ref=f7e114]: Gerencie os dados, acessos e horários do grupo.
+      - generic [ref=f7e115]:
+        - generic [ref=f7e117]:
+          - generic [ref=f7e118]:
+            - heading "Dados do Grupo" [level=2] [ref=f7e119]
+            - button "Editar" [ref=f7e120] [cursor=pointer]
+          - generic [ref=f7e124]:
+            - generic [ref=f7e125]:
+              - generic [ref=f7e126]:
+                - generic [ref=f7e127]: Revisão de Atas
+                - group [ref=f7e128]:
+                  - generic "Informações sobre a revisão de atas" [ref=f7e129] [cursor=pointer]
+              - combobox "Revisão de Atas Informações sobre a revisão de atas" [disabled] [ref=f7e132]:
+                - option "Aprovação ativada" [selected]
+                - option "Aprovação desativada (padrão)"
+            - generic [ref=f7e133]:
+              - generic [ref=f7e134]:
+                - text: E-mail
+                - textbox "E-mail" [ref=f7e135]: codex.odonto@gmail.com
+              - button "Alterar e-mail ou senha" [ref=f7e136] [cursor=pointer]
+            - generic [ref=f7e140]:
+              - generic [ref=f7e141]: Link da ata
+              - generic [ref=f7e142]:
+                - textbox "Link da ata" [ref=f7e143]: http://localhost:3000/preencher/1218223fc61c1c375dacd2cab9f774dbdc9e114e61e0b53f17a3915c3a75329d
+                - button "Copiar link da ata" [ref=f7e144] [cursor=pointer]
+                - button "Rotacionar link de preenchimento" [ref=f7e147] [cursor=pointer]
+            - generic [ref=f7e150]:
+              - text: Última reunião antes do sistema
+              - spinbutton "Última reunião antes do sistema" [ref=f7e151]: "0"
+          - generic [ref=f7e152]:
+            - generic [ref=f7e153]: Plataformas Utilizadas
+            - list "Plataformas Utilizadas" [ref=f7e154]:
+              - listitem [ref=f7e155]: Zoom
+              - listitem [ref=f7e157]: WhatsApp
+        - group [ref=f7e159]:
+          - generic "Servidores" [ref=f7e160] [cursor=pointer]
+      - group [ref=f7e164]:
+        - generic "Plataformas" [ref=f7e165] [cursor=pointer]
+        - option "Selecione uma plataforma" [selected]
+        - option "WhatsApp"
+        - option "Selecione uma plataforma" [selected]
+        - option "Zoom"
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp" [selected]
+        - option "Zoom"
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zoom" [selected]
+      - group [ref=f7e169]:
+        - generic "Horários de Reunião Informações sobre o horário da agenda" [ref=f7e170] [cursor=pointer]:
+          - generic [ref=f7e171]:
+            - generic [ref=f7e172]: Horários de Reunião
+            - img "Informações sobre o horário da agenda" [ref=f7e173]
+        - generic [ref=f7e178]:
+          - list "Legenda de plataformas" [ref=f7e179]:
+            - listitem [ref=f7e180]: Zoom
+            - listitem [ref=f7e182]: Zello
+            - listitem [ref=f7e184]: WhatsApp
+          - generic [ref=f7e186]:
+            - table [ref=f7e188]:
+              - rowgroup [ref=f7e189]:
+                - row [ref=f7e574]:
+                  - columnheader "Dia" [ref=f7e191]
+                  - columnheader "Hora de Início*" [ref=f7e575]
+              - rowgroup [ref=f7e195]:
+                - row [ref=f7e576]:
+                  - rowheader "Domingo" [ref=f7e577]
+                  - cell [ref=f7e578]:
+                    - generic [ref=f7e579]:
+                      - generic [ref=f7e580]:
+                        - text: 10:30
+                        - img "Zoom" [ref=f7e581]
+                        - text: "|"
+                      - generic [ref=f7e582]:
+                        - text: 18:00
+                        - img "Zoom" [ref=f7e583]
+                        - text: "|"
+                      - generic [ref=f7e584]:
+                        - text: 21:30
+                        - img "WhatsApp" [ref=f7e585]
+                - row [ref=f7e586]:
+                  - rowheader "Segunda" [ref=f7e587]
+                  - cell [ref=f7e588]:
+                    - generic [ref=f7e589]:
+                      - generic [ref=f7e590]:
+                        - text: 07:30
+                        - img "Zoom" [ref=f7e591]
+                        - text: "|"
+                      - generic [ref=f7e592]:
+                        - text: 10:00
+                        - img "Zoom" [ref=f7e593]
+                        - text: "|"
+                      - generic [ref=f7e594]:
+                        - text: 15:00
+                        - img "Zoom" [ref=f7e595]
+                        - text: "|"
+                      - generic [ref=f7e596]:
+                        - text: 21:30
+                        - img "Zoom" [ref=f7e597]
+                - row [ref=f7e598]:
+                  - rowheader "Terça" [ref=f7e599]
+                  - cell [ref=f7e600]:
+                    - generic [ref=f7e601]:
+                      - generic [ref=f7e602]:
+                        - text: 07:00
+                        - img "Zoom" [ref=f7e603]
+                        - text: "|"
+                      - generic [ref=f7e604]:
+                        - text: 10:00
+                        - img "Zoom" [ref=f7e605]
+                        - text: "|"
+                      - generic [ref=f7e606]:
+                        - text: 15:00
+                        - img "Zoom" [ref=f7e607]
+                        - text: "|"
+                      - generic [ref=f7e608]:
+                        - text: 21:30
+                        - img "Zoom" [ref=f7e609]
+                - row [ref=f7e610]:
+                  - rowheader "Quarta" [ref=f7e611]
+                  - cell [ref=f7e612]:
+                    - generic [ref=f7e613]:
+                      - generic [ref=f7e614]:
+                        - text: 07:00
+                        - img "Zoom" [ref=f7e615]
+                        - text: "|"
+                      - generic [ref=f7e616]:
+                        - text: 10:00
+                        - img "Zoom" [ref=f7e617]
+                        - text: "|"
+                      - generic [ref=f7e618]:
+                        - text: 15:00
+                        - img "Zoom" [ref=f7e619]
+                        - text: "|"
+                      - generic [ref=f7e620]:
+                        - text: 21:30
+                        - img "Zoom" [ref=f7e621]
+                - row [ref=f7e622]:
+                  - rowheader "Quinta" [ref=f7e623]
+                  - cell [ref=f7e624]:
+                    - generic [ref=f7e625]:
+                      - generic [ref=f7e626]:
+                        - text: 07:00
+                        - img "Zoom" [ref=f7e627]
+                        - text: "|"
+                      - generic [ref=f7e628]:
+                        - text: 10:00
+                        - img "Zoom" [ref=f7e629]
+                        - text: "|"
+                      - generic [ref=f7e630]:
+                        - text: 15:00
+                        - img "Zoom" [ref=f7e631]
+                        - text: "|"
+                      - generic [ref=f7e632]:
+                        - text: 21:30
+                        - img "Zoom" [ref=f7e633]
+                - row [ref=f7e634]:
+                  - rowheader "Sexta" [ref=f7e635]
+                  - cell [ref=f7e636]:
+                    - generic [ref=f7e637]:
+                      - generic [ref=f7e638]:
+                        - text: 10:00
+                        - img "Zoom" [ref=f7e639]
+                        - text: "|"
+                      - generic [ref=f7e640]:
+                        - text: 15:00
+                        - img "Zoom" [ref=f7e641]
+                        - text: "|"
+                      - generic [ref=f7e642]:
+                        - text: 21:30
+                        - img "Zoom" [ref=f7e643]
+                - row [ref=f7e644]:
+                  - rowheader "Sábado" [ref=f7e645]
+                  - cell [ref=f7e646]:
+                    - generic [ref=f7e647]:
+                      - generic [ref=f7e648]:
+                        - text: 07:00
+                        - img "Zoom" [ref=f7e649]
+                        - text: "|"
+                      - generic [ref=f7e650]:
+                        - text: 10:00
+                        - img "Zoom" [ref=f7e651]
+                        - text: "|"
+                      - generic [ref=f7e652]:
+                        - text: 15:00
+                        - img "Zoom" [ref=f7e653]
+                        - text: "|"
+                      - generic [ref=f7e654]:
+                        - text: 21:30
+                        - img "Zoom" [ref=f7e655]
+            - paragraph [ref=f7e656]: "* Horário de Brasília (BRT)"
+            - button "Editar Horários" [ref=f7e658] [cursor=pointer]

@@ -1,0 +1,299 @@
+- generic [ref=f3e1]:
+  - main [ref=f3e2]:
+    - complementary "Navegação do responsável" [ref=f3e3]:
+      - link "Página inicial do responsável" [ref=f3e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f3e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f3e7]:
+        - link "Histórico de Atas" [ref=f3e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f3e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f3e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=f3e21] [cursor=pointer]
+    - generic [ref=f3e25]:
+      - generic [ref=f3e26]:
+        - generic [ref=f3e27]:
+          - paragraph [ref=f3e28]: Histórico de Atas
+          - heading "Grupo USL" [level=1] [ref=f3e29]
+        - generic [ref=f3e30]:
+          - link "Histórico" [ref=f3e31] [cursor=pointer]:
+            - /url: /responsavel/atas?historico=1
+          - link "Nova Ata" [ref=f3e36] [cursor=pointer]:
+            - /url: /atas/nova
+      - generic [ref=f3e41]:
+        - generic "Filtros das Atas" [ref=f3e42]:
+          - generic [ref=f3e43]:
+            - generic [ref=f3e44]: De
+            - textbox "De" [ref=f3e45]: 2026-09-01
+          - generic [ref=f3e46]:
+            - generic [ref=f3e47]: Até
+            - textbox "Até" [ref=f3e48]: 2026-11-03
+          - generic [ref=f3e49]:
+            - generic [ref=f3e50]: Dia da Semana
+            - combobox "Dia da Semana" [ref=f3e51]:
+              - option "Todos" [selected]
+              - option "Domingo"
+              - option "Segunda"
+              - option "Terça"
+              - option "Quarta"
+              - option "Quinta"
+              - option "Sexta"
+              - option "Sábado"
+          - generic [ref=f3e52]:
+            - generic [ref=f3e53]: Horário
+            - combobox "Horário" [ref=f3e54]:
+              - option "Todos" [selected]
+              - option "07:00"
+              - option "07:30"
+              - option "10:00"
+              - option "15:00"
+              - option "18:00"
+              - option "21:30"
+          - generic [ref=f3e55]:
+            - generic [ref=f3e56]: Status
+            - combobox "Status" [ref=f3e57]:
+              - option "Todos" [selected]
+              - option "Enviadas"
+              - option "Não enviadas"
+              - option "Pendentes de revisão"
+        - generic [ref=f3e70]:
+          - table [ref=f3e73]:
+            - rowgroup [ref=f3e80]:
+              - row [ref=f3e81]:
+                - 'columnheader "Ata Ata: Activate to sort" [ref=f3e82] [cursor=pointer]':
+                  - generic [ref=f3e83]:
+                    - generic [ref=f3e84]: Ata
+                    - 'button "Ata: Activate to sort" [ref=f3e85]'
+                - 'columnheader "Data Data: Activate to remove sorting" [ref=f3e86] [cursor=pointer]':
+                  - generic [ref=f3e87]:
+                    - generic [ref=f3e88]: Data
+                    - 'button "Data: Activate to remove sorting" [ref=f3e89]'
+                - 'columnheader "Horário Horário: Activate to sort" [ref=f3e90] [cursor=pointer]':
+                  - generic [ref=f3e91]:
+                    - generic [ref=f3e92]: Horário
+                    - 'button "Horário: Activate to sort" [ref=f3e93]'
+                - 'columnheader "Status Status: Activate to sort" [ref=f3e94] [cursor=pointer]':
+                  - generic [ref=f3e95]:
+                    - generic [ref=f3e96]: Status
+                    - 'button "Status: Activate to sort" [ref=f3e97]'
+                - columnheader "Ações" [ref=f3e98]
+            - rowgroup [ref=f3e101]:
+              - row [ref=f3e472]:
+                - cell "-" [ref=f3e473]
+                - cell "03/11/2026" [ref=f3e474]
+                - cell "07:00" [ref=f3e476]
+                - cell [ref=f3e477]:
+                  - 'img "Status: Não enviada" [ref=f3e479]'
+                - cell [ref=f3e480]
+              - row [ref=f3e481]:
+                - cell "125" [ref=f3e482]
+                - cell "02/11/2026" [ref=f3e483]
+                - cell "21:30" [ref=f3e485]
+                - cell [ref=f3e486]:
+                  - 'img "Status: Enviada" [ref=f3e488]'
+                - cell [ref=f3e489]:
+                  - button "Abrir ações da ata de 02/11/2026" [expanded] [active] [ref=f3e492] [cursor=pointer]
+              - row [ref=f3e495]:
+                - cell "124" [ref=f3e496]
+                - cell "02/11/2026" [ref=f3e497]
+                - cell "15:00" [ref=f3e499]
+                - cell [ref=f3e500]:
+                  - 'img "Status: Enviada" [ref=f3e502]'
+                - cell [ref=f3e503]:
+                  - button "Abrir ações da ata de 02/11/2026" [ref=f3e506] [cursor=pointer]
+              - row [ref=f3e509]:
+                - cell "-" [ref=f3e510]
+                - cell "02/11/2026" [ref=f3e511]
+                - cell "10:00" [ref=f3e513]
+                - cell [ref=f3e514]:
+                  - 'img "Status: Não enviada" [ref=f3e516]'
+                - cell [ref=f3e517]
+              - row [ref=f3e518]:
+                - cell "-" [ref=f3e519]
+                - cell "02/11/2026" [ref=f3e520]
+                - cell "07:30" [ref=f3e522]
+                - cell [ref=f3e523]:
+                  - 'img "Status: Não enviada" [ref=f3e525]'
+                - cell [ref=f3e526]
+              - row [ref=f3e527]:
+                - cell "123" [ref=f3e528]
+                - cell "02/11/2026" [ref=f3e529]
+                - cell "07:00" [ref=f3e531]
+                - cell [ref=f3e532]:
+                  - 'img "Status: Enviada" [ref=f3e534]'
+                - cell [ref=f3e535]:
+                  - button "Abrir ações da ata de 02/11/2026" [ref=f3e538] [cursor=pointer]
+              - row [ref=f3e541]:
+                - cell "122" [ref=f3e542]
+                - cell "27/10/2026" [ref=f3e543]
+                - cell "10:00" [ref=f3e545]
+                - cell [ref=f3e546]:
+                  - 'img "Status: Enviada" [ref=f3e548]'
+                - cell [ref=f3e549]:
+                  - button "Abrir ações da ata de 27/10/2026" [ref=f3e552] [cursor=pointer]
+              - row [ref=f3e555]:
+                - cell "121" [ref=f3e556]
+                - cell "18/10/2026" [ref=f3e557]
+                - cell "18:00" [ref=f3e559]
+                - cell [ref=f3e560]:
+                  - 'img "Status: Enviada" [ref=f3e562]'
+                - cell [ref=f3e563]:
+                  - button "Abrir ações da ata de 18/10/2026" [ref=f3e566] [cursor=pointer]
+              - row [ref=f3e569]:
+                - cell "120" [ref=f3e570]
+                - cell "18/10/2026" [ref=f3e571]
+                - cell "15:00" [ref=f3e573]
+                - cell [ref=f3e574]:
+                  - 'img "Status: Enviada" [ref=f3e576]'
+                - cell [ref=f3e577]:
+                  - button "Abrir ações da ata de 18/10/2026" [ref=f3e580] [cursor=pointer]
+              - row [ref=f3e583]:
+                - cell "119" [ref=f3e584]
+                - cell "18/10/2026" [ref=f3e585]
+                - cell "10:00" [ref=f3e587]
+                - cell [ref=f3e588]:
+                  - 'img "Status: Enviada" [ref=f3e590]'
+                - cell [ref=f3e591]:
+                  - button "Abrir ações da ata de 18/10/2026" [ref=f3e594] [cursor=pointer]
+              - row [ref=f3e597]:
+                - cell "118" [ref=f3e598]
+                - cell "17/10/2026" [ref=f3e599]
+                - cell "21:30" [ref=f3e601]
+                - cell [ref=f3e602]:
+                  - 'img "Status: Enviada" [ref=f3e604]'
+                - cell [ref=f3e605]:
+                  - button "Abrir ações da ata de 17/10/2026" [ref=f3e608] [cursor=pointer]
+              - row [ref=f3e611]:
+                - cell "117" [ref=f3e612]
+                - cell "17/10/2026" [ref=f3e613]
+                - cell "18:00" [ref=f3e615]
+                - cell [ref=f3e616]:
+                  - 'img "Status: Enviada" [ref=f3e618]'
+                - cell [ref=f3e619]:
+                  - button "Abrir ações da ata de 17/10/2026" [ref=f3e622] [cursor=pointer]
+              - row [ref=f3e625]:
+                - cell "116" [ref=f3e626]
+                - cell "17/10/2026" [ref=f3e627]
+                - cell "15:00" [ref=f3e629]
+                - cell [ref=f3e630]:
+                  - 'img "Status: Enviada" [ref=f3e632]'
+                - cell [ref=f3e633]:
+                  - button "Abrir ações da ata de 17/10/2026" [ref=f3e636] [cursor=pointer]
+              - row [ref=f3e639]:
+                - cell "115" [ref=f3e640]
+                - cell "17/10/2026" [ref=f3e641]
+                - cell "10:00" [ref=f3e643]
+                - cell [ref=f3e644]:
+                  - 'img "Status: Enviada" [ref=f3e646]'
+                - cell [ref=f3e647]:
+                  - button "Abrir ações da ata de 17/10/2026" [ref=f3e650] [cursor=pointer]
+              - row [ref=f3e653]:
+                - cell "114" [ref=f3e654]
+                - cell "11/10/2026" [ref=f3e655]
+                - cell "07:00" [ref=f3e657]
+                - cell [ref=f3e658]:
+                  - 'img "Status: Enviada" [ref=f3e660]'
+                - cell [ref=f3e661]:
+                  - button "Abrir ações da ata de 11/10/2026" [ref=f3e664] [cursor=pointer]
+              - row [ref=f3e667]:
+                - cell "113" [ref=f3e668]
+                - cell "10/10/2026" [ref=f3e669]
+                - cell "07:00" [ref=f3e671]
+                - cell [ref=f3e672]:
+                  - 'img "Status: Enviada" [ref=f3e674]'
+                - cell [ref=f3e675]:
+                  - button "Abrir ações da ata de 10/10/2026" [ref=f3e678] [cursor=pointer]
+              - row [ref=f3e681]:
+                - cell "112" [ref=f3e682]
+                - cell "30/09/2026" [ref=f3e683]
+                - cell "21:30" [ref=f3e685]
+                - cell [ref=f3e686]:
+                  - 'img "Status: Enviada" [ref=f3e688]'
+                - cell [ref=f3e689]:
+                  - button "Abrir ações da ata de 30/09/2026" [ref=f3e692] [cursor=pointer]
+              - row [ref=f3e695]:
+                - cell "111" [ref=f3e696]
+                - cell "30/09/2026" [ref=f3e697]
+                - cell "15:00" [ref=f3e699]
+                - cell [ref=f3e700]:
+                  - 'img "Status: Enviada" [ref=f3e702]'
+                - cell [ref=f3e703]:
+                  - button "Abrir ações da ata de 30/09/2026" [ref=f3e706] [cursor=pointer]
+              - row [ref=f3e709]:
+                - cell "110" [ref=f3e710]
+                - cell "30/09/2026" [ref=f3e711]
+                - cell "10:00" [ref=f3e713]
+                - cell [ref=f3e714]:
+                  - 'img "Status: Enviada" [ref=f3e716]'
+                - cell [ref=f3e717]:
+                  - button "Abrir ações da ata de 30/09/2026" [ref=f3e720] [cursor=pointer]
+              - row [ref=f3e723]:
+                - cell "109" [ref=f3e724]
+                - cell "30/09/2026" [ref=f3e725]
+                - cell "07:00" [ref=f3e727]
+                - cell [ref=f3e728]:
+                  - 'img "Status: Enviada" [ref=f3e730]'
+                - cell [ref=f3e731]:
+                  - button "Abrir ações da ata de 30/09/2026" [ref=f3e734] [cursor=pointer]
+              - row [ref=f3e737]:
+                - cell "108" [ref=f3e738]
+                - cell "29/09/2026" [ref=f3e739]
+                - cell "21:30" [ref=f3e741]
+                - cell [ref=f3e742]:
+                  - 'img "Status: Enviada" [ref=f3e744]'
+                - cell [ref=f3e745]:
+                  - button "Abrir ações da ata de 29/09/2026" [ref=f3e748] [cursor=pointer]
+              - row [ref=f3e751]:
+                - cell "107" [ref=f3e752]
+                - cell "29/09/2026" [ref=f3e753]
+                - cell "15:00" [ref=f3e755]
+                - cell [ref=f3e756]:
+                  - 'img "Status: Enviada" [ref=f3e758]'
+                - cell [ref=f3e759]:
+                  - button "Abrir ações da ata de 29/09/2026" [ref=f3e762] [cursor=pointer]
+              - row [ref=f3e765]:
+                - cell "106" [ref=f3e766]
+                - cell "29/09/2026" [ref=f3e767]
+                - cell "10:00" [ref=f3e769]
+                - cell [ref=f3e770]:
+                  - 'img "Status: Enviada" [ref=f3e772]'
+                - cell [ref=f3e773]:
+                  - button "Abrir ações da ata de 29/09/2026" [ref=f3e776] [cursor=pointer]
+              - row [ref=f3e779]:
+                - cell "105" [ref=f3e780]
+                - cell "29/09/2026" [ref=f3e781]
+                - cell "07:00" [ref=f3e783]
+                - cell [ref=f3e784]:
+                  - 'img "Status: Enviada" [ref=f3e786]'
+                - cell [ref=f3e787]:
+                  - button "Abrir ações da ata de 29/09/2026" [ref=f3e790] [cursor=pointer]
+              - row [ref=f3e793]:
+                - cell "104" [ref=f3e794]
+                - cell "28/09/2026" [ref=f3e795]
+                - cell "21:30" [ref=f3e797]
+                - cell [ref=f3e798]:
+                  - 'img "Status: Enviada" [ref=f3e800]'
+                - cell [ref=f3e801]:
+                  - button "Abrir ações da ata de 28/09/2026" [ref=f3e804] [cursor=pointer]
+          - generic [ref=f3e437]:
+            - status [ref=f3e439]: 1 - 25 de 128
+            - navigation "pagination" [ref=f3e442]:
+              - link "First" [disabled] [ref=f3e807]: Primeira
+              - link "Previous" [disabled] [ref=f3e808]: Anterior
+              - link "1" [ref=f3e809] [cursor=pointer]
+              - link "2" [ref=f3e810] [cursor=pointer]
+              - link "3" [ref=f3e811] [cursor=pointer]
+              - link "4" [ref=f3e812] [cursor=pointer]
+              - link "5" [ref=f3e813] [cursor=pointer]
+              - link "6" [ref=f3e814] [cursor=pointer]
+              - link "Next" [ref=f3e815] [cursor=pointer]: Próxima
+              - link "Last" [ref=f3e816] [cursor=pointer]: Última
+  - button "Open Next.js Dev Tools" [ref=f3e65] [cursor=pointer]
+  - alert [ref=f3e453]
+  - menu "Ações da ata de 02/11/2026" [ref=f3e817]:
+    - menuitem "Visualizar" [ref=f3e818] [cursor=pointer]
+    - menuitem "Visualizar PDF" [ref=f3e823] [cursor=pointer]
+    - menuitem "Editar" [ref=f3e827] [cursor=pointer]
+    - menuitem "Excluir" [ref=f3e831] [cursor=pointer]

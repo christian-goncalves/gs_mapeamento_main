@@ -1,0 +1,133 @@
+- generic [active] [ref=f3e1]:
+  - main [ref=f3e2]:
+    - complementary "Navegação do responsável" [ref=f3e3]:
+      - link "Página inicial do responsável" [ref=f3e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f3e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f3e7]:
+        - link "Histórico de Atas" [ref=f3e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f3e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f3e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=f3e21] [cursor=pointer]
+    - generic [ref=f3e26]:
+      - generic [ref=f3e28]:
+        - paragraph [ref=f3e29]: Configurações
+        - heading "Grupo USL" [level=1] [ref=f3e30]
+      - generic [ref=f3e31]:
+        - generic [ref=f3e33]:
+          - generic [ref=f3e34]:
+            - heading "Dados do Grupo" [level=2] [ref=f3e35]
+            - button "Editar" [ref=f3e36] [cursor=pointer]
+          - generic [ref=f3e40]:
+            - generic [ref=f3e41]:
+              - text: Data de fundação do grupo
+              - textbox "Data de fundação do grupo" [disabled] [ref=f3e42]: 2022-02-10
+            - generic [ref=f3e43]:
+              - text: Última reunião antes do sistema
+              - spinbutton "Última reunião antes do sistema" [ref=f3e44]: "0"
+            - generic [ref=f3e45]:
+              - generic [ref=f3e46]:
+                - text: E-mail
+                - textbox "E-mail" [ref=f3e47]: codex.odonto@gmail.com
+              - button "Alterar e-mail ou senha" [ref=f3e48] [cursor=pointer]
+            - generic [ref=f3e52]:
+              - generic [ref=f3e53]: Link da ata
+              - generic [ref=f3e54]:
+                - textbox "Link da ata" [ref=f3e55]: http://localhost:3000/preencher/9428ecd8a64300c831488c8108bb20f72de748f604854d814ba56737dbb47f77
+                - button "Copiar link da ata" [ref=f3e56] [cursor=pointer]
+                - button "Rotacionar link de preenchimento" [ref=f3e59] [cursor=pointer]
+            - generic [ref=f3e62]:
+              - generic [ref=f3e63]:
+                - generic [ref=f3e64]: Revisão de Atas
+                - group [ref=f3e65]:
+                  - generic "Informações sobre a revisão de atas" [ref=f3e66] [cursor=pointer]
+              - switch "Revisão de Atas" [disabled] [ref=f3e69]
+          - generic [ref=f3e71]:
+            - generic [ref=f3e72]: Plataformas Utilizadas
+            - list "Plataformas Utilizadas" [ref=f3e73]:
+              - listitem [ref=f3e74]: Zoom
+              - listitem [ref=f3e76]: Zello
+              - listitem [ref=f3e78]: WhatsApp
+        - group [ref=f3e80]:
+          - generic "Servidores" [ref=f3e81] [cursor=pointer]
+      - group [ref=f3e85]:
+        - generic "Plataformas" [ref=f3e86] [cursor=pointer]
+        - option "Selecione uma plataforma" [selected]
+        - option "Zello"
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "WhatsApp"
+      - group [ref=f3e90]:
+        - generic "Horários de Reunião Os horários desta agenda são informados no horário de Brasília (UTC−03:00)." [ref=f3e91] [cursor=pointer]:
+          - generic [ref=f3e92]:
+            - generic [ref=f3e93]: Horários de Reunião
+            - img "Os horários desta agenda são informados no horário de Brasília (UTC−03:00)." [ref=f3e94]
+  - button "Open Next.js Dev Tools" [ref=f3e104] [cursor=pointer]
+  - alert [ref=f3e108]

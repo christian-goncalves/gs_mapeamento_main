@@ -1,0 +1,28 @@
+- generic [active] [ref=f1e1]:
+  - main [ref=f1e2]:
+    - complementary "Navegação do responsável" [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - link "Página inicial do responsável" [ref=f1e5] [cursor=pointer]:
+          - /url: /responsavel/atas
+          - generic [ref=f1e6]: GS Mapeamento
+        - button "Abrir menu" [ref=f1e7] [cursor=pointer]
+    - generic [ref=f1e10]:
+      - generic [ref=f1e11]:
+        - generic [ref=f1e12]:
+          - paragraph [ref=f1e13]: Editar ata
+          - heading "Grupo USL" [level=1] [ref=f1e14]
+          - paragraph [ref=f1e15]: A edição cria uma nova versão e preserva esta ata no histórico.
+        - link "Cancelar" [ref=f1e16] [cursor=pointer]:
+          - /url: /atas/c63f7988-65d4-4c42-a296-18eb4889209f
+      - generic [ref=f1e21]:
+        - heading "Informações Gerais" [level=2] [ref=f1e22]
+        - generic [ref=f1e23]:
+          - generic [ref=f1e24]:
+            - text: Data
+            - textbox "Data" [ref=f1e25]: 2026-11-06
+          - generic [ref=f1e26]:
+            - text: Horário
+            - combobox "Horário" [disabled] [ref=f1e27]:
+              - option "Selecione..." [selected]
+        - status [ref=f1e28]: Verificando disponibilidade de horário…
+  - button "Open Next.js Dev Tools" [ref=f1e34] [cursor=pointer]

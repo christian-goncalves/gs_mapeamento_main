@@ -1633,6 +1633,12 @@ body:has(.ata-pdf-preview-shell) { overflow: hidden; background: transparent; }
   min-height: 2.25rem;
   padding-block: .45rem;
 }
+.monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel .dashboard-period-autocomplete .autocomplete-options button {
+  box-sizing: border-box;
+  height: 35px;
+  min-height: 35px;
+  padding-block: 0;
+}
 .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-filters-responsavel .dashboard-pdf-button {
   border-radius: 8px;
   background: #1d4ed8;
@@ -4133,12 +4139,30 @@ body:has(.ata-detail-review-shell) {
 }
 
 /* Give the history pagination more room around each hover outline. */
-.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging {
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging nav[aria-label="pagination"] {
+  display: flex;
   gap: 1.2rem;
 }
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging .dt-paging-button {
+  margin: 0;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging nav[aria-label="pagination"] .dt-paging-button.first,
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging nav[aria-label="pagination"] .dt-paging-button.next {
+  margin-right: -0.6rem;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging nav[aria-label="pagination"] .dt-paging-button:not(.first):not(.previous):not(.next):not(.last) + .dt-paging-button:not(.first):not(.previous):not(.next):not(.last) {
+  margin-left: -0.6rem;
+}
 @media (max-width: 767px) {
-  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging {
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging nav[aria-label="pagination"] {
     gap: .75rem;
+  }
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging nav[aria-label="pagination"] .dt-paging-button.first,
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging nav[aria-label="pagination"] .dt-paging-button.next {
+    margin-right: -0.375rem;
+  }
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-table-wrap .dt-paging nav[aria-label="pagination"] .dt-paging-button:not(.first):not(.previous):not(.next):not(.last) + .dt-paging-button:not(.first):not(.previous):not(.next):not(.last) {
+    margin-left: -0.375rem;
   }
 }
 
@@ -4154,7 +4178,7 @@ body:has(.ata-detail-review-shell) {
 }
 .app-layout:not(:has(.responsavel-relatorios-azul-demo)) .app-signout-button {
   border: 0;
-  background: #f5e7e7;
+  background: transparent;
   color: var(--danger);
 }
 .app-layout:not(:has(.responsavel-relatorios-azul-demo)) .app-signout-button:hover {
@@ -4168,4 +4192,25 @@ body:has(.ata-detail-review-shell) {
   color: var(--danger);
   outline: 2px solid var(--danger);
   outline-offset: 2px;
+}
+
+/* Keep every Histórico de Atas record the same height, regardless of ATA/actions. */
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody tr {
+  height: 35.13125px;
+}
+.responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td {
+  padding-block: 2.06px;
+}
+
+@media (max-width: 499px) {
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody tr {
+    height: 23.23125px;
+  }
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-table tbody td {
+    padding-block: 0;
+  }
+  .responsavel-layout:has(.responsavel-atas-page-header) .responsavel-atas-card .responsavel-action-menu-trigger {
+    height: 22.25px;
+    min-height: 22.25px;
+  }
 }

@@ -1,0 +1,10 @@
+- main [ref=e2]:
+  - generic "Ações do PDF" [ref=e3]:
+    - generic [ref=e4]:
+      - link "Voltar" [ref=e5] [cursor=pointer]:
+        - /url: /atas/902858c3-a9c1-4255-8646-ce33f5dad0d8
+      - link "Baixar" [ref=e8] [cursor=pointer]:
+        - /url: /api/atas/902858c3-a9c1-4255-8646-ce33f5dad0d8/pdf?download=1
+      - button "Enviar por e-mail" [ref=e11] [cursor=pointer]
+  - region "PDF de Ata de Reunião nº 46" [ref=e14]:
+    - iframe [ref=e15]

@@ -1,0 +1,14 @@
+- generic [ref=f5e1]:
+  - main [ref=f5e2]:
+    - generic [ref=f5e3]:
+      - heading "Redefinir Senha" [level=1] [ref=f5e4]
+      - paragraph [ref=f5e5]: Informe seu e-mail cadastrado.
+      - generic [ref=f5e6]:
+        - generic [ref=f5e7]:
+          - text: E-mail
+          - textbox "E-mail" [ref=f5e8]
+        - button "Enviar Link" [ref=f5e9] [cursor=pointer]
+      - paragraph [ref=f5e13]:
+        - link "Voltar para Login" [ref=f5e14] [cursor=pointer]:
+          - /url: /login
+  - button "Open Next.js Dev Tools" [ref=f5e20] [cursor=pointer]

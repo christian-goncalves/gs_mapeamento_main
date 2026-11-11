@@ -1,10 +1,14 @@
 # GS Mapeamento - Instruções para o Codex e Outros Agentes
 
-Você é um agente de IA (Codex, Cursor ou similar) atuando no projeto **GS Mapeamento**. Siga as diretrizes de desenvolvimento do repositório descritas abaixo.
+Você atua no projeto **GS Mapeamento**. Consulte `README.md` e os documentos
+aplicáveis que existam no checkout atual. Referências a arquivos removidos ou a
+outros checkouts não são requisitos para executar uma tarefa; não peça ao
+usuário que os restaure.
 
----
+## Simulação mensal de atas
 
-## Diretrizes Gerais do Projeto
-
-Para garantir a consistência das alterações, regras de negócio e persistência do Google Sheets, você deve ler, compreender e seguir rigorosamente as diretrizes em:
-- [docs/](file:///home/cg/Documentos/01-DEV/PROJETOS/Apps/02-GS_Mapeamento/docs/)
+Para planejar, validar ou persistir atas mensais simuladas, siga a skill
+[simular-atas-mensais](.agents/skills/simular-atas-mensais/SKILL.md) e o
+contrato de execução referenciado por ela. A skill define a leitura do Sheets,
+o diagnóstico de falhas, o destino DEV e a autorização obrigatória antes de
+qualquer escrita.

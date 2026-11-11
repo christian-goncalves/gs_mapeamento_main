@@ -1,0 +1,110 @@
+- generic [ref=f5e1]:
+  - main [ref=f5e2]:
+    - complementary "Navegação do responsável" [ref=f5e3]:
+      - generic [ref=f5e4]:
+        - link "Página inicial do responsável" [ref=f5e5] [cursor=pointer]:
+          - /url: /responsavel/atas
+          - generic [ref=f5e6]: GS Mapeamento
+        - button "Abrir menu" [ref=f5e7] [cursor=pointer]
+    - generic [ref=f5e11]:
+      - generic [ref=f5e13]:
+        - paragraph [ref=f5e14]: Configurações
+        - heading "Grupo USL" [level=1] [ref=f5e15]
+      - generic [ref=f5e16]:
+        - generic [ref=f5e18]:
+          - generic [ref=f5e19]:
+            - heading "Dados do Grupo" [level=2] [ref=f5e20]
+            - button "Editar" [ref=f5e21] [cursor=pointer]
+          - generic [ref=f5e25]:
+            - generic [ref=f5e26]:
+              - generic [ref=f5e27]:
+                - generic [ref=f5e28]: Revisão de Atas
+                - group [ref=f5e29]:
+                  - generic "Informações sobre a revisão de atas" [ref=f5e30] [cursor=pointer]
+              - combobox "Revisão de Atas Informações sobre a revisão de atas" [disabled] [ref=f5e33]:
+                - option "Aprovação ativada"
+                - option "Aprovação desativada (padrão)" [selected]
+            - generic [ref=f5e34]:
+              - generic [ref=f5e35]:
+                - text: E-mail
+                - textbox "E-mail" [ref=f5e36]: codex.odonto@gmail.com
+              - button "Alterar e-mail ou senha" [ref=f5e37] [cursor=pointer]
+            - generic [ref=f5e41]:
+              - generic [ref=f5e42]: Link da ata
+              - generic [ref=f5e43]:
+                - textbox "Link da ata" [ref=f5e44]: http://localhost:3000/preencher/1218223fc61c1c375dacd2cab9f774dbdc9e114e61e0b53f17a3915c3a75329d
+                - button "Copiar link da ata" [ref=f5e45] [cursor=pointer]
+                - button "Rotacionar link de preenchimento" [ref=f5e48] [cursor=pointer]
+            - generic [ref=f5e51]:
+              - text: Última reunião antes do sistema
+              - spinbutton "Última reunião antes do sistema" [ref=f5e52]: "0"
+          - generic [ref=f5e53]:
+            - generic [ref=f5e54]: Plataformas Utilizadas
+            - list "Plataformas Utilizadas" [ref=f5e55]:
+              - listitem [ref=f5e56]: Zoom
+              - listitem [ref=f5e58]: Zello
+        - group [ref=f5e60]:
+          - generic "Servidores" [ref=f5e61] [cursor=pointer]
+      - group [ref=f5e65]:
+        - generic "Plataformas" [ref=f5e66] [cursor=pointer]
+        - option "Selecione uma plataforma" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+      - group [ref=f5e70]:
+        - generic "Horários de Reunião Informações sobre o horário da agenda" [ref=f5e71] [cursor=pointer]:
+          - generic [ref=f5e72]:
+            - generic [ref=f5e73]: Horários de Reunião
+            - img "Informações sobre o horário da agenda" [ref=f5e74]
+  - button "Open Next.js Dev Tools" [ref=f5e84] [cursor=pointer]
+  - alert [ref=f5e88]

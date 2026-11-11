@@ -1,0 +1,54 @@
+- main [ref=f13e2]:
+  - complementary "Navegação do responsável" [ref=f13e3]:
+    - generic [ref=f13e4]:
+      - link "Página inicial do responsável" [ref=f13e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f13e6]: GS Mapeamento
+      - button "Abrir menu" [ref=f13e7] [cursor=pointer]
+  - generic [ref=f13e9]:
+    - generic [ref=f13e10]:
+      - generic [ref=f13e11]:
+        - paragraph [ref=f13e12]: Histórico de Atas
+        - heading "Grupo USL" [level=1] [ref=f13e13]
+      - generic [ref=f13e14]:
+        - link "Histórico" [ref=f13e15] [cursor=pointer]:
+          - /url: /responsavel/atas?historico=1
+        - link "Nova Ata" [ref=f13e20] [cursor=pointer]:
+          - /url: /atas/nova
+    - generic [ref=f13e25]:
+      - generic "Filtros das Atas" [ref=f13e26]:
+        - generic [ref=f13e27]:
+          - generic [ref=f13e28]: De
+          - textbox "De" [ref=f13e29]: 2026-11-01
+        - generic [ref=f13e30]:
+          - generic [ref=f13e31]: Até
+          - textbox "Até" [ref=f13e32]: 2026-11-03
+        - generic [ref=f13e33]:
+          - generic [ref=f13e34]: Dia da Semana
+          - combobox "Dia da Semana" [ref=f13e35]:
+            - option "Todos" [selected]
+            - option "Domingo"
+            - option "Segunda"
+            - option "Terça"
+            - option "Quarta"
+            - option "Quinta"
+            - option "Sexta"
+            - option "Sábado"
+        - generic [ref=f13e36]:
+          - generic [ref=f13e37]: Horário
+          - combobox "Horário" [ref=f13e38]:
+            - option "Todos" [selected]
+            - option "07:00"
+            - option "07:30"
+            - option "10:00"
+            - option "15:00"
+            - option "18:00"
+            - option "21:30"
+        - generic [ref=f13e39]:
+          - generic [ref=f13e40]: Status
+          - combobox "Status" [ref=f13e41]:
+            - option "Todos" [selected]
+            - option "Enviadas"
+            - option "Não enviadas"
+            - option "Pendentes de revisão"
+      - status [ref=f13e43]: Carregando tabela...

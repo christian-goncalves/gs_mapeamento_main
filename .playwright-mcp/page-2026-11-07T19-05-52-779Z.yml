@@ -1,0 +1,213 @@
+- generic [ref=f1e1]:
+  - main [ref=f1e2]:
+    - complementary "Navegação do responsável" [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - link "Página inicial do responsável" [ref=f1e5] [cursor=pointer]:
+          - /url: /responsavel/atas
+          - generic [ref=f1e6]: GS Mapeamento
+        - button "Abrir menu" [active] [ref=f1e7] [cursor=pointer]
+    - generic [ref=f1e10]:
+      - generic [ref=f1e11]:
+        - generic [ref=f1e12]:
+          - paragraph [ref=f1e13]: Editar ata
+          - heading "Grupo USL" [level=1] [ref=f1e14]
+          - paragraph [ref=f1e15]: A edição cria uma nova versão e preserva esta ata no histórico.
+        - link "Cancelar" [ref=f1e16] [cursor=pointer]:
+          - /url: /atas/c63f7988-65d4-4c42-a296-18eb4889209f
+      - generic [ref=f1e20]:
+        - generic [ref=f1e21]:
+          - heading "Informações Gerais" [level=2] [ref=f1e22]
+          - generic [ref=f1e23]:
+            - generic [ref=f1e24]:
+              - text: Data
+              - textbox "Data" [ref=f1e25]: 2026-11-06
+            - generic [ref=f1e26]:
+              - text: Horário
+              - combobox "Horário" [ref=f1e27]:
+                - option "Selecione..."
+                - option "15:00" [selected]
+                - option "21:30"
+          - generic [ref=f1e40]:
+            - group "Tipo de Reunião" [ref=f1e41]:
+              - generic [ref=f1e43]:
+                - generic [ref=f1e44]:
+                  - radio "Fechada" [checked] [ref=f1e45]
+                  - text: Fechada
+                - generic [ref=f1e46]:
+                  - radio "Aberta" [ref=f1e47]
+                  - text: Aberta
+            - group "Plataforma" [ref=f1e48]:
+              - generic [ref=f1e50]: Zoom
+          - group "Formatos" [ref=f1e52]:
+            - generic [ref=f1e54]:
+              - generic [ref=f1e55]:
+                - checkbox "Partilha" [ref=f1e56]
+                - text: Partilha
+              - generic [ref=f1e57]:
+                - checkbox "Estudo" [ref=f1e58]
+                - text: Estudo
+              - generic [ref=f1e59]:
+                - checkbox "Temática" [checked] [ref=f1e60]
+                - text: Temática
+              - generic [ref=f1e61]:
+                - checkbox "Literatura" [ref=f1e62]
+                - text: Literatura
+              - generic [ref=f1e63]:
+                - checkbox "Passos" [ref=f1e64]
+                - text: Passos
+              - generic [ref=f1e65]:
+                - checkbox "Tradições" [ref=f1e66]
+                - text: Tradições
+              - generic [ref=f1e67]:
+                - checkbox "Comemorativa" [ref=f1e68]
+                - text: Comemorativa
+              - generic [ref=f1e69]:
+                - checkbox "Serviço" [ref=f1e70]
+                - text: Serviço
+              - generic [ref=f1e71]:
+                - checkbox "Outros" [ref=f1e72]
+                - text: Outros
+        - generic [ref=f1e73]:
+          - heading "Servidores" [level=2] [ref=f1e75]
+          - generic [ref=f1e76]:
+            - generic [ref=f1e77]:
+              - generic [ref=f1e78]: Nome
+              - combobox "Nome" [ref=f1e80]: Caio Ferreira
+            - generic [ref=f1e81]:
+              - generic [ref=f1e82]: Função
+              - combobox "Função" [ref=f1e83]:
+                - option "Selecione..."
+                - option "Coordenador"
+                - option "Moderador" [selected]
+                - option "Secretário"
+                - option "Apoio"
+                - option "Anfitrião"
+                - option "Coanfitrião"
+                - option "Admin"
+                - option "Admin2"
+                - option "Personalizar"
+            - button "Remover servidor" [ref=f1e84] [cursor=pointer]
+          - button "Adicionar" [ref=f1e88] [cursor=pointer]
+        - generic [ref=f1e92]:
+          - heading "Participação" [level=2] [ref=f1e94]
+          - generic [ref=f1e95]:
+            - generic [ref=f1e96]:
+              - generic [ref=f1e97]: Membros
+              - generic [ref=f1e98]:
+                - button "Diminuir membros" [ref=f1e99] [cursor=pointer]: "-"
+                - spinbutton "Membros Diminuir membros Aumentar membros" [ref=f1e100]: "100"
+                - button "Aumentar membros" [disabled] [ref=f1e101]: +
+            - generic [ref=f1e102]:
+              - generic [ref=f1e103]: Partilhas
+              - generic [ref=f1e104]:
+                - button "Diminuir partilhas" [ref=f1e105] [cursor=pointer]: "-"
+                - spinbutton "Partilhas Diminuir partilhas Aumentar partilhas" [ref=f1e106]: "30"
+                - button "Aumentar partilhas" [disabled] [ref=f1e107]: +
+        - generic [ref=f1e108]:
+          - heading "Localidades Nacionais" [level=2] [ref=f1e110]
+          - generic [ref=f1e111]:
+            - generic [ref=f1e112]:
+              - generic [ref=f1e113]: Cidade
+              - combobox "Cidade" [ref=f1e115]: Itajaí - SC
+            - generic [ref=f1e116]:
+              - generic [ref=f1e117]: Quantidade
+              - generic [ref=f1e118]:
+                - button "Diminuir quantidade" [disabled] [ref=f1e119]: "-"
+                - spinbutton "Quantidade Diminuir quantidade Aumentar quantidade" [ref=f1e120]: "1"
+                - button "Aumentar quantidade" [ref=f1e121] [cursor=pointer]: +
+            - button "Remover cidade" [ref=f1e122] [cursor=pointer]
+          - button "Adicionar" [ref=f1e126] [cursor=pointer]
+        - generic [ref=f1e130]:
+          - heading "Localidades Internacionais" [level=2] [ref=f1e132]
+          - generic [ref=f1e133]:
+            - generic [ref=f1e134]:
+              - generic [ref=f1e135]: País
+              - combobox "País" [ref=f1e137]: Alândia
+            - generic [ref=f1e138]:
+              - generic [ref=f1e139]: Quantidade
+              - generic [ref=f1e140]:
+                - button "Diminuir quantidade" [disabled] [ref=f1e141]: "-"
+                - spinbutton "Quantidade Diminuir quantidade Aumentar quantidade" [ref=f1e142]: "1"
+                - button "Aumentar quantidade" [ref=f1e143] [cursor=pointer]: +
+            - button "Remover membro internacional" [ref=f1e144] [cursor=pointer]
+          - button "Adicionar" [ref=f1e148] [cursor=pointer]
+        - generic [ref=f1e152]:
+          - heading "Visitantes" [level=2] [ref=f1e154]
+          - generic [ref=f1e155]:
+            - generic [ref=f1e156]:
+              - generic [ref=f1e157]:
+                - generic [ref=f1e158]: Cidade
+                - combobox "Cidade" [ref=f1e160]: Abadia dos Dourados - MG
+              - generic [ref=f1e161]:
+                - generic [ref=f1e162]: Descrição
+                - generic [ref=f1e163]:
+                  - combobox "Descrição Abrir lista de opções" [ref=f1e164]: Familiar
+                  - button "Abrir lista de opções" [ref=f1e165] [cursor=pointer]
+            - generic [ref=f1e168]:
+              - generic [ref=f1e169]:
+                - generic [ref=f1e170]: Como Chegou a NA?
+                - generic [ref=f1e171]:
+                  - combobox "Como Chegou a NA? Abrir lista de opções" [ref=f1e172]: Profissional
+                  - button "Abrir lista de opções" [ref=f1e173] [cursor=pointer]
+              - button "Remover visitante" [ref=f1e176] [cursor=pointer]
+          - button "Adicionar" [ref=f1e180] [cursor=pointer]
+        - generic [ref=f1e184]:
+          - heading "Ingressos" [level=2] [ref=f1e186]
+          - generic [ref=f1e188]:
+            - generic [ref=f1e189]: Quantidade
+            - generic [ref=f1e190]:
+              - button "Diminuir quantidade" [ref=f1e191] [cursor=pointer]: "-"
+              - spinbutton "Quantidade Diminuir quantidade Aumentar quantidade" [ref=f1e192]: "1"
+              - button "Aumentar quantidade" [disabled] [ref=f1e193]: +
+        - generic [ref=f1e194]:
+          - heading "Conquista" [level=2] [ref=f1e196]
+          - generic [ref=f1e197]:
+            - generic [ref=f1e198]:
+              - generic [ref=f1e199]: Tempo Limpo
+              - generic [ref=f1e200]:
+                - combobox "Tempo Limpo Abrir lista de opções" [ref=f1e201]: 90 dias
+                - button "Abrir lista de opções" [ref=f1e202] [cursor=pointer]
+            - generic [ref=f1e205]:
+              - generic [ref=f1e206]: Quantidade
+              - generic [ref=f1e207]:
+                - button "Diminuir quantidade" [disabled] [ref=f1e208]: "-"
+                - spinbutton "Quantidade Diminuir quantidade Aumentar quantidade" [ref=f1e209]: "1"
+                - button "Aumentar quantidade" [ref=f1e210] [cursor=pointer]: +
+            - button "Remover conquista de tempo" [ref=f1e211] [cursor=pointer]
+          - button "Adicionar" [ref=f1e215] [cursor=pointer]
+        - region [ref=f1e219]:
+          - heading "Resumo" [level=2] [ref=f1e221]
+          - generic "Resumo calculado da ata" [ref=f1e222]:
+            - generic [ref=f1e223]:
+              - term [ref=f1e224]: Servidores
+              - definition [ref=f1e225]: "1"
+            - generic [ref=f1e226]:
+              - term [ref=f1e227]: Membros
+              - definition [ref=f1e228]: "100"
+            - generic [ref=f1e229]:
+              - term [ref=f1e230]: Partilhas
+              - definition [ref=f1e231]: "30"
+            - generic [ref=f1e232]:
+              - term [ref=f1e233]: Visitantes
+              - definition [ref=f1e234]: "1"
+            - generic [ref=f1e235]:
+              - term [ref=f1e236]: Ingressos
+              - definition [ref=f1e237]: "1"
+            - generic [ref=f1e238]:
+              - term [ref=f1e239]: Conquistas
+              - definition [ref=f1e240]: "1"
+            - generic [ref=f1e241]:
+              - term [ref=f1e242]: Cidades
+              - definition [ref=f1e243]: "1"
+            - generic [ref=f1e244]:
+              - term [ref=f1e245]: Estados
+              - definition [ref=f1e246]: "1"
+            - generic [ref=f1e247]:
+              - term [ref=f1e248]: Outros Países
+              - definition [ref=f1e249]: "1"
+        - generic [ref=f1e250]:
+          - generic [ref=f1e251]: Motivo da Alteração
+          - textbox "Motivo da Alteração" [ref=f1e252]
+        - button "Revisar e confirmar" [ref=f1e254] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f1e34] [cursor=pointer]
+  - alert [ref=f1e39]

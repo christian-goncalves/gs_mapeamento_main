@@ -1,0 +1,60 @@
+- generic [ref=f19e1]:
+  - main [ref=f19e2]:
+    - complementary "Navegação do responsável" [ref=f19e3]:
+      - link "Página inicial do responsável" [ref=f19e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f19e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f19e7]:
+        - link "Histórico de Atas" [ref=f19e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f19e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f19e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=f19e21] [cursor=pointer]
+    - generic [ref=f19e25]:
+      - generic [ref=f19e26]:
+        - generic [ref=f19e27]:
+          - paragraph [ref=f19e28]: Histórico de Atas
+          - heading "Grupo USL" [level=1] [ref=f19e29]
+        - generic [ref=f19e30]:
+          - link "Histórico" [ref=f19e31] [cursor=pointer]:
+            - /url: /responsavel/atas?historico=1
+          - link "Nova Ata" [ref=f19e36] [cursor=pointer]:
+            - /url: /atas/nova
+      - generic [ref=f19e41]:
+        - generic "Filtros das Atas" [ref=f19e42]:
+          - generic [ref=f19e43]:
+            - generic [ref=f19e44]: De
+            - textbox "De" [ref=f19e45]: 2026-11-01
+          - generic [ref=f19e46]:
+            - generic [ref=f19e47]: Até
+            - textbox "Até" [ref=f19e48]: 2026-11-11
+          - generic [ref=f19e49]:
+            - generic [ref=f19e50]: Dia da Semana
+            - combobox "Dia da Semana" [ref=f19e51]:
+              - option "Todos" [selected]
+              - option "Domingo"
+              - option "Segunda"
+              - option "Terça"
+              - option "Quarta"
+              - option "Quinta"
+              - option "Sexta"
+              - option "Sábado"
+          - generic [ref=f19e52]:
+            - generic [ref=f19e53]: Horário
+            - combobox "Horário" [ref=f19e54]:
+              - option "Todos" [selected]
+              - option "07:00"
+              - option "10:00"
+              - option "15:00"
+              - option "21:30"
+          - generic [ref=f19e55]:
+            - generic [ref=f19e56]: Status
+            - combobox "Status" [ref=f19e57]:
+              - option "Todos" [selected]
+              - option "Enviadas"
+              - option "Não enviadas"
+              - option "Pendentes de revisão"
+        - status [ref=f19e59]: Carregando tabela...
+  - button "Open Next.js Dev Tools" [ref=f19e65] [cursor=pointer]

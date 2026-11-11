@@ -1,0 +1,10 @@
+- main [ref=f1e2]:
+  - generic "Ações do PDF" [ref=f1e3]:
+    - generic [ref=f1e4]:
+      - link "Voltar" [ref=f1e5] [cursor=pointer]:
+        - /url: /atas/9d1a50e8-8394-482b-9ff1-d108e373b730
+      - link "Baixar" [ref=f1e8] [cursor=pointer]:
+        - /url: /api/atas/9d1a50e8-8394-482b-9ff1-d108e373b730/pdf?download=1
+      - button "Enviar por e-mail" [ref=f1e11] [cursor=pointer]
+  - region "PDF de Ata de Reunião nº 181" [ref=f1e14]:
+    - iframe [ref=f1e15]

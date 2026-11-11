@@ -1,0 +1,143 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - complementary "Navegação do responsável" [ref=e3]:
+      - link "Página inicial do responsável" [ref=e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=e7]:
+        - link "Histórico de Atas" [ref=e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=e21] [cursor=pointer]
+    - generic [ref=e26]:
+      - generic [ref=e28]:
+        - paragraph [ref=e29]: Nova ata
+        - heading "Grupo USL" [level=1] [ref=e30]
+        - paragraph [ref=e31]: Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - heading "Informações Gerais" [level=2] [ref=e34]
+          - generic [ref=e35]:
+            - generic [ref=e36]:
+              - text: Data
+              - textbox "Data" [ref=e37]: 2026-11-07
+            - generic [ref=e38]:
+              - text: Horário
+              - combobox "Horário" [ref=e39]:
+                - option "Selecione..."
+                - option "10:00" [selected]
+                - option "15:00"
+                - option "21:30"
+          - generic [ref=e50]:
+            - group "Tipo de Reunião" [ref=e51]:
+              - generic [ref=e53]:
+                - generic [ref=e54]:
+                  - radio "Fechada" [checked] [ref=e55]
+                  - text: Fechada
+                - generic [ref=e56]:
+                  - radio "Aberta" [ref=e57]
+                  - text: Aberta
+            - group "Plataforma" [ref=e58]:
+              - generic [ref=e60]: Zoom
+          - group "Formatos" [ref=e62]:
+            - generic [ref=e64]:
+              - generic [ref=e65]:
+                - checkbox "Partilha" [ref=e66]
+                - text: Partilha
+              - generic [ref=e67]:
+                - checkbox "Estudo" [ref=e68]
+                - text: Estudo
+              - generic [ref=e69]:
+                - checkbox "Temática" [ref=e70]
+                - text: Temática
+              - generic [ref=e71]:
+                - checkbox "Literatura" [ref=e72]
+                - text: Literatura
+              - generic [ref=e73]:
+                - checkbox "Passos" [ref=e74]
+                - text: Passos
+              - generic [ref=e75]:
+                - checkbox "Tradições" [ref=e76]
+                - text: Tradições
+              - generic [ref=e77]:
+                - checkbox "Comemorativa" [ref=e78]
+                - text: Comemorativa
+              - generic [ref=e79]:
+                - checkbox "Serviço" [ref=e80]
+                - text: Serviço
+              - generic [ref=e81]:
+                - checkbox "Outros" [ref=e82]
+                - text: Outros
+        - generic [ref=e83]:
+          - heading "Servidores" [level=2] [ref=e85]
+          - button "Adicionar" [ref=e87] [cursor=pointer]
+        - generic [ref=e91]:
+          - heading "Participação" [level=2] [ref=e93]
+          - generic [ref=e94]:
+            - generic [ref=e95]:
+              - generic [ref=e96]: Membros
+              - generic [ref=e97]:
+                - button "Diminuir membros" [disabled] [ref=e98]: "-"
+                - spinbutton "Membros Diminuir membros Aumentar membros" [ref=e99]
+                - button "Aumentar membros" [ref=e100] [cursor=pointer]: +
+            - generic [ref=e101]:
+              - generic [ref=e102]: Partilhas
+              - generic [ref=e103]:
+                - button "Diminuir partilhas" [disabled] [ref=e104]: "-"
+                - spinbutton "Partilhas Diminuir partilhas Aumentar partilhas" [ref=e105]
+                - button "Aumentar partilhas" [disabled] [ref=e106]: +
+        - generic [ref=e107]:
+          - heading "Localidades Nacionais" [level=2] [ref=e109]
+          - button "Adicionar" [ref=e111] [cursor=pointer]
+        - generic [ref=e115]:
+          - heading "Localidades Internacionais" [level=2] [ref=e117]
+          - button "Adicionar" [ref=e119] [cursor=pointer]
+        - generic [ref=e123]:
+          - heading "Visitantes" [level=2] [ref=e125]
+          - button "Adicionar" [ref=e127] [cursor=pointer]
+        - heading "Ingressos" [level=2] [ref=e133]
+        - generic [ref=e134]:
+          - heading "Conquista" [level=2] [ref=e136]
+          - button "Adicionar" [ref=e138] [cursor=pointer]
+        - region [ref=e142]:
+          - heading "Resumo" [level=2] [ref=e144]
+          - generic "Resumo calculado da ata" [ref=e145]:
+            - generic [ref=e146]:
+              - term [ref=e147]: Servidores
+              - definition [ref=e148]: "0"
+            - generic [ref=e149]:
+              - term [ref=e150]: Membros
+              - definition [ref=e151]: "0"
+            - generic [ref=e152]:
+              - term [ref=e153]: Partilhas
+              - definition [ref=e154]: "0"
+            - generic [ref=e155]:
+              - term [ref=e156]: Visitantes
+              - definition [ref=e157]: "0"
+            - generic [ref=e158]:
+              - term [ref=e159]: Ingressos
+              - definition [ref=e160]: "0"
+            - generic [ref=e161]:
+              - term [ref=e162]: Conquistas
+              - definition [ref=e163]: "0"
+            - generic [ref=e164]:
+              - term [ref=e165]: Cidades
+              - definition [ref=e166]: "0"
+            - generic [ref=e167]:
+              - term [ref=e168]: Estados
+              - definition [ref=e169]: "0"
+            - generic [ref=e170]:
+              - term [ref=e171]: Outros Países
+              - definition [ref=e172]: "0"
+        - button "Revisar e confirmar" [ref=e174] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=e178] [cursor=pointer]:
+    - generic [ref=e181]:
+      - text: Rendering
+      - generic [ref=e182]:
+        - generic [ref=e183]: .
+        - generic [ref=e184]: .
+        - generic [ref=e185]: .
+  - alert [ref=e186]

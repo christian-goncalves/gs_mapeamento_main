@@ -111,6 +111,32 @@ function normalizeHeaderAliases(name: SheetName, values: SheetCell[][]) {
   ];
 }
 
+function hasSheetValue(cells: SheetCell[]) {
+  return cells.some(
+    (cell) =>
+      cell !== "" &&
+      cell !== false &&
+      cell !== null &&
+      typeof cell !== "undefined",
+  );
+}
+
+function excludeGroupRowsWithExtensionOnlyData(values: SheetCell[][]) {
+  if (values.length === 0) return values;
+  const [headers, ...rows] = values;
+  const baseFieldCount = SHEET_HEADERS.grupos.length;
+
+  return [
+    headers,
+    ...rows.filter((row) => {
+      const hasBaseData = hasSheetValue(row.slice(0, baseFieldCount));
+      const hasExtensionData = hasSheetValue(row.slice(baseFieldCount));
+
+      return hasBaseData || !hasExtensionData;
+    }),
+  ];
+}
+
 function requireValidRows<T>(
   name: string,
   rows: ReturnType<typeof parseRows<T>>,
@@ -158,7 +184,9 @@ export async function readSimulationSheetSnapshot(
       name,
       rowsToCompatibleObjects(
         name,
-        values[name],
+        name === "grupos"
+          ? excludeGroupRowsWithExtensionOnlyData(values[name])
+          : values[name],
         name === "grupos" ? { allowMissingTrailingHeaders: 3 } : undefined,
       ),
     ]),

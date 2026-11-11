@@ -1,0 +1,142 @@
+- generic [ref=f7e1]:
+  - main [ref=f7e2]:
+    - complementary "Navegação do responsável" [ref=f7e3]:
+      - link "Página inicial do responsável" [ref=f7e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f7e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f7e7]:
+        - link "Histórico de Atas" [ref=f7e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f7e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f7e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=f7e21] [cursor=pointer]
+    - generic [ref=f7e26]:
+      - generic [ref=f7e28]:
+        - paragraph [ref=f7e29]: Nova ata
+        - heading "Grupo USL" [level=1] [ref=f7e30]
+        - paragraph [ref=f7e31]: Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
+      - generic [ref=f7e32]:
+        - generic [ref=f7e33]:
+          - heading "Informações Gerais" [level=2] [ref=f7e34]
+          - generic [ref=f7e35]:
+            - generic [ref=f7e36]:
+              - text: Data
+              - textbox "Data" [ref=f7e37]: 2026-11-06
+            - generic [ref=f7e38]:
+              - text: Horário
+              - combobox "Horário" [ref=f7e39]:
+                - option "Selecione..."
+                - option "15:00" [selected]
+                - option "21:30"
+          - generic [ref=f7e50]:
+            - group "Tipo de Reunião" [ref=f7e51]:
+              - generic [ref=f7e53]:
+                - generic [ref=f7e54]:
+                  - radio "Fechada" [checked] [ref=f7e55]
+                  - text: Fechada
+                - generic [ref=f7e56]:
+                  - radio "Aberta" [ref=f7e57]
+                  - text: Aberta
+            - group "Plataforma" [ref=f7e58]:
+              - generic [ref=f7e60]: Zoom
+          - group "Formatos" [ref=f7e62]:
+            - generic [ref=f7e64]:
+              - generic [ref=f7e65]:
+                - checkbox "Partilha" [ref=f7e66]
+                - text: Partilha
+              - generic [ref=f7e67]:
+                - checkbox "Estudo" [ref=f7e68]
+                - text: Estudo
+              - generic [ref=f7e69]:
+                - checkbox "Temática" [ref=f7e70]
+                - text: Temática
+              - generic [ref=f7e71]:
+                - checkbox "Literatura" [ref=f7e72]
+                - text: Literatura
+              - generic [ref=f7e73]:
+                - checkbox "Passos" [ref=f7e74]
+                - text: Passos
+              - generic [ref=f7e75]:
+                - checkbox "Tradições" [ref=f7e76]
+                - text: Tradições
+              - generic [ref=f7e77]:
+                - checkbox "Comemorativa" [ref=f7e78]
+                - text: Comemorativa
+              - generic [ref=f7e79]:
+                - checkbox "Serviço" [ref=f7e80]
+                - text: Serviço
+              - generic [ref=f7e81]:
+                - checkbox "Outros" [ref=f7e82]
+                - text: Outros
+        - generic [ref=f7e83]:
+          - heading "Servidores" [level=2] [ref=f7e85]
+          - button "Adicionar" [ref=f7e87] [cursor=pointer]
+        - generic [ref=f7e91]:
+          - heading "Participação" [level=2] [ref=f7e93]
+          - generic [ref=f7e94]:
+            - generic [ref=f7e95]:
+              - generic [ref=f7e96]: Membros
+              - generic [ref=f7e97]:
+                - button "Diminuir membros" [disabled] [ref=f7e98]: "-"
+                - spinbutton "Membros Diminuir membros Aumentar membros" [ref=f7e99]
+                - button "Aumentar membros" [ref=f7e100] [cursor=pointer]: +
+            - generic [ref=f7e101]:
+              - generic [ref=f7e102]: Partilhas
+              - generic [ref=f7e103]:
+                - button "Diminuir partilhas" [disabled] [ref=f7e104]: "-"
+                - spinbutton "Partilhas Diminuir partilhas Aumentar partilhas" [ref=f7e105]
+                - button "Aumentar partilhas" [disabled] [ref=f7e106]: +
+        - generic [ref=f7e107]:
+          - heading "Localidades Nacionais" [level=2] [ref=f7e109]
+          - button "Adicionar" [ref=f7e111] [cursor=pointer]
+        - generic [ref=f7e115]:
+          - heading "Localidades Internacionais" [level=2] [ref=f7e117]
+          - button "Adicionar" [ref=f7e119] [cursor=pointer]
+        - generic [ref=f7e123]:
+          - heading "Visitantes" [level=2] [ref=f7e125]
+          - button "Adicionar" [ref=f7e127] [cursor=pointer]
+        - heading "Ingressos" [level=2] [ref=f7e133]
+        - generic [ref=f7e134]:
+          - heading "Conquista" [level=2] [ref=f7e136]
+          - button "Adicionar" [ref=f7e138] [cursor=pointer]
+        - region [ref=f7e142]:
+          - heading "Resumo" [level=2] [ref=f7e144]
+          - generic "Resumo calculado da ata" [ref=f7e145]:
+            - generic [ref=f7e146]:
+              - term [ref=f7e147]: Servidores
+              - definition [ref=f7e148]: "0"
+            - generic [ref=f7e149]:
+              - term [ref=f7e150]: Membros
+              - definition [ref=f7e151]: "0"
+            - generic [ref=f7e152]:
+              - term [ref=f7e153]: Partilhas
+              - definition [ref=f7e154]: "0"
+            - generic [ref=f7e155]:
+              - term [ref=f7e156]: Visitantes
+              - definition [ref=f7e157]: "0"
+            - generic [ref=f7e158]:
+              - term [ref=f7e159]: Ingressos
+              - definition [ref=f7e160]: "0"
+            - generic [ref=f7e161]:
+              - term [ref=f7e162]: Conquistas
+              - definition [ref=f7e163]: "0"
+            - generic [ref=f7e164]:
+              - term [ref=f7e165]: Cidades
+              - definition [ref=f7e166]: "0"
+            - generic [ref=f7e167]:
+              - term [ref=f7e168]: Estados
+              - definition [ref=f7e169]: "0"
+            - generic [ref=f7e170]:
+              - term [ref=f7e171]: Outros Países
+              - definition [ref=f7e172]: "0"
+        - button "Revisar e confirmar" [ref=f7e174] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f7e178] [cursor=pointer]:
+    - generic [ref=f7e181]:
+      - text: Rendering
+      - generic [ref=f7e182]:
+        - generic [ref=f7e183]: .
+        - generic [ref=f7e184]: .
+        - generic [ref=f7e185]: .
+  - alert [ref=f7e186]

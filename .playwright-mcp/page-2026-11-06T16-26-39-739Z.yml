@@ -1,0 +1,179 @@
+- generic [ref=f23e1]:
+  - main [ref=f23e2]:
+    - complementary "Navegação do responsável" [ref=f23e3]:
+      - link "Página inicial do responsável" [ref=f23e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f23e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f23e7]:
+        - link "Histórico de Atas" [ref=f23e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f23e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f23e16] [cursor=pointer]:
+          - /url: /grupos/8806319f-dd2d-4b67-9416-ab42bb991870
+        - button "Sair" [ref=f23e21] [cursor=pointer]
+    - generic [ref=f23e26]:
+      - generic [ref=f23e28]:
+        - paragraph [ref=f23e29]: Configurações
+        - heading "Grupo USL" [level=1] [ref=f23e30]
+      - generic [ref=f23e31]:
+        - generic [ref=f23e33]:
+          - generic [ref=f23e34]:
+            - heading "Dados do Grupo" [level=2] [ref=f23e35]
+            - button "Editar" [ref=f23e36] [cursor=pointer]
+          - generic [ref=f23e40]:
+            - generic [ref=f23e41]:
+              - generic [ref=f23e42]:
+                - generic [ref=f23e43]: Revisão de Atas
+                - group [ref=f23e44]:
+                  - generic "Informações sobre a revisão de atas" [ref=f23e45] [cursor=pointer]
+              - combobox "Revisão de Atas Informações sobre a revisão de atas" [disabled] [ref=f23e48]:
+                - option "Aprovação ativada"
+                - option "Aprovação desativada (padrão)" [selected]
+            - generic [ref=f23e49]:
+              - generic [ref=f23e50]:
+                - text: E-mail
+                - textbox "E-mail" [ref=f23e51]: codex.odonto@gmail.com
+              - button "Alterar e-mail ou senha" [ref=f23e52] [cursor=pointer]
+            - generic [ref=f23e56]:
+              - generic [ref=f23e57]: Link da ata
+              - generic [ref=f23e58]:
+                - textbox "Link da ata" [ref=f23e59]: http://localhost:3000/preencher/1218223fc61c1c375dacd2cab9f774dbdc9e114e61e0b53f17a3915c3a75329d
+                - button "Copiar link da ata" [ref=f23e60] [cursor=pointer]
+                - button "Rotacionar link de preenchimento" [ref=f23e63] [cursor=pointer]
+            - generic [ref=f23e66]:
+              - text: Última reunião antes do sistema
+              - spinbutton "Última reunião antes do sistema" [ref=f23e67]: "0"
+          - generic [ref=f23e68]:
+            - generic [ref=f23e69]: Plataformas Utilizadas
+            - list "Plataformas Utilizadas" [ref=f23e70]:
+              - listitem [ref=f23e71]: Zoom
+              - listitem [ref=f23e73]: Zello
+        - group [ref=f23e75]:
+          - generic "Servidores" [ref=f23e76] [cursor=pointer]
+          - generic [ref=f23e105]:
+            - table [ref=f23e107]:
+              - rowgroup [ref=f23e108]:
+                - row [ref=f23e109]:
+                  - columnheader "Encargo" [ref=f23e110]
+                  - columnheader "Servidor" [ref=f23e111]
+                  - columnheader "Desde" [ref=f23e112]
+                  - columnheader "Ações" [ref=f23e113]
+              - rowgroup [ref=f23e114]:
+                - row [ref=f23e115]:
+                  - rowheader "RSG" [ref=f23e116]
+                  - cell "Christian" [ref=f23e117]
+                  - cell "17/10/2026" [ref=f23e118]
+                  - cell [ref=f23e119]:
+                    - generic [ref=f23e120]:
+                      - button "Editar RSG" [ref=f23e121] [cursor=pointer]
+                      - button "Remover RSG" [ref=f23e124] [cursor=pointer]
+                - row [ref=f23e127]:
+                  - rowheader "Secretário" [ref=f23e128]
+                  - cell "Alisson" [ref=f23e129]
+                  - cell "17/10/2026" [ref=f23e130]
+                  - cell [ref=f23e131]:
+                    - generic [ref=f23e132]:
+                      - button "Editar Secretário" [ref=f23e133] [cursor=pointer]
+                      - button "Remover Secretário" [ref=f23e136] [cursor=pointer]
+                - row [ref=f23e139]:
+                  - rowheader "Secretário" [ref=f23e140]
+                  - cell "Gonçalves" [ref=f23e141]
+                  - cell "07/11/2026" [ref=f23e142]
+                  - cell [ref=f23e143]:
+                    - generic [ref=f23e144]:
+                      - button "Editar Secretário" [ref=f23e145] [cursor=pointer]
+                      - button "Remover Secretário" [ref=f23e148] [cursor=pointer]
+            - button "Adicionar Servidores" [ref=f23e152] [cursor=pointer]
+      - group [ref=f23e80]:
+        - generic "Plataformas" [ref=f23e81] [cursor=pointer]
+        - option "Selecione uma plataforma" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+        - option "Zoom" [selected]
+        - option "Zello"
+      - group [ref=f23e85]:
+        - generic "Horários de Reunião Informações sobre o horário da agenda" [ref=f23e86] [cursor=pointer]:
+          - generic [ref=f23e87]:
+            - generic [ref=f23e88]: Horários de Reunião
+            - img "Informações sobre o horário da agenda" [ref=f23e89]
+  - button "Open Next.js Dev Tools" [ref=f23e99] [cursor=pointer]
+  - alert [ref=f23e103]
+  - dialog [ref=f23e156]:
+    - banner [ref=f23e157]:
+      - heading "Editar Encargo" [level=2] [ref=f23e159]
+      - button "Fechar edição" [ref=f23e160] [cursor=pointer]
+    - generic [ref=f23e163]:
+      - generic [ref=f23e164]:
+        - text: Encargo
+        - generic [ref=f23e165]:
+          - combobox "Encargo RSG" [expanded] [active] [ref=f23e180]
+          - listbox [ref=f23e181]:
+            - option [selected] [ref=f23e182]:
+              - button "RSG" [ref=f23e183] [cursor=pointer]
+            - option [ref=f23e184]:
+              - button "RSG suplente" [ref=f23e185] [cursor=pointer]
+            - option [ref=f23e186]:
+              - button "Secretário" [ref=f23e187] [cursor=pointer]
+            - option [ref=f23e188]:
+              - button "Tesoureiro" [ref=f23e189] [cursor=pointer]
+            - option [ref=f23e190]:
+              - button "Outro" [ref=f23e191] [cursor=pointer]
+      - generic [ref=f23e167]:
+        - text: Nome do Servidor
+        - textbox "Nome do Servidor" [ref=f23e168]: Christian
+      - generic [ref=f23e169]:
+        - text: Desde
+        - textbox "Desde" [ref=f23e170]: 2026-10-17
+    - generic [ref=f23e171]:
+      - button "Salvar" [ref=f23e172] [cursor=pointer]
+      - button "Cancelar" [ref=f23e176] [cursor=pointer]

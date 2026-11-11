@@ -1,0 +1,53 @@
+- generic [active] [ref=f11e1]:
+  - main [ref=f11e2]:
+    - complementary "Navegação do responsável" [ref=f11e3]:
+      - generic [ref=f11e4]:
+        - link "Página inicial do responsável" [ref=f11e5] [cursor=pointer]:
+          - /url: /responsavel/atas
+          - generic [ref=f11e6]: GS Mapeamento
+        - button "Abrir menu" [ref=f11e7] [cursor=pointer]
+    - generic [ref=f11e9]:
+      - generic [ref=f11e10]:
+        - generic [ref=f11e11]:
+          - paragraph [ref=f11e12]: Histórico de Atas
+          - heading "Grupo USL" [level=1] [ref=f11e13]
+        - generic [ref=f11e14]:
+          - link "Atas Atuais" [ref=f11e15] [cursor=pointer]:
+            - /url: /responsavel/atas
+          - link "Nova Ata" [ref=f11e20] [cursor=pointer]:
+            - /url: /atas/nova
+      - generic [ref=f11e25]:
+        - generic "Filtros das Atas" [ref=f11e26]:
+          - generic [ref=f11e27]:
+            - generic [ref=f11e28]: De
+            - textbox "De" [ref=f11e29]: 2026-10-01
+          - generic [ref=f11e30]:
+            - generic [ref=f11e31]: Até
+            - textbox "Até" [ref=f11e32]: 2026-10-25
+          - generic [ref=f11e33]:
+            - generic [ref=f11e34]: Dia da Semana
+            - combobox "Dia da Semana" [ref=f11e35]:
+              - option "Todos" [selected]
+              - option "Domingo"
+              - option "Segunda"
+              - option "Terça"
+              - option "Quarta"
+              - option "Quinta"
+              - option "Sexta"
+              - option "Sábado"
+          - generic [ref=f11e36]:
+            - generic [ref=f11e37]: Horário
+            - combobox "Horário" [ref=f11e38]:
+              - option "Todos" [selected]
+              - option "07:00"
+              - option "10:00"
+              - option "10:30"
+              - option "21:30"
+          - generic [ref=f11e39]:
+            - generic [ref=f11e40]: Status
+            - combobox "Status" [ref=f11e41]:
+              - option "Todos" [selected]
+              - option "Substituídas"
+              - option "Excluídas"
+        - status [ref=f11e43]: Carregando tabela...
+  - button "Open Next.js Dev Tools" [ref=f11e49] [cursor=pointer]

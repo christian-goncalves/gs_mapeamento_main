@@ -1,0 +1,31 @@
+- generic [ref=f11e1]:
+  - main [ref=f11e2]:
+    - complementary "Navegação do responsável" [ref=f11e3]:
+      - link "Página inicial do responsável" [ref=f11e5] [cursor=pointer]:
+        - /url: /responsavel/atas
+        - generic [ref=f11e6]: GS Mapeamento
+      - navigation "Navegação do responsável" [ref=f11e7]:
+        - link "Histórico de Atas" [ref=f11e8] [cursor=pointer]:
+          - /url: /responsavel/atas
+        - link "Relatórios" [ref=f11e12] [cursor=pointer]:
+          - /url: /responsavel/relatorios
+        - link "Configurações" [ref=f11e16] [cursor=pointer]:
+          - /url: /grupos/505ba5ab-850a-42a1-bf26-612ea4869dc0
+        - button "Sair" [ref=f11e21] [cursor=pointer]
+    - generic [ref=f11e26]:
+      - generic [ref=f11e28]:
+        - paragraph [ref=f11e29]: Nova ata
+        - heading "Grupo Unidade & Propósito Roraima" [level=1] [ref=f11e30]
+        - paragraph [ref=f11e31]: Preencha as informações da reunião com calma. Você poderá revisar tudo antes de enviar.
+      - generic [ref=f11e33]:
+        - heading "Informações Gerais" [level=2] [ref=f11e34]
+        - generic [ref=f11e35]:
+          - generic [ref=f11e36]:
+            - text: Data
+            - textbox "Data" [ref=f11e37]: 2026-11-12
+          - generic [ref=f11e38]:
+            - text: Horário
+            - combobox "Horário" [disabled] [ref=f11e39]:
+              - option "Selecione..." [selected]
+        - status [ref=f11e40]: Verificando disponibilidade de horário…
+  - alert [ref=f11e41]

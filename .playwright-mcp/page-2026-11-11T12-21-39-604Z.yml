@@ -1,0 +1,165 @@
+- generic [ref=f31e1]:
+  - main [ref=f31e2]:
+    - complementary "Navegação do responsável" [ref=f31e3]:
+      - generic [ref=f31e4]:
+        - link "Página inicial do responsável" [ref=f31e5] [cursor=pointer]:
+          - /url: /responsavel/atas
+          - generic [ref=f31e6]: GS Mapeamento
+        - button "Abrir menu" [ref=f31e7] [cursor=pointer]
+    - generic [ref=f31e10]:
+      - generic [ref=f31e11]:
+        - generic [ref=f31e12]:
+          - paragraph [ref=f31e13]: Histórico de Atas
+          - heading "Grupo Unidade & Propósito Roraima" [level=1] [ref=f31e14]
+        - generic [ref=f31e15]:
+          - link "Histórico" [ref=f31e16] [cursor=pointer]:
+            - /url: /responsavel/atas?historico=1
+          - link "Nova Ata" [ref=f31e21] [cursor=pointer]:
+            - /url: /atas/nova
+      - generic [ref=f31e26]:
+        - generic "Filtros das Atas" [ref=f31e27]:
+          - generic [ref=f31e28]:
+            - generic [ref=f31e29]: De
+            - textbox "De" [ref=f31e30]: 2026-09-01
+          - generic [ref=f31e31]:
+            - generic [ref=f31e32]: Até
+            - textbox "Até" [ref=f31e33]: 2026-11-11
+          - generic [ref=f31e34]:
+            - generic [ref=f31e35]: Dia da Semana
+            - combobox "Dia da Semana" [ref=f31e36]:
+              - option "Todos" [selected]
+              - option "Domingo"
+              - option "Segunda"
+              - option "Terça"
+              - option "Quarta"
+              - option "Quinta"
+              - option "Sexta"
+              - option "Sábado"
+          - generic [ref=f31e37]:
+            - generic [ref=f31e38]: Horário
+            - combobox "Horário" [ref=f31e39]:
+              - option "Todos" [selected]
+              - option "19:30"
+              - option "20:30"
+          - generic [ref=f31e40]:
+            - generic [ref=f31e41]: Status
+            - combobox "Status" [ref=f31e42]:
+              - option "Todos" [selected]
+              - option "Enviadas"
+              - option "Não enviadas"
+              - option "Pendentes de revisão"
+        - generic [ref=f31e45]:
+          - table [ref=f31e48]:
+            - rowgroup [ref=f31e54]:
+              - row [ref=f31e55]:
+                - 'columnheader "Ata Ata: Activate to sort" [ref=f31e56] [cursor=pointer]':
+                  - generic [ref=f31e57]:
+                    - generic [ref=f31e58]: Ata
+                    - 'button "Ata: Activate to sort" [ref=f31e59]'
+                - 'columnheader "Data Data: Activate to remove sorting" [ref=f31e60] [cursor=pointer]':
+                  - generic [ref=f31e61]:
+                    - generic [ref=f31e62]: Data
+                    - 'button "Data: Activate to remove sorting" [ref=f31e63]'
+                - 'columnheader "Status Status: Activate to sort" [ref=f31e64] [cursor=pointer]':
+                  - generic [ref=f31e65]:
+                    - generic [ref=f31e66]: Status
+                    - 'button "Status: Activate to sort" [ref=f31e67]'
+                - columnheader "Ações" [ref=f31e68]
+            - rowgroup [ref=f31e71]:
+              - row [ref=f31e72]:
+                - cell "-" [ref=f31e73]
+                - cell [ref=f31e74]
+                - cell [ref=f31e75]
+                - cell [ref=f31e76]
+              - row [ref=f31e77]:
+                - cell "-" [ref=f31e78]
+                - cell [ref=f31e79]
+                - cell [ref=f31e80]
+                - cell [ref=f31e81]
+              - row [ref=f31e82]:
+                - cell "-" [ref=f31e83]
+                - cell [ref=f31e84]
+                - cell [ref=f31e85]
+                - cell [ref=f31e86]
+              - row [ref=f31e87]:
+                - cell "-" [ref=f31e88]
+                - cell [ref=f31e89]
+                - cell [ref=f31e90]
+                - cell [ref=f31e91]
+              - row [ref=f31e92]:
+                - cell "-" [ref=f31e93]
+                - cell [ref=f31e94]
+                - cell [ref=f31e95]
+                - cell [ref=f31e96]
+              - row [ref=f31e97]:
+                - cell "181" [ref=f31e98]
+                - cell [ref=f31e99]
+                - cell [ref=f31e100]
+                - cell [ref=f31e101]
+              - row [ref=f31e102]:
+                - cell "180" [ref=f31e103]
+                - cell [ref=f31e104]
+                - cell [ref=f31e105]
+                - cell [ref=f31e106]
+              - row [ref=f31e107]:
+                - cell "179" [ref=f31e108]
+                - cell [ref=f31e109]
+                - cell [ref=f31e110]
+                - cell [ref=f31e111]
+              - row [ref=f31e112]:
+                - cell "178" [ref=f31e113]
+                - cell [ref=f31e114]
+                - cell [ref=f31e115]
+                - cell [ref=f31e116]
+              - row [ref=f31e117]:
+                - cell "177" [ref=f31e118]
+                - cell [ref=f31e119]
+                - cell [ref=f31e120]
+                - cell [ref=f31e121]
+              - row [ref=f31e122]:
+                - cell "176" [ref=f31e123]
+                - cell [ref=f31e124]
+                - cell [ref=f31e125]
+                - cell [ref=f31e126]
+              - row [ref=f31e127]:
+                - cell "175" [ref=f31e128]
+                - cell [ref=f31e129]
+                - cell [ref=f31e130]
+                - cell [ref=f31e131]
+              - row [ref=f31e132]:
+                - cell "174" [ref=f31e133]
+                - cell [ref=f31e134]
+                - cell [ref=f31e135]
+                - cell [ref=f31e136]
+              - row [ref=f31e137]:
+                - cell "173" [ref=f31e138]
+                - cell [ref=f31e139]
+                - cell [ref=f31e140]
+                - cell [ref=f31e141]
+              - row [ref=f31e142]:
+                - cell "172" [ref=f31e143]
+                - cell [ref=f31e144]
+                - cell [ref=f31e145]
+                - cell [ref=f31e146]
+              - row [ref=f31e147]:
+                - cell "171" [ref=f31e148]
+                - cell [ref=f31e149]
+                - cell [ref=f31e150]
+                - cell [ref=f31e151]
+              - row [ref=f31e152]:
+                - cell "170" [ref=f31e153]
+                - cell [ref=f31e154]
+                - cell [ref=f31e155]
+                - cell [ref=f31e156]
+              - row [ref=f31e157]:
+                - cell "169" [ref=f31e158]
+                - cell [ref=f31e159]
+                - cell [ref=f31e160]
+                - cell [ref=f31e161]
+          - generic [ref=f31e162]:
+            - status [ref=f31e164]: 1 - 18 de 18
+            - navigation "pagination" [ref=f31e167]:
+              - link "Previous" [disabled] [ref=f31e168]: Anterior
+              - link "1" [ref=f31e169] [cursor=pointer]
+              - link "Next" [disabled] [ref=f31e170]: Próxima
+  - alert [ref=f31e171]

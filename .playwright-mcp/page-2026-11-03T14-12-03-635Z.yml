@@ -1,0 +1,288 @@
+- generic [ref=f5e1]:
+  - main [ref=f5e2]:
+    - complementary "Navegação do responsável" [ref=f5e3]:
+      - generic [ref=f5e4]:
+        - link "Página inicial do responsável" [ref=f5e5] [cursor=pointer]:
+          - /url: /responsavel/atas
+          - generic [ref=f5e6]: GS Mapeamento
+        - button "Abrir menu" [ref=f5e7] [cursor=pointer]
+    - generic [ref=f5e9]:
+      - generic [ref=f5e10]:
+        - generic [ref=f5e11]:
+          - paragraph [ref=f5e12]: Histórico de Atas
+          - heading "Grupo USL" [level=1] [ref=f5e13]
+        - generic [ref=f5e14]:
+          - link "Histórico" [ref=f5e15] [cursor=pointer]:
+            - /url: /responsavel/atas?historico=1
+          - link "Nova Ata" [ref=f5e20] [cursor=pointer]:
+            - /url: /atas/nova
+      - generic [ref=f5e25]:
+        - generic "Filtros das Atas" [ref=f5e26]:
+          - generic [ref=f5e27]:
+            - generic [ref=f5e28]: De
+            - textbox "De" [ref=f5e29]: 2026-09-01
+          - generic [ref=f5e30]:
+            - generic [ref=f5e31]: Até
+            - textbox "Até" [ref=f5e32]: 2026-11-03
+          - generic [ref=f5e33]:
+            - generic [ref=f5e34]: Dia da Semana
+            - combobox "Dia da Semana" [ref=f5e35]:
+              - option "Todos" [selected]
+              - option "Domingo"
+              - option "Segunda"
+              - option "Terça"
+              - option "Quarta"
+              - option "Quinta"
+              - option "Sexta"
+              - option "Sábado"
+          - generic [ref=f5e36]:
+            - generic [ref=f5e37]: Horário
+            - combobox "Horário" [ref=f5e38]:
+              - option "Todos" [selected]
+              - option "07:00"
+              - option "07:30"
+              - option "10:00"
+              - option "15:00"
+              - option "18:00"
+              - option "21:30"
+          - generic [ref=f5e39]:
+            - generic [ref=f5e40]: Status
+            - combobox "Status" [ref=f5e41]:
+              - option "Todos" [selected]
+              - option "Enviadas"
+              - option "Não enviadas"
+              - option "Pendentes de revisão"
+        - generic [ref=f5e46]:
+          - table [ref=f5e49]:
+            - rowgroup [ref=f5e56]:
+              - row [ref=f5e530]:
+                - 'columnheader "Ata Ata: Activate to sort" [ref=f5e58] [cursor=pointer]':
+                  - generic [ref=f5e59]:
+                    - generic [ref=f5e60]: Ata
+                    - 'button "Ata: Activate to sort" [ref=f5e61]'
+                - 'columnheader "Data Data: Activate to remove sorting" [ref=f5e62] [cursor=pointer]':
+                  - generic [ref=f5e63]:
+                    - generic [ref=f5e64]: Data
+                    - 'button "Data: Activate to remove sorting" [ref=f5e65]'
+                - 'columnheader "StatusSt. Status: Activate to sort" [ref=f5e531] [cursor=pointer]':
+                  - generic [ref=f5e67]:
+                    - generic [ref=f5e68]: StatusSt.
+                    - 'button "Status: Activate to sort" [ref=f5e69]'
+                - columnheader "AçõesAção" [ref=f5e532]
+            - rowgroup [ref=f5e73]:
+              - row [ref=f5e223]:
+                - cell "-" [ref=f5e75]
+                - cell "03/11 07:00" [ref=f5e224]:
+                  - generic [ref=f5e225]: 03/11 | 07:00
+                - cell [ref=f5e227]:
+                  - 'img "Status: Não enviada" [ref=f5e229]'
+                - cell [ref=f5e78]
+              - row [ref=f5e230]:
+                - cell "125" [ref=f5e80]
+                - cell "02/11 21:30" [ref=f5e231]:
+                  - generic [ref=f5e232]: 02/11 | 21:30
+                - cell [ref=f5e234]:
+                  - 'img "Status: Enviada" [ref=f5e236]'
+                - cell [ref=f5e237]:
+                  - button "Abrir ações da ata de 02/11/2026" [ref=f5e240] [cursor=pointer]
+              - row [ref=f5e243]:
+                - cell "124" [ref=f5e85]
+                - cell "02/11 15:00" [ref=f5e244]:
+                  - generic [ref=f5e245]: 02/11 | 15:00
+                - cell [ref=f5e247]:
+                  - 'img "Status: Enviada" [ref=f5e249]'
+                - cell [ref=f5e250]:
+                  - button "Abrir ações da ata de 02/11/2026" [ref=f5e253] [cursor=pointer]
+              - row [ref=f5e256]:
+                - cell "-" [ref=f5e90]
+                - cell "02/11 10:00" [ref=f5e257]:
+                  - generic [ref=f5e258]: 02/11 | 10:00
+                - cell [ref=f5e260]:
+                  - 'img "Status: Não enviada" [ref=f5e262]'
+                - cell [ref=f5e93]
+              - row [ref=f5e263]:
+                - cell "-" [ref=f5e95]
+                - cell "02/11 07:30" [ref=f5e264]:
+                  - generic [ref=f5e265]: 02/11 | 07:30
+                - cell [ref=f5e267]:
+                  - 'img "Status: Não enviada" [ref=f5e269]'
+                - cell [ref=f5e98]
+              - row [ref=f5e270]:
+                - cell "123" [ref=f5e100]
+                - cell "02/11 07:00" [ref=f5e271]:
+                  - generic [ref=f5e272]: 02/11 | 07:00
+                - cell [ref=f5e274]:
+                  - 'img "Status: Enviada" [ref=f5e276]'
+                - cell [ref=f5e277]:
+                  - button "Abrir ações da ata de 02/11/2026" [ref=f5e280] [cursor=pointer]
+              - row [ref=f5e283]:
+                - cell "122" [ref=f5e105]
+                - cell "27/10 10:00" [ref=f5e284]:
+                  - generic [ref=f5e285]: 27/10 | 10:00
+                - cell [ref=f5e287]:
+                  - 'img "Status: Enviada" [ref=f5e289]'
+                - cell [ref=f5e290]:
+                  - button "Abrir ações da ata de 27/10/2026" [ref=f5e293] [cursor=pointer]
+              - row [ref=f5e296]:
+                - cell "121" [ref=f5e110]
+                - cell "18/10 18:00" [ref=f5e297]:
+                  - generic [ref=f5e298]: 18/10 | 18:00
+                - cell [ref=f5e300]:
+                  - 'img "Status: Enviada" [ref=f5e302]'
+                - cell [ref=f5e303]:
+                  - button "Abrir ações da ata de 18/10/2026" [ref=f5e306] [cursor=pointer]
+              - row [ref=f5e309]:
+                - cell "120" [ref=f5e115]
+                - cell "18/10 15:00" [ref=f5e310]:
+                  - generic [ref=f5e311]: 18/10 | 15:00
+                - cell [ref=f5e313]:
+                  - 'img "Status: Enviada" [ref=f5e315]'
+                - cell [ref=f5e316]:
+                  - button "Abrir ações da ata de 18/10/2026" [ref=f5e319] [cursor=pointer]
+              - row [ref=f5e322]:
+                - cell "119" [ref=f5e120]
+                - cell "18/10 10:00" [ref=f5e323]:
+                  - generic [ref=f5e324]: 18/10 | 10:00
+                - cell [ref=f5e326]:
+                  - 'img "Status: Enviada" [ref=f5e328]'
+                - cell [ref=f5e329]:
+                  - button "Abrir ações da ata de 18/10/2026" [ref=f5e332] [cursor=pointer]
+              - row [ref=f5e335]:
+                - cell "118" [ref=f5e125]
+                - cell "17/10 21:30" [ref=f5e336]:
+                  - generic [ref=f5e337]: 17/10 | 21:30
+                - cell [ref=f5e339]:
+                  - 'img "Status: Enviada" [ref=f5e341]'
+                - cell [ref=f5e342]:
+                  - button "Abrir ações da ata de 17/10/2026" [ref=f5e345] [cursor=pointer]
+              - row [ref=f5e348]:
+                - cell "117" [ref=f5e130]
+                - cell "17/10 18:00" [ref=f5e349]:
+                  - generic [ref=f5e350]: 17/10 | 18:00
+                - cell [ref=f5e352]:
+                  - 'img "Status: Enviada" [ref=f5e354]'
+                - cell [ref=f5e355]:
+                  - button "Abrir ações da ata de 17/10/2026" [ref=f5e358] [cursor=pointer]
+              - row [ref=f5e361]:
+                - cell "116" [ref=f5e135]
+                - cell "17/10 15:00" [ref=f5e362]:
+                  - generic [ref=f5e363]: 17/10 | 15:00
+                - cell [ref=f5e365]:
+                  - 'img "Status: Enviada" [ref=f5e367]'
+                - cell [ref=f5e368]:
+                  - button "Abrir ações da ata de 17/10/2026" [ref=f5e371] [cursor=pointer]
+              - row [ref=f5e374]:
+                - cell "115" [ref=f5e140]
+                - cell "17/10 10:00" [ref=f5e375]:
+                  - generic [ref=f5e376]: 17/10 | 10:00
+                - cell [ref=f5e378]:
+                  - 'img "Status: Enviada" [ref=f5e380]'
+                - cell [ref=f5e381]:
+                  - button "Abrir ações da ata de 17/10/2026" [ref=f5e384] [cursor=pointer]
+              - row [ref=f5e387]:
+                - cell "114" [ref=f5e145]
+                - cell "11/10 07:00" [ref=f5e388]:
+                  - generic [ref=f5e389]: 11/10 | 07:00
+                - cell [ref=f5e391]:
+                  - 'img "Status: Enviada" [ref=f5e393]'
+                - cell [ref=f5e394]:
+                  - button "Abrir ações da ata de 11/10/2026" [ref=f5e397] [cursor=pointer]
+              - row [ref=f5e400]:
+                - cell "113" [ref=f5e150]
+                - cell "10/10 07:00" [ref=f5e401]:
+                  - generic [ref=f5e402]: 10/10 | 07:00
+                - cell [ref=f5e404]:
+                  - 'img "Status: Enviada" [ref=f5e406]'
+                - cell [ref=f5e407]:
+                  - button "Abrir ações da ata de 10/10/2026" [ref=f5e410] [cursor=pointer]
+              - row [ref=f5e413]:
+                - cell "112" [ref=f5e155]
+                - cell "30/09 21:30" [ref=f5e414]:
+                  - generic [ref=f5e415]: 30/09 | 21:30
+                - cell [ref=f5e417]:
+                  - 'img "Status: Enviada" [ref=f5e419]'
+                - cell [ref=f5e420]:
+                  - button "Abrir ações da ata de 30/09/2026" [ref=f5e423] [cursor=pointer]
+              - row [ref=f5e426]:
+                - cell "111" [ref=f5e160]
+                - cell "30/09 15:00" [ref=f5e427]:
+                  - generic [ref=f5e428]: 30/09 | 15:00
+                - cell [ref=f5e430]:
+                  - 'img "Status: Enviada" [ref=f5e432]'
+                - cell [ref=f5e433]:
+                  - button "Abrir ações da ata de 30/09/2026" [ref=f5e436] [cursor=pointer]
+              - row [ref=f5e439]:
+                - cell "110" [ref=f5e165]
+                - cell "30/09 10:00" [ref=f5e440]:
+                  - generic [ref=f5e441]: 30/09 | 10:00
+                - cell [ref=f5e443]:
+                  - 'img "Status: Enviada" [ref=f5e445]'
+                - cell [ref=f5e446]:
+                  - button "Abrir ações da ata de 30/09/2026" [ref=f5e449] [cursor=pointer]
+              - row [ref=f5e452]:
+                - cell "109" [ref=f5e170]
+                - cell "30/09 07:00" [ref=f5e453]:
+                  - generic [ref=f5e454]: 30/09 | 07:00
+                - cell [ref=f5e456]:
+                  - 'img "Status: Enviada" [ref=f5e458]'
+                - cell [ref=f5e459]:
+                  - button "Abrir ações da ata de 30/09/2026" [ref=f5e462] [cursor=pointer]
+              - row [ref=f5e465]:
+                - cell "108" [ref=f5e175]
+                - cell "29/09 21:30" [ref=f5e466]:
+                  - generic [ref=f5e467]: 29/09 | 21:30
+                - cell [ref=f5e469]:
+                  - 'img "Status: Enviada" [ref=f5e471]'
+                - cell [ref=f5e472]:
+                  - button "Abrir ações da ata de 29/09/2026" [ref=f5e475] [cursor=pointer]
+              - row [ref=f5e478]:
+                - cell "107" [ref=f5e180]
+                - cell "29/09 15:00" [ref=f5e479]:
+                  - generic [ref=f5e480]: 29/09 | 15:00
+                - cell [ref=f5e482]:
+                  - 'img "Status: Enviada" [ref=f5e484]'
+                - cell [ref=f5e485]:
+                  - button "Abrir ações da ata de 29/09/2026" [ref=f5e488] [cursor=pointer]
+              - row [ref=f5e491]:
+                - cell "106" [ref=f5e185]
+                - cell "29/09 10:00" [ref=f5e492]:
+                  - generic [ref=f5e493]: 29/09 | 10:00
+                - cell [ref=f5e495]:
+                  - 'img "Status: Enviada" [ref=f5e497]'
+                - cell [ref=f5e498]:
+                  - button "Abrir ações da ata de 29/09/2026" [ref=f5e501] [cursor=pointer]
+              - row [ref=f5e504]:
+                - cell "105" [ref=f5e190]
+                - cell "29/09 07:00" [ref=f5e505]:
+                  - generic [ref=f5e506]: 29/09 | 07:00
+                - cell [ref=f5e508]:
+                  - 'img "Status: Enviada" [ref=f5e510]'
+                - cell [ref=f5e511]:
+                  - button "Abrir ações da ata de 29/09/2026" [ref=f5e514] [cursor=pointer]
+              - row [ref=f5e517]:
+                - cell "104" [ref=f5e195]
+                - cell "28/09 21:30" [ref=f5e518]:
+                  - generic [ref=f5e519]: 28/09 | 21:30
+                - cell [ref=f5e521]:
+                  - 'img "Status: Enviada" [ref=f5e523]'
+                - cell [ref=f5e524]:
+                  - button "Abrir ações da ata de 28/09/2026" [ref=f5e527] [cursor=pointer]
+          - generic [ref=f5e199]:
+            - status [ref=f5e201]: 1 - 25 de 128
+            - navigation "pagination" [ref=f5e204]:
+              - link "Previous" [disabled] [ref=f5e205]: Anterior
+              - link "1" [ref=f5e206] [cursor=pointer]
+              - link "2" [ref=f5e207] [cursor=pointer]
+              - link "3" [ref=f5e208] [cursor=pointer]
+              - link "4" [ref=f5e209] [cursor=pointer]
+              - link "5" [ref=f5e210] [cursor=pointer]
+              - link "6" [ref=f5e211] [cursor=pointer]
+              - link "Next" [ref=f5e212] [cursor=pointer]: Próxima
+  - button "Open Next.js Dev Tools" [ref=f5e533] [cursor=pointer]:
+    - generic [ref=f5e542]:
+      - text: Rendering
+      - generic [ref=f5e543]:
+        - generic [ref=f5e544]: .
+        - generic [ref=f5e545]: .
+        - generic [ref=f5e546]: .
+  - alert [ref=f5e222]
