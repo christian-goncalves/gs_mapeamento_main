@@ -1110,13 +1110,13 @@ body:has(.app-loading) { background: #fbfcff; }
 .monthly-report-email-modal .ata-email-summary,
 .monthly-report-pdf-modal .ata-email-summary { background: #f8fbff; }
 .monthly-report-email-modal .ata-email-summary { border: 0; padding: calc(.8rem + 1px); }
+.monthly-report-pdf-modal .ata-email-summary { border: 0; padding: calc(.8rem + 1px); }
 .monthly-report-email-modal .admin-status-feedback {
   border: 0;
   padding: calc(.8rem + 1px) calc(1rem + 1px);
   background: #e6f1fa;
   color: var(--brand);
 }
-.monthly-report-pdf-modal .ata-email-summary { border: 0; padding: calc(.8rem + 1px); }
 .monthly-report-email-modal .modal-actions button:not(.secondary) { background: #1d4ed8; color: #ffffff; }
 .monthly-report-email-modal .modal-actions button:not(.secondary):hover:not(:disabled) { background: #1e40af; }
 .monthly-report-email-modal .modal-actions button:focus-visible,
@@ -1984,6 +1984,38 @@ body:has(.ata-pdf-preview-shell) { overflow: hidden; background: transparent; }
   .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody th,
   .monthly-dashboard-page:has(.monthly-dashboard-sheet-responsavel) .dashboard-responsavel-mesa-table tbody td {
     font-size: .7rem;
+  }
+}
+
+/* Keep both PDF email dialogs on the same horizontal content rail. */
+.confirmation-modal.pdf-email-dialog {
+  scrollbar-gutter: auto;
+}
+.confirmation-modal.pdf-email-dialog .modal-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-content: initial;
+  gap: .75rem;
+  margin: 1.25rem 0 -1.5rem;
+  padding: 1rem 0;
+}
+.confirmation-modal.pdf-email-dialog .modal-actions button {
+  width: 100%;
+  min-width: 0;
+}
+.confirmation-modal.pdf-email-dialog .modal-actions button:only-child {
+  grid-column: 1 / -1;
+}
+@media (max-width: 720px) {
+  .confirmation-modal.pdf-email-dialog .modal-actions {
+    gap: .75rem;
+    margin: 1rem 0 -.85rem;
+    padding: .75rem 0;
+  }
+}
+@media (max-width: 360px) {
+  .confirmation-modal.pdf-email-dialog .modal-actions {
+    grid-template-columns: 1fr;
   }
 }
 
