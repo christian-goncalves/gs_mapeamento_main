@@ -2,6 +2,7 @@ import "server-only";
 
 import { Resend } from "resend";
 import type { AtaPresentation } from "@/app/atas/ata-presentation";
+import { adminBccFor } from "@/lib/email/admin-bcc";
 
 function requiredEnvironment(name: string) {
   const value = process.env[name];
@@ -37,6 +38,7 @@ export async function sendAtaPdfEmail({
   const result = await resend.emails.send({
     from: requiredEnvironment("EMAIL_FROM"),
     to: recipient,
+    bcc: adminBccFor(recipient),
     subject,
     text: [
       `${presentation.title}`,

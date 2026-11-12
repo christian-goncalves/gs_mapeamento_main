@@ -1109,6 +1109,13 @@ body:has(.app-loading) { background: #fbfcff; }
 }
 .monthly-report-email-modal .ata-email-summary,
 .monthly-report-pdf-modal .ata-email-summary { background: #f8fbff; }
+.monthly-report-email-modal .ata-email-summary { border: 0; padding: calc(.8rem + 1px); }
+.monthly-report-email-modal .admin-status-feedback {
+  border: 0;
+  padding: calc(.8rem + 1px) calc(1rem + 1px);
+  background: #e6f1fa;
+  color: var(--brand);
+}
 .monthly-report-pdf-modal .ata-email-summary { border: 0; padding: calc(.8rem + 1px); }
 .monthly-report-email-modal .modal-actions button:not(.secondary) { background: #1d4ed8; color: #ffffff; }
 .monthly-report-email-modal .modal-actions button:not(.secondary):hover:not(:disabled) { background: #1e40af; }

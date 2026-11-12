@@ -3,6 +3,7 @@ import "server-only";
 import { Resend } from "resend";
 import type { MonthlyDashboardData } from "@/app/relatorios/monthly-group-dashboard-data";
 import { monthlyReportFilename } from "@/lib/pdf/monthly-report-pdf-document";
+import { adminBccFor } from "@/lib/email/admin-bcc";
 
 function requiredEnvironment(name: string) {
   const value = process.env[name];
@@ -27,6 +28,7 @@ export async function sendMonthlyReportPdfEmail({
   const result = await resend.emails.send({
     from: requiredEnvironment("EMAIL_FROM"),
     to: recipient,
+    bcc: adminBccFor(recipient),
     subject,
     text: [
       subject,

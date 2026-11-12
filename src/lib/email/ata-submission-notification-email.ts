@@ -1,6 +1,7 @@
 import "server-only";
 
 import { Resend } from "resend";
+import { adminBccFor } from "@/lib/email/admin-bcc";
 
 function requiredEnvironment(name: string) {
   const value = process.env[name];
@@ -45,6 +46,7 @@ export async function sendAtaSubmissionNotificationEmail({
   const result = await resend.emails.send({
     from: requiredEnvironment("EMAIL_FROM"),
     to: recipient,
+    bcc: adminBccFor(recipient),
     subject: `Ata preenchida em ${date} - ${groupName}`,
     text: [
       `Olá, ${groupName}.`,
